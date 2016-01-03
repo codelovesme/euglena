@@ -1,0 +1,20 @@
+{
+  "name": "cessnalib",
+  "domain":"codeloves.me",
+  "version": "0.0.1",
+  "private": false,
+  "license":"GPL v2",
+  "author": { 
+	"name" : "Fedai Kaya",
+	"email" : "codelovesme@gmail.com"
+  },
+  "typings": "./typings/cessnalib/cessnalib.d.ts",
+  "devDependencies":{
+	"chai":"*",
+	"mocha":"*",
+	"sinona":"*"
+  },
+  "scripts": {
+    "test": "mocha test"
+  }
+}

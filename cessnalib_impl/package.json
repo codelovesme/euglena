@@ -1,0 +1,17 @@
+{
+  "name": "cessnalib_template",
+  "domain":"codeloves.me",
+  "version": "0.0.1",
+  "private": false,
+  "license":"GPL v2",
+  "author": { 
+	"name" : "Fedai Kaya",
+	"email" : "codelovesme@gmail.com"
+  },
+  "typings": "./typings/cessnalib/cessnalib.d.ts",
+  "dependencies":{
+	"socket.io":"^1.3.5",
+	"socket.io-client":"^1.3.5",
+	"cessnalib_template":"*"
+  }
+}
