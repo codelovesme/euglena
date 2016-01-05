@@ -2,11 +2,6 @@
  * Created by codelovesme on 6/19/2015.
  */
 export module cessnalib {
-    export namespace reference {
-        export namespace being {
-            export const Particle = new cessnalib.being.Particle("Reference Particle",true);
-        }
-    }
     export namespace js {
         export class Class {
             public static extend(subInstance:any, parentInstance:any): void {

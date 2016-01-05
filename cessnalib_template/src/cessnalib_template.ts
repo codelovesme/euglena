@@ -6,10 +6,15 @@ import * as path from "path";
 import * as fs from "fs";
 
 export module cessnalib_template {
+    export namespace reference {
+        export namespace being {
+            export const Particle = new cessnalib.being.Particle("Reference Particle",true);
+        }
+    }
     export namespace injection {
         export class StaticTools {
-            public static readConfigFile(): cessnalib.injection.Configuration {
-                let readConfigFile = fs.readFileSync(path.join(path.resolve(__dirname), "config.json"), "utf8");
+            public static readConfigFile(applicationDirectory:string): cessnalib.injection.Configuration {
+                let readConfigFile = fs.readFileSync(path.join(path.resolve(applicationDirectory), "config.json"), "utf8");
                 return JSON.parse(readConfigFile);
             }
         }
@@ -33,6 +38,7 @@ export module cessnalib_template {
             }
             export namespace constants {
                 export namespace particles {
+                    export const EuglenaId = "cessnalib_template.being.alive.particles.EuglenaId";
                     export const EuglenaHasBeenBorn = "cessnalib_template.being.alive.particles.EuglenaHasBeenBorn";
                     export const Acknowledge = "cessnalib_template.being.alive.particles.Acknowledge";
                     export const ExceptionOccurred = "cessnalib_template.being.alive.particles.ExceptionOccurred";
@@ -90,12 +96,12 @@ export module cessnalib_template {
                 }
             }
             export class StaticTools{
-                public static createEuglena(injectionBank:cessnalib.sys.type.Map<string,cessnalib.being.alive.Organelle<Object>>): void {
+                public static createEuglena(applicationDirectory:string,organelleBank:cessnalib.sys.type.Map<string,cessnalib.being.alive.Organelle<Object>>): Euglena {
                     let euglena = new Euglena();
-                    let initialConfig = injection.StaticTools.readConfigFile();
+                    let initialConfig = injection.StaticTools.readConfigFile(applicationDirectory);
                     euglena.receiveParticle(new particles.EuglenaHasBeenBorn());
                     for (let objectProp of initialConfig.objects) {
-                        let organelle = injectionBank.get(cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
+                        let organelle = organelleBank.get(cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
                         organelle.initialProperties = objectProp.initialProperties;
                         euglena.addOrganelle(organelle);
                     }
@@ -106,6 +112,7 @@ export module cessnalib_template {
                                 cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser)
                             ));
                     }
+                    return euglena;
                 }
             }
         }

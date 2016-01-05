@@ -11,7 +11,16 @@ import * as http from "http";
 export module cessnalib_impl {
     export namespace being {
         export namespace alive {
-            export namespace particles {
+            export class StaticTools {
+                public static createOrganelleBank(): cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>> {
+                    var bank = new cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>();
+                    for (let key in organelles){
+                        bank.add(key, new organelles[key]());
+                    }
+                    return bank;
+                }
+            }
+            export namespace particle {
                 export class ConnectedToEuglena implements cessnalib.being.Particle {
                     public className: string = "cessnalib_impl.being.alive.particles.ConnectedToEuglena";
                     constructor(public content: cessnalib.being.alive.EuglenaInfo) { }
@@ -23,7 +32,7 @@ export module cessnalib_impl {
                     }){ }
                 }
             }
-            export namespace organelles {
+            export namespace organelle {
                 export class TimeOrganelleImplNistGov extends cessnalib_template.being.alive.organelles.TimeOrganelle {
                     public fetchCurrentTime():void {
                         //TODO
@@ -47,14 +56,14 @@ export module cessnalib_impl {
                         };
                         var server = io("http://" + post_options.host + ":" + post_options.port);
                         server.on("particle", (particleAssumption: any, callback: () => void) => {
-                            if (cessnalib.js.Class.instanceOf<cessnalib.being.Particle>(cessnalib.reference.being.Particle, particleAssumption)) {
+                            if (cessnalib.js.Class.instanceOf<cessnalib.being.Particle>(cessnalib_template.reference.being.Particle, particleAssumption)) {
                                 this.seed.receiveParticle(particleAssumption);
                             } else {
                                 //TODO
                             }
                         });
                         server.on("bind", (particleAssumption: any) => {
-                            if (cessnalib.js.Class.instanceOf<cessnalib.being.Particle>(cessnalib.reference.being.Particle, particleAssumption)) {
+                            if (cessnalib.js.Class.instanceOf<cessnalib.being.Particle>(cessnalib_template.reference.being.Particle, particleAssumption)) {
                                 this.seed.receiveParticle(particleAssumption);
                             } else {
                                 //TODO
@@ -90,7 +99,7 @@ export module cessnalib_impl {
                                     res.writeHead(200, { 'Content-Type': 'application/json' });
                                     try {
                                         var particleAssumption: cessnalib.being.Particle = JSON.parse(body);
-                                        if (cessnalib.js.Class.instanceOf<cessnalib.being.Particle>(cessnalib.reference.being.Particle, particleAssumption)) {
+                                        if (cessnalib.js.Class.instanceOf<cessnalib.being.Particle>(cessnalib_template.reference.being.Particle, particleAssumption)) {
                                             this.seed.receiveParticle(particleAssumption);
                                             res.end(JSON.stringify(new cessnalib_template.being.alive.particles.Acknowledge()));
                                         } else {
@@ -112,7 +121,7 @@ export module cessnalib_impl {
                             socket.on("bind", (impulse:any) => {
                                 this.sockets.set(impulse.param.userId, socket);
                                 //TODO fix EuglenaInfo
-                                socket.emit("bind", new cessnalib_impl.being.alive.particles.ConnectedToEuglena(null));
+                                socket.emit("bind", new cessnalib_impl.being.alive.particle.ConnectedToEuglena(null));
                             });
                             socket.on("impulse", (impulse:any) => {
                                 this.seed.receiveParticle(impulse);
@@ -176,6 +185,12 @@ export module cessnalib_impl {
                         post_req.end();
                     }
                 }
+            }
+            export var organelles:any = {
+                "TimeOrganelleImplNistGov": organelle.TimeOrganelleImplNistGov,
+                "WebParticleTransmitterOrganelleImplHttp": organelle.WebParticleTransmitterOrganelleImplHttp,
+                "WebReceptionOrganelleImplHttp": organelle.WebReceptionOrganelleImplHttp,
+                "WebParticleThrowerOrganelleImplHttp": organelle.WebParticleThrowerOrganelleImplHttp
             }
         }
     }

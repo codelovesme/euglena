@@ -17,8 +17,21 @@ var cessnalib_impl;
     (function (being) {
         var alive;
         (function (alive) {
-            var particles;
-            (function (particles) {
+            var StaticTools = (function () {
+                function StaticTools() {
+                }
+                StaticTools.createOrganelleBank = function () {
+                    var bank = new cessnalib_1.cessnalib.sys.type.Map();
+                    for (var key in alive.organelles) {
+                        bank.add(key, new alive.organelles[key]());
+                    }
+                    return bank;
+                };
+                return StaticTools;
+            })();
+            alive.StaticTools = StaticTools;
+            var particle;
+            (function (particle) {
                 var ConnectedToEuglena = (function () {
                     function ConnectedToEuglena(content) {
                         this.content = content;
@@ -26,7 +39,7 @@ var cessnalib_impl;
                     }
                     return ConnectedToEuglena;
                 })();
-                particles.ConnectedToEuglena = ConnectedToEuglena;
+                particle.ConnectedToEuglena = ConnectedToEuglena;
                 var ConnectToEuglenaRequest = (function () {
                     function ConnectToEuglenaRequest(content) {
                         this.content = content;
@@ -34,10 +47,10 @@ var cessnalib_impl;
                     }
                     return ConnectToEuglenaRequest;
                 })();
-                particles.ConnectToEuglenaRequest = ConnectToEuglenaRequest;
-            })(particles = alive.particles || (alive.particles = {}));
-            var organelles;
-            (function (organelles) {
+                particle.ConnectToEuglenaRequest = ConnectToEuglenaRequest;
+            })(particle = alive.particle || (alive.particle = {}));
+            var organelle;
+            (function (organelle) {
                 var TimeOrganelleImplNistGov = (function (_super) {
                     __extends(TimeOrganelleImplNistGov, _super);
                     function TimeOrganelleImplNistGov() {
@@ -49,7 +62,7 @@ var cessnalib_impl;
                     };
                     return TimeOrganelleImplNistGov;
                 })(cessnalib_template_1.cessnalib_template.being.alive.organelles.TimeOrganelle);
-                organelles.TimeOrganelleImplNistGov = TimeOrganelleImplNistGov;
+                organelle.TimeOrganelleImplNistGov = TimeOrganelleImplNistGov;
                 //TODO test
                 var WebParticleTransmitterOrganelleImplHttp = (function (_super) {
                     __extends(WebParticleTransmitterOrganelleImplHttp, _super);
@@ -68,14 +81,14 @@ var cessnalib_impl;
                         };
                         var server = io("http://" + post_options.host + ":" + post_options.port);
                         server.on("particle", function (particleAssumption, callback) {
-                            if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_1.cessnalib.reference.being.Particle, particleAssumption)) {
+                            if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.Particle, particleAssumption)) {
                                 _this.seed.receiveParticle(particleAssumption);
                             }
                             else {
                             }
                         });
                         server.on("bind", function (particleAssumption) {
-                            if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_1.cessnalib.reference.being.Particle, particleAssumption)) {
+                            if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.Particle, particleAssumption)) {
                                 _this.seed.receiveParticle(particleAssumption);
                             }
                             else {
@@ -93,7 +106,7 @@ var cessnalib_impl;
                     };
                     return WebParticleTransmitterOrganelleImplHttp;
                 })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebParticleTransmitterOrganelle);
-                organelles.WebParticleTransmitterOrganelleImplHttp = WebParticleTransmitterOrganelleImplHttp;
+                organelle.WebParticleTransmitterOrganelleImplHttp = WebParticleTransmitterOrganelleImplHttp;
                 //TODO test
                 var WebReceptionOrganelleImplHttp = (function (_super) {
                     __extends(WebReceptionOrganelleImplHttp, _super);
@@ -116,7 +129,7 @@ var cessnalib_impl;
                                     res.writeHead(200, { 'Content-Type': 'application/json' });
                                     try {
                                         var particleAssumption = JSON.parse(body);
-                                        if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_1.cessnalib.reference.being.Particle, particleAssumption)) {
+                                        if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.Particle, particleAssumption)) {
                                             _this.seed.receiveParticle(particleAssumption);
                                             res.end(JSON.stringify(new cessnalib_template_1.cessnalib_template.being.alive.particles.Acknowledge()));
                                         }
@@ -139,7 +152,7 @@ var cessnalib_impl;
                             socket.on("bind", function (impulse) {
                                 _this.sockets.set(impulse.param.userId, socket);
                                 //TODO fix EuglenaInfo
-                                socket.emit("bind", new cessnalib_impl.being.alive.particles.ConnectedToEuglena(null));
+                                socket.emit("bind", new cessnalib_impl.being.alive.particle.ConnectedToEuglena(null));
                             });
                             socket.on("impulse", function (impulse) {
                                 _this.seed.receiveParticle(impulse);
@@ -164,7 +177,7 @@ var cessnalib_impl;
                     };
                     return WebReceptionOrganelleImplHttp;
                 })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebReceptionOrganelle);
-                organelles.WebReceptionOrganelleImplHttp = WebReceptionOrganelleImplHttp;
+                organelle.WebReceptionOrganelleImplHttp = WebReceptionOrganelleImplHttp;
                 var WebParticleThrowerOrganelleImplHttp = (function (_super) {
                     __extends(WebParticleThrowerOrganelleImplHttp, _super);
                     function WebParticleThrowerOrganelleImplHttp() {
@@ -202,8 +215,14 @@ var cessnalib_impl;
                     };
                     return WebParticleThrowerOrganelleImplHttp;
                 })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebParticleThrowerOrganelle);
-                organelles.WebParticleThrowerOrganelleImplHttp = WebParticleThrowerOrganelleImplHttp;
-            })(organelles = alive.organelles || (alive.organelles = {}));
+                organelle.WebParticleThrowerOrganelleImplHttp = WebParticleThrowerOrganelleImplHttp;
+            })(organelle = alive.organelle || (alive.organelle = {}));
+            alive.organelles = {
+                "TimeOrganelleImplNistGov": organelle.TimeOrganelleImplNistGov,
+                "WebParticleTransmitterOrganelleImplHttp": organelle.WebParticleTransmitterOrganelleImplHttp,
+                "WebReceptionOrganelleImplHttp": organelle.WebReceptionOrganelleImplHttp,
+                "WebParticleThrowerOrganelleImplHttp": organelle.WebParticleThrowerOrganelleImplHttp
+            };
         })(alive = being.alive || (being.alive = {}));
     })(being = cessnalib_impl.being || (cessnalib_impl.being = {}));
 })(cessnalib_impl = exports.cessnalib_impl || (exports.cessnalib_impl = {}));

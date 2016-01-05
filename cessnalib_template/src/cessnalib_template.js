@@ -11,13 +11,20 @@ var path = require("path");
 var fs = require("fs");
 var cessnalib_template;
 (function (cessnalib_template) {
+    var reference;
+    (function (reference) {
+        var being;
+        (function (being) {
+            being.Particle = new cessnalib_1.cessnalib.being.Particle("Reference Particle", true);
+        })(being = reference.being || (reference.being = {}));
+    })(reference = cessnalib_template.reference || (cessnalib_template.reference = {}));
     var injection;
     (function (injection) {
         var StaticTools = (function () {
             function StaticTools() {
             }
-            StaticTools.readConfigFile = function () {
-                var readConfigFile = fs.readFileSync(path.join(path.resolve(__dirname), "config.json"), "utf8");
+            StaticTools.readConfigFile = function (applicationDirectory) {
+                var readConfigFile = fs.readFileSync(path.join(path.resolve(applicationDirectory), "config.json"), "utf8");
                 return JSON.parse(readConfigFile);
             };
             return StaticTools;
@@ -45,6 +52,7 @@ var cessnalib_template;
             (function (constants) {
                 var particles;
                 (function (particles) {
+                    particles.EuglenaId = "cessnalib_template.being.alive.particles.EuglenaId";
                     particles.EuglenaHasBeenBorn = "cessnalib_template.being.alive.particles.EuglenaHasBeenBorn";
                     particles.Acknowledge = "cessnalib_template.being.alive.particles.Acknowledge";
                     particles.ExceptionOccurred = "cessnalib_template.being.alive.particles.ExceptionOccurred";
@@ -133,13 +141,13 @@ var cessnalib_template;
             var StaticTools = (function () {
                 function StaticTools() {
                 }
-                StaticTools.createEuglena = function (injectionBank) {
+                StaticTools.createEuglena = function (applicationDirectory, organelleBank) {
                     var euglena = new Euglena();
-                    var initialConfig = injection.StaticTools.readConfigFile();
+                    var initialConfig = injection.StaticTools.readConfigFile(applicationDirectory);
                     euglena.receiveParticle(new particles.EuglenaHasBeenBorn());
                     for (var _i = 0, _a = initialConfig.objects; _i < _a.length; _i++) {
                         var objectProp = _a[_i];
-                        var organelle = injectionBank.get(cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
+                        var organelle = organelleBank.get(cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
                         organelle.initialProperties = objectProp.initialProperties;
                         euglena.addOrganelle(organelle);
                     }
@@ -147,6 +155,7 @@ var cessnalib_template;
                         var valueChooser = _c[_b];
                         euglena.receiveParticle(new cessnalib_1.cessnalib.being.Particle(valueChooser.className, cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser)));
                     }
+                    return euglena;
                 };
                 return StaticTools;
             })();

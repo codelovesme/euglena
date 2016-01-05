@@ -7,7 +7,10 @@ import { cessnalib_template } from "../node_modules/cessnalib_template/src/cessn
 export declare module cessnalib_impl {
     namespace being {
         namespace alive {
-            namespace particles {
+            class StaticTools {
+                static createOrganelleBank(): cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>;
+            }
+            namespace particle {
                 class ConnectedToEuglena implements cessnalib.being.Particle {
                     content: cessnalib.being.alive.EuglenaInfo;
                     className: string;
@@ -23,7 +26,8 @@ export declare module cessnalib_impl {
                     });
                 }
             }
-            namespace organelles {
+            var organelles: any;
+            namespace organelle {
                 class TimeOrganelleImplNistGov extends cessnalib_template.being.alive.organelles.TimeOrganelle {
                     fetchCurrentTime(): void;
                 }

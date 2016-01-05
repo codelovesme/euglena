@@ -3,9 +3,14 @@
  */
 import { cessnalib } from "../node_modules/cessnalib/cessnalib";
 export declare module cessnalib_template {
+    namespace reference {
+        namespace being {
+            const Particle: cessnalib.being.Particle;
+        }
+    }
     namespace injection {
         class StaticTools {
-            static readConfigFile(): cessnalib.injection.Configuration;
+            static readConfigFile(applicationDirectory: string): cessnalib.injection.Configuration;
         }
     }
     namespace being {
@@ -15,6 +20,7 @@ export declare module cessnalib_template {
             }
             namespace constants {
                 namespace particles {
+                    const EuglenaId: string;
                     const EuglenaHasBeenBorn: string;
                     const Acknowledge: string;
                     const ExceptionOccurred: string;
@@ -76,7 +82,7 @@ export declare module cessnalib_template {
                 }
             }
             class StaticTools {
-                static createEuglena(injectionBank: cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>): void;
+                static createEuglena(applicationDirectory: string, organelleBank: cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>): Euglena;
             }
         }
     }

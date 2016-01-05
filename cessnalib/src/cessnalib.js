@@ -8,13 +8,6 @@ var __extends = (this && this.__extends) || function (d, b) {
  */
 var cessnalib;
 (function (cessnalib) {
-    var reference;
-    (function (reference) {
-        var being;
-        (function (being) {
-            being.Particle = new cessnalib.being.Particle("Reference Particle", true);
-        })(being = reference.being || (reference.being = {}));
-    })(reference = cessnalib.reference || (cessnalib.reference = {}));
     var js;
     (function (js) {
         var Class = (function () {
