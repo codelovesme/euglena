@@ -2,11 +2,6 @@
  * Created by codelovesme on 6/19/2015.
  */
 export declare module cessnalib {
-    namespace reference {
-        namespace being {
-            const Particle: cessnalib.being.Particle;
-        }
-    }
     namespace js {
         class Class {
             static extend(subInstance: any, parentInstance: any): void;

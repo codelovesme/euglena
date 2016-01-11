@@ -7,8 +7,33 @@ import {cessnalib} from "../node_modules/cessnalib/cessnalib";
 import {cessnalib_template} from "../node_modules/cessnalib_template/src/cessnalib_template";
 import * as io from "socket.io";
 import * as http from "http";
+import {RequestOptions} from "http";
 
 export module cessnalib_impl {
+    export namespace sys {
+        export namespace io {
+            export namespace net {
+                export class HttpPost {
+                    constructor(public post_options:RequestOptions){ }
+                    public sendMessage(message:string,callback:cessnalib.sys.type.Callback<string>):void{
+                        var post_req = http.request(this.post_options, (res) => {
+                            res.setEncoding('utf8');
+                            var str = '';
+                            res.on('data', (data: string) => {
+                                str += data;
+                            });
+                            res.on('end', (data: string) => {
+                                callback(str);
+                            });
+                        });
+                        // post the data
+                        post_req.write(message);
+                        post_req.end();
+                    }
+                }
+            }
+        }
+    }
     export namespace being {
         export namespace alive {
             export class StaticTools {
@@ -151,38 +176,26 @@ export module cessnalib_impl {
                     }
                 }
                 export class WebParticleThrowerOrganelleImplHttp extends cessnalib_template.being.alive.organelles.WebParticleThrowerOrganelle {
-                    private socket: SocketIOClient.Socket;
-                    private callbackStack: ((impulse: cessnalib.being.Particle) => void)[];
-                    private post_options: http.RequestOptions;
-
-                    initialize() {
-                        this.callbackStack = [];
-                        this.post_options = {
-                            host : this.initialProperties.host,
-                            port : Number(this.initialProperties.port),
-                            path : this.initialProperties.path ? this.initialProperties.path : "/",
-                            method : 'POST',
-                            headers : {
-                                'Content-Type': 'application/json'
-                            }
-                        };
-                    }
+                    private httpConnector:cessnalib_impl.sys.io.net.HttpPost;
                     public throwParticle(particle: cessnalib.being.Particle): void {
-                        var post_req = http.request(this.post_options, (res) => {
-                            res.setEncoding('utf8');
-                            var str = '';
-                            res.on('data', (data: string) => {
-                                str += data;
-                            });
-                            res.on('end', (data: string) => {
-                                var particle = JSON.parse(str);
-                                this.seed.receiveParticle(particle);
-                            });
+                        this.getHttpConnector().sendMessage(JSON.stringify(particle),(message)=>{
+                            this.seed.receiveParticle(JSON.parse(message));
                         });
-                        // post the data
-                        var s = JSON.stringify(particle);
-                        post_req.write(s);
-                        post_req.end();
+                    }
+                    private getHttpConnector():cessnalib_impl.sys.io.net.HttpPost{
+                        if(!this.httpConnector){
+                            var post_options = {
+                                host : this.initialProperties.host,
+                                port : Number(this.initialProperties.port),
+                                path : this.initialProperties.path ? this.initialProperties.path : "/",
+                                method : 'POST',
+                                headers : {
+                                    'Content-Type': 'application/json'
+                                }
+                            };
+                            this.httpConnector = new cessnalib_impl.sys.io.net.HttpPost(post_options);
+                        }
+                        return this.httpConnector;
                     }
                 }
             }

@@ -4,6 +4,7 @@
 import {cessnalib} from "../node_modules/cessnalib/cessnalib";
 import * as path from "path";
 import * as fs from "fs";
+var jsonminify = require("jsonminify");
 
 export module cessnalib_template {
     export namespace reference {
@@ -15,30 +16,25 @@ export module cessnalib_template {
         export class StaticTools {
             public static readConfigFile(applicationDirectory:string): cessnalib.injection.Configuration {
                 let readConfigFile = fs.readFileSync(path.join(path.resolve(applicationDirectory), "config.json"), "utf8");
-                return JSON.parse(readConfigFile);
+                return JSON.parse(jsonminify(readConfigFile));
             }
         }
     }
     export namespace being {
         export namespace alive {
             import Particle = cessnalib.being.Particle;
-            export class Euglena extends cessnalib.being.alive.Euglena {
-                constructor() {
-                    let chromosome = new Array<cessnalib.being.alive.dna.Gene>();
-                    chromosome.push(new cessnalib.being.alive.dna.Gene(
-                        "WhenEuglenaHasBeenBorn",
-                        [constants.particles.EuglenaHasBeenBorn],
-                        (triggerParticle:Particle,particles:any,organelles:any) => {
-                            let timeOrganelle: organelles.TimeOrganelle = <organelles.TimeOrganelle>organelles[constants.organelles.TimeOrganelle];
-                            timeOrganelle.fetchCurrentTime();
-                        }
-                    ));
-                    super(chromosome);
+            import Euglena = cessnalib.being.alive.Euglena;
+            import Gene = cessnalib.being.alive.dna.Gene;
+            import Reaction = cessnalib.being.alive.dna.Reaction;
+            import Time = cessnalib.sys.type.Time;
+            export class RegularlyTriggeredGene extends Gene {
+                constructor(public className: string, timeSpan:Time, public reaction: Reaction){
+                    super(className,[constants.particles.Time],reaction);
                 }
             }
             export namespace constants {
                 export namespace particles {
-                    export const EuglenaId = "cessnalib_template.being.alive.particles.EuglenaId";
+                    export const EuglenaName = "cessnalib_template.being.alive.particles.EuglenaName";
                     export const EuglenaHasBeenBorn = "cessnalib_template.being.alive.particles.EuglenaHasBeenBorn";
                     export const Acknowledge = "cessnalib_template.being.alive.particles.Acknowledge";
                     export const ExceptionOccurred = "cessnalib_template.being.alive.particles.ExceptionOccurred";
@@ -75,35 +71,39 @@ export module cessnalib_template {
                     constructor() {
                         super(constants.organelles.WebReceptionOrganelle);
                     }
+                    public abstract listen():void;
                 }
             }
             export namespace particles {
-                export class Time implements cessnalib.being.Particle {
-                    public className = constants.particles.Time;
-                    constructor(public content:cessnalib.sys.type.Time) { }
+                export class Time extends cessnalib.being.Particle {
+                    constructor(content:cessnalib.sys.type.Time) {
+                        super(constants.particles.Time,content);
+                    }
                 }
-                export class EuglenaHasBeenBorn implements cessnalib.being.Particle {
-                    public className = constants.particles.EuglenaHasBeenBorn;
-                    public content = true;
+                export class EuglenaHasBeenBorn extends cessnalib.being.Particle {
+                    constructor() {
+                        super(constants.particles.EuglenaHasBeenBorn,true);
+                    }
                 }
-                export class Acknowledge implements cessnalib.being.Particle {
+                export class Acknowledge extends cessnalib.being.Particle {
                     public className = constants.particles.Acknowledge;
                     public content = true;
                 }
-                export class ExceptionOccurred implements cessnalib.being.Particle {
-                    public className = constants.particles.ExceptionOccurred;
-                    constructor(public content: cessnalib.sys.type.Exception) { }
+                export class ExceptionOccurred extends cessnalib.being.Particle {
+                    constructor(content: cessnalib.sys.type.Exception) {
+                        super(constants.particles.ExceptionOccurred,content);
+                    }
                 }
             }
             export class StaticTools{
                 public static createEuglena(applicationDirectory:string,organelleBank:cessnalib.sys.type.Map<string,cessnalib.being.alive.Organelle<Object>>): Euglena {
-                    let euglena = new Euglena();
+                    let euglena = new cessnalib.being.alive.Euglena();
                     let initialConfig = injection.StaticTools.readConfigFile(applicationDirectory);
-                    euglena.receiveParticle(new particles.EuglenaHasBeenBorn());
                     for (let objectProp of initialConfig.objects) {
                         let organelle = organelleBank.get(cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
                         organelle.initialProperties = objectProp.initialProperties;
                         euglena.addOrganelle(organelle);
+                        organelle.seed = euglena;
                     }
                     for (let valueChooser of initialConfig.values){
                         euglena.receiveParticle(
@@ -112,6 +112,7 @@ export module cessnalib_template {
                                 cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser)
                             ));
                     }
+                    euglena.receiveParticle(new particles.EuglenaHasBeenBorn());
                     return euglena;
                 }
             }

@@ -129,20 +129,8 @@ export module cessnalib {
                     return this.values;
                 }
             }
-            export namespace StaticTools {
-                export class Array {
-                    public static contains<T>(array:T[],t:T,compare?:(arrayItem:T,t:T)=>boolean): boolean {
-                        return Array.indexOf(array,t,compare)>=0;
-                    }
-                    public static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number {
-                        for (var i = 0; i<array.length;i++) {
-                            if (compare(array[i], t)) {
-                                return i;
-                            }
-                        }
-                        return -1;
-                    }
-                }
+            export interface Callback<T> {
+                (t:T): void
             }
             export interface Identifiable {
                 className: string;
@@ -157,14 +145,41 @@ export module cessnalib {
             }
             export class Clock implements Identifiable {
                 className: string = "cessnalib.sys.type.Clock";
-                constructor(public hour: number, public minute: number, public second: number) { } 
+                constructor(public hour: number, public minute: number, public second: number) { }
+            }
+            export namespace StaticTools {
+                export class Array {
+                    public static contains<T>(array:T[],t:T,compare?:(arrayItem:T,t:T)=>boolean): boolean {
+                        return Array.indexOf(array,t,compare)>=0;
+                    }
+                    public static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number {
+                        if (compare){
+                            for (var i = 0; i < array.length; i++) {
+                                if (compare(array[i], t)) {
+                                    return i;
+                                }
+                            }
+                        } else {
+                            for (var i = 0; i < array.length; i++) {
+                                if (array[i] == t) {
+                                    return i;
+                                }
+                            }
+                        }
+                        return -1;
+                    }
+                }
             }
         }
     }
     export namespace being {
         import Identifiable = cessnalib.sys.type.Identifiable;
-        export class Particle implements Identifiable {
-            constructor(public className: string, public content: any) { }
+        export namespace constants {
+            export const Particle = "cessnalib.being.Particle";
+        }
+        export class Particle{
+            public className = constants.Particle;
+            constructor(public name: string, public content: any) { }
         }
         export namespace interaction {
             export interface CanReceiveParticle {
@@ -177,16 +192,20 @@ export module cessnalib {
         export namespace alive {
             import Serializable = cessnalib.sys.type.Identifiable;
             import Particle = cessnalib.being.Particle;
+            import Gene = cessnalib.being.alive.dna.Gene;
+            export namespace constants {
+                export const EuglenaInfo = "cessnalib.being.alive.EuglenaInfo";
+            }
             export abstract class Organelle<InitialProperties> implements Identifiable {
                 constructor(
                     public className: string,
                     public seed?: interaction.CanReceiveParticle,
-                    public initialProperties?: InitialProperties) { } 
+                    public initialProperties?: InitialProperties) { }
                 /* 
-                * TODO 
-                * initialProperties must be type save 
-                * may be like Map<string,string>
-                */
+                 * TODO
+                 * initialProperties must be type save
+                 * may be like Map<string,string>
+                 */
             }
             export abstract class Limb<InitialProperties> extends Organelle<InitialProperties> implements interaction.CanThrowParticle {
                 constructor(
@@ -198,7 +217,7 @@ export module cessnalib {
                 public abstract throwParticle(particle: Particle): void;
             }
             export class EuglenaInfo implements sys.type.Identifiable {
-                public className: string = "cessnalib.being.alive.EuglenaInfo";
+                public className: string = constants.EuglenaInfo;
                 constructor(public euglenaId: string, public url: string, public port: string) { }
             }
             export class Euglena implements interaction.CanReceiveParticle {
@@ -207,6 +226,9 @@ export module cessnalib {
                 private chromosome: dna.Gene[] = [];
                 constructor(chromosome?:dna.Gene[]) {
                     this.chromosome = chromosome ? chromosome : [];
+                }
+                public addGene(gene:Gene){
+                    this.chromosome.push(gene);
                 }
                 public addOrganelle(organelle:Organelle<Object>) {
                     this.organelles[organelle.className] = organelle;
@@ -226,7 +248,7 @@ export module cessnalib {
                 }
                 private triggerGene(particle: Particle) {
                     for (var i = 0; i<this.chromosome.length;i++) {
-                        if (sys.type.StaticTools.Array.contains(this.chromosome[i].triggers, particle.className)) {
+                        if (sys.type.StaticTools.Array.contains(this.chromosome[i].triggers, particle.name)) {
                             var reaction = this.chromosome[i].reaction;
                             var particles = this.particles;
                             var organelles = this.organelles;
@@ -236,9 +258,335 @@ export module cessnalib {
                 }
             }
             export namespace dna {
-                import Serializable = cessnalib.sys.type.Identifiable;
-                export class Gene implements Serializable {
-                    constructor(public className: string, public triggers: string[], public reaction: Reaction) { }
+                import Time = cessnalib.sys.type.Time;
+                import Identifiable = cessnalib.sys.type.Identifiable;
+                import ParticleReference = cessnalib.being.alive.dna.condition.ParticleReference;
+                export class Gene implements Identifiable {
+                    constructor(public className: string, public triggers: string[], public reaction: Reaction,condition?:dna.condition.LogicalPhrase | dna.condition.Comparison<any> | ParticleReference) { }
+                }
+                export namespace condition {
+                    import Date = cessnalib.sys.type.Date;
+                    import Clock = cessnalib.sys.type.Clock;
+                    export namespace constants {
+                        export const TimeComparison = "cessnalib.being.alive.dna.condition.TimeComparison";
+                        export const NumberComparison = "cessnalib.being.alive.dna.condition.NumberComparison";
+                        export const LogicalPhrase = "cessnalib.being.alive.dna.condition.ConditionPhrase";
+                        export const CalculationPhrase = "cessnalib.being.alive.dna.condition.CalculationPhrase";
+                        export const ClockComparison = "cessnalib.being.alive.dna.condition.ClockComparison";
+                        export const DateComparison = "cessnalib.being.alive.dna.condition.DateComparison";
+                    }
+                    export class ParticleReference extends Particle {
+                        constructor(name:string){
+                            super(name,undefined);
+                        }
+                    }
+                    export class StaticTools {
+                        public addOperandAndParameter<T,S>(phrase:Phrase<T>,operand:string,parameter:T):void{
+                            phrase.stack.push(operand,parameter);
+                        }
+                    }
+                    export class Executor {
+                        constructor(private particles:any){ }
+                        public executeLogicalPhrase(logicalPhrase:LogicalPhrase):boolean{
+                            var stack = logicalPhrase.stack;
+                            var result:boolean = this.execute(stack.shift());
+                            var operator:string = stack.shift();
+                            do{
+                                let operand2:boolean = this.execute(stack.shift());
+                                switch (operator) {
+                                    case condition.operator.LogicalOperator.AND:
+                                        result = result && operand2;
+                                        break;
+                                    case condition.operator.LogicalOperator.OR:
+                                        result = result || operand2;
+                                        break;
+                                }
+                            }while(operator = stack.shift());
+                            return result;
+                        }
+                        public execute(condition:any): any {
+                            if(typeof condition == "string" || typeof condition == "number") return;
+                            let returnValue:any = null;
+                            switch(condition.className) {
+                                case constants.LogicalPhrase:
+                                    returnValue = this.executeLogicalPhrase(condition);
+                                    break;
+                                case constants.CalculationPhrase:
+                                    returnValue = this.executeCalculationPhrase(condition);
+                                    break;
+                                case cessnalib.being.constants.Particle:
+                                    returnValue = this.executeParticleReference(condition);
+                                case constants.TimeComparison:
+                                case constants.DateComparison:
+                                case constants.ClockComparison:
+                                case constants.NumberComparison:
+                                    returnValue = this.executeComparison(condition);
+                                    break;
+                            }
+                            return returnValue;
+                        }
+                        private executeComparison<T>(comparison:Comparison<T>): boolean {
+                            let result: boolean = false;
+                            let operand1 = this.execute(comparison.operand1);
+                            let operator = comparison.operator;
+                            let operand2 = this.execute (comparison.operand2);
+                            switch (comparison.className){
+                                case constants.NumberComparison:
+                                    let number1:number = Number(operand1);
+                                    let number2:number = Number(operand2);
+
+                                    switch (comparison.operator) {
+                                        case condition.operator.ComparisonOperator.BIGGERTHAN:
+                                            result = number1 > number2;
+                                            break;
+                                        case condition.operator.ComparisonOperator.EQUAL:
+                                            result = number1 === number2;
+                                            break;
+                                        case condition.operator.ComparisonOperator.NOTEQUAL:
+                                            result = number1 !== number2;
+                                            break;
+                                        case condition.operator.ComparisonOperator.SMALLERTHAN:
+                                            result = number1 < number2;
+                                            break;
+                                        case condition.operator.ComparisonOperator.BIGEQUAL:
+                                            result = number1 >= number2;
+                                            break;
+                                        case condition.operator.ComparisonOperator.SMALLEQUAL:
+                                            result = number1 <= number2;
+                                            break;
+                                    }
+                                    break;
+                                case constants.TimeComparison:
+                                    let time1:Time = operand1;
+                                    let time2:Time = operand2;
+                                    switch (comparison.operator) {
+                                        case condition.operator.ComparisonOperator.BIGGERTHAN:
+                                            result = this.execute(new DateComparison(time1.date,condition.operator.ComparisonOperator.BIGGERTHAN,time2.date)) ? true :
+                                                this.execute(new DateComparison(time1.date,condition.operator.ComparisonOperator.SMALLERTHAN,time2.date)) ? false :
+                                                this.execute(new ClockComparison(time1.clock,condition.operator.ComparisonOperator.BIGGERTHAN,time2.clock));
+                                            break;
+                                        case condition.operator.ComparisonOperator.EQUAL:
+                                            result = this.execute(new DateComparison(time1.date,condition.operator.ComparisonOperator.EQUAL,time2.date)) &&
+                                                    this.execute(new ClockComparison(time1.clock,condition.operator.ComparisonOperator.EQUAL,time2.clock));
+                                            break;
+                                        case condition.operator.ComparisonOperator.NOTEQUAL:
+                                            result = !this.execute(new TimeComparison(time1,condition.operator.ComparisonOperator.EQUAL,time2));
+                                            break;
+                                        case condition.operator.ComparisonOperator.SMALLERTHAN:
+                                            result = this.execute(new DateComparison(time1.date,condition.operator.ComparisonOperator.SMALLERTHAN,time2.date)) ? true :
+                                                this.execute(new DateComparison(time1.date,condition.operator.ComparisonOperator.BIGGERTHAN,time2.date)) ? false :
+                                                    this.execute(new ClockComparison(time1.clock,condition.operator.ComparisonOperator.SMALLERTHAN,time2.clock));
+                                            break;
+                                        case condition.operator.ComparisonOperator.BIGEQUAL:
+                                            result = this.execute(new TimeComparison(time1,condition.operator.ComparisonOperator.BIGGERTHAN,time2)) ||
+                                                this.execute(new TimeComparison(time1,condition.operator.ComparisonOperator.EQUAL,time2));
+                                            break;
+                                        case condition.operator.ComparisonOperator.SMALLEQUAL:
+                                            result = this.execute(new TimeComparison(time1,condition.operator.ComparisonOperator.SMALLERTHAN,time2)) ||
+                                                this.execute(new TimeComparison(time1,condition.operator.ComparisonOperator.EQUAL,time2));
+                                            break;
+                                    }
+                                    break;
+                                case constants.DateComparison:
+                                    let date1:cessnalib.sys.type.Date = operand1;
+                                    let date2:cessnalib.sys.type.Date = operand2;
+                                    switch (comparison.operator) {
+                                        case condition.operator.ComparisonOperator.BIGGERTHAN:
+                                            result = date1.year > date2.year ? true : date1.year < date2.year ? false :
+                                                date1.month > date2.month ? true : date1.month < date2.month ? false :
+                                                date1.day > date2.day;
+                                            break;
+                                        case condition.operator.ComparisonOperator.EQUAL:
+                                            result = date1.year == date2.year &&
+                                                date1.month == date2.month &&
+                                                date1.day == date2.day;
+                                            break;
+                                        case condition.operator.ComparisonOperator.NOTEQUAL:
+                                            result = !(date1.year == date2.year &&
+                                            date1.month == date2.month &&
+                                            date1.day == date2.day);
+                                            break;
+                                        case condition.operator.ComparisonOperator.SMALLERTHAN:
+                                            result = date1.year < date2.year ? true : date1.year > date2.year ? false :
+                                                date1.month < date2.month ? true : date1.month > date2.month ? false :
+                                                date1.day < date2.day;
+                                            break;
+                                        case condition.operator.ComparisonOperator.BIGEQUAL:
+                                            result = this.execute(new DateComparison(date1,condition.operator.ComparisonOperator.BIGGERTHAN,date2)) ||
+                                                this.execute(new DateComparison(date1,condition.operator.ComparisonOperator.EQUAL,date2));
+                                            break;
+                                        case condition.operator.ComparisonOperator.SMALLEQUAL:
+                                            result = this.execute(new DateComparison(date1,condition.operator.ComparisonOperator.SMALLERTHAN,date2)) ||
+                                                this.execute(new DateComparison(date1,condition.operator.ComparisonOperator.EQUAL,date2));
+                                            break;
+                                    }
+                                    break;
+                                case constants.ClockComparison:
+                                    let clock1:cessnalib.sys.type.Clock = operand1;
+                                    let clock2: cessnalib.sys.type.Clock = operand2;
+                                    switch (comparison.operator) {
+                                        case condition.operator.ComparisonOperator.BIGGERTHAN:
+                                            result = clock1.hour > clock2.hour ? true : clock1.hour < clock2.hour ? false :
+                                                clock1.minute > clock2.minute ? true : clock1.minute < clock2.minute ? false :
+                                                clock1.second > clock2.second;
+                                            break;
+                                        case condition.operator.ComparisonOperator.EQUAL:
+                                            result = clock1.hour == clock2.hour &&
+                                                clock1.minute == clock2.minute &&
+                                                clock1.second == clock2.second;
+                                            break;
+                                        case condition.operator.ComparisonOperator.NOTEQUAL:
+                                            result = !(clock1.hour == clock2.hour &&
+                                            clock1.minute == clock2.minute &&
+                                            clock1.second == clock2.second);
+                                            break;
+                                        case condition.operator.ComparisonOperator.SMALLERTHAN:
+                                            result = clock1.hour < clock2.hour ? true : clock1.hour > clock2.hour ? false :
+                                                clock1.minute < clock2.minute ? true : clock1.minute > clock2.minute ? false :
+                                                clock1.second < clock2.second;
+                                            break;
+                                        case condition.operator.ComparisonOperator.BIGEQUAL:
+                                            result = this.execute(new ClockComparison(clock1,condition.operator.ComparisonOperator.BIGGERTHAN,clock2)) ||
+                                                this.execute(new ClockComparison(clock1,condition.operator.ComparisonOperator.EQUAL,clock2));
+                                            break;
+                                        case condition.operator.ComparisonOperator.SMALLEQUAL:
+                                            result = this.execute(new ClockComparison(clock1,condition.operator.ComparisonOperator.SMALLERTHAN,clock2)) ||
+                                                this.execute(new ClockComparison(clock1,condition.operator.ComparisonOperator.EQUAL,clock2));
+                                            break;
+                                    }
+                                    break;
+                            }
+                            return result;
+                        }
+                        public executeCalculationPhrase(calculationPhrase: CalculationPhrase): number {
+                            var stack = calculationPhrase.stack;
+                            //get multiplication and division manipulations first
+                            //for(let item of calculationPhrase.stack){
+
+                            //}
+                            var result:number = this.execute(stack.shift());
+                            var operator:string = stack.shift();
+                            do{
+                                let operand2 = this.execute(stack.shift());
+                                switch (operator) {
+                                    case condition.operator.CalculationOperator.SUM:
+                                        result += operand2;
+                                        break;
+                                    case condition.operator.CalculationOperator.SUB:
+                                        result -= operand2;
+                                        break;
+                                    case condition.operator.CalculationOperator.MUL:
+                                        result *= operand2;
+                                        break;
+                                    case condition.operator.CalculationOperator.DIV:
+                                        result /= operand2;
+                                        break;
+                                }
+                            }while(operator = stack.shift());
+                            return result;
+                        }
+                        public executeParticleReference(particle: ParticleReference): any {
+                            return this.particles[particle.name];
+                        }
+                    }
+                    export interface TwoParameterBracket<T> extends Identifiable {
+                        operand1: T;
+                        operator: string;
+                        operand2: T;
+                    }
+                    export abstract class Phrase<T> implements Identifiable {
+                        public stack:Array<any>;
+                        constructor(
+                            public className:string,
+                            public operand1: Phrase<T> | T | ParticleReference,
+                            public operator: string,
+                            public operand2: Phrase<T> | T | ParticleReference
+                        ){
+                            this.stack.push(operand1,operator,operand2);
+                        }
+                    }
+                    export class LogicalPhrase extends Phrase<Comparison<any>>{
+                        constructor(
+                            operand1: Phrase<Comparison<any>> | Comparison<any> | ParticleReference,
+                            operator: string,
+                            operand2: Phrase<Comparison<any>> | Comparison<any> | ParticleReference
+                        ){
+                            super(constants.LogicalPhrase,operand1,operator,operand2);
+                        }
+                    }
+                    export abstract class Comparison<T> implements TwoParameterBracket<Comparison<T> | Particle | T>{
+                        constructor(
+                            public className: string,
+                            public operand1: Comparison<T> | ParticleReference | T,
+                            public operator: string,
+                            public operand2: Comparison<T> | ParticleReference | T
+                        ){ }
+                    }
+                    export class NumberComparison extends Comparison<number>{
+                        constructor(
+                            operand1: NumberComparison | ParticleReference | number,
+                            operator: string,
+                            operand2: NumberComparison | ParticleReference | number
+                        ){
+                            super(constants.NumberComparison,operand1,operator,operand2);
+                        }
+                    }
+                    export class TimeComparison extends Comparison<Time> {
+                        constructor(
+                            operand1: TimeComparison | ParticleReference | Time,
+                            operator: string,
+                            operand2: TimeComparison | ParticleReference | Time
+                        ){
+                            super(constants.TimeComparison,operand1,operator,operand2);
+                        }
+                    }
+                    export class DateComparison extends Comparison<Date> {
+                        constructor(
+                            operand1: DateComparison | ParticleReference | Date,
+                            operator: string,
+                            operand2: DateComparison | ParticleReference | Date
+                        ){
+                            super(constants.DateComparison,operand1,operator,operand2);
+                        }
+                    }
+                    export class ClockComparison extends Comparison<Clock> {
+                        constructor(
+                            operand1: ClockComparison | Particle | Clock,
+                            operator: string,
+                            operand2: ClockComparison | Particle | Clock
+                        ){
+                            super(constants.ClockComparison,operand1,operator,operand2);
+                        }
+                    }
+                    export class CalculationPhrase extends Phrase<number>{
+                        constructor(
+                            operand1: Phrase<number> | ParticleReference | number,
+                            operator: string,
+                            operand2: Phrase<number> | ParticleReference | number
+                        ){
+                            super(constants.CalculationPhrase,operand1,operator,operand2);
+                        }
+                    }
+                    export namespace operator {
+                        export namespace LogicalOperator {
+                            export const AND = "AND";
+                            export const OR = "OR";
+                        }
+                        export namespace CalculationOperator {
+                            export const SUM = "AND";
+                            export const SUB = "OR";
+                            export const MUL = "MUL";
+                            export const DIV = "DIV";
+                        }
+                        export namespace ComparisonOperator {
+                            export const EQUAL = "EQUAL";
+                            export const NOTEQUAL = "NOTEQUAL";
+                            export const BIGGERTHAN = "BIGGERTHAN";
+                            export const SMALLERTHAN = "SMALLERTHAN";
+                            export const BIGEQUAL = "BIGEQUAL";
+                            export const SMALLEQUAL = "SMALLEQUAL";
+                        }
+                    }
                 }
                 export interface Reaction {
                     (triggerParticle:Particle,particles:any,organelles:any): void;

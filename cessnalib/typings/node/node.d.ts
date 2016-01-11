@@ -4,10 +4,10 @@
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
 /************************************************
-*                                               *
-*               Node.js v4.x API                *
-*                                               *
-************************************************/
+ *                                               *
+ *               Node.js v4.x API                *
+ *                                               *
+ ************************************************/
 
 interface Error {
     stack?: string;
@@ -23,10 +23,10 @@ interface SetConstructor {}
 interface WeakSetConstructor {}
 
 /************************************************
-*                                               *
-*                   GLOBAL                      *
-*                                               *
-************************************************/
+ *                                               *
+ *                   GLOBAL                      *
+ *                                               *
+ ************************************************/
 declare var process: NodeJS.Process;
 declare var global: NodeJS.Global;
 
@@ -154,10 +154,10 @@ declare var Buffer: {
 };
 
 /************************************************
-*                                               *
-*               GLOBAL INTERFACES               *
-*                                               *
-************************************************/
+ *                                               *
+ *               GLOBAL INTERFACES               *
+ *                                               *
+ ************************************************/
 declare module NodeJS {
     export interface ErrnoException extends Error {
         errno?: number;
@@ -173,9 +173,11 @@ declare module NodeJS {
         once(event: string, listener: Function): EventEmitter;
         removeListener(event: string, listener: Function): EventEmitter;
         removeAllListeners(event?: string): EventEmitter;
-        setMaxListeners(n: number): void;
+        setMaxListeners(n: number): EventEmitter;
+        getMaxListeners(): number;
         listeners(event: string): Function[];
         emit(event: string, ...args: any[]): boolean;
+        listenerCount(type: string): number;
     }
 
     export interface ReadableStream extends EventEmitter {
@@ -256,7 +258,7 @@ declare module NodeJS {
                 visibility: string;
             };
         };
-        kill(pid: number, signal?: string): void;
+        kill(pid:number, signal?: string|number): void;
         pid: number;
         title: string;
         arch: string;
@@ -396,34 +398,48 @@ interface NodeBuffer {
 }
 
 /************************************************
-*                                               *
-*                   MODULES                     *
-*                                               *
-************************************************/
+ *                                               *
+ *                   MODULES                     *
+ *                                               *
+ ************************************************/
 declare module "buffer" {
     export var INSPECT_MAX_BYTES: number;
 }
 
 declare module "querystring" {
-    export function stringify(obj: any, sep?: string, eq?: string): string;
-    export function parse(str: string, sep?: string, eq?: string, options?: { maxKeys?: number; }): any;
+    export interface StringifyOptions {
+        encodeURIComponent?: Function;
+    }
+
+    export interface ParseOptions {
+        maxKeys?: number;
+        decodeURIComponent?: Function;
+    }
+
+    export function stringify<T>(obj: T, sep?: string, eq?: string, options?: StringifyOptions): string;
+    export function parse(str: string, sep?: string, eq?: string, options?: ParseOptions): any;
+    export function parse<T extends {}>(str: string, sep?: string, eq?: string, options?: ParseOptions): T;
     export function escape(str: string): string;
     export function unescape(str: string): string;
 }
 
 declare module "events" {
     export class EventEmitter implements NodeJS.EventEmitter {
-        static listenerCount(emitter: EventEmitter, event: string): number;
+        static EventEmitter: EventEmitter;
+        static listenerCount(emitter: EventEmitter, event: string): number; // deprecated
+        static defaultMaxListeners: number;
 
         addListener(event: string, listener: Function): EventEmitter;
         on(event: string, listener: Function): EventEmitter;
         once(event: string, listener: Function): EventEmitter;
         removeListener(event: string, listener: Function): EventEmitter;
         removeAllListeners(event?: string): EventEmitter;
-        setMaxListeners(n: number): void;
+        setMaxListeners(n: number): EventEmitter;
+        getMaxListeners(): number;
         listeners(event: string): Function[];
         emit(event: string, ...args: any[]): boolean;
-   }
+        listenerCount(type: string): number;
+    }
 }
 
 declare module "http" {
@@ -443,7 +459,7 @@ declare module "http" {
         path?: string;
         headers?: { [key: string]: any };
         auth?: string;
-        agent?: Agent;
+        agent?: Agent|boolean;
     }
 
     export interface Server extends events.EventEmitter {
@@ -474,6 +490,7 @@ declare module "http" {
         writeHead(statusCode: number, headers?: any): void;
         statusCode: number;
         statusMessage: string;
+        headersSent: boolean;
         setHeader(name: string, value: string): void;
         sendDate: boolean;
         getHeader(name: string): string;
@@ -539,41 +556,41 @@ declare module "http" {
      */
     export interface ClientResponse extends IncomingMessage { }
 
-	export interface AgentOptions {
-		/**
-		 * Keep sockets around in a pool to be used by other requests in the future. Default = false
-		 */
-		keepAlive?: boolean;
-		/**
-		 * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive. Default = 1000.
-		 * Only relevant if keepAlive is set to true.
-		 */
-		keepAliveMsecs?: number;
-		/**
-		 * Maximum number of sockets to allow per host. Default for Node 0.10 is 5, default for Node 0.12 is Infinity
-		 */
-		maxSockets?: number;
-		/**
-		 * Maximum number of sockets to leave open in a free state. Only relevant if keepAlive is set to true. Default = 256.
-		 */
-		maxFreeSockets?: number;
-	}
+    export interface AgentOptions {
+        /**
+         * Keep sockets around in a pool to be used by other requests in the future. Default = false
+         */
+        keepAlive?: boolean;
+        /**
+         * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive. Default = 1000.
+         * Only relevant if keepAlive is set to true.
+         */
+        keepAliveMsecs?: number;
+        /**
+         * Maximum number of sockets to allow per host. Default for Node 0.10 is 5, default for Node 0.12 is Infinity
+         */
+        maxSockets?: number;
+        /**
+         * Maximum number of sockets to leave open in a free state. Only relevant if keepAlive is set to true. Default = 256.
+         */
+        maxFreeSockets?: number;
+    }
 
     export class Agent {
-		maxSockets: number;
-		sockets: any;
-		requests: any;
+        maxSockets: number;
+        sockets: any;
+        requests: any;
 
-		constructor(opts?: AgentOptions);
+        constructor(opts?: AgentOptions);
 
-		/**
-		 * Destroy any sockets that are currently in use by the agent.
-		 * It is usually not necessary to do this. However, if you are using an agent with KeepAlive enabled,
-		 * then it is best to explicitly shut down the agent when you know that it will no longer be used. Otherwise,
-		 * sockets may hang open for quite a long time before the server terminates them.
-		 */
-		destroy(): void;
-	}
+        /**
+         * Destroy any sockets that are currently in use by the agent.
+         * It is usually not necessary to do this. However, if you are using an agent with KeepAlive enabled,
+         * then it is best to explicitly shut down the agent when you know that it will no longer be used. Otherwise,
+         * sockets may hang open for quite a long time before the server terminates them.
+         */
+        destroy(): void;
+    }
 
     export var METHODS: string[];
 
@@ -698,7 +715,29 @@ declare module "zlib" {
 }
 
 declare module "os" {
+    export interface CpuInfo {
+        model: string;
+        speed: number;
+        times: {
+            user: number;
+            nice: number;
+            sys: number;
+            idle: number;
+            irq: number;
+        }
+    }
+
+    export interface NetworkInterfaceInfo {
+        address: string;
+        netmask: string;
+        family: string;
+        mac: string;
+        internal: boolean;
+    }
+
     export function tmpdir(): string;
+    export function homedir(): string;
+    export function endianness(): string;
     export function hostname(): string;
     export function type(): string;
     export function platform(): string;
@@ -708,8 +747,8 @@ declare module "os" {
     export function loadavg(): number[];
     export function totalmem(): number;
     export function freemem(): number;
-    export function cpus(): { model: string; speed: number; times: { user: number; nice: number; sys: number; idle: number; irq: number; }; }[];
-    export function networkInterfaces(): any;
+    export function cpus(): CpuInfo[];
+    export function networkInterfaces(): {[index: string]: NetworkInterfaceInfo[]};
     export var EOL: string;
 }
 
@@ -794,22 +833,49 @@ declare module "readline" {
     import * as events from "events";
     import * as stream from "stream";
 
+    export interface Key {
+        sequence?: string;
+        name?: string;
+        ctrl?: boolean;
+        meta?: boolean;
+        shift?: boolean;
+    }
+
     export interface ReadLine extends events.EventEmitter {
         setPrompt(prompt: string): void;
         prompt(preserveCursor?: boolean): void;
-        question(query: string, callback: Function): void;
-        pause(): void;
-        resume(): void;
+        question(query: string, callback: (answer: string) => void): void;
+        pause(): ReadLine;
+        resume(): ReadLine;
         close(): void;
-        write(data: any, key?: any): void;
+        write(data: string|Buffer, key?: Key): void;
     }
+
+    export interface Completer {
+        (line: string): CompleterResult;
+        (line: string, callback: (err: any, result: CompleterResult) => void): any;
+    }
+
+    export interface CompleterResult {
+        completions: string[];
+        line: string;
+    }
+
     export interface ReadLineOptions {
         input: NodeJS.ReadableStream;
-        output: NodeJS.WritableStream;
-        completer?: Function;
+        output?: NodeJS.WritableStream;
+        completer?: Completer;
         terminal?: boolean;
+        historySize?: number;
     }
+
+    export function createInterface(input: NodeJS.ReadableStream, output?: NodeJS.WritableStream, completer?: Completer, terminal?: boolean): ReadLine;
     export function createInterface(options: ReadLineOptions): ReadLine;
+
+    export function cursorTo(stream: NodeJS.WritableStream, x: number, y: number): void;
+    export function moveCursor(stream: NodeJS.WritableStream, dx: number|string, dy: number|string): void;
+    export function clearLine(stream: NodeJS.WritableStream, dir: number): void;
+    export function clearScreenDown(stream: NodeJS.WritableStream): void;
 }
 
 declare module "vm" {
@@ -859,9 +925,9 @@ declare module "child_process" {
     }, callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
     export function exec(command: string, callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
     export function execFile(file: string,
-        callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
+                             callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
     export function execFile(file: string, args?: string[],
-        callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
+                             callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
     export function execFile(file: string, args?: string[], options?: {
         cwd?: string;
         stdio?: any;
@@ -875,7 +941,11 @@ declare module "child_process" {
     export function fork(modulePath: string, args?: string[], options?: {
         cwd?: string;
         env?: any;
-        encoding?: string;
+        execPath?: string;
+        execArgv?: string[];
+        silent?: boolean;
+        uid?: number;
+        gid?: number;
     }): ChildProcess;
     export function spawnSync(command: string, args?: string[], options?: {
         cwd?: string;
@@ -1454,33 +1524,33 @@ declare module "path" {
     export function format(pathObject: ParsedPath): string;
 
     export module posix {
-      export function normalize(p: string): string;
-      export function join(...paths: any[]): string;
-      export function resolve(...pathSegments: any[]): string;
-      export function isAbsolute(p: string): boolean;
-      export function relative(from: string, to: string): string;
-      export function dirname(p: string): string;
-      export function basename(p: string, ext?: string): string;
-      export function extname(p: string): string;
-      export var sep: string;
-      export var delimiter: string;
-      export function parse(p: string): ParsedPath;
-      export function format(pP: ParsedPath): string;
+        export function normalize(p: string): string;
+        export function join(...paths: any[]): string;
+        export function resolve(...pathSegments: any[]): string;
+        export function isAbsolute(p: string): boolean;
+        export function relative(from: string, to: string): string;
+        export function dirname(p: string): string;
+        export function basename(p: string, ext?: string): string;
+        export function extname(p: string): string;
+        export var sep: string;
+        export var delimiter: string;
+        export function parse(p: string): ParsedPath;
+        export function format(pP: ParsedPath): string;
     }
 
     export module win32 {
-      export function normalize(p: string): string;
-      export function join(...paths: any[]): string;
-      export function resolve(...pathSegments: any[]): string;
-      export function isAbsolute(p: string): boolean;
-      export function relative(from: string, to: string): string;
-      export function dirname(p: string): string;
-      export function basename(p: string, ext?: string): string;
-      export function extname(p: string): string;
-      export var sep: string;
-      export var delimiter: string;
-      export function parse(p: string): ParsedPath;
-      export function format(pP: ParsedPath): string;
+        export function normalize(p: string): string;
+        export function join(...paths: any[]): string;
+        export function resolve(...pathSegments: any[]): string;
+        export function isAbsolute(p: string): boolean;
+        export function relative(from: string, to: string): string;
+        export function dirname(p: string): string;
+        export function basename(p: string, ext?: string): string;
+        export function extname(p: string): string;
+        export var sep: string;
+        export var delimiter: string;
+        export function parse(p: string): ParsedPath;
+        export function format(pP: ParsedPath): string;
     }
 }
 
@@ -1503,6 +1573,8 @@ declare module "tls" {
     var CLIENT_RENEG_WINDOW: number;
 
     export interface TlsOptions {
+        host?: string;
+        port?: number;
         pfx?: any;   //string or buffer
         key?: any;   //string or buffer
         passphrase?: string;
@@ -1662,10 +1734,10 @@ declare module "crypto" {
         setPrivateKey(public_key: string, encoding?: string): void;
     }
     export function getDiffieHellman(group_name: string): DiffieHellman;
-    export function pbkdf2(password: string, salt: string, iterations: number, keylen: number, callback: (err: Error, derivedKey: Buffer) => any): void;
-    export function pbkdf2(password: string, salt: string, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any): void;
-    export function pbkdf2Sync(password: string, salt: string, iterations: number, keylen: number) : Buffer;
-    export function pbkdf2Sync(password: string, salt: string, iterations: number, keylen: number, digest: string) : Buffer;
+    export function pbkdf2(password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, callback: (err: Error, derivedKey: Buffer) => any): void;
+    export function pbkdf2(password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string, callback: (err: Error, derivedKey: Buffer) => any): void;
+    export function pbkdf2Sync(password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number) : Buffer;
+    export function pbkdf2Sync(password: string|Buffer, salt: string|Buffer, iterations: number, keylen: number, digest: string) : Buffer;
     export function randomBytes(size: number): Buffer;
     export function randomBytes(size: number, callback: (err: Error, buf: Buffer) =>void ): void;
     export function pseudoRandomBytes(size: number): Buffer;
@@ -1675,7 +1747,7 @@ declare module "crypto" {
 declare module "stream" {
     import * as events from "events";
 
-    export interface Stream extends events.EventEmitter {
+    export class Stream extends events.EventEmitter {
         pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean; }): T;
     }
 
@@ -1797,7 +1869,7 @@ declare module "assert" {
             generatedMessage: boolean;
 
             constructor(options?: {message?: string; actual?: any; expected?: any;
-                                  operator?: string; stackStartFunction?: Function});
+                operator?: string; stackStartFunction?: Function});
         }
 
         export function fail(actual?: any, expected?: any, message?: string, operator?: string): void;

@@ -13,6 +13,37 @@ var io = require("socket.io");
 var http = require("http");
 var cessnalib_impl;
 (function (cessnalib_impl) {
+    var sys;
+    (function (sys) {
+        var io;
+        (function (io) {
+            var net;
+            (function (net) {
+                var HttpPost = (function () {
+                    function HttpPost(post_options) {
+                        this.post_options = post_options;
+                    }
+                    HttpPost.prototype.sendMessage = function (message, callback) {
+                        var post_req = http.request(this.post_options, function (res) {
+                            res.setEncoding('utf8');
+                            var str = '';
+                            res.on('data', function (data) {
+                                str += data;
+                            });
+                            res.on('end', function (data) {
+                                callback(str);
+                            });
+                        });
+                        // post the data
+                        post_req.write(message);
+                        post_req.end();
+                    };
+                    return HttpPost;
+                })();
+                net.HttpPost = HttpPost;
+            })(net = io.net || (io.net = {}));
+        })(io = sys.io || (sys.io = {}));
+    })(sys = cessnalib_impl.sys || (cessnalib_impl.sys = {}));
     var being;
     (function (being) {
         var alive;
@@ -183,35 +214,26 @@ var cessnalib_impl;
                     function WebParticleThrowerOrganelleImplHttp() {
                         _super.apply(this, arguments);
                     }
-                    WebParticleThrowerOrganelleImplHttp.prototype.initialize = function () {
-                        this.callbackStack = [];
-                        this.post_options = {
-                            host: this.initialProperties.host,
-                            port: Number(this.initialProperties.port),
-                            path: this.initialProperties.path ? this.initialProperties.path : "/",
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        };
-                    };
                     WebParticleThrowerOrganelleImplHttp.prototype.throwParticle = function (particle) {
                         var _this = this;
-                        var post_req = http.request(this.post_options, function (res) {
-                            res.setEncoding('utf8');
-                            var str = '';
-                            res.on('data', function (data) {
-                                str += data;
-                            });
-                            res.on('end', function (data) {
-                                var particle = JSON.parse(str);
-                                _this.seed.receiveParticle(particle);
-                            });
+                        this.getHttpConnector().sendMessage(JSON.stringify(particle), function (message) {
+                            _this.seed.receiveParticle(JSON.parse(message));
                         });
-                        // post the data
-                        var s = JSON.stringify(particle);
-                        post_req.write(s);
-                        post_req.end();
+                    };
+                    WebParticleThrowerOrganelleImplHttp.prototype.getHttpConnector = function () {
+                        if (!this.httpConnector) {
+                            var post_options = {
+                                host: this.initialProperties.host,
+                                port: Number(this.initialProperties.port),
+                                path: this.initialProperties.path ? this.initialProperties.path : "/",
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            };
+                            this.httpConnector = new cessnalib_impl.sys.io.net.HttpPost(post_options);
+                        }
+                        return this.httpConnector;
                     };
                     return WebParticleThrowerOrganelleImplHttp;
                 })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebParticleThrowerOrganelle);
