@@ -251,6 +251,7 @@ var cessnalib;
         var alive;
         (function (alive) {
             var Particle = cessnalib.being.Particle;
+            var Executor = cessnalib.being.alive.dna.condition.Executor;
             var constants;
             (function (constants) {
                 constants.EuglenaInfo = "cessnalib.being.alive.EuglenaInfo";
@@ -287,7 +288,9 @@ var cessnalib;
                     this.organelles = {};
                     this.particles = {};
                     this.chromosome = [];
+                    this.executor = null;
                     this.chromosome = chromosome ? chromosome : [];
+                    this.executor = new Executor(this.particles);
                 }
                 Euglena.prototype.addGene = function (gene) {
                     this.chromosome.push(gene);
@@ -310,7 +313,8 @@ var cessnalib;
                 };
                 Euglena.prototype.triggerGene = function (particle) {
                     for (var i = 0; i < this.chromosome.length; i++) {
-                        if (sys.type.StaticTools.Array.contains(this.chromosome[i].triggers, particle.name)) {
+                        if (sys.type.StaticTools.Array.contains(this.chromosome[i].triggers, particle.name) &&
+                            this.executor.execute(this.chromosome[i].condition)) {
                             var reaction = this.chromosome[i].reaction;
                             var particles = this.particles;
                             var organelles = this.organelles;
@@ -323,17 +327,21 @@ var cessnalib;
             alive.Euglena = Euglena;
             var dna;
             (function (dna) {
+                var Time = cessnalib.sys.type.Time;
                 var Gene = (function () {
                     function Gene(className, triggers, reaction, condition) {
                         this.className = className;
                         this.triggers = triggers;
                         this.reaction = reaction;
+                        this.condition = condition;
                     }
                     return Gene;
                 })();
                 dna.Gene = Gene;
                 var condition;
                 (function (condition_1) {
+                    var Date = cessnalib.sys.type.Date;
+                    var Clock = cessnalib.sys.type.Clock;
                     var constants;
                     (function (constants) {
                         constants.TimeComparison = "cessnalib.being.alive.dna.condition.TimeComparison";
@@ -342,6 +350,12 @@ var cessnalib;
                         constants.CalculationPhrase = "cessnalib.being.alive.dna.condition.CalculationPhrase";
                         constants.ClockComparison = "cessnalib.being.alive.dna.condition.ClockComparison";
                         constants.DateComparison = "cessnalib.being.alive.dna.condition.DateComparison";
+                        constants.DateTemplateComparison = "cessnalib.being.alive.dna.condition.DateTemplateComparison";
+                        constants.DateTemplate = "cessnalib.being.alive.dna.condition.DateTemplate";
+                        constants.ClockTemplateComparison = "cessnalib.being.alive.dna.condition.ClockTemplateComparison";
+                        constants.ClockTemplate = "cessnalib.being.alive.dna.condition.ClockTemplate";
+                        constants.TimeTemplateComparison = "cessnalib.being.alive.dna.condition.TimeTemplateComparison";
+                        constants.TimeTemplate = "cessnalib.being.alive.dna.condition.TimeTemplate";
                     })(constants = condition_1.constants || (condition_1.constants = {}));
                     var ParticleReference = (function (_super) {
                         __extends(ParticleReference, _super);
@@ -351,6 +365,33 @@ var cessnalib;
                         return ParticleReference;
                     })(Particle);
                     condition_1.ParticleReference = ParticleReference;
+                    var DateTemplate = (function (_super) {
+                        __extends(DateTemplate, _super);
+                        function DateTemplate(year, month, day) {
+                            _super.call(this, year, month, day);
+                            this.className = constants.DateTemplate;
+                        }
+                        return DateTemplate;
+                    })(Date);
+                    condition_1.DateTemplate = DateTemplate;
+                    var ClockTemplate = (function (_super) {
+                        __extends(ClockTemplate, _super);
+                        function ClockTemplate(hour, minute, second) {
+                            _super.call(this, hour, minute, second);
+                            this.className = constants.ClockTemplate;
+                        }
+                        return ClockTemplate;
+                    })(Clock);
+                    condition_1.ClockTemplate = ClockTemplate;
+                    var TimeTemplate = (function (_super) {
+                        __extends(TimeTemplate, _super);
+                        function TimeTemplate(date, clock) {
+                            _super.call(this, date, clock);
+                            this.className = constants.TimeTemplate;
+                        }
+                        return TimeTemplate;
+                    })(Time);
+                    condition_1.TimeTemplate = TimeTemplate;
                     var StaticTools = (function () {
                         function StaticTools() {
                         }
@@ -384,24 +425,27 @@ var cessnalib;
                         Executor.prototype.execute = function (condition) {
                             if (typeof condition == "string" || typeof condition == "number")
                                 return;
-                            var returnValue = null;
+                            var result = null;
                             switch (condition.className) {
                                 case constants.LogicalPhrase:
-                                    returnValue = this.executeLogicalPhrase(condition);
+                                    result = this.executeLogicalPhrase(condition);
                                     break;
                                 case constants.CalculationPhrase:
-                                    returnValue = this.executeCalculationPhrase(condition);
+                                    result = this.executeCalculationPhrase(condition);
                                     break;
                                 case cessnalib.being.constants.Particle:
-                                    returnValue = this.executeParticleReference(condition);
+                                    result = this.executeParticleReference(condition);
                                 case constants.TimeComparison:
                                 case constants.DateComparison:
                                 case constants.ClockComparison:
                                 case constants.NumberComparison:
-                                    returnValue = this.executeComparison(condition);
+                                    result = this.executeComparison(condition);
+                                    break;
+                                case constants.DateTemplateComparison:
+                                    result = this.executeComparison(condition);
                                     break;
                             }
-                            return returnValue;
+                            return result;
                         };
                         Executor.prototype.executeComparison = function (comparison) {
                             var result = false;
@@ -532,6 +576,71 @@ var cessnalib;
                                             break;
                                     }
                                     break;
+                                case constants.DateTemplateComparison:
+                                    var dateTemplate = null;
+                                    var date = null;
+                                    if (operand1.className == constants.DateTemplate) {
+                                        dateTemplate = operand1;
+                                        date = operand2;
+                                    }
+                                    else {
+                                        date = operand1;
+                                        dateTemplate = operand2;
+                                    }
+                                    switch (comparison.operator) {
+                                        case condition.operator.TemplateOperator.COVER:
+                                            return dateTemplate.year ?
+                                                dateTemplate.year == date.year :
+                                                dateTemplate.month ?
+                                                    dateTemplate.month == date.month :
+                                                    dateTemplate.day ?
+                                                        dateTemplate.day == date.day : true;
+                                            break;
+                                    }
+                                    break;
+                                case constants.ClockTemplateComparison:
+                                    var clockTemplate = null;
+                                    var clock = null;
+                                    if (operand1.className == constants.ClockTemplate) {
+                                        clockTemplate = operand1;
+                                        clock = operand2;
+                                    }
+                                    else {
+                                        clock = operand1;
+                                        clockTemplate = operand2;
+                                    }
+                                    switch (comparison.operator) {
+                                        //TODO fix
+                                        case condition.operator.TemplateOperator.COVER:
+                                            return clockTemplate.hour ?
+                                                clockTemplate.hour == clock.hour :
+                                                clockTemplate.minute ?
+                                                    clockTemplate.minute == clock.minute :
+                                                    clockTemplate.second ?
+                                                        clockTemplate.second == clock.second : true;
+                                            break;
+                                    }
+                                    break;
+                                case constants.TimeTemplateComparison:
+                                    var timeTemplate = null;
+                                    var time = null;
+                                    if (operand1.className == constants.TimeTemplate) {
+                                        timeTemplate = operand1;
+                                        time = operand2;
+                                    }
+                                    else {
+                                        time = operand1;
+                                        timeTemplate = operand2;
+                                    }
+                                    switch (comparison.operator) {
+                                        case condition.operator.TemplateOperator.COVER:
+                                            return timeTemplate.date ?
+                                                this.execute(new DateTemplateComparison(timeTemplate.date, condition.operator.TemplateOperator.COVER, time.date)) :
+                                                timeTemplate.clock ?
+                                                    this.execute(new ClockTemplateComparison(timeTemplate.clock, condition.operator.TemplateOperator.COVER, time.clock)) : true;
+                                            break;
+                                    }
+                                    break;
                             }
                             return result;
                         };
@@ -628,6 +737,30 @@ var cessnalib;
                         return ClockComparison;
                     })(Comparison);
                     condition_1.ClockComparison = ClockComparison;
+                    var DateTemplateComparison = (function (_super) {
+                        __extends(DateTemplateComparison, _super);
+                        function DateTemplateComparison(operand1, operator, operand2) {
+                            _super.call(this, constants.DateTemplateComparison, operand1, operator, operand2);
+                        }
+                        return DateTemplateComparison;
+                    })(Comparison);
+                    condition_1.DateTemplateComparison = DateTemplateComparison;
+                    var ClockTemplateComparison = (function (_super) {
+                        __extends(ClockTemplateComparison, _super);
+                        function ClockTemplateComparison(operand1, operator, operand2) {
+                            _super.call(this, constants.ClockTemplateComparison, operand1, operator, operand2);
+                        }
+                        return ClockTemplateComparison;
+                    })(Comparison);
+                    condition_1.ClockTemplateComparison = ClockTemplateComparison;
+                    var TimeTemplateComparison = (function (_super) {
+                        __extends(TimeTemplateComparison, _super);
+                        function TimeTemplateComparison(operand1, operator, operand2) {
+                            _super.call(this, constants.TimeTemplateComparison, operand1, operator, operand2);
+                        }
+                        return TimeTemplateComparison;
+                    })(Comparison);
+                    condition_1.TimeTemplateComparison = TimeTemplateComparison;
                     var CalculationPhrase = (function (_super) {
                         __extends(CalculationPhrase, _super);
                         function CalculationPhrase(operand1, operator, operand2) {
@@ -659,6 +792,10 @@ var cessnalib;
                             ComparisonOperator.BIGEQUAL = "BIGEQUAL";
                             ComparisonOperator.SMALLEQUAL = "SMALLEQUAL";
                         })(ComparisonOperator = operator.ComparisonOperator || (operator.ComparisonOperator = {}));
+                        var TemplateOperator;
+                        (function (TemplateOperator) {
+                            TemplateOperator.COVER = "COVER";
+                        })(TemplateOperator = operator.TemplateOperator || (operator.TemplateOperator = {}));
                     })(operator = condition_1.operator || (condition_1.operator = {}));
                 })(condition = dna.condition || (dna.condition = {}));
             })(dna = alive.dna || (alive.dna = {}));

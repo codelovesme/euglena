@@ -50,11 +50,8 @@ export declare module cessnalib {
                 getKeys(): K[];
                 getValues(): V[];
             }
-            namespace StaticTools {
-                class Array {
-                    static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean;
-                    static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number;
-                }
+            interface Callback<T> {
+                (t: T): void;
             }
             interface Identifiable {
                 className: string;
@@ -79,14 +76,24 @@ export declare module cessnalib {
                 className: string;
                 constructor(hour: number, minute: number, second: number);
             }
+            namespace StaticTools {
+                class Array {
+                    static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean;
+                    static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number;
+                }
+            }
         }
     }
     namespace being {
         import Identifiable = cessnalib.sys.type.Identifiable;
-        class Particle implements Identifiable {
-            className: string;
+        namespace constants {
+            const Particle: string;
+        }
+        class Particle {
+            name: string;
             content: any;
-            constructor(className: string, content: any);
+            className: string;
+            constructor(name: string, content: any);
         }
         namespace interaction {
             interface CanReceiveParticle {
@@ -98,6 +105,10 @@ export declare module cessnalib {
         }
         namespace alive {
             import Particle = cessnalib.being.Particle;
+            import Gene = cessnalib.being.alive.dna.Gene;
+            namespace constants {
+                const EuglenaInfo: string;
+            }
             abstract class Organelle<InitialProperties> implements Identifiable {
                 className: string;
                 seed: interaction.CanReceiveParticle;
@@ -120,6 +131,7 @@ export declare module cessnalib {
                 private particles;
                 private chromosome;
                 constructor(chromosome?: dna.Gene[]);
+                addGene(gene: Gene): void;
                 addOrganelle(organelle: Organelle<Object>): void;
                 receiveParticle(impact: Particle): void;
                 saveParticle(particle: Particle): void;
@@ -128,12 +140,99 @@ export declare module cessnalib {
                 private triggerGene(particle);
             }
             namespace dna {
-                import Serializable = cessnalib.sys.type.Identifiable;
-                class Gene implements Serializable {
+                import Time = cessnalib.sys.type.Time;
+                import Identifiable = cessnalib.sys.type.Identifiable;
+                import ParticleReference = cessnalib.being.alive.dna.condition.ParticleReference;
+                class Gene implements Identifiable {
                     className: string;
                     triggers: string[];
                     reaction: Reaction;
-                    constructor(className: string, triggers: string[], reaction: Reaction);
+                    constructor(className: string, triggers: string[], reaction: Reaction, condition?: dna.condition.LogicalPhrase | dna.condition.Comparison<any> | ParticleReference);
+                }
+                namespace condition {
+                    import Date = cessnalib.sys.type.Date;
+                    import Clock = cessnalib.sys.type.Clock;
+                    namespace constants {
+                        const TimeComparison: string;
+                        const NumberComparison: string;
+                        const LogicalPhrase: string;
+                        const CalculationPhrase: string;
+                        const ClockComparison: string;
+                        const DateComparison: string;
+                    }
+                    class ParticleReference extends Particle {
+                        constructor(name: string);
+                    }
+                    class StaticTools {
+                        addOperandAndParameter<T, S>(phrase: Phrase<T>, operand: string, parameter: T): void;
+                    }
+                    class Executor {
+                        private particles;
+                        constructor(particles: any);
+                        executeLogicalPhrase(logicalPhrase: LogicalPhrase): boolean;
+                        execute(condition: any): any;
+                        private executeComparison<T>(comparison);
+                        executeCalculationPhrase(calculationPhrase: CalculationPhrase): number;
+                        executeParticleReference(particle: ParticleReference): any;
+                    }
+                    interface TwoParameterBracket<T> extends Identifiable {
+                        operand1: T;
+                        operator: string;
+                        operand2: T;
+                    }
+                    abstract class Phrase<T> implements Identifiable {
+                        className: string;
+                        operand1: Phrase<T> | T | ParticleReference;
+                        operator: string;
+                        operand2: Phrase<T> | T | ParticleReference;
+                        stack: Array<any>;
+                        constructor(className: string, operand1: Phrase<T> | T | ParticleReference, operator: string, operand2: Phrase<T> | T | ParticleReference);
+                    }
+                    class LogicalPhrase extends Phrase<Comparison<any>> {
+                        constructor(operand1: Phrase<Comparison<any>> | Comparison<any> | ParticleReference, operator: string, operand2: Phrase<Comparison<any>> | Comparison<any> | ParticleReference);
+                    }
+                    abstract class Comparison<T> implements TwoParameterBracket<Comparison<T> | Particle | T> {
+                        className: string;
+                        operand1: Comparison<T> | ParticleReference | T;
+                        operator: string;
+                        operand2: Comparison<T> | ParticleReference | T;
+                        constructor(className: string, operand1: Comparison<T> | ParticleReference | T, operator: string, operand2: Comparison<T> | ParticleReference | T);
+                    }
+                    class NumberComparison extends Comparison<number> {
+                        constructor(operand1: NumberComparison | ParticleReference | number, operator: string, operand2: NumberComparison | ParticleReference | number);
+                    }
+                    class TimeComparison extends Comparison<Time> {
+                        constructor(operand1: TimeComparison | ParticleReference | Time, operator: string, operand2: TimeComparison | ParticleReference | Time);
+                    }
+                    class DateComparison extends Comparison<Date> {
+                        constructor(operand1: DateComparison | ParticleReference | Date, operator: string, operand2: DateComparison | ParticleReference | Date);
+                    }
+                    class ClockComparison extends Comparison<Clock> {
+                        constructor(operand1: ClockComparison | Particle | Clock, operator: string, operand2: ClockComparison | Particle | Clock);
+                    }
+                    class CalculationPhrase extends Phrase<number> {
+                        constructor(operand1: Phrase<number> | ParticleReference | number, operator: string, operand2: Phrase<number> | ParticleReference | number);
+                    }
+                    namespace operator {
+                        namespace LogicalOperator {
+                            const AND: string;
+                            const OR: string;
+                        }
+                        namespace CalculationOperator {
+                            const SUM: string;
+                            const SUB: string;
+                            const MUL: string;
+                            const DIV: string;
+                        }
+                        namespace ComparisonOperator {
+                            const EQUAL: string;
+                            const NOTEQUAL: string;
+                            const BIGGERTHAN: string;
+                            const SMALLERTHAN: string;
+                            const BIGEQUAL: string;
+                            const SMALLEQUAL: string;
+                        }
+                    }
                 }
                 interface Reaction {
                     (triggerParticle: Particle, particles: any, organelles: any): void;
