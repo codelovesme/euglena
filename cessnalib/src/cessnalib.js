@@ -1,11 +1,20 @@
+/**
+ * Created by codelovesme on 6/19/2015.
+ */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/**
- * Created by codelovesme on 6/19/2015.
- */
+/*
+*TODO List
+*
+* #Generate impact for particle value change
+* #Seperate nucleus to a organelle
+* #Seperate particle, request, event
+*
+*/
+var JavascriptDate = Date;
 var cessnalib;
 (function (cessnalib) {
     var js;
@@ -24,7 +33,7 @@ var cessnalib;
                 if (deep === void 0) { deep = false; }
                 var sub = {};
                 for (var prop in obj) {
-                    sub[prop] = (deep && ('object' == typeof obj[prop])) ? Class.clone(obj[prop], true) : obj[prop];
+                    sub[prop] = (deep && ('object' === typeof obj[prop])) ? Class.clone(obj[prop], true) : obj[prop];
                 }
                 return sub;
             };
@@ -37,7 +46,7 @@ var cessnalib;
             };
             Class.classify = function (emptyInstance, valueObj) {
                 for (var prop in emptyInstance) {
-                    if (("function" != typeof emptyInstance[prop]) && !emptyInstance[prop])
+                    if (("function" !== typeof emptyInstance[prop]) && !emptyInstance[prop])
                         emptyInstance[prop] = valueObj[prop];
                 }
                 return emptyInstance;
@@ -46,28 +55,28 @@ var cessnalib;
                 var valueObj = {};
                 var propToValuefy = null;
                 for (var prop in instance) {
-                    if ("function" != typeof instance[prop]) {
+                    if ("function" !== typeof instance[prop]) {
                         valueObj[prop] = instance[prop];
                     }
-                    else if (typeof prop == "object") {
+                    else if (typeof prop === "object") {
                         valueObj[prop] = Class.valuefy(instance[prop]);
                     }
-                    else if ((prop.substring(0, 3) == "get") && (propToValuefy = prop.substring(3, prop.length))) {
+                    else if ((prop.substring(0, 3) === "get") && (propToValuefy = prop.substring(3, prop.length))) {
                         valueObj[propToValuefy[0].toLowerCase() + propToValuefy.substring(1, propToValuefy.length)] = instance[prop]();
                     }
                 }
                 return valueObj;
             };
             Class.isPrimaryType = function (obj) {
-                return typeof obj == "string" ||
-                    typeof obj == "number" ||
-                    typeof obj == "boolean";
+                return typeof obj === "string" ||
+                    typeof obj === "number" ||
+                    typeof obj === "boolean";
             };
             Class.instanceOf = function (referenceObject, obj) {
                 if (Class.isPrimaryType(referenceObject))
-                    return typeof referenceObject == typeof obj;
+                    return typeof referenceObject === typeof obj;
                 for (var prop in referenceObject) {
-                    if (obj[prop] == undefined)
+                    if (obj[prop] === undefined)
                         return false;
                 }
                 return true;
@@ -204,6 +213,65 @@ var cessnalib;
             type.Clock = Clock;
             var StaticTools;
             (function (StaticTools) {
+                var Exception = (function () {
+                    function Exception() {
+                    }
+                    Exception.isNotException = function (t) {
+                        return cessnalib.js.Class.instanceOf(cessnalib.reference.sys.type.Exception, t);
+                    };
+                    return Exception;
+                })();
+                StaticTools.Exception = Exception;
+                var UUID = (function () {
+                    function UUID() {
+                    }
+                    UUID.generate = function () {
+                        function word() {
+                            return Math.floor((1 + Math.random()) * 0x10000)
+                                .toString(16)
+                                .substring(1);
+                        }
+                        return word() + word() + '-' + word() + '-' + word() + '-' +
+                            word() + '-' + word() + word() + word();
+                    };
+                    return UUID;
+                })();
+                StaticTools.UUID = UUID;
+                var Time = (function () {
+                    function Time() {
+                    }
+                    Time.equals = function (time1, time2) {
+                        return Date.equals(time1.date, time2.date) && Clock.equals(time1.clock, time2.clock);
+                    };
+                    Time.now = function () {
+                        var newDate = new JavascriptDate();
+                        return new sys.type.Time(new sys.type.Date(newDate.getUTCFullYear(), newDate.getUTCMonth() + 1, newDate.getUTCDate()), new sys.type.Clock(newDate.getUTCHours(), newDate.getUTCMinutes(), newDate.getUTCSeconds()));
+                    };
+                    return Time;
+                })();
+                StaticTools.Time = Time;
+                var Date = (function () {
+                    function Date() {
+                    }
+                    Date.equals = function (date1, date2) {
+                        return date1.year == date2.year &&
+                            date1.month == date2.month &&
+                            date1.day == date2.day;
+                    };
+                    return Date;
+                })();
+                StaticTools.Date = Date;
+                var Clock = (function () {
+                    function Clock() {
+                    }
+                    Clock.equals = function (clock1, clock2) {
+                        return clock1.hour == clock2.hour &&
+                            clock1.minute == clock2.minute &&
+                            clock1.second == clock2.second;
+                    };
+                    return Clock;
+                })();
+                StaticTools.Clock = Clock;
                 var Array = (function () {
                     function Array() {
                     }
@@ -220,7 +288,7 @@ var cessnalib;
                         }
                         else {
                             for (var i = 0; i < array.length; i++) {
-                                if (array[i] == t) {
+                                if (array[i] === t) {
                                     return i;
                                 }
                             }
@@ -235,102 +303,49 @@ var cessnalib;
     })(sys = cessnalib.sys || (cessnalib.sys = {}));
     var being;
     (function (being) {
-        var constants;
-        (function (constants) {
-            constants.Particle = "cessnalib.being.Particle";
-        })(constants = being.constants || (being.constants = {}));
         var Particle = (function () {
             function Particle(name, content) {
                 this.name = name;
                 this.content = content;
-                this.className = constants.Particle;
             }
             return Particle;
         })();
         being.Particle = Particle;
+        var interaction;
+        (function (interaction) {
+            var ImpactGenerator = (function () {
+                function ImpactGenerator(euglenaName) {
+                    this.euglenaName = euglenaName;
+                }
+                ImpactGenerator.prototype.generateImpact = function (particle, destination) {
+                    return StaticTools.generateImpact(this.euglenaName, particle, destination);
+                };
+                return ImpactGenerator;
+            })();
+            interaction.ImpactGenerator = ImpactGenerator;
+            var StaticTools = (function () {
+                function StaticTools() {
+                }
+                StaticTools.generateImpact = function (sender, particle, destination) {
+                    return {
+                        "name": sys.type.StaticTools.UUID.generate(),
+                        "sender": sender,
+                        "particle": particle
+                    };
+                };
+                return StaticTools;
+            })();
+            interaction.StaticTools = StaticTools;
+        })(interaction = being.interaction || (being.interaction = {}));
         var alive;
         (function (alive) {
             var Particle = cessnalib.being.Particle;
-            var Executor = cessnalib.being.alive.dna.condition.Executor;
-            var constants;
-            (function (constants) {
-                constants.EuglenaInfo = "cessnalib.being.alive.EuglenaInfo";
-            })(constants = alive.constants || (alive.constants = {}));
-            var Organelle = (function () {
-                function Organelle(className, seed, initialProperties) {
-                    this.className = className;
-                    this.seed = seed;
-                    this.initialProperties = initialProperties;
-                }
-                return Organelle;
-            })();
-            alive.Organelle = Organelle;
-            var Limb = (function (_super) {
-                __extends(Limb, _super);
-                function Limb(className, seed, initialProperties) {
-                    _super.call(this, className, seed, initialProperties);
-                }
-                return Limb;
-            })(Organelle);
-            alive.Limb = Limb;
-            var EuglenaInfo = (function () {
-                function EuglenaInfo(euglenaId, url, port) {
-                    this.euglenaId = euglenaId;
-                    this.url = url;
-                    this.port = port;
-                    this.className = constants.EuglenaInfo;
-                }
-                return EuglenaInfo;
-            })();
-            alive.EuglenaInfo = EuglenaInfo;
-            var Euglena = (function () {
-                function Euglena(chromosome) {
-                    this.organelles = {};
-                    this.particles = {};
-                    this.chromosome = [];
-                    this.executor = null;
-                    this.chromosome = chromosome ? chromosome : [];
-                    this.executor = new Executor(this.particles);
-                }
-                Euglena.prototype.addGene = function (gene) {
-                    this.chromosome.push(gene);
-                };
-                Euglena.prototype.addOrganelle = function (organelle) {
-                    this.organelles[organelle.className] = organelle;
-                };
-                Euglena.prototype.receiveParticle = function (impact) {
-                    this.triggerGene(impact);
-                };
-                Euglena.prototype.saveParticle = function (particle) {
-                    this.particles[particle.className] = particle.content;
-                    this.triggerGene(particle);
-                };
-                Euglena.prototype.deleteParticle = function (className) {
-                    delete this.particles[className];
-                };
-                Euglena.prototype.getParticle = function (className) {
-                    return this.particles[className];
-                };
-                Euglena.prototype.triggerGene = function (particle) {
-                    for (var i = 0; i < this.chromosome.length; i++) {
-                        if (sys.type.StaticTools.Array.contains(this.chromosome[i].triggers, particle.name) &&
-                            this.executor.execute(this.chromosome[i].condition)) {
-                            var reaction = this.chromosome[i].reaction;
-                            var particles = this.particles;
-                            var organelles = this.organelles;
-                            reaction(particle, particles, organelles);
-                        }
-                    }
-                };
-                return Euglena;
-            })();
-            alive.Euglena = Euglena;
             var dna;
             (function (dna) {
                 var Time = cessnalib.sys.type.Time;
                 var Gene = (function () {
-                    function Gene(className, triggers, reaction, condition) {
-                        this.className = className;
+                    function Gene(name, triggers, reaction, condition) {
+                        this.name = name;
                         this.triggers = triggers;
                         this.reaction = reaction;
                         this.condition = condition;
@@ -360,7 +375,7 @@ var cessnalib;
                     var ParticleReference = (function (_super) {
                         __extends(ParticleReference, _super);
                         function ParticleReference(name) {
-                            _super.call(this, name, undefined);
+                            _super.call(this, name, null);
                         }
                         return ParticleReference;
                     })(Particle);
@@ -423,27 +438,32 @@ var cessnalib;
                             return result;
                         };
                         Executor.prototype.execute = function (condition) {
-                            if (typeof condition == "string" || typeof condition == "number")
-                                return;
-                            var result = null;
-                            switch (condition.className) {
-                                case constants.LogicalPhrase:
-                                    result = this.executeLogicalPhrase(condition);
-                                    break;
-                                case constants.CalculationPhrase:
-                                    result = this.executeCalculationPhrase(condition);
-                                    break;
-                                case cessnalib.being.constants.Particle:
-                                    result = this.executeParticleReference(condition);
-                                case constants.TimeComparison:
-                                case constants.DateComparison:
-                                case constants.ClockComparison:
-                                case constants.NumberComparison:
-                                    result = this.executeComparison(condition);
-                                    break;
-                                case constants.DateTemplateComparison:
-                                    result = this.executeComparison(condition);
-                                    break;
+                            var result = condition;
+                            if (typeof condition === "string" || typeof condition === "number") {
+                                result = condition;
+                            }
+                            if (cessnalib.js.Class.instanceOf(new Particle("Reference", true), condition)) {
+                                result = this.executeParticleReference(condition);
+                            }
+                            else {
+                                switch (condition.className) {
+                                    case constants.LogicalPhrase:
+                                        result = this.executeLogicalPhrase(condition);
+                                        break;
+                                    case constants.CalculationPhrase:
+                                        result = this.executeCalculationPhrase(condition);
+                                        break;
+                                    case constants.TimeComparison:
+                                    case constants.TimeTemplateComparison:
+                                    case constants.DateComparison:
+                                    case constants.DateTemplateComparison:
+                                    case constants.ClockComparison:
+                                    case constants.ClockTemplateComparison:
+                                    case constants.NumberComparison:
+                                    case constants.DateTemplateComparison:
+                                        result = this.executeComparison(condition);
+                                        break;
+                                }
                             }
                             return result;
                         };
@@ -518,14 +538,14 @@ var cessnalib;
                                                     date1.day > date2.day;
                                             break;
                                         case condition.operator.ComparisonOperator.EQUAL:
-                                            result = date1.year == date2.year &&
-                                                date1.month == date2.month &&
-                                                date1.day == date2.day;
+                                            result = date1.year === date2.year &&
+                                                date1.month === date2.month &&
+                                                date1.day === date2.day;
                                             break;
                                         case condition.operator.ComparisonOperator.NOTEQUAL:
-                                            result = !(date1.year == date2.year &&
-                                                date1.month == date2.month &&
-                                                date1.day == date2.day);
+                                            result = !(date1.year === date2.year &&
+                                                date1.month === date2.month &&
+                                                date1.day === date2.day);
                                             break;
                                         case condition.operator.ComparisonOperator.SMALLERTHAN:
                                             result = date1.year < date2.year ? true : date1.year > date2.year ? false :
@@ -552,14 +572,14 @@ var cessnalib;
                                                     clock1.second > clock2.second;
                                             break;
                                         case condition.operator.ComparisonOperator.EQUAL:
-                                            result = clock1.hour == clock2.hour &&
-                                                clock1.minute == clock2.minute &&
-                                                clock1.second == clock2.second;
+                                            result = clock1.hour === clock2.hour &&
+                                                clock1.minute === clock2.minute &&
+                                                clock1.second === clock2.second;
                                             break;
                                         case condition.operator.ComparisonOperator.NOTEQUAL:
-                                            result = !(clock1.hour == clock2.hour &&
-                                                clock1.minute == clock2.minute &&
-                                                clock1.second == clock2.second);
+                                            result = !(clock1.hour === clock2.hour &&
+                                                clock1.minute === clock2.minute &&
+                                                clock1.second === clock2.second);
                                             break;
                                         case condition.operator.ComparisonOperator.SMALLERTHAN:
                                             result = clock1.hour < clock2.hour ? true : clock1.hour > clock2.hour ? false :
@@ -579,7 +599,7 @@ var cessnalib;
                                 case constants.DateTemplateComparison:
                                     var dateTemplate = null;
                                     var date = null;
-                                    if (operand1.className == constants.DateTemplate) {
+                                    if (operand1.className === constants.DateTemplate) {
                                         dateTemplate = operand1;
                                         date = operand2;
                                     }
@@ -589,19 +609,16 @@ var cessnalib;
                                     }
                                     switch (comparison.operator) {
                                         case condition.operator.TemplateOperator.COVER:
-                                            return dateTemplate.year ?
-                                                dateTemplate.year == date.year :
-                                                dateTemplate.month ?
-                                                    dateTemplate.month == date.month :
-                                                    dateTemplate.day ?
-                                                        dateTemplate.day == date.day : true;
+                                            result = dateTemplate.year ? dateTemplate.year === date.year : true;
+                                            result = result && (dateTemplate.month ? dateTemplate.month === date.month : true);
+                                            result = result && (dateTemplate.day ? dateTemplate.day === date.day : true);
                                             break;
                                     }
                                     break;
                                 case constants.ClockTemplateComparison:
                                     var clockTemplate = null;
                                     var clock = null;
-                                    if (operand1.className == constants.ClockTemplate) {
+                                    if (operand1.className === constants.ClockTemplate) {
                                         clockTemplate = operand1;
                                         clock = operand2;
                                     }
@@ -610,21 +627,17 @@ var cessnalib;
                                         clockTemplate = operand2;
                                     }
                                     switch (comparison.operator) {
-                                        //TODO fix
                                         case condition.operator.TemplateOperator.COVER:
-                                            return clockTemplate.hour ?
-                                                clockTemplate.hour == clock.hour :
-                                                clockTemplate.minute ?
-                                                    clockTemplate.minute == clock.minute :
-                                                    clockTemplate.second ?
-                                                        clockTemplate.second == clock.second : true;
+                                            result = clockTemplate.hour ? clockTemplate.hour === clock.hour : true;
+                                            result = result && (clockTemplate.minute ? clockTemplate.minute === clock.minute : true);
+                                            result = result && (clockTemplate.second ? clockTemplate.second === clock.second : true);
                                             break;
                                     }
                                     break;
                                 case constants.TimeTemplateComparison:
                                     var timeTemplate = null;
                                     var time = null;
-                                    if (operand1.className == constants.TimeTemplate) {
+                                    if (operand1.className === constants.TimeTemplate) {
                                         timeTemplate = operand1;
                                         time = operand2;
                                     }
@@ -634,10 +647,8 @@ var cessnalib;
                                     }
                                     switch (comparison.operator) {
                                         case condition.operator.TemplateOperator.COVER:
-                                            return timeTemplate.date ?
-                                                this.execute(new DateTemplateComparison(timeTemplate.date, condition.operator.TemplateOperator.COVER, time.date)) :
-                                                timeTemplate.clock ?
-                                                    this.execute(new ClockTemplateComparison(timeTemplate.clock, condition.operator.TemplateOperator.COVER, time.clock)) : true;
+                                            result = timeTemplate.date ? this.execute(new DateTemplateComparison(timeTemplate.date, condition.operator.TemplateOperator.COVER, time.date)) : true;
+                                            result = result && (timeTemplate.clock ? this.execute(new ClockTemplateComparison(timeTemplate.clock, condition.operator.TemplateOperator.COVER, time.clock)) : true);
                                             break;
                                     }
                                     break;
@@ -799,7 +810,79 @@ var cessnalib;
                     })(operator = condition_1.operator || (condition_1.operator = {}));
                 })(condition = dna.condition || (dna.condition = {}));
             })(dna = alive.dna || (alive.dna = {}));
+            var constants;
+            (function (constants) {
+                constants.OutSide = "OutSide";
+                constants.EuglenaInfo = "cessnalib.being.alive.EuglenaInfo";
+                var particles;
+                (function (particles) {
+                    particles.EuglenaName = "EuglenaName";
+                })(particles = constants.particles || (constants.particles = {}));
+            })(constants = alive.constants || (alive.constants = {}));
+            var Organelle = (function () {
+                function Organelle(name, impactGenerator, nucleus, initialProperties) {
+                    this.name = name;
+                    this.impactGenerator = impactGenerator;
+                    this.nucleus = nucleus;
+                    this.initialProperties = initialProperties;
+                }
+                return Organelle;
+            })();
+            alive.Organelle = Organelle;
+            var EuglenaInfo = (function () {
+                function EuglenaInfo(name, url, port) {
+                    this.name = name;
+                    this.url = url;
+                    this.port = port;
+                }
+                return EuglenaInfo;
+            })();
+            alive.EuglenaInfo = EuglenaInfo;
+            var Euglena = (function () {
+                function Euglena(chromosome, particles, organelles, impactGenerator) {
+                    if (chromosome === void 0) { chromosome = []; }
+                    if (particles === void 0) { particles = {}; }
+                    if (organelles === void 0) { organelles = []; }
+                    this.chromosome = chromosome;
+                    this.particles = particles;
+                    this.impactGenerator = impactGenerator;
+                    this.executor = null;
+                    this.organelles = {};
+                    this.executor = new cessnalib.being.alive.dna.condition.Executor(this.particles);
+                    for (var _i = 0; _i < organelles.length; _i++) {
+                        var organelle = organelles[_i];
+                        organelle.nucleus = this;
+                        this.organelles[organelle.name] = organelle;
+                    }
+                }
+                Euglena.prototype.receiveParticle = function (particle) {
+                    this.triggerGene(particle);
+                };
+                Euglena.prototype.triggerGene = function (particle) {
+                    for (var i = 0; i < this.chromosome.length; i++) {
+                        if (sys.type.StaticTools.Array.contains(this.chromosome[i].triggers, particle.name) &&
+                            this.chromosome[i].condition ? this.executor.execute(this.chromosome[i].condition) : true) {
+                            var reaction = this.chromosome[i].reaction;
+                            var particles = this.particles;
+                            var organelles = this.organelles;
+                            reaction(particle, particles, organelles, this.receiveParticle, this.impactGenerator);
+                        }
+                    }
+                };
+                return Euglena;
+            })();
+            alive.Euglena = Euglena;
         })(alive = being.alive || (being.alive = {}));
     })(being = cessnalib.being || (cessnalib.being = {}));
+    var reference;
+    (function (reference) {
+        var sys;
+        (function (sys) {
+            var type;
+            (function (type) {
+                type.Exception = new cessnalib.sys.type.Exception("Exception", null);
+            })(type = sys.type || (sys.type = {}));
+        })(sys = reference.sys || (reference.sys = {}));
+    })(reference = cessnalib.reference || (cessnalib.reference = {}));
 })(cessnalib = exports.cessnalib || (exports.cessnalib = {}));
 //# sourceMappingURL=cessnalib.js.map

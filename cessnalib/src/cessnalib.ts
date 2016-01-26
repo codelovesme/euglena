@@ -1,6 +1,19 @@
 /**
  * Created by codelovesme on 6/19/2015.
  */
+
+/*
+*TODO List
+*
+* #Generate impact for particle value change
+* #Seperate nucleus to a organelle
+* #Seperate particle, request, event
+*
+*/
+
+
+const JavascriptDate = Date;
+
 export module cessnalib {
     export namespace js {
         export class Class {
@@ -13,7 +26,7 @@ export module cessnalib {
             public static clone<T extends any>(obj: T, deep: boolean = false): T {
                 var sub:any = {};
                 for (var prop in obj) {
-                    sub[prop] = (deep && ('object' == typeof obj[prop])) ? Class.clone(obj[prop], true) : obj[prop];
+                    sub[prop] = (deep && ('object' === typeof obj[prop])) ? Class.clone(obj[prop], true) : obj[prop];
                 }
                 return <T>sub;
             }
@@ -25,7 +38,7 @@ export module cessnalib {
             }
             public static classify(emptyInstance:any, valueObj:any) {
                 for (var prop in emptyInstance) {
-                    if (("function" != typeof emptyInstance[prop]) && !emptyInstance[prop]) emptyInstance[prop] = valueObj[prop];
+                    if (("function" !== typeof emptyInstance[prop]) && !emptyInstance[prop]) emptyInstance[prop] = valueObj[prop];
                 }
                 return emptyInstance;
             }
@@ -33,25 +46,25 @@ export module cessnalib {
                 var valueObj:any = {};
                 var propToValuefy:any = null;
                 for (var prop in instance) {
-                    if ("function" != typeof instance[prop]) {
+                    if ("function" !== typeof instance[prop]) {
                         valueObj[prop] = instance[prop];
-                    } else if (typeof prop == "object") {
+                    } else if (typeof prop === "object") {
                         valueObj[prop] = Class.valuefy(instance[prop]);
-                    } else if ((prop.substring(0, 3) == "get") && (propToValuefy = prop.substring(3, prop.length))) {
+                    } else if ((prop.substring(0, 3) === "get") && (propToValuefy = prop.substring(3, prop.length))) {
                         valueObj[propToValuefy[0].toLowerCase() + propToValuefy.substring(1, propToValuefy.length)] = instance[prop]();
                     }
                 }
                 return valueObj;
             }
             public static isPrimaryType(obj:any): boolean {
-                return typeof obj == "string" ||
-                    typeof obj == "number" ||
-                    typeof obj == "boolean";
+                return typeof obj === "string" ||
+                    typeof obj === "number" ||
+                    typeof obj === "boolean";
             }
-            public static instanceOf<T>(referenceObject:any,obj:any): obj is T {
-                if (Class.isPrimaryType(referenceObject)) return typeof referenceObject == typeof obj;
+            public static instanceOf<T>(referenceObject:T,obj:any|T): obj is T {
+                if (Class.isPrimaryType(referenceObject)) return typeof referenceObject === typeof obj;
                 for (var prop in referenceObject) {
-                    if (obj[prop] == undefined)
+                    if (obj[prop] === undefined)
                         return false;
                 }
                 return true;
@@ -68,7 +81,7 @@ export module cessnalib {
             public values: ValueChooser[];
             public objects: ObjectChooser[];
         }
-        export class ValueChooser implements sys.type.Identifiable {
+        export class ValueChooser {
             public className: string;
             public values: string[];
             public index: number = 0;
@@ -130,24 +143,70 @@ export module cessnalib {
                 }
             }
             export interface Callback<T> {
-                (t:T): void
+                (t:T | Exception): void
             }
-            export interface Identifiable {
+            export interface Classifiable {
                 className: string;
             }
-            export class Time implements Identifiable {
+            export interface Identifiable{
+                id: string;
+            }
+            export interface Named {
+                name:string;
+            }
+            export class Time implements Classifiable {
                 className: string = "cessnalib.sys.type.Time";
                 constructor(public date: Date, public clock: Clock) { }
             }
-            export class Date implements Identifiable {
+            export class Date implements Classifiable {
                 className: string = "cessnalib.sys.type.Date";
                 constructor(public year: number, public month: number, public day: number) { }
             }
-            export class Clock implements Identifiable {
+            export class Clock implements Classifiable {
                 className: string = "cessnalib.sys.type.Clock";
                 constructor(public hour: number, public minute: number, public second: number) { }
             }
             export namespace StaticTools {
+                export class Exception {
+                    public static isNotException<T>(t: T | Exception): t is T {
+                        return cessnalib.js.Class.instanceOf(cessnalib.reference.sys.type.Exception, t);
+                    }
+                }
+                export class UUID {
+                    public static generate():string {
+                        function word() {
+                            return Math.floor((1 + Math.random()) * 0x10000)
+                                .toString(16)
+                                .substring(1);
+                        }
+                        return word() + word() + '-' + word() + '-' + word() + '-' +
+                            word() + '-' + word() + word() + word();
+                    }
+                }
+                export class Time {
+                    public static equals(time1:sys.type.Time,time2:sys.type.Time): boolean {
+                        return Date.equals(time1.date, time2.date) && Clock.equals(time1.clock,time2.clock);
+                    }
+                    public static now(): sys.type.Time {
+                        let newDate = new JavascriptDate();
+                        return new sys.type.Time(new sys.type.Date(newDate.getUTCFullYear(), newDate.getUTCMonth()+1, newDate.getUTCDate()),
+                            new sys.type.Clock(newDate.getUTCHours(),newDate.getUTCMinutes(),newDate.getUTCSeconds()));
+                    }
+                }
+                export class Date {
+                    public static equals(date1: sys.type.Date, date2: sys.type.Date): boolean {
+                        return date1.year == date2.year &&
+                            date1.month == date2.month &&
+                            date1.day == date2.day;
+                    }
+                }
+                export class Clock{
+                    public static equals(clock1:sys.type.Clock,clock2:sys.type.Clock):boolean{
+                        return clock1.hour == clock2.hour &&
+                            clock1.minute == clock2.minute &&
+                            clock1.second == clock2.second;
+                    }
+                }
                 export class Array {
                     public static contains<T>(array:T[],t:T,compare?:(arrayItem:T,t:T)=>boolean): boolean {
                         return Array.indexOf(array,t,compare)>=0;
@@ -161,7 +220,7 @@ export module cessnalib {
                             }
                         } else {
                             for (var i = 0; i < array.length; i++) {
-                                if (array[i] == t) {
+                                if (array[i] === t) {
                                     return i;
                                 }
                             }
@@ -173,101 +232,53 @@ export module cessnalib {
         }
     }
     export namespace being {
-        import Identifiable = cessnalib.sys.type.Identifiable;
-        export namespace constants {
-            export const Particle = "cessnalib.being.Particle";
-        }
-        export class Particle{
-            public className = constants.Particle;
+        import Classifiable = cessnalib.sys.type.Classifiable;
+        import Named = cessnalib.sys.type.Named;
+        export class Particle {
             constructor(public name: string, public content: any) { }
         }
         export namespace interaction {
-            export interface CanReceiveParticle {
-                receiveParticle (particle: Particle): void;
+            import EuglenaInfo = cessnalib.being.alive.EuglenaInfo;
+            export interface ReceiveParticle {
+                (particle: Particle): void;
             }
-            export interface CanThrowParticle {
-                throwParticle (particle: Particle): void;
+            export interface CanReceiveParticle {
+                receiveParticle:ReceiveParticle;
+            }
+            export interface Impact extends Named {
+                name: string,
+                sender: string,
+                particle: Particle;
+            }
+            export class ImpactGenerator {
+                constructor(public euglenaName: string) { }
+                public generateImpact(particle: Particle, destination: string): Impact {
+                    return StaticTools.generateImpact(this.euglenaName,particle,destination);
+                }
+            }
+            export class StaticTools {
+                public static generateImpact(sender: string, particle: Particle, destination:string):Impact{
+                    return {
+                        "name": sys.type.StaticTools.UUID.generate(),
+                        "sender": sender,
+                        "particle": particle
+                    };
+                }
             }
         }
         export namespace alive {
-            import Serializable = cessnalib.sys.type.Identifiable;
+            import Classifiable = cessnalib.sys.type.Classifiable;
             import Particle = cessnalib.being.Particle;
             import Gene = cessnalib.being.alive.dna.Gene;
-            import Executor = cessnalib.being.alive.dna.condition.Executor;
-            export namespace constants {
-                export const EuglenaInfo = "cessnalib.being.alive.EuglenaInfo";
-            }
-            export abstract class Organelle<InitialProperties> implements Identifiable {
-                constructor(
-                    public className: string,
-                    public seed?: interaction.CanReceiveParticle,
-                    public initialProperties?: InitialProperties) { }
-                /* 
-                 * TODO
-                 * initialProperties must be type save
-                 * may be like Map<string,string>
-                 */
-            }
-            export abstract class Limb<InitialProperties> extends Organelle<InitialProperties> implements interaction.CanThrowParticle {
-                constructor(
-                    className: string,
-                    seed?: interaction.CanReceiveParticle,
-                    initialProperties?: InitialProperties) {
-                    super(className,seed,initialProperties);
-                }
-                public abstract throwParticle(particle: Particle): void;
-            }
-            export class EuglenaInfo implements sys.type.Identifiable {
-                public className: string = constants.EuglenaInfo;
-                constructor(public euglenaId: string, public url: string, public port: string) { }
-            }
-            export class Euglena implements interaction.CanReceiveParticle {
-                private organelles: any = {};
-                private particles: any = {};
-                private chromosome: dna.Gene[] = [];
-                private executor: Executor = null;
-                constructor(chromosome?:dna.Gene[]) {
-                    this.chromosome = chromosome ? chromosome : [];
-                    this.executor = new Executor(this.particles);
-                }
-                public addGene(gene:Gene){
-                    this.chromosome.push(gene);
-                }
-                public addOrganelle(organelle:Organelle<Object>) {
-                    this.organelles[organelle.className] = organelle;
-                }
-                public receiveParticle( impact: Particle ) {
-                    this.triggerGene(impact);
-                }
-                public saveParticle(particle: Particle) {
-                    this.particles[particle.className] = particle.content;
-                    this.triggerGene(particle);
-                }
-                public deleteParticle(className:string) {
-                    delete this.particles[className];
-                }
-                public getParticle(className: string):any {
-                    return this.particles[className];
-                }
-                private triggerGene(particle: Particle) {
-                    for (var i = 0; i<this.chromosome.length;i++) {
-                        if (sys.type.StaticTools.Array.contains(this.chromosome[i].triggers, particle.name) &&
-                            this.executor.execute(this.chromosome[i].condition)) {
-                            var reaction = this.chromosome[i].reaction;
-                            var particles = this.particles;
-                            var organelles = this.organelles;
-                            reaction(particle,particles,organelles);
-                        }
-                    }
-                }
-            }
+            import Impact = cessnalib.being.interaction.Impact;
             export namespace dna {
                 import Time = cessnalib.sys.type.Time;
-                import Identifiable = cessnalib.sys.type.Identifiable;
+                import Classifiable = cessnalib.sys.type.Classifiable;
                 import ParticleReference = cessnalib.being.alive.dna.condition.ParticleReference;
-                export class Gene implements Identifiable {
+                import CanReceiveParticle = cessnalib.being.interaction.CanReceiveParticle;
+                export class Gene implements Named {
                     constructor(
-                        public className: string,
+                        public name: string,
                         public triggers: string[],
                         public reaction: Reaction,
                         public condition?:dna.condition.LogicalPhrase | dna.condition.Comparison<any> | ParticleReference) { }
@@ -291,28 +302,27 @@ export module cessnalib {
                     }
                     export class ParticleReference extends Particle {
                         constructor(name:string){
-                            super(name,undefined);
+                            super(name,null);
                         }
                     }
-                    export class DateTemplate extends Date implements Identifiable {
+                    export class DateTemplate extends Date implements Classifiable {
                         public className = constants.DateTemplate;
-                        constructor(year?:number,month?:number,day?:number){
+                        constructor(year:number,month:number,day:number){
                             super(year,month,day);
                         }
                     }
-                    export class ClockTemplate extends Clock implements Identifiable {
+                    export class ClockTemplate extends Clock implements Classifiable {
                         public className = constants.ClockTemplate;
-                        constructor(hour?:number,minute?:number,second?:number){
+                        constructor(hour:number,minute:number,second:number){
                             super(hour,minute,second);
                         }
                     }
-                    export class TimeTemplate extends Time implements Identifiable {
+                    export class TimeTemplate extends Time implements Classifiable {
                         public className = constants.TimeTemplate;
-                        constructor(date?:Date,clock?:Clock){
+                        constructor(date:Date,clock:Clock){
                             super(date,clock);
                         }
                     }
-
                     export class StaticTools {
                         public addOperandAndParameter<T,S>(phrase:Phrase<T>,operand:string,parameter:T):void{
                             phrase.stack.push(operand,parameter);
@@ -337,27 +347,32 @@ export module cessnalib {
                             }while(operator = stack.shift());
                             return result;
                         }
-                        public execute(condition:any): any {
-                            if(typeof condition == "string" || typeof condition == "number") return;
-                            let result:any = null;
-                            switch(condition.className) {
-                                case constants.LogicalPhrase:
-                                    result = this.executeLogicalPhrase(condition);
-                                    break;
-                                case constants.CalculationPhrase:
-                                    result = this.executeCalculationPhrase(condition);
-                                    break;
-                                case cessnalib.being.constants.Particle:
-                                    result = this.executeParticleReference(condition);
-                                case constants.TimeComparison:
-                                case constants.DateComparison:
-                                case constants.ClockComparison:
-                                case constants.NumberComparison:
-                                    result = this.executeComparison(condition);
-                                    break;
-                                case constants.DateTemplateComparison:
-                                    result = this.executeComparison(condition);
-                                    break;
+                        public execute(condition: any): any {
+                            let result: any = condition;
+                            if (typeof condition === "string" || typeof condition === "number") {
+                                result = condition;
+                            }
+                            if(cessnalib.js.Class.instanceOf(new Particle("Reference",true),condition)){
+                                result = this.executeParticleReference(condition);
+                            }else {
+                                switch (condition.className) {
+                                    case constants.LogicalPhrase:
+                                        result = this.executeLogicalPhrase(condition);
+                                        break;
+                                    case constants.CalculationPhrase:
+                                        result = this.executeCalculationPhrase(condition);
+                                        break;
+                                    case constants.TimeComparison:
+                                    case constants.TimeTemplateComparison:
+                                    case constants.DateComparison:
+                                    case constants.DateTemplateComparison:
+                                    case constants.ClockComparison:
+                                    case constants.ClockTemplateComparison:
+                                    case constants.NumberComparison:
+                                    case constants.DateTemplateComparison:
+                                        result = this.executeComparison(condition);
+                                        break;
+                                }
                             }
                             return result;
                         }
@@ -370,7 +385,6 @@ export module cessnalib {
                                 case constants.NumberComparison:
                                     let number1:number = Number(operand1);
                                     let number2:number = Number(operand2);
-
                                     switch (comparison.operator) {
                                         case condition.operator.ComparisonOperator.BIGGERTHAN:
                                             result = number1 > number2;
@@ -399,11 +413,11 @@ export module cessnalib {
                                         case condition.operator.ComparisonOperator.BIGGERTHAN:
                                             result = this.execute(new DateComparison(time1.date,condition.operator.ComparisonOperator.BIGGERTHAN,time2.date)) ? true :
                                                 this.execute(new DateComparison(time1.date,condition.operator.ComparisonOperator.SMALLERTHAN,time2.date)) ? false :
-                                                this.execute(new ClockComparison(time1.clock,condition.operator.ComparisonOperator.BIGGERTHAN,time2.clock));
+                                                    this.execute(new ClockComparison(time1.clock,condition.operator.ComparisonOperator.BIGGERTHAN,time2.clock));
                                             break;
                                         case condition.operator.ComparisonOperator.EQUAL:
                                             result = this.execute(new DateComparison(time1.date,condition.operator.ComparisonOperator.EQUAL,time2.date)) &&
-                                                    this.execute(new ClockComparison(time1.clock,condition.operator.ComparisonOperator.EQUAL,time2.clock));
+                                                this.execute(new ClockComparison(time1.clock,condition.operator.ComparisonOperator.EQUAL,time2.clock));
                                             break;
                                         case condition.operator.ComparisonOperator.NOTEQUAL:
                                             result = !this.execute(new TimeComparison(time1,condition.operator.ComparisonOperator.EQUAL,time2));
@@ -433,14 +447,14 @@ export module cessnalib {
                                                 date1.day > date2.day;
                                             break;
                                         case condition.operator.ComparisonOperator.EQUAL:
-                                            result = date1.year == date2.year &&
-                                                date1.month == date2.month &&
-                                                date1.day == date2.day;
+                                            result = date1.year === date2.year &&
+                                                date1.month === date2.month &&
+                                                date1.day === date2.day;
                                             break;
                                         case condition.operator.ComparisonOperator.NOTEQUAL:
-                                            result = !(date1.year == date2.year &&
-                                            date1.month == date2.month &&
-                                            date1.day == date2.day);
+                                            result = !(date1.year === date2.year &&
+                                            date1.month === date2.month &&
+                                            date1.day === date2.day);
                                             break;
                                         case condition.operator.ComparisonOperator.SMALLERTHAN:
                                             result = date1.year < date2.year ? true : date1.year > date2.year ? false :
@@ -467,14 +481,14 @@ export module cessnalib {
                                                 clock1.second > clock2.second;
                                             break;
                                         case condition.operator.ComparisonOperator.EQUAL:
-                                            result = clock1.hour == clock2.hour &&
-                                                clock1.minute == clock2.minute &&
-                                                clock1.second == clock2.second;
+                                            result = clock1.hour === clock2.hour &&
+                                                clock1.minute === clock2.minute &&
+                                                clock1.second === clock2.second;
                                             break;
                                         case condition.operator.ComparisonOperator.NOTEQUAL:
-                                            result = !(clock1.hour == clock2.hour &&
-                                            clock1.minute == clock2.minute &&
-                                            clock1.second == clock2.second);
+                                            result = !(clock1.hour === clock2.hour &&
+                                            clock1.minute === clock2.minute &&
+                                            clock1.second === clock2.second);
                                             break;
                                         case condition.operator.ComparisonOperator.SMALLERTHAN:
                                             result = clock1.hour < clock2.hour ? true : clock1.hour > clock2.hour ? false :
@@ -494,7 +508,7 @@ export module cessnalib {
                                 case constants.DateTemplateComparison:
                                     let dateTemplate: DateTemplate = null;
                                     let date: Date = null;
-                                    if(operand1.className == constants.DateTemplate){
+                                    if(operand1.className === constants.DateTemplate){
                                         dateTemplate = operand1;
                                         date = operand2;
                                     }else{
@@ -503,19 +517,16 @@ export module cessnalib {
                                     }
                                     switch (comparison.operator) {
                                         case condition.operator.TemplateOperator.COVER:
-                                            return dateTemplate.year ?
-                                                dateTemplate.year == date.year :
-                                                dateTemplate.month ?
-                                                    dateTemplate.month == date.month :
-                                                    dateTemplate.day ?
-                                                        dateTemplate.day == date.day : true;
+                                            result = dateTemplate.year ? dateTemplate.year === date.year : true;
+                                            result = result && (dateTemplate.month ? dateTemplate.month === date.month : true);
+                                            result = result && (dateTemplate.day ? dateTemplate.day === date.day : true);
                                             break;
                                     }
                                     break;
                                 case constants.ClockTemplateComparison:
                                     let clockTemplate: ClockTemplate = null;
                                     let clock: Clock = null;
-                                    if(operand1.className == constants.ClockTemplate){
+                                    if(operand1.className === constants.ClockTemplate){
                                         clockTemplate = operand1;
                                         clock = operand2;
                                     }else{
@@ -523,21 +534,17 @@ export module cessnalib {
                                         clockTemplate = operand2;
                                     }
                                     switch (comparison.operator) {
-                                        //TODO fix
                                         case condition.operator.TemplateOperator.COVER:
-                                            return clockTemplate.hour ?
-                                            clockTemplate.hour == clock.hour :
-                                                clockTemplate.minute ?
-                                                clockTemplate.minute == clock.minute :
-                                                    clockTemplate.second ?
-                                                    clockTemplate.second == clock.second : true;
+                                            result =  clockTemplate.hour ? clockTemplate.hour === clock.hour : true;
+                                            result = result && (clockTemplate.minute ? clockTemplate.minute === clock.minute : true);
+                                            result = result && (clockTemplate.second ? clockTemplate.second === clock.second : true);
                                             break;
                                     }
                                     break;
                                 case constants.TimeTemplateComparison:
                                     let timeTemplate: TimeTemplate = null;
                                     let time: Time = null;
-                                    if(operand1.className == constants.TimeTemplate){
+                                    if(operand1.className === constants.TimeTemplate){
                                         timeTemplate = operand1;
                                         time = operand2;
                                     }else{
@@ -546,10 +553,8 @@ export module cessnalib {
                                     }
                                     switch (comparison.operator) {
                                         case condition.operator.TemplateOperator.COVER:
-                                            return timeTemplate.date ?
-                                            this.execute(new DateTemplateComparison(timeTemplate.date,condition.operator.TemplateOperator.COVER,time.date)):
-                                                timeTemplate.clock ?
-                                                    this.execute(new ClockTemplateComparison(timeTemplate.clock,condition.operator.TemplateOperator.COVER,time.clock)) : true;
+                                            result = timeTemplate.date ? this.execute(new DateTemplateComparison(timeTemplate.date,condition.operator.TemplateOperator.COVER,time.date)): true;
+                                            result = result && (timeTemplate.clock ? this.execute(new ClockTemplateComparison(timeTemplate.clock,condition.operator.TemplateOperator.COVER,time.clock)) : true);
                                             break;
                                     }
                                     break;
@@ -587,12 +592,12 @@ export module cessnalib {
                             return this.particles[particle.name];
                         }
                     }
-                    export interface TwoParameterBracket<T> extends Identifiable {
+                    export interface TwoParameterBracket<T> extends Classifiable {
                         operand1: T;
                         operator: string;
                         operand2: T;
                     }
-                    export abstract class Phrase<T> implements Identifiable {
+                    export abstract class Phrase<T> implements Classifiable {
                         public stack:Array<any>;
                         constructor(
                             public className:string,
@@ -649,36 +654,36 @@ export module cessnalib {
                     }
                     export class ClockComparison extends Comparison<Clock> {
                         constructor(
-                            operand1: ClockComparison | Particle | Clock,
+                            operand1: ClockComparison | ParticleReference | Clock,
                             operator: string,
-                            operand2: ClockComparison | Particle | Clock
+                            operand2: ClockComparison | ParticleReference | Clock
                         ){
                             super(constants.ClockComparison,operand1,operator,operand2);
                         }
                     }
                     export class DateTemplateComparison extends Comparison<DateTemplate> {
                         constructor(
-                            operand1: DateTemplateComparison | Particle | DateTemplate,
+                            operand1: DateTemplateComparison | ParticleReference | DateTemplate,
                             operator: string,
-                            operand2: DateTemplateComparison | Particle | DateTemplate
+                            operand2: DateTemplateComparison | ParticleReference | DateTemplate
                         ){
                             super(constants.DateTemplateComparison,operand1,operator,operand2);
                         }
                     }
                     export class ClockTemplateComparison extends Comparison<ClockTemplate> {
                         constructor(
-                            operand1: ClockTemplateComparison | Particle | ClockTemplate,
+                            operand1: ClockTemplateComparison | ParticleReference | ClockTemplate,
                             operator: string,
-                            operand2: ClockTemplateComparison | Particle | ClockTemplate
+                            operand2: ClockTemplateComparison | ParticleReference | ClockTemplate
                         ){
                             super(constants.ClockTemplateComparison,operand1,operator,operand2);
                         }
                     }
                     export class TimeTemplateComparison extends Comparison<TimeTemplate> {
                         constructor(
-                            operand1: TimeTemplateComparison | Particle | TimeTemplate,
+                            operand1: TimeTemplateComparison | ParticleReference | TimeTemplate,
                             operator: string,
-                            operand2: TimeTemplateComparison | Particle | TimeTemplate
+                            operand2: TimeTemplateComparison | ParticleReference | TimeTemplate
                         ){
                             super(constants.TimeTemplateComparison,operand1,operator,operand2);
                         }
@@ -717,8 +722,61 @@ export module cessnalib {
                     }
                 }
                 export interface Reaction {
-                    (triggerParticle:Particle,particles:any,organelles:any): void;
+                    (particle:Particle,particles:any,organelles:any,receiveParticle:interaction.ReceiveParticle,impactGenerator:interaction.ImpactGenerator): void;
                 }
+            }
+            export namespace constants {
+                export const OutSide = "OutSide";
+                export const EuglenaInfo = "cessnalib.being.alive.EuglenaInfo";
+                export namespace particles {
+                    export const EuglenaName = "EuglenaName";
+                }
+            }
+            export abstract class Organelle<InitialProperties> implements Named, interaction.CanReceiveParticle {
+                constructor(
+                    public name: string,
+                    public impactGenerator?: interaction.ImpactGenerator,
+                    public nucleus?: interaction.CanReceiveParticle,
+                    public initialProperties?: InitialProperties) { }
+                public abstract receiveParticle(particle: Particle): void;
+            }
+            export class EuglenaInfo implements Named {
+                constructor(public name: string, public url: string, public port: string) { }
+            }
+            export interface OrganelleInfo {
+
+            }
+            export class Euglena implements interaction.CanReceiveParticle {
+                private executor: cessnalib.being.alive.dna.condition.Executor = null;
+                private organelles: any = {};
+                constructor(private chromosome: dna.Gene[] = [], private particles: any = {}, organelles:Organelle<any>[] = [],private impactGenerator:interaction.ImpactGenerator) {
+                    this.executor = new cessnalib.being.alive.dna.condition.Executor(this.particles);
+                    for (let organelle of organelles){
+                        organelle.nucleus = this;
+                        this.organelles[organelle.name] = organelle;
+                    }
+                }
+                public receiveParticle( particle: Particle ) {
+                    this.triggerGene(particle);
+                }
+                private triggerGene(particle: Particle) {
+                    for (var i = 0; i<this.chromosome.length;i++) {
+                        if (sys.type.StaticTools.Array.contains(this.chromosome[i].triggers, particle.name) &&
+                            this.chromosome[i].condition ? this.executor.execute(this.chromosome[i].condition): true) {
+                            var reaction = this.chromosome[i].reaction;
+                            var particles = this.particles;
+                            var organelles = this.organelles;
+                            reaction(particle,particles,organelles,this.receiveParticle,this.impactGenerator);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    export namespace reference {
+        export namespace sys {
+            export namespace type {
+                export const Exception = new cessnalib.sys.type.Exception("Exception", null);
             }
         }
     }

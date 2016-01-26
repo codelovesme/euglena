@@ -1,6 +1,3 @@
-/**
- * Created by codelovesme on 6/19/2015.
- */
 export declare module cessnalib {
     namespace js {
         class Class {
@@ -10,7 +7,7 @@ export declare module cessnalib {
             static classify(emptyInstance: any, valueObj: any): any;
             static valuefy(instance: any): any;
             static isPrimaryType(obj: any): boolean;
-            static instanceOf<T>(referenceObject: any, obj: any): obj is T;
+            static instanceOf<T>(referenceObject: T, obj: any | T): obj is T;
         }
     }
     namespace injection {
@@ -21,7 +18,7 @@ export declare module cessnalib {
             values: ValueChooser[];
             objects: ObjectChooser[];
         }
-        class ValueChooser implements sys.type.Identifiable {
+        class ValueChooser {
             className: string;
             values: string[];
             index: number;
@@ -51,25 +48,31 @@ export declare module cessnalib {
                 getValues(): V[];
             }
             interface Callback<T> {
-                (t: T): void;
+                (t: T | Exception): void;
             }
-            interface Identifiable {
+            interface Classifiable {
                 className: string;
             }
-            class Time implements Identifiable {
+            interface Identifiable {
+                id: string;
+            }
+            interface Named {
+                name: string;
+            }
+            class Time implements Classifiable {
                 date: Date;
                 clock: Clock;
                 className: string;
                 constructor(date: Date, clock: Clock);
             }
-            class Date implements Identifiable {
+            class Date implements Classifiable {
                 year: number;
                 month: number;
                 day: number;
                 className: string;
                 constructor(year: number, month: number, day: number);
             }
-            class Clock implements Identifiable {
+            class Clock implements Classifiable {
                 hour: number;
                 minute: number;
                 second: number;
@@ -77,6 +80,22 @@ export declare module cessnalib {
                 constructor(hour: number, minute: number, second: number);
             }
             namespace StaticTools {
+                class Exception {
+                    static isNotException<T>(t: T | Exception): t is T;
+                }
+                class UUID {
+                    static generate(): string;
+                }
+                class Time {
+                    static equals(time1: sys.type.Time, time2: sys.type.Time): boolean;
+                    static now(): sys.type.Time;
+                }
+                class Date {
+                    static equals(date1: sys.type.Date, date2: sys.type.Date): boolean;
+                }
+                class Clock {
+                    static equals(clock1: sys.type.Clock, clock2: sys.type.Clock): boolean;
+                }
                 class Array {
                     static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean;
                     static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number;
@@ -85,69 +104,45 @@ export declare module cessnalib {
         }
     }
     namespace being {
-        import Identifiable = cessnalib.sys.type.Identifiable;
-        namespace constants {
-            const Particle: string;
-        }
+        import Named = cessnalib.sys.type.Named;
         class Particle {
             name: string;
             content: any;
-            className: string;
             constructor(name: string, content: any);
         }
         namespace interaction {
-            interface CanReceiveParticle {
-                receiveParticle(particle: Particle): void;
+            interface ReceiveParticle {
+                (particle: Particle): void;
             }
-            interface CanThrowParticle {
-                throwParticle(particle: Particle): void;
+            interface CanReceiveParticle {
+                receiveParticle: ReceiveParticle;
+            }
+            interface Impact extends Named {
+                name: string;
+                sender: string;
+                particle: Particle;
+            }
+            class ImpactGenerator {
+                euglenaName: string;
+                constructor(euglenaName: string);
+                generateImpact(particle: Particle, destination: string): Impact;
+            }
+            class StaticTools {
+                static generateImpact(sender: string, particle: Particle, destination: string): Impact;
             }
         }
         namespace alive {
             import Particle = cessnalib.being.Particle;
-            import Gene = cessnalib.being.alive.dna.Gene;
-            namespace constants {
-                const EuglenaInfo: string;
-            }
-            abstract class Organelle<InitialProperties> implements Identifiable {
-                className: string;
-                seed: interaction.CanReceiveParticle;
-                initialProperties: InitialProperties;
-                constructor(className: string, seed?: interaction.CanReceiveParticle, initialProperties?: InitialProperties);
-            }
-            abstract class Limb<InitialProperties> extends Organelle<InitialProperties> implements interaction.CanThrowParticle {
-                constructor(className: string, seed?: interaction.CanReceiveParticle, initialProperties?: InitialProperties);
-                abstract throwParticle(particle: Particle): void;
-            }
-            class EuglenaInfo implements sys.type.Identifiable {
-                euglenaId: string;
-                url: string;
-                port: string;
-                className: string;
-                constructor(euglenaId: string, url: string, port: string);
-            }
-            class Euglena implements interaction.CanReceiveParticle {
-                private organelles;
-                private particles;
-                private chromosome;
-                constructor(chromosome?: dna.Gene[]);
-                addGene(gene: Gene): void;
-                addOrganelle(organelle: Organelle<Object>): void;
-                receiveParticle(impact: Particle): void;
-                saveParticle(particle: Particle): void;
-                deleteParticle(className: string): void;
-                getParticle(className: string): any;
-                private triggerGene(particle);
-            }
             namespace dna {
                 import Time = cessnalib.sys.type.Time;
-                import Identifiable = cessnalib.sys.type.Identifiable;
+                import Classifiable = cessnalib.sys.type.Classifiable;
                 import ParticleReference = cessnalib.being.alive.dna.condition.ParticleReference;
-                class Gene implements Identifiable {
-                    className: string;
+                class Gene implements Named {
+                    name: string;
                     triggers: string[];
                     reaction: Reaction;
-                    constructor(className: string, triggers: string[], reaction: Reaction, condition?: dna.condition.LogicalPhrase | dna.condition.Comparison<any> | ParticleReference);
+                    condition: dna.condition.LogicalPhrase | dna.condition.Comparison<any> | ParticleReference;
+                    constructor(name: string, triggers: string[], reaction: Reaction, condition?: dna.condition.LogicalPhrase | dna.condition.Comparison<any> | ParticleReference);
                 }
                 namespace condition {
                     import Date = cessnalib.sys.type.Date;
@@ -159,9 +154,27 @@ export declare module cessnalib {
                         const CalculationPhrase: string;
                         const ClockComparison: string;
                         const DateComparison: string;
+                        const DateTemplateComparison: string;
+                        const DateTemplate: string;
+                        const ClockTemplateComparison: string;
+                        const ClockTemplate: string;
+                        const TimeTemplateComparison: string;
+                        const TimeTemplate: string;
                     }
                     class ParticleReference extends Particle {
                         constructor(name: string);
+                    }
+                    class DateTemplate extends Date implements Classifiable {
+                        className: string;
+                        constructor(year: number, month: number, day: number);
+                    }
+                    class ClockTemplate extends Clock implements Classifiable {
+                        className: string;
+                        constructor(hour: number, minute: number, second: number);
+                    }
+                    class TimeTemplate extends Time implements Classifiable {
+                        className: string;
+                        constructor(date: Date, clock: Clock);
                     }
                     class StaticTools {
                         addOperandAndParameter<T, S>(phrase: Phrase<T>, operand: string, parameter: T): void;
@@ -172,15 +185,15 @@ export declare module cessnalib {
                         executeLogicalPhrase(logicalPhrase: LogicalPhrase): boolean;
                         execute(condition: any): any;
                         private executeComparison<T>(comparison);
-                        executeCalculationPhrase(calculationPhrase: CalculationPhrase): number;
-                        executeParticleReference(particle: ParticleReference): any;
+                        private executeCalculationPhrase(calculationPhrase);
+                        private executeParticleReference(particle);
                     }
-                    interface TwoParameterBracket<T> extends Identifiable {
+                    interface TwoParameterBracket<T> extends Classifiable {
                         operand1: T;
                         operator: string;
                         operand2: T;
                     }
-                    abstract class Phrase<T> implements Identifiable {
+                    abstract class Phrase<T> implements Classifiable {
                         className: string;
                         operand1: Phrase<T> | T | ParticleReference;
                         operator: string;
@@ -208,7 +221,16 @@ export declare module cessnalib {
                         constructor(operand1: DateComparison | ParticleReference | Date, operator: string, operand2: DateComparison | ParticleReference | Date);
                     }
                     class ClockComparison extends Comparison<Clock> {
-                        constructor(operand1: ClockComparison | Particle | Clock, operator: string, operand2: ClockComparison | Particle | Clock);
+                        constructor(operand1: ClockComparison | ParticleReference | Clock, operator: string, operand2: ClockComparison | ParticleReference | Clock);
+                    }
+                    class DateTemplateComparison extends Comparison<DateTemplate> {
+                        constructor(operand1: DateTemplateComparison | ParticleReference | DateTemplate, operator: string, operand2: DateTemplateComparison | ParticleReference | DateTemplate);
+                    }
+                    class ClockTemplateComparison extends Comparison<ClockTemplate> {
+                        constructor(operand1: ClockTemplateComparison | ParticleReference | ClockTemplate, operator: string, operand2: ClockTemplateComparison | ParticleReference | ClockTemplate);
+                    }
+                    class TimeTemplateComparison extends Comparison<TimeTemplate> {
+                        constructor(operand1: TimeTemplateComparison | ParticleReference | TimeTemplate, operator: string, operand2: TimeTemplateComparison | ParticleReference | TimeTemplate);
                     }
                     class CalculationPhrase extends Phrase<number> {
                         constructor(operand1: Phrase<number> | ParticleReference | number, operator: string, operand2: Phrase<number> | ParticleReference | number);
@@ -232,11 +254,54 @@ export declare module cessnalib {
                             const BIGEQUAL: string;
                             const SMALLEQUAL: string;
                         }
+                        namespace TemplateOperator {
+                            const COVER: string;
+                        }
                     }
                 }
                 interface Reaction {
-                    (triggerParticle: Particle, particles: any, organelles: any): void;
+                    (particle: Particle, particles: any, organelles: any, receiveParticle: interaction.ReceiveParticle, impactGenerator: interaction.ImpactGenerator): void;
                 }
+            }
+            namespace constants {
+                const OutSide: string;
+                const EuglenaInfo: string;
+                namespace particles {
+                    const EuglenaName: string;
+                }
+            }
+            abstract class Organelle<InitialProperties> implements Named, interaction.CanReceiveParticle {
+                name: string;
+                impactGenerator: interaction.ImpactGenerator;
+                nucleus: interaction.CanReceiveParticle;
+                initialProperties: InitialProperties;
+                constructor(name: string, impactGenerator?: interaction.ImpactGenerator, nucleus?: interaction.CanReceiveParticle, initialProperties?: InitialProperties);
+                abstract receiveParticle(particle: Particle): void;
+            }
+            class EuglenaInfo implements Named {
+                name: string;
+                url: string;
+                port: string;
+                constructor(name: string, url: string, port: string);
+            }
+            interface OrganelleInfo {
+            }
+            class Euglena implements interaction.CanReceiveParticle {
+                private chromosome;
+                private particles;
+                private impactGenerator;
+                private executor;
+                private organelles;
+                constructor(chromosome: dna.Gene[], particles: any, organelles: Organelle<any>[], impactGenerator: interaction.ImpactGenerator);
+                receiveParticle(particle: Particle): void;
+                private triggerGene(particle);
+            }
+        }
+    }
+    namespace reference {
+        namespace sys {
+            namespace type {
+                const Exception: cessnalib.sys.type.Exception;
             }
         }
     }

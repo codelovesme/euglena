@@ -1,4 +1,3 @@
-/// <reference path="../../cessnalib_template/typings/tsd.d.ts" />
 /**
  * Created by codelovesme on 6/19/2015.
  */
@@ -7,10 +6,15 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/*
+* TODO List
+* Environment geriye exception donmeli mi problem ciktiginda yoksa loglayip gecmeli mi ?0
+*/
 var cessnalib_1 = require("../node_modules/cessnalib/cessnalib");
 var cessnalib_template_1 = require("../node_modules/cessnalib_template/src/cessnalib_template");
 var io = require("socket.io");
 var http = require("http");
+var Exception = cessnalib_1.cessnalib.sys.type.Exception;
 var cessnalib_impl;
 (function (cessnalib_impl) {
     var sys;
@@ -19,12 +23,12 @@ var cessnalib_impl;
         (function (io) {
             var net;
             (function (net) {
-                var HttpPost = (function () {
-                    function HttpPost(post_options) {
+                var HttpRequestManager = (function () {
+                    function HttpRequestManager(post_options) {
                         this.post_options = post_options;
                     }
-                    HttpPost.prototype.sendMessage = function (message, callback) {
-                        var post_req = http.request(this.post_options, function (res) {
+                    HttpRequestManager.prototype.sendMessage = function (message, callback) {
+                        var req = http.request(this.post_options, function (res) {
                             res.setEncoding('utf8');
                             var str = '';
                             res.on('data', function (data) {
@@ -34,13 +38,19 @@ var cessnalib_impl;
                                 callback(str);
                             });
                         });
-                        // post the data
-                        post_req.write(message);
-                        post_req.end();
+                        req.setTimeout(10000, function () {
+                            req.abort();
+                            callback(new Exception("Request timed out."));
+                        });
+                        req.on('error', function (e) {
+                            callback(new Exception("problem with request: " + e.message));
+                        });
+                        req.write(message);
+                        req.end();
                     };
-                    return HttpPost;
+                    return HttpRequestManager;
                 })();
-                net.HttpPost = HttpPost;
+                net.HttpRequestManager = HttpRequestManager;
             })(net = io.net || (io.net = {}));
         })(io = sys.io || (sys.io = {}));
     })(sys = cessnalib_impl.sys || (cessnalib_impl.sys = {}));
@@ -53,100 +63,174 @@ var cessnalib_impl;
                 }
                 StaticTools.createOrganelleBank = function () {
                     var bank = new cessnalib_1.cessnalib.sys.type.Map();
-                    for (var key in alive.organelles) {
-                        bank.add(key, new alive.organelles[key]());
-                    }
+                    bank.add(constants.organelles.ImpactThrowerOrganelleImplHttp, new alive.organelle.ImpactThrowerOrganelleImplHttp());
+                    bank.add(constants.organelles.ImpactTransmitterOrganelleImplHttp, new alive.organelle.ImpactTransmitterOrganelleImplHttp());
+                    bank.add(constants.organelles.ReceptionOrganelleImplHttp, new alive.organelle.ReceptionOrganelleImplHttp());
+                    bank.add(constants.organelles.WebOrganelleImplHttp, new alive.organelle.WebOrganelleImplHttp());
+                    bank.add(constants.organelles.TimeOrganelleImplJs, new alive.organelle.TimeOrganelleJs());
                     return bank;
                 };
                 return StaticTools;
             })();
             alive.StaticTools = StaticTools;
-            var particle;
-            (function (particle) {
-                var ConnectedToEuglena = (function () {
-                    function ConnectedToEuglena(content) {
-                        this.content = content;
-                        this.className = "cessnalib_impl.being.alive.particles.ConnectedToEuglena";
-                    }
-                    return ConnectedToEuglena;
-                })();
-                particle.ConnectedToEuglena = ConnectedToEuglena;
-                var ConnectToEuglenaRequest = (function () {
-                    function ConnectToEuglenaRequest(content) {
-                        this.content = content;
-                        this.className = "cessnalib_impl.being.alive.particles.ConnectToEuglenaRequest";
-                    }
-                    return ConnectToEuglenaRequest;
-                })();
-                particle.ConnectToEuglenaRequest = ConnectToEuglenaRequest;
-            })(particle = alive.particle || (alive.particle = {}));
+            var constants;
+            (function (constants) {
+                var organelles;
+                (function (organelles) {
+                    organelles.WebOrganelleImplHttp = "WebOrganelleImplHttp";
+                    organelles.ReceptionOrganelleImplHttp = "ReceptionOrganelleImplHttp";
+                    organelles.ImpactTransmitterOrganelleImplHttp = "ImpactTransmitterOrganelleImplHttp";
+                    organelles.ImpactThrowerOrganelleImplHttp = "ImpactThrowerOrganelleImplHttp";
+                    organelles.TimeOrganelleImplJs = "TimeOrganelleImplJs";
+                })(organelles = constants.organelles || (constants.organelles = {}));
+            })(constants = alive.constants || (alive.constants = {}));
             var organelle;
             (function (organelle) {
-                var TimeOrganelleImplNistGov = (function (_super) {
-                    __extends(TimeOrganelleImplNistGov, _super);
-                    function TimeOrganelleImplNistGov() {
+                var WebOrganelleImplHttp = (function (_super) {
+                    __extends(WebOrganelleImplHttp, _super);
+                    function WebOrganelleImplHttp() {
                         _super.apply(this, arguments);
                     }
-                    TimeOrganelleImplNistGov.prototype.fetchCurrentTime = function () {
-                        //TODO
-                        this.seed.receiveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.Time(new cessnalib_1.cessnalib.sys.type.Time(new cessnalib_1.cessnalib.sys.type.Date(2016, 1, 12), new cessnalib_1.cessnalib.sys.type.Clock(23, 12, 3))));
+                    WebOrganelleImplHttp.prototype.receiveParticle = function (particle) {
+                        switch (particle.name) {
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.web.constants.incomingparticles.ReturnCurrentTime:
+                                this.fetchCurrentTime();
+                                break;
+                        }
                     };
-                    return TimeOrganelleImplNistGov;
-                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.TimeOrganelle);
-                organelle.TimeOrganelleImplNistGov = TimeOrganelleImplNistGov;
-                //TODO test
-                var WebParticleTransmitterOrganelleImplHttp = (function (_super) {
-                    __extends(WebParticleTransmitterOrganelleImplHttp, _super);
-                    function WebParticleTransmitterOrganelleImplHttp() {
+                    WebOrganelleImplHttp.prototype.fetchCurrentTime = function () {
+                        //TODO
+                    };
+                    return WebOrganelleImplHttp;
+                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebOrganelle);
+                organelle.WebOrganelleImplHttp = WebOrganelleImplHttp;
+                var TimeOrganelleJs = (function (_super) {
+                    __extends(TimeOrganelleJs, _super);
+                    function TimeOrganelleJs() {
                         _super.apply(this, arguments);
                     }
-                    WebParticleTransmitterOrganelleImplHttp.prototype.connectToEuglena = function () {
+                    TimeOrganelleJs.prototype.receiveParticle = function (particle) {
                         var _this = this;
+                        switch (particle.name) {
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.time.constants.incomingparticles.SetTime:
+                                this.time = particle.content;
+                                break;
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.time.constants.incomingparticles.StartClock:
+                                setInterval(function () {
+                                    var newDate = new Date(_this.time.date.year, _this.time.date.month - 1, _this.time.date.day, _this.time.clock.hour, _this.time.clock.minute, _this.time.clock.second + 1);
+                                    if (newDate.getSeconds() != _this.time.clock.second) {
+                                        _this.time.clock.second = newDate.getSeconds();
+                                        //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Second(this.time.clock.second));
+                                        if (newDate.getMinutes() != _this.time.clock.minute) {
+                                            _this.time.clock.minute = newDate.getMinutes();
+                                            //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Minute(this.time.clock.minute));
+                                            if (newDate.getHours() != _this.time.clock.hour) {
+                                                _this.time.clock.hour = newDate.getHours();
+                                                //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Hour(this.time.clock.hour));
+                                                if (newDate.getDate() != _this.time.date.day) {
+                                                    _this.time.date.day = newDate.getDate();
+                                                    //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Day(this.time.date.day));
+                                                    if (newDate.getMonth() + 1 != _this.time.date.month) {
+                                                        _this.time.date.month = newDate.getMonth() + 1;
+                                                        //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Month(this.time.date.month));
+                                                        if (newDate.getFullYear() != _this.time.date.year) {
+                                                            _this.time.date.year = newDate.getFullYear();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    _this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.Time(_this.time));
+                                }, 1000);
+                                break;
+                        }
+                    };
+                    return TimeOrganelleJs;
+                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.TimeOrganelle);
+                organelle.TimeOrganelleJs = TimeOrganelleJs;
+                var ImpactTransmitterOrganelleImplHttp = (function (_super) {
+                    __extends(ImpactTransmitterOrganelleImplHttp, _super);
+                    function ImpactTransmitterOrganelleImplHttp() {
+                        _super.apply(this, arguments);
+                        this.servers = {};
+                    }
+                    ImpactTransmitterOrganelleImplHttp.prototype.receiveParticle = function (particle) {
+                        switch (particle.name) {
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.impacttransmitter.constants.incomingparticles.ConnectToEuglena:
+                                this.connectToEuglena(particle.content);
+                                break;
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.impacttransmitter.constants.incomingparticles.ThrowImpact:
+                                var throwImpactContent = particle.content;
+                                this.throwImpact(throwImpactContent.to, throwImpactContent.impact);
+                                break;
+                        }
+                    };
+                    ImpactTransmitterOrganelleImplHttp.prototype.connectToEuglena = function (euglenaInfo) {
+                        var _this = this;
+                        if (this.servers[euglenaInfo.name]) {
+                            return;
+                        }
                         var post_options;
-                        post_options.host = this.initialProperties.host;
-                        post_options.port = Number(this.initialProperties.port);
-                        post_options.path = this.initialProperties.path ? this.initialProperties.path : "/";
+                        post_options.host = euglenaInfo.url;
+                        post_options.port = Number(euglenaInfo.port);
+                        post_options.path = "/";
                         post_options.method = 'POST';
                         post_options.headers = {
                             'Content-Type': 'application/json'
                         };
                         var server = io("http://" + post_options.host + ":" + post_options.port);
-                        server.on("particle", function (particleAssumption, callback) {
-                            if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.Particle, particleAssumption)) {
-                                _this.seed.receiveParticle(particleAssumption);
+                        this.servers[euglenaInfo.name] = server;
+                        server.on("impact", function (impactAssumption, callback) {
+                            if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.interaction.Impact, impactAssumption)) {
+                                //TODO
+                                //callback(new cessnalib_template.being.alive.particles.Acknowledge());
+                                _this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption));
                             }
                             else {
                             }
                         });
-                        server.on("bind", function (particleAssumption) {
-                            if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.Particle, particleAssumption)) {
-                                _this.seed.receiveParticle(particleAssumption);
-                            }
-                            else {
-                            }
+                        server.on("bind", function (impactAssumption) {
+                            //TODO
                         });
                         server.on("disconnect", function () {
                             //TODO
                         });
                         server.on("connect", function (socket) {
+                            socket.emit("bind", null);
                             //TODO
                         });
                     };
-                    WebParticleTransmitterOrganelleImplHttp.prototype.throwParticle = function (particle) {
-                        this.server.emit("particle", particle);
+                    ImpactTransmitterOrganelleImplHttp.prototype.throwImpact = function (to, impact) {
+                        var server = this.servers[to.name];
+                        if (server) {
+                            server.emit("impact", impact);
+                        }
+                        else {
+                        }
                     };
-                    return WebParticleTransmitterOrganelleImplHttp;
-                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebParticleTransmitterOrganelle);
-                organelle.WebParticleTransmitterOrganelleImplHttp = WebParticleTransmitterOrganelleImplHttp;
-                //TODO test
-                var WebReceptionOrganelleImplHttp = (function (_super) {
-                    __extends(WebReceptionOrganelleImplHttp, _super);
-                    function WebReceptionOrganelleImplHttp() {
+                    return ImpactTransmitterOrganelleImplHttp;
+                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.ImpactTransmitterOrganelle);
+                organelle.ImpactTransmitterOrganelleImplHttp = ImpactTransmitterOrganelleImplHttp;
+                var ReceptionOrganelleImplHttp = (function (_super) {
+                    __extends(ReceptionOrganelleImplHttp, _super);
+                    function ReceptionOrganelleImplHttp() {
                         _super.apply(this, arguments);
+                        this.sockets = {};
                     }
-                    WebReceptionOrganelleImplHttp.prototype.listen = function () {
+                    ReceptionOrganelleImplHttp.prototype.receiveParticle = function (particle) {
+                        switch (particle.name) {
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.constants.incomingparticles.Listen:
+                                this.listen();
+                                break;
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.constants.incomingparticles.ThrowImpact:
+                                var throwImpactContent = particle.content;
+                                this.throwImpact(throwImpactContent.to, throwImpactContent.impact);
+                                break;
+                        }
+                    };
+                    ReceptionOrganelleImplHttp.prototype.listen = function () {
                         var _this = this;
-                        this.sockets = new cessnalib_1.cessnalib.sys.type.Map();
                         var server = http.createServer(function (req, res) {
                             if (req.method == 'POST') {
                                 var body = '';
@@ -159,16 +243,18 @@ var cessnalib_impl;
                                 req.on('end', function () {
                                     res.writeHead(200, { 'Content-Type': 'application/json' });
                                     try {
-                                        var particleAssumption = JSON.parse(body);
-                                        if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.Particle, particleAssumption)) {
-                                            _this.seed.receiveParticle(particleAssumption);
+                                        var impactAssumption = JSON.parse(body);
+                                        if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.interaction.Impact, impactAssumption) &&
+                                            cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.Particle, impactAssumption.particle)) {
+                                            _this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption));
                                             res.end(JSON.stringify(new cessnalib_template_1.cessnalib_template.being.alive.particles.Acknowledge()));
                                         }
                                         else {
                                         }
                                     }
                                     catch (e) {
-                                        res.end(JSON.stringify(new cessnalib_template_1.cessnalib_template.being.alive.particles.ExceptionOccurred(new cessnalib_1.cessnalib.sys.type.Exception(e.message))));
+                                        //TODO
+                                        res.end("Request format is uncorrect !");
                                     }
                                 });
                             }
@@ -180,71 +266,81 @@ var cessnalib_impl;
                         var socket = io.listen(server);
                         socket.listen(this.initialProperties.port);
                         socket.on("connection", function (socket) {
-                            socket.on("bind", function (impulse) {
-                                _this.sockets.set(impulse.param.userId, socket);
-                                //TODO fix EuglenaInfo
-                                socket.emit("bind", new cessnalib_impl.being.alive.particle.ConnectedToEuglena(null));
+                            socket.on("bind", function (impact) {
+                                _this.sockets[impact.sender] = socket;
+                                //TODO
+                                socket.emit("bind", null);
                             });
-                            socket.on("impulse", function (impulse) {
-                                _this.seed.receiveParticle(impulse);
-                                var s = _this.sockets.get(impulse.param.userId);
-                                if (s) {
-                                }
+                            socket.on("impact", function (impactAssumption) {
+                                //TODO
+                                _this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption));
+                                //var s = this.sockets[impulse];
+                                //if (s) {
+                                //s.emit("response", response);
+                                //}
                             });
                         });
                     };
-                    WebReceptionOrganelleImplHttp.prototype.throwImpulse = function (userId, impulse) {
-                        var connectedMiddlewares = '';
-                        if (this.sockets) {
-                            this.sockets.getKeys().forEach(function (e) {
-                                connectedMiddlewares += e + ",";
-                            });
-                        }
-                        var client = this.sockets.get(userId);
+                    ReceptionOrganelleImplHttp.prototype.throwImpact = function (to, impact) {
+                        var client = this.sockets[to.name];
                         if (client) {
+                            client.emit("impact", impact, function (resp) {
+                                //TODO
+                            });
                         }
                         else {
                         }
                     };
-                    return WebReceptionOrganelleImplHttp;
-                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebReceptionOrganelle);
-                organelle.WebReceptionOrganelleImplHttp = WebReceptionOrganelleImplHttp;
-                var WebParticleThrowerOrganelleImplHttp = (function (_super) {
-                    __extends(WebParticleThrowerOrganelleImplHttp, _super);
-                    function WebParticleThrowerOrganelleImplHttp() {
+                    return ReceptionOrganelleImplHttp;
+                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.ReceptionOrganelle);
+                organelle.ReceptionOrganelleImplHttp = ReceptionOrganelleImplHttp;
+                var ImpactThrowerOrganelleImplHttp = (function (_super) {
+                    __extends(ImpactThrowerOrganelleImplHttp, _super);
+                    function ImpactThrowerOrganelleImplHttp() {
                         _super.apply(this, arguments);
                     }
-                    WebParticleThrowerOrganelleImplHttp.prototype.throwParticle = function (particle) {
+                    ImpactThrowerOrganelleImplHttp.prototype.receiveParticle = function (particle) {
+                        switch (particle.name) {
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.impactthrower.constants.incomingparticles.ThrowImpact:
+                                this.throwImpact(particle.content.to, particle.content.impact);
+                                break;
+                        }
+                    };
+                    ImpactThrowerOrganelleImplHttp.prototype.throwImpact = function (to, impact) {
                         var _this = this;
-                        this.getHttpConnector().sendMessage(JSON.stringify(particle), function (message) {
-                            _this.seed.receiveParticle(JSON.parse(message));
+                        var post_options = {
+                            host: to.url,
+                            port: Number(to.port),
+                            path: "/",
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        };
+                        var httpConnector = new cessnalib_impl.sys.io.net.HttpRequestManager(post_options);
+                        httpConnector.sendMessage(JSON.stringify(impact), function (message) {
+                            if (cessnalib_1.cessnalib.sys.type.StaticTools.Exception.isNotException(message)) {
+                                try {
+                                    var impactAssumption = JSON.parse(message);
+                                    if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.interaction.Impact, impactAssumption)) {
+                                        _this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption));
+                                    }
+                                    else {
+                                    }
+                                }
+                                catch (e) {
+                                }
+                            }
+                            else {
+                                //TODO write a eligable exception message
+                                _this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.Exception(new Exception("")));
+                            }
                         });
                     };
-                    WebParticleThrowerOrganelleImplHttp.prototype.getHttpConnector = function () {
-                        if (!this.httpConnector) {
-                            var post_options = {
-                                host: this.initialProperties.host,
-                                port: Number(this.initialProperties.port),
-                                path: this.initialProperties.path ? this.initialProperties.path : "/",
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            };
-                            this.httpConnector = new cessnalib_impl.sys.io.net.HttpPost(post_options);
-                        }
-                        return this.httpConnector;
-                    };
-                    return WebParticleThrowerOrganelleImplHttp;
-                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebParticleThrowerOrganelle);
-                organelle.WebParticleThrowerOrganelleImplHttp = WebParticleThrowerOrganelleImplHttp;
+                    return ImpactThrowerOrganelleImplHttp;
+                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.ImpactThrowerOrganelle);
+                organelle.ImpactThrowerOrganelleImplHttp = ImpactThrowerOrganelleImplHttp;
             })(organelle = alive.organelle || (alive.organelle = {}));
-            alive.organelles = {
-                "TimeOrganelleImplNistGov": organelle.TimeOrganelleImplNistGov,
-                "WebParticleTransmitterOrganelleImplHttp": organelle.WebParticleTransmitterOrganelleImplHttp,
-                "WebReceptionOrganelleImplHttp": organelle.WebReceptionOrganelleImplHttp,
-                "WebParticleThrowerOrganelleImplHttp": organelle.WebParticleThrowerOrganelleImplHttp
-            };
         })(alive = being.alive || (being.alive = {}));
     })(being = cessnalib_impl.being || (cessnalib_impl.being = {}));
 })(cessnalib_impl = exports.cessnalib_impl || (exports.cessnalib_impl = {}));
