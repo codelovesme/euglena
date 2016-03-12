@@ -1,15 +1,11 @@
 ﻿{
     "compilerOptions": {
         "module": "commonjs",
+        "target": "es5",
         "noImplicitAny": true,
         "removeComments": false,
         "sourceMap": true,
         "declaration":true
     },
-    "files": [
-        "src/cessnalib.ts"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+    "files": [ "src/cessnalib.ts"]
 }

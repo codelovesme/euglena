@@ -10,6 +10,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 * TODO List
 * Environment geriye exception donmeli mi problem ciktiginda yoksa loglayip gecmeli mi ?0
 */
+/// <reference path="../typings/socket.io/socket.io.d.ts" />
 var cessnalib_1 = require("../node_modules/cessnalib/cessnalib");
 var cessnalib_template_1 = require("../node_modules/cessnalib_template/src/cessnalib_template");
 var io = require("socket.io");
@@ -45,7 +46,8 @@ var cessnalib_impl;
                         req.on('error', function (e) {
                             callback(new Exception("problem with request: " + e.message));
                         });
-                        req.write(message);
+                        if (message)
+                            req.write(message);
                         req.end();
                     };
                     return HttpRequestManager;
@@ -68,6 +70,7 @@ var cessnalib_impl;
                     bank.add(constants.organelles.ReceptionOrganelleImplHttp, new alive.organelle.ReceptionOrganelleImplHttp());
                     bank.add(constants.organelles.WebOrganelleImplHttp, new alive.organelle.WebOrganelleImplHttp());
                     bank.add(constants.organelles.TimeOrganelleImplJs, new alive.organelle.TimeOrganelleJs());
+                    bank.add(constants.organelles.DbOrganelleImplNeDb, new alive.organelle.DbOrganelleImplNeDb());
                     return bank;
                 };
                 return StaticTools;
@@ -77,6 +80,7 @@ var cessnalib_impl;
             (function (constants) {
                 var organelles;
                 (function (organelles) {
+                    organelles.DbOrganelleImplNeDb = "DbOrganelleImplNeDb";
                     organelles.WebOrganelleImplHttp = "WebOrganelleImplHttp";
                     organelles.ReceptionOrganelleImplHttp = "ReceptionOrganelleImplHttp";
                     organelles.ImpactTransmitterOrganelleImplHttp = "ImpactTransmitterOrganelleImplHttp";
@@ -96,14 +100,82 @@ var cessnalib_impl;
                             case cessnalib_template_1.cessnalib_template.being.ghost.euglena.web.constants.incomingparticles.ReturnCurrentTime:
                                 this.fetchCurrentTime();
                                 break;
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.web.constants.incomingparticles.ReturnIfConnectedToTheInternet:
+                                this.checkInternetConnection();
+                                break;
                         }
                     };
+                    WebOrganelleImplHttp.prototype.checkInternetConnection = function () {
+                        var _this = this;
+                        new cessnalib_impl.sys.io.net.HttpRequestManager({
+                            host: "http://www.timeapi.org/utc/now",
+                            port: 80,
+                            path: "/",
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).sendMessage(null, function (result) {
+                            if (typeof result == "string") {
+                                var jsDate = new Date(result);
+                                var date = new cessnalib_1.cessnalib.sys.type.Date(jsDate.getUTCFullYear(), jsDate.getUTCMonth() + 1, jsDate.getUTCDay());
+                                var clock = new cessnalib_1.cessnalib.sys.type.Clock(jsDate.getUTCHours(), jsDate.getUTCMinutes(), jsDate.getSeconds());
+                                var time = new cessnalib_1.cessnalib.sys.type.Time(date, clock);
+                                //this.receiveParticle(new cessnalib_template.being.alive.particles.Time(time));
+                                _this.receiveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.ConnectedToTheInternet(cessnalib_1.cessnalib.js.Class.instanceOf(new cessnalib_1.cessnalib.sys.type.Time(new cessnalib_1.cessnalib.sys.type.Date(0, 0, 0), new cessnalib_1.cessnalib.sys.type.Clock(0, 0, 0)), time)));
+                            }
+                            else {
+                            }
+                        });
+                    };
                     WebOrganelleImplHttp.prototype.fetchCurrentTime = function () {
-                        //TODO
+                        var _this = this;
+                        new cessnalib_impl.sys.io.net.HttpRequestManager({
+                            host: "http://www.timeapi.org/utc/now",
+                            port: 80,
+                            path: "/",
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).sendMessage(null, function (result) {
+                            if (typeof result == "string") {
+                                var jsDate = new Date(result);
+                                var date = new cessnalib_1.cessnalib.sys.type.Date(jsDate.getUTCFullYear(), jsDate.getUTCMonth() + 1, jsDate.getUTCDay());
+                                var clock = new cessnalib_1.cessnalib.sys.type.Clock(jsDate.getUTCHours(), jsDate.getUTCMinutes(), jsDate.getSeconds());
+                                var time = new cessnalib_1.cessnalib.sys.type.Time(date, clock);
+                                _this.receiveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.Time(time));
+                            }
+                            else {
+                            }
+                        });
                     };
                     return WebOrganelleImplHttp;
                 })(cessnalib_template_1.cessnalib_template.being.alive.organelles.WebOrganelle);
                 organelle.WebOrganelleImplHttp = WebOrganelleImplHttp;
+                var DbOrganelleImplNeDb = (function (_super) {
+                    __extends(DbOrganelleImplNeDb, _super);
+                    function DbOrganelleImplNeDb() {
+                        _super.call(this);
+                        this.array = [];
+                    }
+                    DbOrganelleImplNeDb.prototype.receiveParticle = function (particle) {
+                        switch (particle.name) {
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Save:
+                                break;
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Remove:
+                                break;
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Read:
+                                break;
+                            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.DoesTokenExist:
+                                var content = particle.content;
+                                this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.db.outgoingparticles.TokenIsValid(content.token));
+                                break;
+                        }
+                    };
+                    return DbOrganelleImplNeDb;
+                })(cessnalib_template_1.cessnalib_template.being.alive.organelles.DbOrganelle);
+                organelle.DbOrganelleImplNeDb = DbOrganelleImplNeDb;
                 var TimeOrganelleJs = (function (_super) {
                     __extends(TimeOrganelleJs, _super);
                     function TimeOrganelleJs() {
@@ -117,7 +189,9 @@ var cessnalib_impl;
                                 break;
                             case cessnalib_template_1.cessnalib_template.being.ghost.euglena.time.constants.incomingparticles.StartClock:
                                 setInterval(function () {
-                                    var newDate = new Date(_this.time.date.year, _this.time.date.month - 1, _this.time.date.day, _this.time.clock.hour, _this.time.clock.minute, _this.time.clock.second + 1);
+                                    //let newDate = new Date(this.time.date.year, this.time.date.month - 1, this.time.date.day,
+                                    //    this.time.clock.hour, this.time.clock.minute, this.time.clock.second + 1);
+                                    var newDate = new Date();
                                     if (newDate.getSeconds() != _this.time.clock.second) {
                                         _this.time.clock.second = newDate.getSeconds();
                                         //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Second(this.time.clock.second));
@@ -267,7 +341,7 @@ var cessnalib_impl;
                         socket.listen(this.initialProperties.port);
                         socket.on("connection", function (socket) {
                             socket.on("bind", function (impact) {
-                                _this.sockets[impact.sender] = socket;
+                                _this.sockets[impact.from] = socket;
                                 //TODO
                                 socket.emit("bind", null);
                             });

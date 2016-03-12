@@ -7,6 +7,9 @@
 * Environment geriye exception donmeli mi problem ciktiginda yoksa loglayip gecmeli mi ?0
 */
 
+/// <reference path="../typings/socket.io/socket.io.d.ts" />
+
+
 import {cessnalib} from "../node_modules/cessnalib/cessnalib";
 import {cessnalib_template} from "../node_modules/cessnalib_template/src/cessnalib_template";
 import * as io from "socket.io";
@@ -39,7 +42,7 @@ export module cessnalib_impl {
                         req.on('error', (e: any) => {
                             callback(new Exception("problem with request: " + e.message));
                         });
-                        req.write(message);
+                        if(message) req.write(message);
                         req.end();
                     }
                 }
@@ -56,11 +59,13 @@ export module cessnalib_impl {
                     bank.add(constants.organelles.ReceptionOrganelleImplHttp, new alive.organelle.ReceptionOrganelleImplHttp());
                     bank.add(constants.organelles.WebOrganelleImplHttp, new alive.organelle.WebOrganelleImplHttp());
                     bank.add(constants.organelles.TimeOrganelleImplJs,new alive.organelle.TimeOrganelleJs());
+                    bank.add(constants.organelles.DbOrganelleImplNeDb,new alive.organelle.DbOrganelleImplNeDb());
                     return bank;
                 }
             }
             export namespace constants {
                 export namespace organelles {
+                    export const DbOrganelleImplNeDb = "DbOrganelleImplNeDb";
                     export const WebOrganelleImplHttp = "WebOrganelleImplHttp";
                     export const ReceptionOrganelleImplHttp = "ReceptionOrganelleImplHttp";
                     export const ImpactTransmitterOrganelleImplHttp = "ImpactTransmitterOrganelleImplHttp";
@@ -76,10 +81,76 @@ export module cessnalib_impl {
                             case cessnalib_template.being.ghost.euglena.web.constants.incomingparticles.ReturnCurrentTime:
                                 this.fetchCurrentTime();
                                 break;
+                            case cessnalib_template.being.ghost.euglena.web.constants.incomingparticles.ReturnIfConnectedToTheInternet:
+                                this.checkInternetConnection();
+                                break;
                         }
                     }
+                    private checkInternetConnection(): void{
+                        new cessnalib_impl.sys.io.net.HttpRequestManager({
+                            host: "http://www.timeapi.org/utc/now",
+                            port: 80,
+                            path: "/",
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).sendMessage(null, (result) => {
+                            if (typeof result == "string") {
+                                let jsDate = new Date(result as string);
+                                let date = new cessnalib.sys.type.Date(jsDate.getUTCFullYear(), jsDate.getUTCMonth() + 1, jsDate.getUTCDay());
+                                let clock = new cessnalib.sys.type.Clock(jsDate.getUTCHours(), jsDate.getUTCMinutes(), jsDate.getSeconds());
+                                let time = new cessnalib.sys.type.Time(date, clock);
+                                //this.receiveParticle(new cessnalib_template.being.alive.particles.Time(time));
+                                this.receiveParticle(new cessnalib_template.being.alive.particles.ConnectedToTheInternet(
+                                    cessnalib.js.Class.instanceOf(new cessnalib.sys.type.Time(new cessnalib.sys.type.Date(0,0,0),new cessnalib.sys.type.Clock(0,0,0)),time)
+                                ));
+                            } else {
+                                //TODO
+                            }
+                        });
+                    }
                     private fetchCurrentTime(): void {
-                        //TODO
+                        new cessnalib_impl.sys.io.net.HttpRequestManager({
+                            host: "http://www.timeapi.org/utc/now",
+                            port: 80,
+                            path: "/",
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).sendMessage(null, (result) => {
+                            if (typeof result == "string") {
+                                let jsDate = new Date(result as string);
+                                let date = new cessnalib.sys.type.Date(jsDate.getUTCFullYear(),jsDate.getUTCMonth()+1,jsDate.getUTCDay());
+                                let clock = new cessnalib.sys.type.Clock(jsDate.getUTCHours(),jsDate.getUTCMinutes(),jsDate.getSeconds());
+                                let time = new cessnalib.sys.type.Time(date,clock);
+                                this.receiveParticle(new cessnalib_template.being.alive.particles.Time(time));
+                            } else {
+                                //TODO
+                            }
+                        });
+                    }
+                }
+                export class DbOrganelleImplNeDb extends cessnalib_template.being.alive.organelles.DbOrganelle {
+                    private array:Array<string>;
+                    constructor(){
+                        super();
+                        this.array = [];
+                    }
+                    public receiveParticle(particle: Particle): void {
+                        switch (particle.name) {
+                            case cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Save:
+                                break;
+                            case cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Remove:
+                                break;
+                            case cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Read:
+                                break;
+                            case cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.DoesTokenExist:
+                                let content = particle.content as cessnalib_template.being.ghost.euglena.db.incomingparticles.DoesTokenExistContent;
+                                this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.db.outgoingparticles.TokenIsValid(content.token)); 
+                                break;
+                        }
                     }
                 }
                 export class TimeOrganelleJs extends cessnalib_template.being.alive.organelles.TimeOrganelle {
@@ -91,8 +162,9 @@ export module cessnalib_impl {
                                 break;
                             case cessnalib_template.being.ghost.euglena.time.constants.incomingparticles.StartClock:
                                 setInterval(() => {
-                                    let newDate = new Date(this.time.date.year, this.time.date.month - 1, this.time.date.day,
-                                        this.time.clock.hour, this.time.clock.minute, this.time.clock.second + 1);
+                                    //let newDate = new Date(this.time.date.year, this.time.date.month - 1, this.time.date.day,
+                                    //    this.time.clock.hour, this.time.clock.minute, this.time.clock.second + 1);
+                                    let newDate = new Date();
                                     if (newDate.getSeconds() != this.time.clock.second) {
                                         this.time.clock.second = newDate.getSeconds();
                                         //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Second(this.time.clock.second));
@@ -226,9 +298,9 @@ export module cessnalib_impl {
                         });
                         let socket = io.listen(server);
                         socket.listen(this.initialProperties.port);
-                        socket.on("connection", (socket) => {
+                        socket.on("connection", (socket:any) => {
                             socket.on("bind", (impact:cessnalib.being.interaction.Impact) => {
-                                this.sockets[impact.sender] = socket;
+                                this.sockets[impact.from] = socket;
 
                                 //TODO
                                 socket.emit("bind", null);

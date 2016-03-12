@@ -4,10 +4,10 @@
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
 /************************************************
- *                                               *
- *               Node.js v4.x API                *
- *                                               *
- ************************************************/
+*                                               *
+*               Node.js v4.x API                *
+*                                               *
+************************************************/
 
 interface Error {
     stack?: string;
@@ -23,10 +23,10 @@ interface SetConstructor {}
 interface WeakSetConstructor {}
 
 /************************************************
- *                                               *
- *                   GLOBAL                      *
- *                                               *
- ************************************************/
+*                                               *
+*                   GLOBAL                      *
+*                                               *
+************************************************/
 declare var process: NodeJS.Process;
 declare var global: NodeJS.Global;
 
@@ -113,6 +113,12 @@ declare var Buffer: {
      * @param array The octets to store.
      */
     new (array: any[]): Buffer;
+    /**
+     * Copies the passed {buffer} data onto a new {Buffer} instance.
+     *
+     * @param buffer The buffer to copy.
+     */
+    new (buffer: Buffer): Buffer;
     prototype: Buffer;
     /**
      * Returns true if {obj} is a Buffer
@@ -154,10 +160,10 @@ declare var Buffer: {
 };
 
 /************************************************
- *                                               *
- *               GLOBAL INTERFACES               *
- *                                               *
- ************************************************/
+*                                               *
+*               GLOBAL INTERFACES               *
+*                                               *
+************************************************/
 declare module NodeJS {
     export interface ErrnoException extends Error {
         errno?: number;
@@ -210,6 +216,7 @@ declare module NodeJS {
         stderr: WritableStream;
         stdin: ReadableStream;
         argv: string[];
+        execArgv: string[];
         execPath: string;
         abort(): void;
         chdir(directory: string): void;
@@ -395,15 +402,19 @@ interface NodeBuffer {
     writeDoubleLE(value: number, offset: number, noAssert?: boolean): number;
     writeDoubleBE(value: number, offset: number, noAssert?: boolean): number;
     fill(value: any, offset?: number, end?: number): Buffer;
+    indexOf(value: string | number | Buffer, byteOffset?: number): number;
 }
 
 /************************************************
- *                                               *
- *                   MODULES                     *
- *                                               *
- ************************************************/
+*                                               *
+*                   MODULES                     *
+*                                               *
+************************************************/
 declare module "buffer" {
     export var INSPECT_MAX_BYTES: number;
+    var BuffType: typeof Buffer;
+    var SlowBuffType: typeof SlowBuffer;
+    export { BuffType as Buffer, SlowBuffType as SlowBuffer };
 }
 
 declare module "querystring" {
@@ -452,7 +463,7 @@ declare module "http" {
         host?: string;
         hostname?: string;
         family?: number;
-        port?: number
+        port?: number;
         localAddress?: string;
         socketPath?: string;
         method?: string;
@@ -491,7 +502,7 @@ declare module "http" {
         statusCode: number;
         statusMessage: string;
         headersSent: boolean;
-        setHeader(name: string, value: string): void;
+        setHeader(name: string, value: string | string[]): void;
         sendDate: boolean;
         getHeader(name: string): string;
         removeHeader(name: string): void;
@@ -556,41 +567,41 @@ declare module "http" {
      */
     export interface ClientResponse extends IncomingMessage { }
 
-    export interface AgentOptions {
-        /**
-         * Keep sockets around in a pool to be used by other requests in the future. Default = false
-         */
-        keepAlive?: boolean;
-        /**
-         * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive. Default = 1000.
-         * Only relevant if keepAlive is set to true.
-         */
-        keepAliveMsecs?: number;
-        /**
-         * Maximum number of sockets to allow per host. Default for Node 0.10 is 5, default for Node 0.12 is Infinity
-         */
-        maxSockets?: number;
-        /**
-         * Maximum number of sockets to leave open in a free state. Only relevant if keepAlive is set to true. Default = 256.
-         */
-        maxFreeSockets?: number;
-    }
+	export interface AgentOptions {
+		/**
+		 * Keep sockets around in a pool to be used by other requests in the future. Default = false
+		 */
+		keepAlive?: boolean;
+		/**
+		 * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive. Default = 1000.
+		 * Only relevant if keepAlive is set to true.
+		 */
+		keepAliveMsecs?: number;
+		/**
+		 * Maximum number of sockets to allow per host. Default for Node 0.10 is 5, default for Node 0.12 is Infinity
+		 */
+		maxSockets?: number;
+		/**
+		 * Maximum number of sockets to leave open in a free state. Only relevant if keepAlive is set to true. Default = 256.
+		 */
+		maxFreeSockets?: number;
+	}
 
     export class Agent {
-        maxSockets: number;
-        sockets: any;
-        requests: any;
+		maxSockets: number;
+		sockets: any;
+		requests: any;
 
-        constructor(opts?: AgentOptions);
+		constructor(opts?: AgentOptions);
 
-        /**
-         * Destroy any sockets that are currently in use by the agent.
-         * It is usually not necessary to do this. However, if you are using an agent with KeepAlive enabled,
-         * then it is best to explicitly shut down the agent when you know that it will no longer be used. Otherwise,
-         * sockets may hang open for quite a long time before the server terminates them.
-         */
-        destroy(): void;
-    }
+		/**
+		 * Destroy any sockets that are currently in use by the agent.
+		 * It is usually not necessary to do this. However, if you are using an agent with KeepAlive enabled,
+		 * then it is best to explicitly shut down the agent when you know that it will no longer be used. Otherwise,
+		 * sockets may hang open for quite a long time before the server terminates them.
+		 */
+		destroy(): void;
+	}
 
     export var METHODS: string[];
 
@@ -636,6 +647,13 @@ declare module "cluster" {
 
     // Event emitter
     export function addListener(event: string, listener: Function): void;
+    export function on(event: "disconnect", listener: (worker: Worker) => void): void;
+    export function on(event: "exit", listener: (worker: Worker, code: number, signal: string) => void): void;
+    export function on(event: "fork", listener: (worker: Worker) => void): void;
+    export function on(event: "listening", listener: (worker: Worker, address: any) => void): void;
+    export function on(event: "message", listener: (worker: Worker, message: any) => void): void;
+    export function on(event: "online", listener: (worker: Worker) => void): void;
+    export function on(event: "setup", listener: (settings: any) => void): void;
     export function on(event: string, listener: Function): any;
     export function once(event: string, listener: Function): void;
     export function removeListener(event: string, listener: Function): void;
@@ -724,7 +742,7 @@ declare module "os" {
             sys: number;
             idle: number;
             irq: number;
-        }
+        };
     }
 
     export interface NetworkInterfaceInfo {
@@ -899,6 +917,7 @@ declare module "child_process" {
         stdin:  stream.Writable;
         stdout: stream.Readable;
         stderr: stream.Readable;
+        stdio: (stream.Readable|stream.Writable)[];
         pid: number;
         kill(signal?: string): void;
         send(message: any, sendHandle?: any): void;
@@ -925,9 +944,9 @@ declare module "child_process" {
     }, callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
     export function exec(command: string, callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
     export function execFile(file: string,
-                             callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
+        callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
     export function execFile(file: string, args?: string[],
-                             callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
+        callback?: (error: Error, stdout: Buffer, stderr: Buffer) =>void ): ChildProcess;
     export function execFile(file: string, args?: string[], options?: {
         cwd?: string;
         stdio?: any;
@@ -1524,33 +1543,33 @@ declare module "path" {
     export function format(pathObject: ParsedPath): string;
 
     export module posix {
-        export function normalize(p: string): string;
-        export function join(...paths: any[]): string;
-        export function resolve(...pathSegments: any[]): string;
-        export function isAbsolute(p: string): boolean;
-        export function relative(from: string, to: string): string;
-        export function dirname(p: string): string;
-        export function basename(p: string, ext?: string): string;
-        export function extname(p: string): string;
-        export var sep: string;
-        export var delimiter: string;
-        export function parse(p: string): ParsedPath;
-        export function format(pP: ParsedPath): string;
+      export function normalize(p: string): string;
+      export function join(...paths: any[]): string;
+      export function resolve(...pathSegments: any[]): string;
+      export function isAbsolute(p: string): boolean;
+      export function relative(from: string, to: string): string;
+      export function dirname(p: string): string;
+      export function basename(p: string, ext?: string): string;
+      export function extname(p: string): string;
+      export var sep: string;
+      export var delimiter: string;
+      export function parse(p: string): ParsedPath;
+      export function format(pP: ParsedPath): string;
     }
 
     export module win32 {
-        export function normalize(p: string): string;
-        export function join(...paths: any[]): string;
-        export function resolve(...pathSegments: any[]): string;
-        export function isAbsolute(p: string): boolean;
-        export function relative(from: string, to: string): string;
-        export function dirname(p: string): string;
-        export function basename(p: string, ext?: string): string;
-        export function extname(p: string): string;
-        export var sep: string;
-        export var delimiter: string;
-        export function parse(p: string): ParsedPath;
-        export function format(pP: ParsedPath): string;
+      export function normalize(p: string): string;
+      export function join(...paths: any[]): string;
+      export function resolve(...pathSegments: any[]): string;
+      export function isAbsolute(p: string): boolean;
+      export function relative(from: string, to: string): string;
+      export function dirname(p: string): string;
+      export function basename(p: string, ext?: string): string;
+      export function extname(p: string): string;
+      export var sep: string;
+      export var delimiter: string;
+      export function parse(p: string): ParsedPath;
+      export function format(pP: ParsedPath): string;
     }
 }
 
@@ -1681,13 +1700,13 @@ declare module "crypto" {
     export function createHash(algorithm: string): Hash;
     export function createHmac(algorithm: string, key: string): Hmac;
     export function createHmac(algorithm: string, key: Buffer): Hmac;
-    interface Hash {
+    export interface Hash {
         update(data: any, input_encoding?: string): Hash;
         digest(encoding: 'buffer'): Buffer;
         digest(encoding: string): any;
         digest(): Buffer;
     }
-    interface Hmac {
+    export interface Hmac extends NodeJS.ReadWriteStream {
         update(data: any, input_encoding?: string): Hmac;
         digest(encoding: 'buffer'): Buffer;
         digest(encoding: string): any;
@@ -1695,7 +1714,7 @@ declare module "crypto" {
     }
     export function createCipher(algorithm: string, password: any): Cipher;
     export function createCipheriv(algorithm: string, key: any, iv: any): Cipher;
-    interface Cipher {
+    export interface Cipher {
         update(data: Buffer): Buffer;
         update(data: string, input_encoding?: string, output_encoding?: string): string;
         final(): Buffer;
@@ -1704,7 +1723,7 @@ declare module "crypto" {
     }
     export function createDecipher(algorithm: string, password: any): Decipher;
     export function createDecipheriv(algorithm: string, key: any, iv: any): Decipher;
-    interface Decipher {
+    export interface Decipher {
         update(data: Buffer): Buffer;
         update(data: string, input_encoding?: string, output_encoding?: string): string;
         final(): Buffer;
@@ -1712,18 +1731,18 @@ declare module "crypto" {
         setAutoPadding(auto_padding: boolean): void;
     }
     export function createSign(algorithm: string): Signer;
-    interface Signer extends NodeJS.WritableStream {
+    export interface Signer extends NodeJS.WritableStream {
         update(data: any): void;
         sign(private_key: string, output_format: string): string;
     }
     export function createVerify(algorith: string): Verify;
-    interface Verify extends NodeJS.WritableStream {
+    export interface Verify extends NodeJS.WritableStream {
         update(data: any): void;
         verify(object: string, signature: string, signature_format?: string): boolean;
     }
     export function createDiffieHellman(prime_length: number): DiffieHellman;
     export function createDiffieHellman(prime: number, encoding?: string): DiffieHellman;
-    interface DiffieHellman {
+    export interface DiffieHellman {
         generateKeys(encoding?: string): string;
         computeSecret(other_public_key: string, input_encoding?: string, output_encoding?: string): string;
         getPrime(encoding?: string): string;
@@ -1742,6 +1761,17 @@ declare module "crypto" {
     export function randomBytes(size: number, callback: (err: Error, buf: Buffer) =>void ): void;
     export function pseudoRandomBytes(size: number): Buffer;
     export function pseudoRandomBytes(size: number, callback: (err: Error, buf: Buffer) =>void ): void;
+    export interface RsaPublicKey {
+        key: string;
+        padding?: any;
+    }
+    export interface RsaPrivateKey {
+        key: string;
+        passphrase?: string,
+        padding?: any;
+    }
+    export function publicEncrypt(public_key: string|RsaPublicKey, buffer: Buffer): Buffer
+    export function privateDecrypt(private_key: string|RsaPrivateKey, buffer: Buffer): Buffer
 }
 
 declare module "stream" {
@@ -1869,7 +1899,7 @@ declare module "assert" {
             generatedMessage: boolean;
 
             constructor(options?: {message?: string; actual?: any; expected?: any;
-                operator?: string; stackStartFunction?: Function});
+                                  operator?: string; stackStartFunction?: Function});
         }
 
         export function fail(actual?: any, expected?: any, message?: string, operator?: string): void;
@@ -1909,10 +1939,12 @@ declare module "tty" {
     export interface ReadStream extends net.Socket {
         isRaw: boolean;
         setRawMode(mode: boolean): void;
+        isTTY: boolean;
     }
     export interface WriteStream extends net.Socket {
         columns: number;
         rows: number;
+        isTTY: boolean;
     }
 }
 

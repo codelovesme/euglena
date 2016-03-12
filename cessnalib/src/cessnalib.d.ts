@@ -172,9 +172,11 @@ export declare module cessnalib {
                         className: string;
                         constructor(hour: number, minute: number, second: number);
                     }
-                    class TimeTemplate extends Time implements Classifiable {
+                    class TimeTemplate implements Classifiable {
+                        dateTemplate: DateTemplate;
+                        clockTemplate: ClockTemplate;
                         className: string;
-                        constructor(date: Date, clock: Clock);
+                        constructor(dateTemplate: DateTemplate, clockTemplate: ClockTemplate);
                     }
                     class StaticTools {
                         addOperandAndParameter<T, S>(phrase: Phrase<T>, operand: string, parameter: T): void;
@@ -223,14 +225,14 @@ export declare module cessnalib {
                     class ClockComparison extends Comparison<Clock> {
                         constructor(operand1: ClockComparison | ParticleReference | Clock, operator: string, operand2: ClockComparison | ParticleReference | Clock);
                     }
+                    class TimeTemplateComparison extends Comparison<TimeTemplate> {
+                        constructor(operand1: TimeTemplateComparison | ParticleReference | TimeTemplate, operator: string, operand2: TimeTemplateComparison | ParticleReference | TimeTemplate);
+                    }
                     class DateTemplateComparison extends Comparison<DateTemplate> {
                         constructor(operand1: DateTemplateComparison | ParticleReference | DateTemplate, operator: string, operand2: DateTemplateComparison | ParticleReference | DateTemplate);
                     }
                     class ClockTemplateComparison extends Comparison<ClockTemplate> {
                         constructor(operand1: ClockTemplateComparison | ParticleReference | ClockTemplate, operator: string, operand2: ClockTemplateComparison | ParticleReference | ClockTemplate);
-                    }
-                    class TimeTemplateComparison extends Comparison<TimeTemplate> {
-                        constructor(operand1: TimeTemplateComparison | ParticleReference | TimeTemplate, operator: string, operand2: TimeTemplateComparison | ParticleReference | TimeTemplate);
                     }
                     class CalculationPhrase extends Phrase<number> {
                         constructor(operand1: Phrase<number> | ParticleReference | number, operator: string, operand2: Phrase<number> | ParticleReference | number);
@@ -260,7 +262,7 @@ export declare module cessnalib {
                     }
                 }
                 interface Reaction {
-                    (particle: Particle, particles: any, organelles: any, receiveParticle: interaction.ReceiveParticle, impactGenerator: interaction.ImpactGenerator): void;
+                    (particle: Particle, euglena: Euglena): void;
                 }
             }
             namespace constants {
@@ -289,12 +291,16 @@ export declare module cessnalib {
             class Euglena implements interaction.CanReceiveParticle {
                 private chromosome;
                 private particles;
-                private impactGenerator;
-                private executor;
                 private organelles;
-                constructor(chromosome: dna.Gene[], particles: any, organelles: Organelle<any>[], impactGenerator: interaction.ImpactGenerator);
+                private impactGenerator;
+                static instance: Euglena;
+                private executor;
+                constructor(chromosome: dna.Gene[], particles: any, organelles: any, impactGenerator: interaction.ImpactGenerator);
+                static generateInstance(chromosome: dna.Gene[], particles: any, organelles: Organelle<any>[], impactGenerator: interaction.ImpactGenerator): Euglena;
                 receiveParticle(particle: Particle): void;
-                private triggerGene(particle);
+                getParticle(particleName: string): being.Particle;
+                saveParticle(particle: being.Particle): void;
+                getOrganelle(organelleName: string): being.alive.Organelle<any>;
             }
         }
     }

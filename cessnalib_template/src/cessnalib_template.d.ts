@@ -1,4 +1,4 @@
-/// <reference path="../../cessnalib/typings/node/node.d.ts" />
+/// <reference path="../../../../cessnalib/typings/node/node.d.ts" />
 /**
  * Created by codelovesme on 6/19/2015.
  */
@@ -21,18 +21,12 @@ export declare module cessnalib_template {
         }
         namespace alive {
             import Euglena = cessnalib.being.alive.Euglena;
-            import Gene = cessnalib.being.alive.dna.Gene;
             namespace constants {
                 namespace particles {
                     const EuglenaName: string;
                     const EuglenaHasBeenBorn: string;
                     const Acknowledge: string;
-                    const Year: string;
-                    const Month: string;
-                    const Day: string;
-                    const Hour: string;
-                    const Minute: string;
-                    const Second: string;
+                    const Time: string;
                     const Exception: string;
                     const ConnectedToTheInternet: string;
                 }
@@ -42,6 +36,7 @@ export declare module cessnalib_template {
                     const ReceptionOrganelle: string;
                     const TimeOrganelle: string;
                     const WebOrganelle: string;
+                    const DbOrganelle: string;
                 }
                 namespace impacts {
                     const TimeChanged: string;
@@ -69,28 +64,16 @@ export declare module cessnalib_template {
                 abstract class WebOrganelle extends Organelle<{}> {
                     constructor();
                 }
+                abstract class DbOrganelle extends Organelle<{}> {
+                    constructor();
+                }
             }
             namespace particles {
                 class Exception extends cessnalib.being.Particle {
                     constructor(content: cessnalib.sys.type.Exception);
                 }
-                class Hour extends cessnalib.being.Particle {
-                    constructor(content: number);
-                }
-                class Minute extends cessnalib.being.Particle {
-                    constructor(content: number);
-                }
-                class Second extends cessnalib.being.Particle {
-                    constructor(content: number);
-                }
-                class Year extends cessnalib.being.Particle {
-                    constructor(content: number);
-                }
-                class Month extends cessnalib.being.Particle {
-                    constructor(content: number);
-                }
-                class Day extends cessnalib.being.Particle {
-                    constructor(content: number);
+                class Time extends cessnalib.being.Particle {
+                    constructor(content: cessnalib.sys.type.Time);
                 }
                 class Acknowledge extends being.particles.VoidParticle {
                     constructor();
@@ -103,7 +86,7 @@ export declare module cessnalib_template {
                 }
             }
             class StaticTools {
-                static instantiateEuglena(applicationDirectory: string, organelleBank: cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>, chromosome: Gene[]): Euglena;
+                static instantiateEuglena(applicationDirectory: string, organelleBank: cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>, chromosome: any[]): Euglena;
             }
         }
         namespace ghost {
@@ -206,6 +189,9 @@ export declare module cessnalib_template {
                         class SetTime extends Particle {
                             constructor(time: cessnalib.sys.type.Time);
                         }
+                        class StartClock extends being.particles.VoidParticle {
+                            constructor();
+                        }
                     }
                     namespace constants {
                         namespace outgoingparticles {
@@ -213,6 +199,23 @@ export declare module cessnalib_template {
                         namespace incomingparticles {
                             const SetTime: string;
                             const StartClock: string;
+                        }
+                    }
+                }
+                namespace db {
+                    import Particle = cessnalib.being.Particle;
+                    namespace outgoingparticles {
+                    }
+                    namespace incomingparticles {
+                        class Save extends Particle {
+                            constructor();
+                        }
+                    }
+                    namespace constants {
+                        namespace outgoingparticles {
+                        }
+                        namespace incomingparticles {
+                            const Save: string;
                         }
                     }
                 }

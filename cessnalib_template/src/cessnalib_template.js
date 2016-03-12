@@ -56,19 +56,13 @@ var cessnalib_template;
                 var particles;
                 (function (particles) {
                     particles.EuglenaName = "EuglenaName";
+                    particles.EuglenaInfos = "EuglenaInfos";
+                    particles.ImpactReceived = "ImpactReceived";
                     particles.EuglenaHasBeenBorn = "EuglenaHasBeenBorn";
                     particles.Acknowledge = "Acknowledge";
                     particles.Time = "Time";
-                    particles.Year = "Year";
-                    particles.Month = "Month";
-                    particles.Day = "Day";
-                    particles.Hour = "Hour";
-                    particles.Minute = "Minute";
-                    particles.Second = "Second";
-                    particles.Clock = "Clock";
-                    particles.Date = "Date";
                     particles.Exception = "Exception";
-                    particles.ConnectedToTheInternet = "cessnalib_template.being.alive.particles.ConnectedToTheInternet";
+                    particles.ConnectedToTheInternet = "ConnectedToTheInternet";
                 })(particles = constants.particles || (constants.particles = {}));
                 var organelles;
                 (function (organelles) {
@@ -77,9 +71,11 @@ var cessnalib_template;
                     organelles.ReceptionOrganelle = "ReceptionOrganelle";
                     organelles.TimeOrganelle = "TimeOrganelle";
                     organelles.WebOrganelle = "WebOrganelle";
+                    organelles.DbOrganelle = "DbOrganelle";
                 })(organelles = constants.organelles || (constants.organelles = {}));
                 var impacts;
                 (function (impacts) {
+                    impacts.FetchImpacts = "FetchImpacts";
                     impacts.TimeChanged = "TimeChanged";
                     impacts.ExceptionOccurred = "ExceptionOccurred";
                 })(impacts = constants.impacts || (constants.impacts = {}));
@@ -127,6 +123,14 @@ var cessnalib_template;
                     return WebOrganelle;
                 })(Organelle);
                 organelles.WebOrganelle = WebOrganelle;
+                var DbOrganelle = (function (_super) {
+                    __extends(DbOrganelle, _super);
+                    function DbOrganelle() {
+                        _super.call(this, constants.organelles.DbOrganelle);
+                    }
+                    return DbOrganelle;
+                })(Organelle);
+                organelles.DbOrganelle = DbOrganelle;
             })(organelles = alive.organelles || (alive.organelles = {}));
             var particles;
             (function (particles) {
@@ -138,70 +142,6 @@ var cessnalib_template;
                     return Exception;
                 })(cessnalib_1.cessnalib.being.Particle);
                 particles.Exception = Exception;
-                var Hour = (function (_super) {
-                    __extends(Hour, _super);
-                    function Hour(content) {
-                        _super.call(this, constants.particles.Hour, content);
-                    }
-                    return Hour;
-                })(cessnalib_1.cessnalib.being.Particle);
-                particles.Hour = Hour;
-                var Minute = (function (_super) {
-                    __extends(Minute, _super);
-                    function Minute(content) {
-                        _super.call(this, constants.particles.Minute, content);
-                    }
-                    return Minute;
-                })(cessnalib_1.cessnalib.being.Particle);
-                particles.Minute = Minute;
-                var Second = (function (_super) {
-                    __extends(Second, _super);
-                    function Second(content) {
-                        _super.call(this, constants.particles.Second, content);
-                    }
-                    return Second;
-                })(cessnalib_1.cessnalib.being.Particle);
-                particles.Second = Second;
-                var Year = (function (_super) {
-                    __extends(Year, _super);
-                    function Year(content) {
-                        _super.call(this, constants.particles.Year, content);
-                    }
-                    return Year;
-                })(cessnalib_1.cessnalib.being.Particle);
-                particles.Year = Year;
-                var Month = (function (_super) {
-                    __extends(Month, _super);
-                    function Month(content) {
-                        _super.call(this, constants.particles.Month, content);
-                    }
-                    return Month;
-                })(cessnalib_1.cessnalib.being.Particle);
-                particles.Month = Month;
-                var Day = (function (_super) {
-                    __extends(Day, _super);
-                    function Day(content) {
-                        _super.call(this, constants.particles.Day, content);
-                    }
-                    return Day;
-                })(cessnalib_1.cessnalib.being.Particle);
-                particles.Day = Day;
-                var Date = (function (_super) {
-                    __extends(Date, _super);
-                    function Date(content) {
-                        _super.call(this, constants.particles.Date, content);
-                    }
-                    return Date;
-                })(cessnalib_1.cessnalib.being.Particle);
-                particles.Date = Date;
-                var Clock = (function (_super) {
-                    __extends(Clock, _super);
-                    function Clock(content) {
-                        _super.call(this, constants.particles.Clock, content);
-                    }
-                    return Clock;
-                })(cessnalib_1.cessnalib.being.Particle);
-                particles.Clock = Clock;
                 var Time = (function (_super) {
                     __extends(Time, _super);
                     function Time(content) {
@@ -234,6 +174,24 @@ var cessnalib_template;
                     return EuglenaHasBeenBorn;
                 })(being.particles.BooleanParticle);
                 particles.EuglenaHasBeenBorn = EuglenaHasBeenBorn;
+                var FetchImpacts = (function (_super) {
+                    __extends(FetchImpacts, _super);
+                    function FetchImpacts(from) {
+                        _super.call(this, constants.impacts.FetchImpacts, from);
+                        this.from = from;
+                    }
+                    return FetchImpacts;
+                })(cessnalib_1.cessnalib.being.Particle);
+                particles.FetchImpacts = FetchImpacts;
+                var ImpactReceived = (function (_super) {
+                    __extends(ImpactReceived, _super);
+                    function ImpactReceived(content) {
+                        _super.call(this, constants.particles.ImpactReceived, content);
+                        this.content = content;
+                    }
+                    return ImpactReceived;
+                })(cessnalib_1.cessnalib.being.Particle);
+                particles.ImpactReceived = ImpactReceived;
             })(particles = alive.particles || (alive.particles = {}));
             var StaticTools = (function () {
                 function StaticTools() {
@@ -245,7 +203,7 @@ var cessnalib_template;
                         var valueChooser = _a[_i];
                         particles[valueChooser.className] = new Particle(valueChooser.className, cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser));
                     }
-                    var organelles = [];
+                    var organelles = {};
                     var euglenaName = particles[cessnalib_1.cessnalib.being.alive.constants.particles.EuglenaName].content;
                     var impactGenerator = new interaction.ImpactGenerator(euglenaName);
                     for (var _b = 0, _c = initialConfig.objects; _b < _c.length; _b++) {
@@ -253,9 +211,9 @@ var cessnalib_template;
                         var organelle = organelleBank.get(cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
                         organelle.initialProperties = objectProp.initialProperties;
                         organelle.impactGenerator = impactGenerator;
-                        organelles.push(organelle);
+                        organelles[organelle.name] = organelle;
                     }
-                    var euglena = new cessnalib_1.cessnalib.being.alive.Euglena(chromosome, particles, organelles, impactGenerator);
+                    var euglena = cessnalib_1.cessnalib.being.alive.Euglena.generateInstance(chromosome, particles, organelles, impactGenerator);
                     euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn());
                     return euglena;
                 };
@@ -407,6 +365,14 @@ var cessnalib_template;
                             return SetTime;
                         })(Particle);
                         incomingparticles.SetTime = SetTime;
+                        var StartClock = (function (_super) {
+                            __extends(StartClock, _super);
+                            function StartClock() {
+                                _super.call(this, constants.incomingparticles.StartClock);
+                            }
+                            return StartClock;
+                        })(being.particles.VoidParticle);
+                        incomingparticles.StartClock = StartClock;
                     })(incomingparticles = time_1.incomingparticles || (time_1.incomingparticles = {}));
                     var constants;
                     (function (constants) {
@@ -417,6 +383,87 @@ var cessnalib_template;
                         })(incomingparticles = constants.incomingparticles || (constants.incomingparticles = {}));
                     })(constants = time_1.constants || (time_1.constants = {}));
                 })(time = euglena.time || (euglena.time = {}));
+                var db;
+                (function (db) {
+                    var Particle = cessnalib_1.cessnalib.being.Particle;
+                    var incomingparticles;
+                    (function (incomingparticles) {
+                        var Save = (function (_super) {
+                            __extends(Save, _super);
+                            function Save() {
+                                _super.call(this, constants.incomingparticles.Save, time);
+                            }
+                            return Save;
+                        })(Particle);
+                        incomingparticles.Save = Save;
+                        var DoesTokenExist = (function (_super) {
+                            __extends(DoesTokenExist, _super);
+                            function DoesTokenExist(token) {
+                                _super.call(this, constants.incomingparticles.DoesTokenExist, { token: token });
+                            }
+                            return DoesTokenExist;
+                        })(Particle);
+                        incomingparticles.DoesTokenExist = DoesTokenExist;
+                    })(incomingparticles = db.incomingparticles || (db.incomingparticles = {}));
+                    var outgoingparticles;
+                    (function (outgoingparticles) {
+                        var UserExists = (function (_super) {
+                            __extends(UserExists, _super);
+                            function UserExists(userId) {
+                                _super.call(this, constants.outgoingparticles.UserExists, { userId: userId });
+                            }
+                            return UserExists;
+                        })(cessnalib_1.cessnalib.being.Particle);
+                        outgoingparticles.UserExists = UserExists;
+                        var UserNotExists = (function (_super) {
+                            __extends(UserNotExists, _super);
+                            function UserNotExists(userId) {
+                                _super.call(this, constants.outgoingparticles.UserNotExists, { userId: userId });
+                            }
+                            return UserNotExists;
+                        })(cessnalib_1.cessnalib.being.Particle);
+                        outgoingparticles.UserNotExists = UserNotExists;
+                        var TokenIsValid = (function (_super) {
+                            __extends(TokenIsValid, _super);
+                            function TokenIsValid(token) {
+                                _super.call(this, constants.outgoingparticles.TokenIsValid, { token: token });
+                            }
+                            return TokenIsValid;
+                        })(cessnalib_1.cessnalib.being.Particle);
+                        outgoingparticles.TokenIsValid = TokenIsValid;
+                        var TokenIsNotValid = (function (_super) {
+                            __extends(TokenIsNotValid, _super);
+                            function TokenIsNotValid(token) {
+                                _super.call(this, constants.outgoingparticles.TokenIsNotValid, { token: token });
+                            }
+                            return TokenIsNotValid;
+                        })(cessnalib_1.cessnalib.being.Particle);
+                        outgoingparticles.TokenIsNotValid = TokenIsNotValid;
+                    })(outgoingparticles = db.outgoingparticles || (db.outgoingparticles = {}));
+                    var constants;
+                    (function (constants) {
+                        var outgoingparticles;
+                        (function (outgoingparticles) {
+                            outgoingparticles.UserExists = "UserExists";
+                            outgoingparticles.UserNotExists = "UserNotExists";
+                            outgoingparticles.TokenIsValid = "TokenIsValid";
+                            outgoingparticles.TokenIsNotValid = "TokenIsNotValid";
+                        })(outgoingparticles = constants.outgoingparticles || (constants.outgoingparticles = {}));
+                        var incomingparticles;
+                        (function (incomingparticles) {
+                            incomingparticles.Save = "Save";
+                            incomingparticles.DoesTokenExist = "DoesTokenExist";
+                        })(incomingparticles = constants.incomingparticles || (constants.incomingparticles = {}));
+                        var incomingparticles;
+                        (function (incomingparticles) {
+                            incomingparticles.Read = "Read";
+                        })(incomingparticles = constants.incomingparticles || (constants.incomingparticles = {}));
+                        var incomingparticles;
+                        (function (incomingparticles) {
+                            incomingparticles.Remove = "Remove";
+                        })(incomingparticles = constants.incomingparticles || (constants.incomingparticles = {}));
+                    })(constants = db.constants || (db.constants = {}));
+                })(db = euglena.db || (euglena.db = {}));
             })(euglena = ghost.euglena || (ghost.euglena = {}));
         })(ghost = being.ghost || (being.ghost = {}));
     })(being = cessnalib_template.being || (cessnalib_template.being = {}));
@@ -428,8 +475,7 @@ var cessnalib_template;
             var interaction;
             (function (interaction) {
                 interaction.Impact = {
-                    name: "Reference",
-                    sender: "Reference",
+                    from: "Reference",
                     particle: being.Particle
                 };
             })(interaction = being.interaction || (being.interaction = {}));

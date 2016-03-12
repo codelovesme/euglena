@@ -34,7 +34,11 @@ export declare module cessnalib_impl {
                 import Particle = cessnalib.being.Particle;
                 class WebOrganelleImplHttp extends cessnalib_template.being.alive.organelles.WebOrganelle {
                     receiveParticle(particle: Particle): void;
+                    private checkInternetConnection();
                     private fetchCurrentTime();
+                }
+                class DbOrganelleImplNeDb extends cessnalib_template.being.alive.organelles.DbOrganelle {
+                    receiveParticle(particle: Particle): void;
                 }
                 class TimeOrganelleJs extends cessnalib_template.being.alive.organelles.TimeOrganelle {
                     private time;
