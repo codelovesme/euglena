@@ -8,8 +8,9 @@
 */
 
 /// <reference path="../typings/socket.io/socket.io.d.ts" />
+/// <reference path="../typings/mongodb/mongodb.d.ts" />
 
-
+"use strict";
 import {cessnalib} from "../node_modules/cessnalib/cessnalib";
 import {cessnalib_template} from "../node_modules/cessnalib_template/src/cessnalib_template";
 import * as io from "socket.io";
@@ -17,6 +18,7 @@ import * as http from "http";
 import {RequestOptions} from "http";
 import Exception = cessnalib.sys.type.Exception;
 import Impact = cessnalib.being.interaction.Impact;
+import * as mongodb from "mongodb";
 
 export module cessnalib_impl {
     export namespace sys {
@@ -59,13 +61,13 @@ export module cessnalib_impl {
                     bank.add(constants.organelles.ReceptionOrganelleImplHttp, new alive.organelle.ReceptionOrganelleImplHttp());
                     bank.add(constants.organelles.WebOrganelleImplHttp, new alive.organelle.WebOrganelleImplHttp());
                     bank.add(constants.organelles.TimeOrganelleImplJs,new alive.organelle.TimeOrganelleJs());
-                    bank.add(constants.organelles.DbOrganelleImplNeDb,new alive.organelle.DbOrganelleImplNeDb());
+                    bank.add(constants.organelles.DbOrganelleImplMongoDb,new alive.organelle.DbOrganelleImplMongoDb());
                     return bank;
                 }
             }
             export namespace constants {
                 export namespace organelles {
-                    export const DbOrganelleImplNeDb = "DbOrganelleImplNeDb";
+                    export const DbOrganelleImplMongoDb = "DbOrganelleImplMongoDb";
                     export const WebOrganelleImplHttp = "WebOrganelleImplHttp";
                     export const ReceptionOrganelleImplHttp = "ReceptionOrganelleImplHttp";
                     export const ImpactTransmitterOrganelleImplHttp = "ImpactTransmitterOrganelleImplHttp";
@@ -103,7 +105,8 @@ export module cessnalib_impl {
                                 let time = new cessnalib.sys.type.Time(date, clock);
                                 //this.receiveParticle(new cessnalib_template.being.alive.particles.Time(time));
                                 this.receiveParticle(new cessnalib_template.being.alive.particles.ConnectedToTheInternet(
-                                    cessnalib.js.Class.instanceOf(new cessnalib.sys.type.Time(new cessnalib.sys.type.Date(0,0,0),new cessnalib.sys.type.Clock(0,0,0)),time)
+                                    cessnalib.js.Class.instanceOf(new cessnalib.sys.type.Time(new cessnalib.sys.type.Date(0,0,0),new cessnalib.sys.type.Clock(0,0,0)),time),
+                                    cessnalib_template.being.alive.constants.organelles.WebOrganelle
                                 ));
                             } else {
                                 //TODO
@@ -125,30 +128,59 @@ export module cessnalib_impl {
                                 let date = new cessnalib.sys.type.Date(jsDate.getUTCFullYear(),jsDate.getUTCMonth()+1,jsDate.getUTCDay());
                                 let clock = new cessnalib.sys.type.Clock(jsDate.getUTCHours(),jsDate.getUTCMinutes(),jsDate.getSeconds());
                                 let time = new cessnalib.sys.type.Time(date,clock);
-                                this.receiveParticle(new cessnalib_template.being.alive.particles.Time(time));
+                                this.receiveParticle(new cessnalib_template.being.alive.particles.Time(time,cessnalib_template.being.alive.constants.organelles.WebOrganelle));
                             } else {
                                 //TODO
                             }
                         });
                     }
                 }
-                export class DbOrganelleImplNeDb extends cessnalib_template.being.alive.organelles.DbOrganelle {
-                    private array:Array<string>;
-                    constructor(){
+                export class DbOrganelleImplMongoDb extends cessnalib_template.being.alive.organelles.DbOrganelle {
+                    private euglenaInfos:cessnalib.sys.type.Map<string,cessnalib.being.alive.EuglenaInfo>;
+                    private db:mongodb.Db;
+                    constructor() {
                         super();
-                        this.array = [];
+                        this.euglenaInfos = new cessnalib.sys.type.Map<string,cessnalib.being.alive.EuglenaInfo>();   
+                        this.euglenaInfos.add("idcore",new cessnalib.being.alive.EuglenaInfo("idcore","localhost","1337"));
+                        this.euglenaInfos.add("postman",new cessnalib.being.alive.EuglenaInfo("idcore","localhost","1337"));      
                     }
                     public receiveParticle(particle: Particle): void {
                         switch (particle.name) {
-                            case cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Save:
+                            
+                            case cessnalib_template.being.ghost.euglena.db.constants.StartDatabase:
+                                let this3_:DbOrganelleImplMongoDb = this;
+                                let startDatabase = particle as cessnalib_template.being.ghost.euglena.db.incomingparticles.StartDatabase;
+                                mongodb.MongoClient.connect("mongodb://" + this.initialProperties.url + ":" + this.initialProperties.port+"/"+startDatabase.content.euglenaName,(err, db) => {
+                                if (!err) {
+                                    this.db = db;
+                                    this3_.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.db.outgoingparticles.DbIsOnline(particle.of));
+                                } else {
+                                    //TODO
+                                }
+                            });
                                 break;
-                            case cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Remove:
+                            case cessnalib_template.being.alive.constants.impacts.ReadParticle:
+                            let readParticle = particle as cessnalib_template.being.alive.particles.ReadParticle;
+                            let this_ = this;
+                                this.db.collection(readParticle.name).find({of:readParticle.of}).toArray((err,doc)=>{
+                                    this_.nucleus.receiveParticle(doc[0]);    
+                                });
                                 break;
-                            case cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.Read:
+                            case cessnalib_template.being.alive.constants.impacts.RemoveParticle:
+                                this.db.collection(particle.name).findOneAndDelete({of:particle.of},(err,doc)=>{
+                                    //TODO
+                                });
                                 break;
-                            case cessnalib_template.being.ghost.euglena.db.constants.incomingparticles.DoesTokenExist:
-                                let content = particle.content as cessnalib_template.being.ghost.euglena.db.incomingparticles.DoesTokenExistContent;
-                                this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.db.outgoingparticles.TokenIsValid(content.token)); 
+                            case cessnalib_template.being.alive.constants.impacts.SaveParticle:
+                                let saveParticle = particle as cessnalib_template.being.alive.particles.SaveParticle;
+                                let this2_ = this;
+                                this.db.collection(saveParticle.name).findOneAndUpdate({name:saveParticle.content.name},saveParticle.content,{ upsert: true },(err,document)=>{
+                                    if(err){
+                                        //TODO
+                                    }else{
+                                        this2_.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Acknowledge({of:saveParticle.name,id:saveParticle.content.particle.name},cessnalib_template.being.alive.constants.organelles.DbOrganelle));
+                                    }
+                                });
                                 break;
                         }
                     }
@@ -189,14 +221,18 @@ export module cessnalib_impl {
                                             }
                                         }
                                     }
-                                    this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Time(this.time));
+                                    this.saveParticle(new cessnalib_template.being.alive.particles.Time(this.time,cessnalib_template.being.alive.constants.organelles.TimeOrganelle));
                                 }, 1000);
                                 break;
                         }
                     }
                 }
                 export class ImpactTransmitterOrganelleImplHttp extends cessnalib_template.being.alive.organelles.ImpactTransmitterOrganelle {
-                    private servers: any = {};
+                    private servers: any;
+                    constructor(){
+                        super();
+                        this.servers = {};
+                    }
                     public receiveParticle(particle:Particle):void {
                         switch (particle.name){
                             case cessnalib_template.being.ghost.euglena.impacttransmitter.constants.incomingparticles.ConnectToEuglena:
@@ -226,7 +262,7 @@ export module cessnalib_impl {
                             if (cessnalib.js.Class.instanceOf<cessnalib.being.interaction.Impact>(cessnalib_template.reference.being.interaction.Impact, impactAssumption)) {
                                 //TODO
                                 //callback(new cessnalib_template.being.alive.particles.Acknowledge());
-                                this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption));
+                                this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption,cessnalib_template.being.alive.constants.organelles.ImpactTransmitterOrganelle));
                             } else {
                                 //TODO
                             }
@@ -252,7 +288,11 @@ export module cessnalib_impl {
                     }
                 }
                 export class ReceptionOrganelleImplHttp extends cessnalib_template.being.alive.organelles.ReceptionOrganelle {
-                    private sockets: any = {};
+                    private sockets: any;
+                    constructor(){
+                        super();
+                        this.sockets = {};
+                    }
                     public receiveParticle(particle:Particle): void {
                         switch (particle.name){
                             case cessnalib_template.being.ghost.euglena.reception.constants.incomingparticles.Listen:
@@ -276,19 +316,30 @@ export module cessnalib_impl {
                                 });
                                 req.on('end', () => {
                                     res.writeHead(200, { 'Content-Type': 'application/json' });
+                                    let impactAssumption:any = null;
+                                    let result = {result:"Internal Server Error!"}
                                     try {
-                                        var impactAssumption = JSON.parse(body);
+                                        impactAssumption = JSON.parse(body);
                                         if (cessnalib.js.Class.instanceOf<cessnalib.being.interaction.Impact>(cessnalib_template.reference.being.interaction.Impact, impactAssumption) &&
                                             cessnalib.js.Class.instanceOf<cessnalib.being.Particle>(cessnalib_template.reference.being.Particle, (impactAssumption as cessnalib.being.interaction.Impact).particle)) {
-                                            this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption as cessnalib.being.interaction.Impact));
-                                            res.end(JSON.stringify(new cessnalib_template.being.alive.particles.Acknowledge()));
+                                            result = {result:"ok"};
+                                            
                                         } else {
                                             //TODO
+                                            result = {result:"Request format is uncorrect !"};
+                                            impactAssumption = null;
                                         }
                                     } catch (e) {
                                         //TODO
-                                        res.end("Request format is uncorrect !");
+                                        result = {result:"Request format is uncorrect !"};
+                                        impactAssumption = null;
                                     }
+                                    if(impactAssumption){
+                                        this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption as cessnalib.being.interaction.Impact,cessnalib_template.being.alive.constants.organelles.ReceptionOrganelle));
+                                    }else{
+                                        //TODO
+                                    }
+                                    res.end(JSON.stringify(result));
                                 });
                             } else if (req.method == 'GET') {
                                 res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -297,17 +348,17 @@ export module cessnalib_impl {
 
                         });
                         let socket = io.listen(server);
-                        socket.listen(this.initialProperties.port);
+                        server.listen(this.initialProperties.port);
                         socket.on("connection", (socket:any) => {
                             socket.on("bind", (impact:cessnalib.being.interaction.Impact) => {
-                                this.sockets[impact.from] = socket;
+                                this.sockets[impact.particle.of] = socket;
 
                                 //TODO
                                 socket.emit("bind", null);
                             });
                             socket.on("impact", (impactAssumption:cessnalib.being.interaction.Impact) => {
                                 //TODO
-                                this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption as cessnalib.being.interaction.Impact));
+                                this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption as cessnalib.being.interaction.Impact,cessnalib_template.being.alive.constants.organelles.ReceptionOrganelle));
                                 //var s = this.sockets[impulse];
                                 //if (s) {
                                     //s.emit("response", response);
@@ -355,7 +406,7 @@ export module cessnalib_impl {
                                     try {
                                         let impactAssumption = JSON.parse(message);
                                         if (cessnalib.js.Class.instanceOf(cessnalib_template.reference.being.interaction.Impact,impactAssumption)){
-                                            this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption as cessnalib.being.interaction.Impact));
+                                            this.nucleus.receiveParticle(new cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption as cessnalib.being.interaction.Impact,cessnalib_template.being.alive.constants.organelles.ImpactThrowerOrganelle));
                                         } else {
                                             //TODO log
                                         }
@@ -364,7 +415,7 @@ export module cessnalib_impl {
                                     }
                                 } else {
                                     //TODO write a eligable exception message
-                                    this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Exception(new Exception("")));
+                                    this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Exception(new Exception(""),cessnalib_template.being.alive.constants.organelles.ImpactThrowerOrganelle));
                                 }
                             
                         });

@@ -1,3 +1,4 @@
+"use strict";
 /// <reference path="C:/git/me.codeloves/cessnalib/cessnalib/typings/node/node.d.ts" />
 /**
  * Created by codelovesme on 6/19/2015.
@@ -23,10 +24,10 @@ export module cessnalib_template {
     export namespace being {
         export namespace particles {
             export class BooleanParticle extends cessnalib.being.Particle {
-                constructor(className:string,content:boolean){ super(className,content); }
+                constructor(name:string,content:boolean,of:string){ super(name,content,of); }
             }
             export class VoidParticle extends cessnalib.being.Particle {
-                constructor(name:string){ super(name,null); }
+                constructor(name:string,of:string){ super(name,null,of); }
             }
         }
         export namespace alive {
@@ -45,6 +46,10 @@ export module cessnalib_template {
                     export const Time = "Time";
                     export const Exception = "Exception";
                     export const ConnectedToTheInternet = "ConnectedToTheInternet";
+                    export const Token = "Token";
+                    export const Impacts = "Impacts";
+                    export const DoesParticleExist = "DoesParticleExist";
+                    export const DoesUniqueParticleExist = "DoesUniqueParticleExist";
                 }
                 export namespace organelles {
                     export const ImpactTransmitterOrganelle = "ImpactTransmitterOrganelle";
@@ -55,9 +60,11 @@ export module cessnalib_template {
                     export const DbOrganelle = "DbOrganelle";
                 }
                 export namespace impacts {
-                    export const FetchImpacts = "FetchImpacts";
                     export const TimeChanged = "TimeChanged";
                     export const ExceptionOccurred = "ExceptionOccurred";
+                    export const SaveParticle = "SaveParticle";
+                    export const ReadParticle = "ReadParticle";
+                    export const RemoveParticle = "RemoveParticle";
                 }
             }
             export namespace organelles {
@@ -77,50 +84,73 @@ export module cessnalib_template {
                 export abstract class WebOrganelle extends Organelle<{}>{
                     constructor() { super(constants.organelles.WebOrganelle); }
                 }
-                export abstract class DbOrganelle extends Organelle<{}>{
+                export abstract class DbOrganelle extends Organelle<{url:string,port:number}>{
                     constructor() { super(constants.organelles.DbOrganelle); }
                 }
             }
             export namespace particles {
+                export class EuglenaInfos extends Particle {
+                    constructor(content:any,of:string){super(constants.particles.EuglenaInfos,content,of);}
+                }
+                export class Token extends Particle {
+                    constructor(content:string,of:string){super(constants.particles.Token,content,of);}
+                }
                 export class Exception extends cessnalib.being.Particle {
-                    constructor(content: cessnalib.sys.type.Exception) { super(constants.particles.Exception, content); }
+                    constructor(content: cessnalib.sys.type.Exception,of:string) { super(constants.particles.Exception, content,of); }
                 }
                 export class Time extends cessnalib.being.Particle {
-                    constructor(content: cessnalib.sys.type.Time) { super(constants.particles.Time, content); }
+                    constructor(content: cessnalib.sys.type.Time,of:string) { super(constants.particles.Time, content,of); }
+                }
+                export interface AcknowledgeContent{
+                    of:string,
+                    id:string
                 }
                 export class Acknowledge extends being.particles.VoidParticle {
-                    constructor(){ super(constants.particles.Acknowledge); }
+                    constructor(content:AcknowledgeContent,of:string){ super(constants.particles.Acknowledge,of); }
                 }
                 export class ConnectedToTheInternet extends being.particles.BooleanParticle{
-                    constructor(content:boolean){ super(constants.particles.ConnectedToTheInternet,content); }
+                    constructor(content:boolean,of:string){ super(constants.particles.ConnectedToTheInternet,content,of); }
                 }
                 export class EuglenaHasBeenBorn extends being.particles.BooleanParticle {
-                    constructor() { super(constants.particles.EuglenaHasBeenBorn,true); }
+                    constructor(of:string) { super(constants.particles.EuglenaHasBeenBorn,true,of); }
                 }
-                export class FetchImpacts extends cessnalib.being.Particle {
-                    constructor(public from:string) { super(constants.impacts.FetchImpacts,from); }
+                export class SaveParticle extends Particle {
+                    constructor(content:Particle,of:string) { super(constants.impacts.SaveParticle, content,of); }
                 }
-                export interface ImpactReceivedContent{
-                    from:string,
-                    particle:Particle,
-                    token:string
+                export class ReadParticle extends Particle {
+                    constructor(content:cessnalib.being.alive.dna.condition.ParticleReference,of:string){ super(constants.impacts.ReadParticle,content,of); }
+                }
+                export interface RemoveParticleContent {
+                    name: string,
+                    of: string
+                }
+                export class RemoveParticle extends Particle {
+                    constructor(content:RemoveParticleContent,of:string){ super(constants.impacts.RemoveParticle,content,of); }
+                }
+                export interface DoesParticleExistContent {
+                    name:string,
+                    of:string
+                }
+                export class DoesParticleExist extends Particle {
+                    constructor(content:DoesParticleExistContent,of:string){super(alive.constants.particles.DoesParticleExist,content,of);}
                 }
                 export class ImpactReceived extends cessnalib.being.Particle {
-                    constructor(public content:ImpactReceivedContent) { super(constants.particles.ImpactReceived,content); }
+                    constructor(public content:Impact,of:string) { super(constants.particles.ImpactReceived,content,of); }
                 }
             }
             export class StaticTools{
-                public static instantiateEuglena(applicationDirectory: string, organelleBank: cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>, chromosome: any[]): Euglena {
+                public static instantiateEuglena(applicationDirectory: string, organelleBank: cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>, chromosome: any[],euglenaName:string): Euglena {
                     const initialConfig = injection.StaticTools.readConfigFile(applicationDirectory);
                     let particles: any = {};
                     for (let valueChooser of initialConfig.values) {
                         particles[valueChooser.className] = new Particle(
                             valueChooser.className,
-                            cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser)
+                            cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser),
+                            euglenaName
                         );
                     }
+                    particles[cessnalib_template.being.alive.constants.particles.EuglenaName] = new Particle(cessnalib_template.being.alive.constants.particles.EuglenaName,euglenaName,euglenaName);
                     let organelles: any = {};
-                    let euglenaName = (particles[cessnalib.being.alive.constants.particles.EuglenaName] as Particle).content;
                     let impactGenerator = new interaction.ImpactGenerator(euglenaName);
                     for (let objectProp of initialConfig.objects) {
                         let organelle = organelleBank.get(cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
@@ -129,7 +159,7 @@ export module cessnalib_template {
                         organelles[organelle.name] = organelle;
                     }
                     let euglena = cessnalib.being.alive.Euglena.generateInstance(chromosome, particles, organelles, impactGenerator);
-                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn());
+                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn(euglena.getParticle(cessnalib_template.being.alive.constants.particles.EuglenaName).content));
                     return euglena;
                 }
             }
@@ -143,7 +173,7 @@ export module cessnalib_template {
                             impact: Impact
                         }
                         export class ThrowImpact extends cessnalib.being.Particle {
-                            constructor(content: { to: cessnalib.being.alive.EuglenaInfo, impact: Impact } ) { super(constants.incomingparticles.ThrowImpact, content); }
+                            constructor(content: { to: cessnalib.being.alive.EuglenaInfo, impact: Impact },of:string) { super(constants.incomingparticles.ThrowImpact, content,of); }
                         }
                     }
                     export namespace constants {
@@ -155,19 +185,19 @@ export module cessnalib_template {
                 export namespace reception {
                     export namespace incomingparticles {
                         export class Listen extends being.particles.VoidParticle {
-                            constructor() { super(constants.incomingparticles.Listen); }
+                            constructor(of:string) { super(constants.incomingparticles.Listen,of); }
                         }
                         export interface ThrowImpactContent {
                             to: cessnalib.being.alive.EuglenaInfo,
                             impact: Impact
                         }
                         export class ThrowImpact extends cessnalib.being.Particle {
-                            constructor(content: ThrowImpactContent ) { super(constants.incomingparticles.ThrowImpact, content); }
+                            constructor(content: ThrowImpactContent,of:string) { super(constants.incomingparticles.ThrowImpact, content,of); }
                         }
                     }
                     export namespace outgoingparticles {
                         export class ImpactReceived extends cessnalib.being.Particle {
-                            constructor(impact:cessnalib.being.interaction.Impact) { super(constants.outgoingparticles.ImpactReceived,impact); }
+                            constructor(impact:cessnalib.being.interaction.Impact,of:string) { super(constants.outgoingparticles.ImpactReceived,impact,of); }
                         }
                     }
                     export namespace constants {
@@ -183,8 +213,8 @@ export module cessnalib_template {
                 export namespace impacttransmitter {
                     export namespace incomingparticles {
                         export class ConnectToEuglena extends cessnalib.being.Particle {
-                            constructor(euglenaInfo: cessnalib.being.alive.EuglenaInfo) {
-                                super(constants.incomingparticles.ConnectToEuglena, euglenaInfo);
+                            constructor(euglenaInfo: cessnalib.being.alive.EuglenaInfo,of:string) {
+                                super(constants.incomingparticles.ConnectToEuglena, euglenaInfo,of);
                             }
                         }
                         export interface ThrowImpactContent {
@@ -192,7 +222,7 @@ export module cessnalib_template {
                             impact: Impact
                         }
                         export class ThrowImpact extends cessnalib.being.Particle {
-                            constructor(content: { to: string, impact: ThrowImpactContent}) { super(constants.incomingparticles.ThrowImpact,content); }
+                            constructor(content: { to: string, impact: ThrowImpactContent},of:string) { super(constants.incomingparticles.ThrowImpact,content,of); }
                         }
                     }
                     export namespace constants {
@@ -212,10 +242,10 @@ export module cessnalib_template {
                     export namespace incomingparticles {
                         import VoidParticle = cessnalib_template.being.particles.VoidParticle;
                         export class ReturnCurrentTime extends VoidParticle{
-                            constructor(){ super(constants.incomingparticles.ReturnCurrentTime); }
+                            constructor(of:string){ super(constants.incomingparticles.ReturnCurrentTime,of); }
                         }
                         export class ReturnIfConnectedToTheInternet extends VoidParticle {
-                            constructor(){ super(constants.incomingparticles.ReturnIfConnectedToTheInternet); }
+                            constructor(of:string){ super(constants.incomingparticles.ReturnIfConnectedToTheInternet,of); }
                         }
                     }
                 }
@@ -226,10 +256,10 @@ export module cessnalib_template {
                     }
                     export namespace incomingparticles {
                         export class SetTime extends Particle {
-                            constructor(time: cessnalib.sys.type.Time) { super(constants.incomingparticles.SetTime, time); }
+                            constructor(time: cessnalib.sys.type.Time,of:string) { super(constants.incomingparticles.SetTime, time,of); }
                         }
                         export class StartClock extends being.particles.VoidParticle {
-                            constructor() { super(constants.incomingparticles.StartClock); }
+                            constructor(of:string) { super(constants.incomingparticles.StartClock,of); }
                         }
                     }
                     export namespace constants {
@@ -248,56 +278,18 @@ export module cessnalib_template {
                         
                     }
                     export namespace incomingparticles {
-                        export interface SaveContent {
-                            particle: Particle
-                        }
-                        export class Save extends Particle {
-                            constructor(content:SaveContent) { super(constants.incomingparticles.Save, content); }
-                        }
-                        export interface ReadContent{
-                            name:string
-                        }
-                        export class Read extends Particle {
-                            constructor(content:ReadContent){ super(constants.incomingparticles.Read,content); }
-                        }
-                        export interface RemoveContent{
-                            name:string
-                        }
-                        export class Remove extends Particle {
-                            constructor(content:RemoveContent){ super(constants.incomingparticles.Remove,content); }
+                        export class StartDatabase extends Particle {
+                            constructor(content:{euglenaName:string},of:string){super(constants.StartDatabase,content,of);}
                         }
                     }
                     export namespace outgoingparticles{
-                        export class UserExists extends cessnalib.being.Particle {
-                            constructor(userId:string) { super(constants.outgoingparticles.UserExists,{userId:userId}); }
-                        }  
-                        export class UserNotExists extends cessnalib.being.Particle {
-                            constructor(userId:string) { super(constants.outgoingparticles.UserNotExists,{userId:userId}); }
+                        export class DbIsOnline extends being.particles.VoidParticle {
+                            constructor(of:string){super(constants.DbIsOnline,of);}
                         }
-                        export class TokenIsValid extends cessnalib.being.Particle {
-                            constructor(token:string) { super(constants.outgoingparticles.TokenIsValid,{token:token}); }
-                        }
-                        export class TokenIsNotValid extends cessnalib.being.Particle {
-                            constructor(token:string) { super(constants.outgoingparticles.TokenIsNotValid,{token:token}); }
-                        }
-                   }
+                    }
                     export namespace constants {
-                        export namespace outgoingparticles {
-                            export const UserExists = "UserExists";
-                            export const UserNotExists = "UserNotExists";
-                            export const TokenIsValid = "TokenIsValid";
-                            export const TokenIsNotValid = "TokenIsNotValid";
-                        }
-                        export namespace incomingparticles {
-                            export const Save = "Save";
-                            export const DoesTokenExist = "DoesTokenExist";
-                        }
-                        export namespace incomingparticles {
-                            export const Read = "Read";
-                        }
-                        export namespace incomingparticles {
-                            export const Remove = "Remove";
-                        }
+                        export const StartDatabase = "StartDatabase";
+                        export const DbIsOnline = "DbIsOnline";
                     }
                 }
             }
@@ -305,11 +297,11 @@ export module cessnalib_template {
     }
     export namespace reference {
         export namespace being {
-            export const Particle = new cessnalib.being.Particle("Reference Particle", true);
+            export const Particle = new cessnalib.being.Particle("Reference Particle", true,"mine");
             export namespace interaction {
                 export const Impact:cessnalib.being.interaction.Impact = {
-                    from: "Reference",
-                    particle: being.Particle
+                    particle: being.Particle,
+                    token: "token"
                 }
             }
         }
