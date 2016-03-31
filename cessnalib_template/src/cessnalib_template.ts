@@ -39,7 +39,6 @@ export module cessnalib_template {
             export namespace constants {
                 export namespace particles {
                     export const EuglenaName = "EuglenaName";
-                    export const EuglenaInfos = "EuglenaInfos";
                     export const ImpactReceived = "ImpactReceived";
                     export const EuglenaHasBeenBorn = "EuglenaHasBeenBorn";
                     export const Acknowledge = "Acknowledge";
@@ -64,6 +63,7 @@ export module cessnalib_template {
                     export const ExceptionOccurred = "ExceptionOccurred";
                     export const SaveParticle = "SaveParticle";
                     export const ReadParticle = "ReadParticle";
+                    export const ReadParticles = "ReadParticles";
                     export const RemoveParticle = "RemoveParticle";
                 }
             }
@@ -89,9 +89,6 @@ export module cessnalib_template {
                 }
             }
             export namespace particles {
-                export class EuglenaInfos extends Particle {
-                    constructor(content:any,of:string){super(constants.particles.EuglenaInfos,content,of);}
-                }
                 export class Token extends Particle {
                     constructor(content:string,of:string){super(constants.particles.Token,content,of);}
                 }
@@ -120,6 +117,9 @@ export module cessnalib_template {
                 export class ReadParticle extends Particle {
                     constructor(content:cessnalib.being.alive.dna.condition.ParticleReference,of:string){ super(constants.impacts.ReadParticle,content,of); }
                 }
+                export class ReadParticles extends Particle {
+                    constructor(particleName:string,of:string){ super(constants.impacts.ReadParticles,particleName,of); }
+                }
                 export interface RemoveParticleContent {
                     name: string,
                     of: string
@@ -141,25 +141,23 @@ export module cessnalib_template {
             export class StaticTools{
                 public static instantiateEuglena(applicationDirectory: string, organelleBank: cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>, chromosome: any[],euglenaName:string): Euglena {
                     const initialConfig = injection.StaticTools.readConfigFile(applicationDirectory);
-                    let particles: any = {};
+                    let particles = new Array<Particle>();
                     for (let valueChooser of initialConfig.values) {
-                        particles[valueChooser.className] = new Particle(
+                        particles.push(new Particle(
                             valueChooser.className,
                             cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser),
                             euglenaName
-                        );
+                        ));
                     }
-                    particles[cessnalib_template.being.alive.constants.particles.EuglenaName] = new Particle(cessnalib_template.being.alive.constants.particles.EuglenaName,euglenaName,euglenaName);
+                    particles.push(new Particle(cessnalib_template.being.alive.constants.particles.EuglenaName,euglenaName,euglenaName));
                     let organelles: any = {};
-                    let impactGenerator = new interaction.ImpactGenerator(euglenaName);
                     for (let objectProp of initialConfig.objects) {
                         let organelle = organelleBank.get(cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
                         organelle.initialProperties = objectProp.initialProperties;
-                        organelle.impactGenerator = impactGenerator;
                         organelles[organelle.name] = organelle;
                     }
-                    let euglena = cessnalib.being.alive.Euglena.generateInstance(chromosome, particles, organelles, impactGenerator);
-                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn(euglena.getParticle(cessnalib_template.being.alive.constants.particles.EuglenaName).content));
+                    let euglena = cessnalib.being.alive.Euglena.generateInstance(chromosome, particles, organelles);
+                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn(euglena.getParticle(new cessnalib.being.alive.dna.condition.ParticleReference(cessnalib_template.being.alive.constants.particles.EuglenaName,euglenaName)).content));
                     return euglena;
                 }
             }

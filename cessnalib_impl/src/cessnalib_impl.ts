@@ -146,7 +146,6 @@ export module cessnalib_impl {
                     }
                     public receiveParticle(particle: Particle): void {
                         switch (particle.name) {
-                            
                             case cessnalib_template.being.ghost.euglena.db.constants.StartDatabase:
                                 let this3_:DbOrganelleImplMongoDb = this;
                                 let startDatabase = particle as cessnalib_template.being.ghost.euglena.db.incomingparticles.StartDatabase;
@@ -160,25 +159,32 @@ export module cessnalib_impl {
                             });
                                 break;
                             case cessnalib_template.being.alive.constants.impacts.ReadParticle:
-                            let readParticle = particle as cessnalib_template.being.alive.particles.ReadParticle;
-                            let this_ = this;
-                                this.db.collection(readParticle.name).find({of:readParticle.of}).toArray((err,doc)=>{
+                                let this_ = this;
+                                this.db.collection(particle.content.name).find({of:particle.content.of}).toArray((err,doc)=>{
                                     this_.nucleus.receiveParticle(doc[0]);    
                                 });
                                 break;
+                            case cessnalib_template.being.alive.constants.impacts.ReadParticles:
+                                let this4_ = this;
+                                this.db.collection(particle.content).find({}).toArray((err,doc)=>{
+                                    for (var index = 0; index < doc.length; index++) {
+                                        this4_.nucleus.receiveParticle(doc[index]);
+                                    }  
+                                });
+                                break;
                             case cessnalib_template.being.alive.constants.impacts.RemoveParticle:
-                                this.db.collection(particle.name).findOneAndDelete({of:particle.of},(err,doc)=>{
+                                this.db.collection(particle.content.name).findOneAndDelete({of:particle.content.of},(err,doc)=>{
                                     //TODO
                                 });
                                 break;
                             case cessnalib_template.being.alive.constants.impacts.SaveParticle:
                                 let saveParticle = particle as cessnalib_template.being.alive.particles.SaveParticle;
                                 let this2_ = this;
-                                this.db.collection(saveParticle.name).findOneAndUpdate({name:saveParticle.content.name},saveParticle.content,{ upsert: true },(err,document)=>{
+                                this.db.collection(saveParticle.content.name).findOneAndUpdate({of:saveParticle.content.of},saveParticle.content,{ upsert: true },(err,document)=>{
                                     if(err){
                                         //TODO
                                     }else{
-                                        this2_.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Acknowledge({of:saveParticle.name,id:saveParticle.content.particle.name},cessnalib_template.being.alive.constants.organelles.DbOrganelle));
+                                        this2_.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Acknowledge({of:saveParticle.of,id:saveParticle.content.name},cessnalib_template.being.alive.constants.organelles.DbOrganelle));
                                     }
                                 });
                                 break;

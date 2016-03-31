@@ -7,7 +7,6 @@ var cessnalib_1 = require("../node_modules/cessnalib/cessnalib");
 var path = require("path");
 var fs = require("fs");
 var jsonminify = require("jsonminify");
-var interaction = cessnalib_1.cessnalib.being.interaction;
 var cessnalib_template;
 (function (cessnalib_template) {
     var injection;
@@ -45,7 +44,6 @@ var cessnalib_template;
                 var particles;
                 (function (particles) {
                     particles.EuglenaName = "EuglenaName";
-                    particles.EuglenaInfos = "EuglenaInfos";
                     particles.ImpactReceived = "ImpactReceived";
                     particles.EuglenaHasBeenBorn = "EuglenaHasBeenBorn";
                     particles.Acknowledge = "Acknowledge";
@@ -72,6 +70,7 @@ var cessnalib_template;
                     impacts.ExceptionOccurred = "ExceptionOccurred";
                     impacts.SaveParticle = "SaveParticle";
                     impacts.ReadParticle = "ReadParticle";
+                    impacts.ReadParticles = "ReadParticles";
                     impacts.RemoveParticle = "RemoveParticle";
                 })(impacts = constants.impacts || (constants.impacts = {}));
             })(constants = alive.constants || (alive.constants = {}));
@@ -117,12 +116,6 @@ var cessnalib_template;
             })(organelles = alive.organelles || (alive.organelles = {}));
             var particles;
             (function (particles) {
-                class EuglenaInfos extends Particle {
-                    constructor(content, of) {
-                        super(constants.particles.EuglenaInfos, content, of);
-                    }
-                }
-                particles.EuglenaInfos = EuglenaInfos;
                 class Token extends Particle {
                     constructor(content, of) {
                         super(constants.particles.Token, content, of);
@@ -171,6 +164,12 @@ var cessnalib_template;
                     }
                 }
                 particles.ReadParticle = ReadParticle;
+                class ReadParticles extends Particle {
+                    constructor(particleName, of) {
+                        super(constants.impacts.ReadParticles, particleName, of);
+                    }
+                }
+                particles.ReadParticles = ReadParticles;
                 class RemoveParticle extends Particle {
                     constructor(content, of) {
                         super(constants.impacts.RemoveParticle, content, of);
@@ -194,21 +193,19 @@ var cessnalib_template;
             class StaticTools {
                 static instantiateEuglena(applicationDirectory, organelleBank, chromosome, euglenaName) {
                     const initialConfig = injection.StaticTools.readConfigFile(applicationDirectory);
-                    let particles = {};
+                    let particles = new Array();
                     for (let valueChooser of initialConfig.values) {
-                        particles[valueChooser.className] = new Particle(valueChooser.className, cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser), euglenaName);
+                        particles.push(new Particle(valueChooser.className, cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser), euglenaName));
                     }
-                    particles[cessnalib_template.being.alive.constants.particles.EuglenaName] = new Particle(cessnalib_template.being.alive.constants.particles.EuglenaName, euglenaName, euglenaName);
+                    particles.push(new Particle(cessnalib_template.being.alive.constants.particles.EuglenaName, euglenaName, euglenaName));
                     let organelles = {};
-                    let impactGenerator = new interaction.ImpactGenerator(euglenaName);
                     for (let objectProp of initialConfig.objects) {
                         let organelle = organelleBank.get(cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
                         organelle.initialProperties = objectProp.initialProperties;
-                        organelle.impactGenerator = impactGenerator;
                         organelles[organelle.name] = organelle;
                     }
-                    let euglena = cessnalib_1.cessnalib.being.alive.Euglena.generateInstance(chromosome, particles, organelles, impactGenerator);
-                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn(euglena.getParticle(cessnalib_template.being.alive.constants.particles.EuglenaName).content));
+                    let euglena = cessnalib_1.cessnalib.being.alive.Euglena.generateInstance(chromosome, particles, organelles);
+                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn(euglena.getParticle(new cessnalib_1.cessnalib.being.alive.dna.condition.ParticleReference(cessnalib_template.being.alive.constants.particles.EuglenaName, euglenaName)).content));
                     return euglena;
                 }
             }

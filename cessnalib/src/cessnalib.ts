@@ -166,7 +166,7 @@ export module cessnalib {
             export namespace StaticTools {
                 export class Exception {
                     public static isNotException<T>(t: T | Exception): t is T {
-                        return cessnalib.js.Class.instanceOf(cessnalib.reference.sys.type.Exception, t);
+                        return !cessnalib.js.Class.instanceOf(cessnalib.reference.sys.type.Exception, t);
                     }
                 }
                 export class UUID {
@@ -287,27 +287,11 @@ export module cessnalib {
             export interface CanReceiveParticle {
                 receiveParticle: ReceiveParticle;
             }
-            export interface Impact {
-                particle: Particle;
-                token:string;
+            export class Impact {
+                constructor(public particle: Particle,public token:string){}
             }
             export namespace constants{
                 export const ReceivedParticleReference = "ReceivedParticleReference";
-            }
-            export class ImpactGenerator {
-                constructor(public euglenaName: string) { }
-                public generateImpact(particle: Particle): Impact {
-                    return StaticTools.generateImpact(this.euglenaName, particle);
-                }
-            }
-            export class StaticTools {
-                public static generateImpact(from: string, particle: Particle): Impact {
-                    return {
-                        "particle": particle,
-                        "token":"" 
-                        //TODO fix 
-                    };
-                }
             }
         }
         export namespace alive {
@@ -352,11 +336,11 @@ export module cessnalib {
                     }
                     export class DoesParticalExist implements Classifiable {
                         public className = constants.DoesParticalExist;
-                        constructor(public particleReference:ParticleReference){  }
+                        constructor(public name: string, public of: DetailedParticleReference | ParticleReference | ReceivedParticleReference | string ){  }
                     }
                     export class ParticleReference extends Particle {
-                        constructor(name: string) {
-                            super(name, null,null);
+                        constructor(name: string,of:string) {
+                            super(name, null,of);
                         }
                     }
                     export class DetailedParticleReference {
@@ -418,7 +402,7 @@ export module cessnalib {
                             } else {
                                 switch (condition.className) {
                                     case constants.DoesParticalExist:
-                                        result = this.particles[(condition as DoesParticalExist).particleReference.name] ? true : false;
+                                        result = this.executeDoesParticleExists(condition,receivedParticle);
                                         break;
                                     case constants.DetailedParticleReference:
                                         result = this.executeDetailedParticle(condition,receivedParticle);
@@ -641,6 +625,16 @@ export module cessnalib {
                             }
                             return result;
                         }
+                        private executeDoesParticleExists(doesParticleExist:DoesParticalExist ,receivedParticle:Particle):boolean {
+                            let returnValue = false;
+                            if(typeof doesParticleExist.of === "string"){
+                                returnValue = this.particles[doesParticleExist.name] ? true : false; 
+                            }else if(typeof doesParticleExist.of === "object"){
+                                let of = this.execute(doesParticleExist.of,receivedParticle);
+                                returnValue = this.particles[doesParticleExist.name] ? true : false;
+                            }
+                            return returnValue;
+                        }
                         private executeCalculationPhrase(calculationPhrase: CalculationPhrase,receivedParticle:Particle): number {
                             var stack = calculationPhrase.stack;
                             //get multiplication and division manipulations first
@@ -830,7 +824,7 @@ export module cessnalib {
             }
             export namespace constants {
                 export const OutSide = "OutSide";
-                export const EuglenaInfo = "cessnalib.being.alive.EuglenaInfo";
+                export const EuglenaInfo = "EuglenaInfo";
                 export namespace particles {
                     export const EuglenaName = "EuglenaName";
                 }
@@ -838,7 +832,6 @@ export module cessnalib {
             export abstract class Organelle<InitialProperties> implements Named, interaction.CanReceiveParticle {
                 constructor(
                     public name: string,
-                    public impactGenerator?: interaction.ImpactGenerator,
                     public nucleus?: interaction.CanReceiveParticle,
                     public saveParticle?:(particle:Particle)=>void,
                     public initialProperties?: InitialProperties) { }
@@ -882,7 +875,7 @@ export module cessnalib {
                 public static instance: Euglena = null;
                 private garbageCollector:GarbageCollector = null;
                 private executor: cessnalib.being.alive.dna.condition.Executor = null;
-                constructor(public chromosome: dna.Gene[], private particles: any, private organelles: any, private impactGenerator: interaction.ImpactGenerator) {
+                constructor(public chromosome: dna.Gene[], private particles: Particle[], private organelles: any) {
                     this.executor = new cessnalib.being.alive.dna.condition.Executor(this.particles);
                     this.garbageCollector = new GarbageCollector(this.chromosome);
                     for (let organelleName in organelles) {
@@ -891,9 +884,9 @@ export module cessnalib {
                     }
                     this.garbageCollector.start();
                 }
-                public static generateInstance(chromosome: dna.Gene[], particles: any, organelles: Organelle<any>[], impactGenerator: interaction.ImpactGenerator) {
+                public static generateInstance(chromosome: dna.Gene[], particles: any, organelles: Organelle<any>[]) {
                     if (!Euglena.instance) {
-                        Euglena.instance = new Euglena(chromosome, particles, organelles, impactGenerator);
+                        Euglena.instance = new Euglena(chromosome, particles, organelles);
                     }
                     return Euglena.instance;
                 }
@@ -915,12 +908,25 @@ export module cessnalib {
                         }
                     }
                 }
-                public getParticle(particleName: string): being.Particle {
-                    return Euglena.instance.particles[particleName];
+                public getParticle(particleReference: dna.condition.ParticleReference): being.Particle {
+                    let index = Euglena.instance.indexOfParticle(particleReference);
+                    return index >=0 ? Euglena.instance.particles[index] : null;
+                }
+                private indexOfParticle(particleReference: dna.condition.ParticleReference):number{
+                    for(let i=0;i<Euglena.instance.particles.length;i++){
+                        if(Euglena.instance.particles[i].name === particleReference.name && Euglena.instance.particles[i].of === particleReference.of){
+                            return i;
+                        }
+                    }
+                    return -1;
                 }
                 public saveParticle(particle: being.Particle) {
-                    Euglena.instance.particles[particle.name] = particle;
-                    Euglena.instance.receiveParticle(particle);
+                    let index = Euglena.instance.indexOfParticle(particle);
+                    if(index >= 0){
+                        Euglena.instance.particles[index] = particle;
+                    }else{
+                        Euglena.instance.particles.push(particle);
+                    }
                 }
                 public getOrganelle(organelleName: string): being.alive.Organelle<any> {
                     return Euglena.instance.organelles[organelleName];

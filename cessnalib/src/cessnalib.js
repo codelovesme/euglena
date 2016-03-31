@@ -191,7 +191,7 @@ var cessnalib;
             (function (StaticTools) {
                 class Exception {
                     static isNotException(t) {
-                        return cessnalib.js.Class.instanceOf(cessnalib.reference.sys.type.Exception, t);
+                        return !cessnalib.js.Class.instanceOf(cessnalib.reference.sys.type.Exception, t);
                     }
                 }
                 StaticTools.Exception = Exception;
@@ -314,28 +314,17 @@ var cessnalib;
         being.Particle = Particle;
         var interaction;
         (function (interaction) {
+            class Impact {
+                constructor(particle, token) {
+                    this.particle = particle;
+                    this.token = token;
+                }
+            }
+            interaction.Impact = Impact;
             var constants;
             (function (constants) {
                 constants.ReceivedParticleReference = "ReceivedParticleReference";
             })(constants = interaction.constants || (interaction.constants = {}));
-            class ImpactGenerator {
-                constructor(euglenaName) {
-                    this.euglenaName = euglenaName;
-                }
-                generateImpact(particle) {
-                    return StaticTools.generateImpact(this.euglenaName, particle);
-                }
-            }
-            interaction.ImpactGenerator = ImpactGenerator;
-            class StaticTools {
-                static generateImpact(from, particle) {
-                    return {
-                        "particle": particle,
-                        "token": ""
-                    };
-                }
-            }
-            interaction.StaticTools = StaticTools;
         })(interaction = being.interaction || (being.interaction = {}));
         var alive;
         (function (alive) {
@@ -376,15 +365,16 @@ var cessnalib;
                         constants.DetailedParticleReference = "cessnalib.being.alive.dna.condition.DetailedParticleReference";
                     })(constants = condition_1.constants || (condition_1.constants = {}));
                     class DoesParticalExist {
-                        constructor(particleReference) {
-                            this.particleReference = particleReference;
+                        constructor(name, of) {
+                            this.name = name;
+                            this.of = of;
                             this.className = constants.DoesParticalExist;
                         }
                     }
                     condition_1.DoesParticalExist = DoesParticalExist;
                     class ParticleReference extends Particle {
-                        constructor(name) {
-                            super(name, null, null);
+                        constructor(name, of) {
+                            super(name, null, of);
                         }
                     }
                     condition_1.ParticleReference = ParticleReference;
@@ -462,7 +452,7 @@ var cessnalib;
                             else {
                                 switch (condition.className) {
                                     case constants.DoesParticalExist:
-                                        result = this.particles[condition.particleReference.name] ? true : false;
+                                        result = this.executeDoesParticleExists(condition, receivedParticle);
                                         break;
                                     case constants.DetailedParticleReference:
                                         result = this.executeDetailedParticle(condition, receivedParticle);
@@ -688,6 +678,17 @@ var cessnalib;
                             }
                             return result;
                         }
+                        executeDoesParticleExists(doesParticleExist, receivedParticle) {
+                            let returnValue = false;
+                            if (typeof doesParticleExist.of === "string") {
+                                returnValue = this.particles[doesParticleExist.name] ? true : false;
+                            }
+                            else if (typeof doesParticleExist.of === "object") {
+                                let of = this.execute(doesParticleExist.of, receivedParticle);
+                                returnValue = this.particles[doesParticleExist.name] ? true : false;
+                            }
+                            return returnValue;
+                        }
                         executeCalculationPhrase(calculationPhrase, receivedParticle) {
                             var stack = calculationPhrase.stack;
                             //get multiplication and division manipulations first
@@ -846,16 +847,15 @@ var cessnalib;
             var constants;
             (function (constants) {
                 constants.OutSide = "OutSide";
-                constants.EuglenaInfo = "cessnalib.being.alive.EuglenaInfo";
+                constants.EuglenaInfo = "EuglenaInfo";
                 var particles;
                 (function (particles) {
                     particles.EuglenaName = "EuglenaName";
                 })(particles = constants.particles || (constants.particles = {}));
             })(constants = alive.constants || (alive.constants = {}));
             class Organelle {
-                constructor(name, impactGenerator, nucleus, saveParticle, initialProperties) {
+                constructor(name, nucleus, saveParticle, initialProperties) {
                     this.name = name;
-                    this.impactGenerator = impactGenerator;
                     this.nucleus = nucleus;
                     this.saveParticle = saveParticle;
                     this.initialProperties = initialProperties;
@@ -900,11 +900,10 @@ var cessnalib;
             }
             alive.GarbageCollector = GarbageCollector;
             class Euglena {
-                constructor(chromosome, particles, organelles, impactGenerator) {
+                constructor(chromosome, particles, organelles) {
                     this.chromosome = chromosome;
                     this.particles = particles;
                     this.organelles = organelles;
-                    this.impactGenerator = impactGenerator;
                     this.garbageCollector = null;
                     this.executor = null;
                     this.executor = new cessnalib.being.alive.dna.condition.Executor(this.particles);
@@ -915,9 +914,9 @@ var cessnalib;
                     }
                     this.garbageCollector.start();
                 }
-                static generateInstance(chromosome, particles, organelles, impactGenerator) {
+                static generateInstance(chromosome, particles, organelles) {
                     if (!Euglena.instance) {
-                        Euglena.instance = new Euglena(chromosome, particles, organelles, impactGenerator);
+                        Euglena.instance = new Euglena(chromosome, particles, organelles);
                     }
                     return Euglena.instance;
                 }
@@ -939,12 +938,26 @@ var cessnalib;
                         }
                     }
                 }
-                getParticle(particleName) {
-                    return Euglena.instance.particles[particleName];
+                getParticle(particleReference) {
+                    let index = Euglena.instance.indexOfParticle(particleReference);
+                    return index >= 0 ? Euglena.instance.particles[index] : null;
+                }
+                indexOfParticle(particleReference) {
+                    for (let i = 0; i < Euglena.instance.particles.length; i++) {
+                        if (Euglena.instance.particles[i].name === particleReference.name && Euglena.instance.particles[i].of === particleReference.of) {
+                            return i;
+                        }
+                    }
+                    return -1;
                 }
                 saveParticle(particle) {
-                    Euglena.instance.particles[particle.name] = particle;
-                    Euglena.instance.receiveParticle(particle);
+                    let index = Euglena.instance.indexOfParticle(particle);
+                    if (index >= 0) {
+                        Euglena.instance.particles[index] = particle;
+                    }
+                    else {
+                        Euglena.instance.particles.push(particle);
+                    }
                 }
                 getOrganelle(organelleName) {
                     return Euglena.instance.organelles[organelleName];
