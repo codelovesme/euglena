@@ -1,5 +1,7 @@
-"use strict";
 /// <reference path="C:/git/me.codeloves/cessnalib/cessnalib/typings/node/node.d.ts" />
+
+"use strict";
+
 /**
  * Created by codelovesme on 6/19/2015.
  */
@@ -15,9 +17,9 @@ import interaction = cessnalib.being.interaction;
 export module cessnalib_template {
     export namespace injection {
         export class StaticTools {
-            public static readConfigFile(applicationDirectory:string): cessnalib.injection.Configuration {
-                let readConfigFile = fs.readFileSync(path.join(path.resolve(applicationDirectory), "config.json"), "utf8");
-                return JSON.parse(jsonminify(readConfigFile));
+            public static readFileParticles(applicationDirectory:string): cessnalib.injection.Configuration {
+                let particles = fs.readFileSync(path.join(path.resolve(applicationDirectory), "particles.json"), "utf8");
+                return JSON.parse(jsonminify(particles));
             }
         }
     }
@@ -38,9 +40,12 @@ export module cessnalib_template {
             import Time = cessnalib.sys.type.Time;
             export namespace constants {
                 export namespace particles {
+                    export const DbOrganelleInitialProperties = "DbOrganelleInitialProperties";
+                    export const ReceptionOrganelleInitialProperties = "ReceptionOrganelleInitialProperties";
                     export const EuglenaName = "EuglenaName";
                     export const ImpactReceived = "ImpactReceived";
                     export const EuglenaHasBeenBorn = "EuglenaHasBeenBorn";
+                    export const EuglenaHasBeenDivided = "EuglenaHasBeenDivided";
                     export const Acknowledge = "Acknowledge";
                     export const Time = "Time";
                     export const Exception = "Exception";
@@ -51,12 +56,11 @@ export module cessnalib_template {
                     export const DoesUniqueParticleExist = "DoesUniqueParticleExist";
                 }
                 export namespace organelles {
-                    export const ImpactTransmitterOrganelle = "ImpactTransmitterOrganelle";
-                    export const ImpactThrowerOrganelle = "ImpactThrowerOrganelle";
                     export const ReceptionOrganelle = "ReceptionOrganelle";
                     export const TimeOrganelle = "TimeOrganelle";
                     export const WebOrganelle = "WebOrganelle";
                     export const DbOrganelle = "DbOrganelle";
+                    export const WebUIOrganelle = "WebUIOrganelle";
                 }
                 export namespace impacts {
                     export const TimeChanged = "TimeChanged";
@@ -69,23 +73,20 @@ export module cessnalib_template {
             }
             export namespace organelles {
                 import Organelle = cessnalib.being.alive.Organelle;
+                export abstract class WebUIOrganelle extends Organelle<{}>{
+                    constructor(className:string){super(alive.constants.organelles.WebUIOrganelle,className)}
+                }
                 export abstract class TimeOrganelle extends Organelle<{}> {
-                    constructor() { super(alive.constants.organelles.TimeOrganelle);}
-                }
-                export abstract class ImpactThrowerOrganelle extends Organelle<{ euglenaInfos:cessnalib.sys.type.Map<string,cessnalib.being.alive.EuglenaInfo>}> {
-                    constructor() { super(constants.organelles.ImpactThrowerOrganelle); }
-                }
-                export abstract class ImpactTransmitterOrganelle extends Organelle<{}> {
-                    constructor() { super(alive.constants.organelles.ImpactTransmitterOrganelle); }
+                    constructor(className:string) { super(alive.constants.organelles.TimeOrganelle,className);}
                 }
                 export abstract class ReceptionOrganelle extends Organelle<{port?:string}> {
-                    constructor() { super(constants.organelles.ReceptionOrganelle); }
+                    constructor(className:string) { super(constants.organelles.ReceptionOrganelle,className); }
                 }
                 export abstract class WebOrganelle extends Organelle<{}>{
-                    constructor() { super(constants.organelles.WebOrganelle); }
+                    constructor(className:string) { super(constants.organelles.WebOrganelle,className); }
                 }
                 export abstract class DbOrganelle extends Organelle<{url:string,port:number}>{
-                    constructor() { super(constants.organelles.DbOrganelle); }
+                    constructor(className:string) { super(constants.organelles.DbOrganelle,className); }
                 }
             }
             export namespace particles {
@@ -110,6 +111,9 @@ export module cessnalib_template {
                 }
                 export class EuglenaHasBeenBorn extends being.particles.BooleanParticle {
                     constructor(of:string) { super(constants.particles.EuglenaHasBeenBorn,true,of); }
+                }
+                export class EuglenaHasBeenDivided extends being.particles.BooleanParticle {
+                    constructor(of:string) { super(constants.particles.EuglenaHasBeenDivided,true,of); }
                 }
                 export class SaveParticle extends Particle {
                     constructor(content:Particle,of:string) { super(constants.impacts.SaveParticle, content,of); }
@@ -139,25 +143,9 @@ export module cessnalib_template {
                 }
             }
             export class StaticTools{
-                public static instantiateEuglena(applicationDirectory: string, organelleBank: cessnalib.sys.type.Map<string, cessnalib.being.alive.Organelle<Object>>, chromosome: any[],euglenaName:string): Euglena {
-                    const initialConfig = injection.StaticTools.readConfigFile(applicationDirectory);
-                    let particles = new Array<Particle>();
-                    for (let valueChooser of initialConfig.values) {
-                        particles.push(new Particle(
-                            valueChooser.className,
-                            cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser),
-                            euglenaName
-                        ));
-                    }
-                    particles.push(new Particle(cessnalib_template.being.alive.constants.particles.EuglenaName,euglenaName,euglenaName));
-                    let organelles: any = {};
-                    for (let objectProp of initialConfig.objects) {
-                        let organelle = organelleBank.get(cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
-                        organelle.initialProperties = objectProp.initialProperties;
-                        organelles[organelle.name] = organelle;
-                    }
-                    let euglena = cessnalib.being.alive.Euglena.generateInstance(chromosome, particles, organelles);
-                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn(euglena.getParticle(new cessnalib.being.alive.dna.condition.ParticleReference(cessnalib_template.being.alive.constants.particles.EuglenaName,euglenaName)).content));
+                public static instantiateEuglena(applicationDirectory: string, chromosome: any[],euglenaName:string): Euglena {
+                    let euglena = cessnalib.being.alive.Euglena.generateInstance(chromosome, injection.StaticTools.readFileParticles(applicationDirectory));
+                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenDivided(euglena.getParticle(new cessnalib.being.alive.dna.condition.ParticleReference(cessnalib_template.being.alive.constants.particles.EuglenaName,euglenaName)).content));
                     return euglena;
                 }
             }

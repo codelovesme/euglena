@@ -124,6 +124,9 @@ var cessnalib;
                         throw "KeyAlreadyExistException";
                     }
                 }
+                keyExists(key) {
+                    return this.indexOf(key) >= 0;
+                }
                 set(key, value) {
                     var index = this.keys.indexOf(key);
                     if (index >= 0) {
@@ -139,19 +142,22 @@ var cessnalib;
                     this.keys.slice(index, 1);
                     this.values.slice(index, 1);
                 }
-                get(key) {
-                    var returnValue = null;
+                indexOf(key) {
+                    let index = -1;
                     if (this.condition) {
                         this.keys.forEach((k) => {
                             if (this.condition(k, key)) {
-                                returnValue = this.values[this.keys.indexOf(k)];
+                                index = this.keys.indexOf(k);
                             }
                         });
                     }
                     else {
-                        returnValue = this.values[this.keys.indexOf(key)];
+                        index = this.keys.indexOf(key);
                     }
-                    return returnValue;
+                    return index;
+                }
+                get(key) {
+                    return this.values[this.indexOf(key)];
                 }
                 getKeys() {
                     return this.keys;
@@ -854,8 +860,9 @@ var cessnalib;
                 })(particles = constants.particles || (constants.particles = {}));
             })(constants = alive.constants || (alive.constants = {}));
             class Organelle {
-                constructor(name, nucleus, saveParticle, initialProperties) {
+                constructor(name, className, nucleus, saveParticle, initialProperties) {
                     this.name = name;
+                    this.className = className;
                     this.nucleus = nucleus;
                     this.saveParticle = saveParticle;
                     this.initialProperties = initialProperties;
@@ -900,23 +907,19 @@ var cessnalib;
             }
             alive.GarbageCollector = GarbageCollector;
             class Euglena {
-                constructor(chromosome, particles, organelles) {
+                constructor(chromosome, particles) {
                     this.chromosome = chromosome;
                     this.particles = particles;
-                    this.organelles = organelles;
                     this.garbageCollector = null;
                     this.executor = null;
+                    this.organelles = {};
                     this.executor = new cessnalib.being.alive.dna.condition.Executor(this.particles);
                     this.garbageCollector = new GarbageCollector(this.chromosome);
-                    for (let organelleName in organelles) {
-                        this.organelles[organelleName].nucleus = this;
-                        this.organelles[organelleName].saveParticle = this.saveParticle;
-                    }
                     this.garbageCollector.start();
                 }
-                static generateInstance(chromosome, particles, organelles) {
+                static generateInstance(chromosome, particles) {
                     if (!Euglena.instance) {
-                        Euglena.instance = new Euglena(chromosome, particles, organelles);
+                        Euglena.instance = new Euglena(chromosome, particles);
                     }
                     return Euglena.instance;
                 }
@@ -961,6 +964,11 @@ var cessnalib;
                 }
                 getOrganelle(organelleName) {
                     return Euglena.instance.organelles[organelleName];
+                }
+                setOrganelle(organelle) {
+                    organelle.nucleus = Euglena.instance;
+                    organelle.saveParticle = Euglena.instance.saveParticle;
+                    Euglena.instance.organelles[organelle.name] = organelle;
                 }
             }
             Euglena.instance = null;

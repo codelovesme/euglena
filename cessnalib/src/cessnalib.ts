@@ -105,6 +105,9 @@ export module cessnalib {
                         throw "KeyAlreadyExistException";
                     }
                 }
+                public keyExists(key:K):boolean{
+                    return this.indexOf(key) >= 0;
+                }
                 public set(key: K, value: V): void {
                     var index = this.keys.indexOf(key);
                     if (index >= 0) {
@@ -119,18 +122,21 @@ export module cessnalib {
                     this.keys.slice(index, 1);
                     this.values.slice(index, 1);
                 }
-                public get(key: K): V {
-                    var returnValue: V = null;
+                public indexOf(key:K):number{
+                    let index = -1;
                     if (this.condition) {
                         this.keys.forEach((k: K) => {
                             if (this.condition(k, key)) {
-                                returnValue = this.values[this.keys.indexOf(k)];
+                                index = this.keys.indexOf(k);
                             }
                         });
                     } else {
-                        returnValue = this.values[this.keys.indexOf(key)];
+                        index = this.keys.indexOf(key);
                     }
-                    return returnValue;
+                    return index;
+                }
+                public get(key: K): V {
+                    return this.values[this.indexOf(key)];
                 }
                 public getKeys(): K[] {
                     return this.keys;
@@ -829,9 +835,10 @@ export module cessnalib {
                     export const EuglenaName = "EuglenaName";
                 }
             }
-            export abstract class Organelle<InitialProperties> implements Named, interaction.CanReceiveParticle {
+            export abstract class Organelle<InitialProperties> implements Named,Classifiable, interaction.CanReceiveParticle {
                 constructor(
                     public name: string,
+                    public className:string,
                     public nucleus?: interaction.CanReceiveParticle,
                     public saveParticle?:(particle:Particle)=>void,
                     public initialProperties?: InitialProperties) { }
@@ -875,18 +882,16 @@ export module cessnalib {
                 public static instance: Euglena = null;
                 private garbageCollector:GarbageCollector = null;
                 private executor: cessnalib.being.alive.dna.condition.Executor = null;
-                constructor(public chromosome: dna.Gene[], private particles: Particle[], private organelles: any) {
+                private organelles: any;
+                constructor(public chromosome: dna.Gene[], private particles: Particle[]) {
+                    this.organelles = {};
                     this.executor = new cessnalib.being.alive.dna.condition.Executor(this.particles);
                     this.garbageCollector = new GarbageCollector(this.chromosome);
-                    for (let organelleName in organelles) {
-                        this.organelles[organelleName].nucleus = this;
-                        this.organelles[organelleName].saveParticle = this.saveParticle;
-                    }
                     this.garbageCollector.start();
                 }
-                public static generateInstance(chromosome: dna.Gene[], particles: any, organelles: Organelle<any>[]) {
+                public static generateInstance(chromosome: dna.Gene[], particles: any) {
                     if (!Euglena.instance) {
-                        Euglena.instance = new Euglena(chromosome, particles, organelles);
+                        Euglena.instance = new Euglena(chromosome, particles);
                     }
                     return Euglena.instance;
                 }
@@ -930,6 +935,11 @@ export module cessnalib {
                 }
                 public getOrganelle(organelleName: string): being.alive.Organelle<any> {
                     return Euglena.instance.organelles[organelleName];
+                }
+                public setOrganelle(organelle:cessnalib.being.alive.Organelle<{}>):void{
+                    organelle.nucleus = Euglena.instance;
+                    organelle.saveParticle = Euglena.instance.saveParticle;
+                    Euglena.instance.organelles[organelle.name] = organelle;
                 }
             }
         }

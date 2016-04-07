@@ -1,5 +1,5 @@
-"use strict";
 /// <reference path="C:/git/me.codeloves/cessnalib/cessnalib/typings/node/node.d.ts" />
+"use strict";
 /**
  * Created by codelovesme on 6/19/2015.
  */
@@ -12,9 +12,9 @@ var cessnalib_template;
     var injection;
     (function (injection) {
         class StaticTools {
-            static readConfigFile(applicationDirectory) {
-                let readConfigFile = fs.readFileSync(path.join(path.resolve(applicationDirectory), "config.json"), "utf8");
-                return JSON.parse(jsonminify(readConfigFile));
+            static readFileParticles(applicationDirectory) {
+                let particles = fs.readFileSync(path.join(path.resolve(applicationDirectory), "particles.json"), "utf8");
+                return JSON.parse(jsonminify(particles));
             }
         }
         injection.StaticTools = StaticTools;
@@ -43,9 +43,12 @@ var cessnalib_template;
             (function (constants) {
                 var particles;
                 (function (particles) {
+                    particles.DbOrganelleInitialProperties = "DbOrganelleInitialProperties";
+                    particles.ReceptionOrganelleInitialProperties = "ReceptionOrganelleInitialProperties";
                     particles.EuglenaName = "EuglenaName";
                     particles.ImpactReceived = "ImpactReceived";
                     particles.EuglenaHasBeenBorn = "EuglenaHasBeenBorn";
+                    particles.EuglenaHasBeenDivided = "EuglenaHasBeenDivided";
                     particles.Acknowledge = "Acknowledge";
                     particles.Time = "Time";
                     particles.Exception = "Exception";
@@ -57,12 +60,11 @@ var cessnalib_template;
                 })(particles = constants.particles || (constants.particles = {}));
                 var organelles;
                 (function (organelles) {
-                    organelles.ImpactTransmitterOrganelle = "ImpactTransmitterOrganelle";
-                    organelles.ImpactThrowerOrganelle = "ImpactThrowerOrganelle";
                     organelles.ReceptionOrganelle = "ReceptionOrganelle";
                     organelles.TimeOrganelle = "TimeOrganelle";
                     organelles.WebOrganelle = "WebOrganelle";
                     organelles.DbOrganelle = "DbOrganelle";
+                    organelles.WebUIOrganelle = "WebUIOrganelle";
                 })(organelles = constants.organelles || (constants.organelles = {}));
                 var impacts;
                 (function (impacts) {
@@ -77,39 +79,33 @@ var cessnalib_template;
             var organelles;
             (function (organelles) {
                 var Organelle = cessnalib_1.cessnalib.being.alive.Organelle;
+                class WebUIOrganelle extends Organelle {
+                    constructor(className) {
+                        super(alive.constants.organelles.WebUIOrganelle, className);
+                    }
+                }
+                organelles.WebUIOrganelle = WebUIOrganelle;
                 class TimeOrganelle extends Organelle {
-                    constructor() {
-                        super(alive.constants.organelles.TimeOrganelle);
+                    constructor(className) {
+                        super(alive.constants.organelles.TimeOrganelle, className);
                     }
                 }
                 organelles.TimeOrganelle = TimeOrganelle;
-                class ImpactThrowerOrganelle extends Organelle {
-                    constructor() {
-                        super(constants.organelles.ImpactThrowerOrganelle);
-                    }
-                }
-                organelles.ImpactThrowerOrganelle = ImpactThrowerOrganelle;
-                class ImpactTransmitterOrganelle extends Organelle {
-                    constructor() {
-                        super(alive.constants.organelles.ImpactTransmitterOrganelle);
-                    }
-                }
-                organelles.ImpactTransmitterOrganelle = ImpactTransmitterOrganelle;
                 class ReceptionOrganelle extends Organelle {
-                    constructor() {
-                        super(constants.organelles.ReceptionOrganelle);
+                    constructor(className) {
+                        super(constants.organelles.ReceptionOrganelle, className);
                     }
                 }
                 organelles.ReceptionOrganelle = ReceptionOrganelle;
                 class WebOrganelle extends Organelle {
-                    constructor() {
-                        super(constants.organelles.WebOrganelle);
+                    constructor(className) {
+                        super(constants.organelles.WebOrganelle, className);
                     }
                 }
                 organelles.WebOrganelle = WebOrganelle;
                 class DbOrganelle extends Organelle {
-                    constructor() {
-                        super(constants.organelles.DbOrganelle);
+                    constructor(className) {
+                        super(constants.organelles.DbOrganelle, className);
                     }
                 }
                 organelles.DbOrganelle = DbOrganelle;
@@ -152,6 +148,12 @@ var cessnalib_template;
                     }
                 }
                 particles.EuglenaHasBeenBorn = EuglenaHasBeenBorn;
+                class EuglenaHasBeenDivided extends being.particles.BooleanParticle {
+                    constructor(of) {
+                        super(constants.particles.EuglenaHasBeenDivided, true, of);
+                    }
+                }
+                particles.EuglenaHasBeenDivided = EuglenaHasBeenDivided;
                 class SaveParticle extends Particle {
                     constructor(content, of) {
                         super(constants.impacts.SaveParticle, content, of);
@@ -191,21 +193,9 @@ var cessnalib_template;
                 particles.ImpactReceived = ImpactReceived;
             })(particles = alive.particles || (alive.particles = {}));
             class StaticTools {
-                static instantiateEuglena(applicationDirectory, organelleBank, chromosome, euglenaName) {
-                    const initialConfig = injection.StaticTools.readConfigFile(applicationDirectory);
-                    let particles = new Array();
-                    for (let valueChooser of initialConfig.values) {
-                        particles.push(new Particle(valueChooser.className, cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(valueChooser), euglenaName));
-                    }
-                    particles.push(new Particle(cessnalib_template.being.alive.constants.particles.EuglenaName, euglenaName, euglenaName));
-                    let organelles = {};
-                    for (let objectProp of initialConfig.objects) {
-                        let organelle = organelleBank.get(cessnalib_1.cessnalib.injection.StaticTools.valueOfValueChooser(objectProp.class));
-                        organelle.initialProperties = objectProp.initialProperties;
-                        organelles[organelle.name] = organelle;
-                    }
-                    let euglena = cessnalib_1.cessnalib.being.alive.Euglena.generateInstance(chromosome, particles, organelles);
-                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenBorn(euglena.getParticle(new cessnalib_1.cessnalib.being.alive.dna.condition.ParticleReference(cessnalib_template.being.alive.constants.particles.EuglenaName, euglenaName)).content));
+                static instantiateEuglena(applicationDirectory, chromosome, euglenaName) {
+                    let euglena = cessnalib_1.cessnalib.being.alive.Euglena.generateInstance(chromosome, injection.StaticTools.readFileParticles(applicationDirectory));
+                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenDivided(euglena.getParticle(new cessnalib_1.cessnalib.being.alive.dna.condition.ParticleReference(cessnalib_template.being.alive.constants.particles.EuglenaName, euglenaName)).content));
                     return euglena;
                 }
             }
