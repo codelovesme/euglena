@@ -1,4 +1,4 @@
-/// <reference path="C:/git/me.codeloves/cessnalib/cessnalib/typings/node/node.d.ts" />
+/// <reference path="../../cessnalib/typings/node/node.d.ts" />
 
 "use strict";
 
@@ -41,6 +41,7 @@ export module cessnalib_template {
             export namespace constants {
                 export namespace particles {
                     export const DbOrganelleInitialProperties = "DbOrganelleInitialProperties";
+                    export const WebOrganelleInitialProperties = "WebOrganelleInitialProperties";
                     export const ReceptionOrganelleInitialProperties = "ReceptionOrganelleInitialProperties";
                     export const EuglenaName = "EuglenaName";
                     export const ImpactReceived = "ImpactReceived";
@@ -79,10 +80,10 @@ export module cessnalib_template {
                 export abstract class TimeOrganelle extends Organelle<{}> {
                     constructor(className:string) { super(alive.constants.organelles.TimeOrganelle,className);}
                 }
-                export abstract class ReceptionOrganelle extends Organelle<{port?:string}> {
+                export abstract class ReceptionOrganelle extends Organelle<{port:string,euglenaInfo:cessnalib.being.alive.EuglenaInfo}> {
                     constructor(className:string) { super(constants.organelles.ReceptionOrganelle,className); }
                 }
-                export abstract class WebOrganelle extends Organelle<{}>{
+                export abstract class WebOrganelle extends Organelle<{port:string}>{
                     constructor(className:string) { super(constants.organelles.WebOrganelle,className); }
                 }
                 export abstract class DbOrganelle extends Organelle<{url:string,port:number}>{
@@ -185,6 +186,12 @@ export module cessnalib_template {
                         export class ImpactReceived extends cessnalib.being.Particle {
                             constructor(impact:cessnalib.being.interaction.Impact,of:string) { super(constants.outgoingparticles.ImpactReceived,impact,of); }
                         }
+                        export class ConnectedToEuglena extends cessnalib.being.Particle{
+                            constructor(euglenaInfo:cessnalib.being.alive.EuglenaInfo,of:string){super(constants.outgoingparticles.ConnectedToEuglena,euglenaInfo,of);}
+                        }
+                        export class DisconnectedFromEuglena extends cessnalib.being.Particle{
+                            constructor(euglenaInfo:cessnalib.being.alive.EuglenaInfo,of:string){super(constants.outgoingparticles.ConnectedToEuglena,euglenaInfo,of);}
+                        }
                     }
                     export namespace constants {
                         export namespace incomingparticles {
@@ -193,6 +200,8 @@ export module cessnalib_template {
                         }
                         export namespace outgoingparticles {
                             export const ImpactReceived = "ImpactReceived";
+                            export const ConnectedToEuglena = "ConnectedToEuglena";
+                            export const DisconnectedFromEuglena = "DisconnectedFromEuglena";
                         }
                     }
                 }
@@ -222,11 +231,15 @@ export module cessnalib_template {
                     export namespace constants {
                         export namespace incomingparticles {
                             export const ReturnCurrentTime:string = "ReturnCurrentTime";
+                            export const Serve:string = "Serve";
                             export const ReturnIfConnectedToTheInternet: string = "ReturnIfConnectedToTheInternet";
                         }
                     }
                     export namespace incomingparticles {
                         import VoidParticle = cessnalib_template.being.particles.VoidParticle;
+                        export class Serve extends VoidParticle{
+                            constructor(of:string){super(constants.incomingparticles.Serve,of);}
+                        }
                         export class ReturnCurrentTime extends VoidParticle{
                             constructor(of:string){ super(constants.incomingparticles.ReturnCurrentTime,of); }
                         }

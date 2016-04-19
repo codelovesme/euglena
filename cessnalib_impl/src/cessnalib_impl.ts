@@ -12,7 +12,7 @@
 
 "use strict";
 import {cessnalib} from "../node_modules/cessnalib/cessnalib";
-import {cessnalib_template} from "../node_modules/cessnalib_template/src/cessnalib_template";
+import {cessnalib_template} from "../../cessnalib_template/src/cessnalib_template";
 import * as io from "socket.io";
 import * as http from "http";
 import {RequestOptions} from "http";

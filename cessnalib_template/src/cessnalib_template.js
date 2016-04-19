@@ -1,4 +1,4 @@
-/// <reference path="C:/git/me.codeloves/cessnalib/cessnalib/typings/node/node.d.ts" />
+/// <reference path="../../cessnalib/typings/node/node.d.ts" />
 "use strict";
 /**
  * Created by codelovesme on 6/19/2015.
@@ -296,12 +296,19 @@ var cessnalib_template;
                         var incomingparticles;
                         (function (incomingparticles) {
                             incomingparticles.ReturnCurrentTime = "ReturnCurrentTime";
+                            incomingparticles.Serve = "Serve";
                             incomingparticles.ReturnIfConnectedToTheInternet = "ReturnIfConnectedToTheInternet";
                         })(incomingparticles = constants.incomingparticles || (constants.incomingparticles = {}));
                     })(constants = web.constants || (web.constants = {}));
                     var incomingparticles;
                     (function (incomingparticles) {
                         var VoidParticle = cessnalib_template.being.particles.VoidParticle;
+                        class Serve extends VoidParticle {
+                            constructor(of) {
+                                super(constants.incomingparticles.Serve, of);
+                            }
+                        }
+                        incomingparticles.Serve = Serve;
                         class ReturnCurrentTime extends VoidParticle {
                             constructor(of) {
                                 super(constants.incomingparticles.ReturnCurrentTime, of);
