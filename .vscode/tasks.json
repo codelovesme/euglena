@@ -21,7 +21,10 @@
 	"showOutput": "always",
 
 	// args is the HelloWorld program to compile.
-	"args": ["organelles/euglena.organelle.net.nodejs/src/euglena.organelle.net.nodejs.ts","-module","commonjs","--sourceMap","-target","es6"],
+	"args": [
+		//"organelles/euglena.organelle.net.nodejs/src/euglena.organelle.net.nodejs.ts",
+		"organelles/euglena.organelle.web.expressjs/src/euglena.organelle.web.expressjs.ts",
+		"-module","commonjs","--sourceMap","-target","es6"],
 
 	// use the standard tsc problem matcher to find compile problems
 	// in the output.
