@@ -40,6 +40,7 @@ export module cessnalib_template {
             import Time = cessnalib.sys.type.Time;
             export namespace constants {
                 export namespace particles {
+                    export const OrganelleList = "OrganelleList";
                     export const DbOrganelleInitialProperties = "DbOrganelleInitialProperties";
                     export const WebOrganelleInitialProperties = "WebOrganelleInitialProperties";
                     export const ReceptionOrganelleInitialProperties = "ReceptionOrganelleInitialProperties";
@@ -91,6 +92,9 @@ export module cessnalib_template {
                 }
             }
             export namespace particles {
+                export class OrganelleList extends Particle{
+                    constructor(content:Array<string>,of:string){super(constants.particles.OrganelleList,content,of);}
+                }
                 export class Token extends Particle {
                     constructor(content:string,of:string){super(constants.particles.Token,content,of);}
                 }

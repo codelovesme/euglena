@@ -43,7 +43,9 @@ var cessnalib_template;
             (function (constants) {
                 var particles;
                 (function (particles) {
+                    particles.OrganelleList = "OrganelleList";
                     particles.DbOrganelleInitialProperties = "DbOrganelleInitialProperties";
+                    particles.WebOrganelleInitialProperties = "WebOrganelleInitialProperties";
                     particles.ReceptionOrganelleInitialProperties = "ReceptionOrganelleInitialProperties";
                     particles.EuglenaName = "EuglenaName";
                     particles.ImpactReceived = "ImpactReceived";
@@ -112,6 +114,12 @@ var cessnalib_template;
             })(organelles = alive.organelles || (alive.organelles = {}));
             var particles;
             (function (particles) {
+                class OrganelleList extends Particle {
+                    constructor(content, of) {
+                        super(constants.particles.OrganelleList, content, of);
+                    }
+                }
+                particles.OrganelleList = OrganelleList;
                 class Token extends Particle {
                     constructor(content, of) {
                         super(constants.particles.Token, content, of);
@@ -249,6 +257,18 @@ var cessnalib_template;
                             }
                         }
                         outgoingparticles.ImpactReceived = ImpactReceived;
+                        class ConnectedToEuglena extends cessnalib_1.cessnalib.being.Particle {
+                            constructor(euglenaInfo, of) {
+                                super(constants.outgoingparticles.ConnectedToEuglena, euglenaInfo, of);
+                            }
+                        }
+                        outgoingparticles.ConnectedToEuglena = ConnectedToEuglena;
+                        class DisconnectedFromEuglena extends cessnalib_1.cessnalib.being.Particle {
+                            constructor(euglenaInfo, of) {
+                                super(constants.outgoingparticles.ConnectedToEuglena, euglenaInfo, of);
+                            }
+                        }
+                        outgoingparticles.DisconnectedFromEuglena = DisconnectedFromEuglena;
                     })(outgoingparticles = reception.outgoingparticles || (reception.outgoingparticles = {}));
                     var constants;
                     (function (constants) {
@@ -260,6 +280,8 @@ var cessnalib_template;
                         var outgoingparticles;
                         (function (outgoingparticles) {
                             outgoingparticles.ImpactReceived = "ImpactReceived";
+                            outgoingparticles.ConnectedToEuglena = "ConnectedToEuglena";
+                            outgoingparticles.DisconnectedFromEuglena = "DisconnectedFromEuglena";
                         })(outgoingparticles = constants.outgoingparticles || (constants.outgoingparticles = {}));
                     })(constants = reception.constants || (reception.constants = {}));
                 })(reception = euglena.reception || (euglena.reception = {}));
