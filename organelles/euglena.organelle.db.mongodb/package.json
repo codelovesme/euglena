@@ -9,6 +9,6 @@
   "author": "codelovesme",
   "license": "GPL v2",
   "dependencies": {
-    "mongodb": "^2.1.14"
+    "mongodb": "^2.1.16"
   }
 }

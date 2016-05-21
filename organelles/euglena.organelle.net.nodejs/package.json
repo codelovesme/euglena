@@ -9,7 +9,6 @@
   "author": "codelovesme",
   "license": "GPL v2",
   "dependencies": {
-    "mongodb": "^2.1.14",
-    "socket.io": "^1.4.5"
+    "socket.io": "*"
   }
 }

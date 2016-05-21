@@ -7,9 +7,11 @@ var io = require("socket.io");
 var Exception = cessnalib_1.cessnalib.sys.type.Exception;
 const OrganelleName = "ReceptionOrganelleImplHttp";
 let organelle = null;
+let this_ = null;
 class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.organelles.ReceptionOrganelle {
     constructor() {
         super(OrganelleName);
+        this_ = this;
         organelle = this;
         this.sockets = {};
         this.servers = {};
@@ -42,24 +44,22 @@ class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.orga
         };
         let server = io("http://" + post_options.host + ":" + post_options.port);
         this.servers[euglenaInfo.name] = server;
-        server.on("impact", (impactAssumption, callback) => {
-            if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.interaction.Impact, impactAssumption)) {
-                //TODO
-                //callback(new cessnalib_template.being.alive.particles.Acknowledge());
-                this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption, organelle));
-            }
-            else {
-            }
-        });
-        server.on("bind", (impactAssumption) => {
-            //TODO
+        server.on("connect", (socket) => {
+            server.emit("bind", this_.initialProperties.euglenaInfo, (done) => {
+                if (done) {
+                    this_.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ConnectedToEuglena(euglenaInfo, this_.name));
+                }
+            });
+            server.on("impact", (impactAssumption, callback) => {
+                if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.interaction.Impact, impactAssumption)) {
+                    this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption, organelle));
+                }
+                else {
+                }
+            });
         });
         server.on("disconnect", () => {
-            //TODO
-        });
-        server.on("connect", (socket) => {
-            socket.emit("bind", null);
-            //TODO
+            this_.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.DisconnectedFromEuglena(euglenaInfo, this_.name));
         });
     }
     listen() {
@@ -109,18 +109,13 @@ class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.orga
         let socket = io.listen(server);
         server.listen(this.initialProperties.port);
         socket.on("connection", (socket) => {
-            socket.on("bind", (impact) => {
-                this.sockets[impact.particle.of] = socket;
-                //TODO
-                socket.emit("bind", null);
+            socket.on("bind", (euglenaInfo, callback) => {
+                this.sockets[euglenaInfo.name] = socket;
+                callback(true);
+                this_.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ConnectedToEuglena(euglenaInfo, this_.name));
             });
             socket.on("impact", (impactAssumption) => {
-                //TODO
-                this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption, cessnalib_template_1.cessnalib_template.being.alive.constants.organelles.ReceptionOrganelle));
-                //var s = this.sockets[impulse];
-                //if (s) {
-                //s.emit("response", response);
-                //}
+                this_.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption, cessnalib_template_1.cessnalib_template.being.alive.constants.organelles.ReceptionOrganelle));
             });
         });
     }
@@ -156,7 +151,7 @@ class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.orga
                         try {
                             let impactAssumption = JSON.parse(message);
                             if (cessnalib_1.cessnalib.js.Class.instanceOf(cessnalib_template_1.cessnalib_template.reference.being.interaction.Impact, impactAssumption)) {
-                                this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption, organelle));
+                                this_.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.ghost.euglena.reception.outgoingparticles.ImpactReceived(impactAssumption, organelle));
                             }
                             else {
                             }
@@ -166,7 +161,7 @@ class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.orga
                     }
                     else {
                         //TODO write a eligable exception message
-                        this.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.Exception(new Exception(""), organelle));
+                        this_.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.Exception(new Exception(""), organelle));
                     }
                 });
             }
