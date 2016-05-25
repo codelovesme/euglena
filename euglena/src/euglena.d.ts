@@ -1,4 +1,4 @@
-export declare module cessnalib {
+export declare module euglena {
     namespace js {
         class Class {
             static extend(subInstance: any, parentInstance: any): void;
@@ -104,7 +104,7 @@ export declare module cessnalib {
         }
     }
     namespace being {
-        import Named = cessnalib.sys.type.Named;
+        import Named = euglena.sys.type.Named;
         class Particle {
             name: string;
             content: any;
@@ -132,11 +132,11 @@ export declare module cessnalib {
             }
         }
         namespace alive {
-            import Particle = cessnalib.being.Particle;
+            import Particle = euglena.being.Particle;
             namespace dna {
-                import Time = cessnalib.sys.type.Time;
-                import Classifiable = cessnalib.sys.type.Classifiable;
-                import ParticleReference = cessnalib.being.alive.dna.condition.ParticleReference;
+                import Time = euglena.sys.type.Time;
+                import Classifiable = euglena.sys.type.Classifiable;
+                import ParticleReference = euglena.being.alive.dna.condition.ParticleReference;
                 class Gene implements Named {
                     name: string;
                     triggers: string[];
@@ -145,8 +145,8 @@ export declare module cessnalib {
                     constructor(name: string, triggers: string[], reaction: Reaction, condition?: dna.condition.LogicalPhrase | dna.condition.Comparison<any> | ParticleReference);
                 }
                 namespace condition {
-                    import Date = cessnalib.sys.type.Date;
-                    import Clock = cessnalib.sys.type.Clock;
+                    import Date = euglena.sys.type.Date;
+                    import Clock = euglena.sys.type.Clock;
                     namespace constants {
                         const TimeComparison: string;
                         const NumberComparison: string;
@@ -307,7 +307,7 @@ export declare module cessnalib {
     namespace reference {
         namespace sys {
             namespace type {
-                const Exception: cessnalib.sys.type.Exception;
+                const Exception: euglena.sys.type.Exception;
             }
         }
     }

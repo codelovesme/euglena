@@ -1,14 +1,14 @@
-/// <reference path="../../cessnalib/typings/node/node.d.ts" />
+/// <reference path="../../euglena/typings/node/node.d.ts" />
 "use strict";
 /**
  * Created by codelovesme on 6/19/2015.
  */
-var cessnalib_1 = require("../node_modules/cessnalib/cessnalib");
+var euglena_1 = require("../node_modules/euglena/euglena");
 var path = require("path");
 var fs = require("fs");
 var jsonminify = require("jsonminify");
-var cessnalib_template;
-(function (cessnalib_template) {
+var euglena_template;
+(function (euglena_template) {
     var injection;
     (function (injection) {
         class StaticTools {
@@ -18,18 +18,18 @@ var cessnalib_template;
             }
         }
         injection.StaticTools = StaticTools;
-    })(injection = cessnalib_template.injection || (cessnalib_template.injection = {}));
+    })(injection = euglena_template.injection || (euglena_template.injection = {}));
     var being;
     (function (being) {
         var particles;
         (function (particles) {
-            class BooleanParticle extends cessnalib_1.cessnalib.being.Particle {
+            class BooleanParticle extends euglena_1.euglena.being.Particle {
                 constructor(name, content, of) {
                     super(name, content, of);
                 }
             }
             particles.BooleanParticle = BooleanParticle;
-            class VoidParticle extends cessnalib_1.cessnalib.being.Particle {
+            class VoidParticle extends euglena_1.euglena.being.Particle {
                 constructor(name, of) {
                     super(name, null, of);
                 }
@@ -38,7 +38,7 @@ var cessnalib_template;
         })(particles = being.particles || (being.particles = {}));
         var alive;
         (function (alive) {
-            var Particle = cessnalib_1.cessnalib.being.Particle;
+            var Particle = euglena_1.euglena.being.Particle;
             var constants;
             (function (constants) {
                 var particles;
@@ -80,7 +80,7 @@ var cessnalib_template;
             })(constants = alive.constants || (alive.constants = {}));
             var organelles;
             (function (organelles) {
-                var Organelle = cessnalib_1.cessnalib.being.alive.Organelle;
+                var Organelle = euglena_1.euglena.being.alive.Organelle;
                 class WebUIOrganelle extends Organelle {
                     constructor(className) {
                         super(alive.constants.organelles.WebUIOrganelle, className);
@@ -126,13 +126,13 @@ var cessnalib_template;
                     }
                 }
                 particles.Token = Token;
-                class Exception extends cessnalib_1.cessnalib.being.Particle {
+                class Exception extends euglena_1.euglena.being.Particle {
                     constructor(content, of) {
                         super(constants.particles.Exception, content, of);
                     }
                 }
                 particles.Exception = Exception;
-                class Time extends cessnalib_1.cessnalib.being.Particle {
+                class Time extends euglena_1.euglena.being.Particle {
                     constructor(content, of) {
                         super(constants.particles.Time, content, of);
                     }
@@ -192,7 +192,7 @@ var cessnalib_template;
                     }
                 }
                 particles.DoesParticleExist = DoesParticleExist;
-                class ImpactReceived extends cessnalib_1.cessnalib.being.Particle {
+                class ImpactReceived extends euglena_1.euglena.being.Particle {
                     constructor(content, of) {
                         super(constants.particles.ImpactReceived, content, of);
                         this.content = content;
@@ -202,8 +202,8 @@ var cessnalib_template;
             })(particles = alive.particles || (alive.particles = {}));
             class StaticTools {
                 static instantiateEuglena(applicationDirectory, chromosome, euglenaName) {
-                    let euglena = cessnalib_1.cessnalib.being.alive.Euglena.generateInstance(chromosome, injection.StaticTools.readFileParticles(applicationDirectory));
-                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenDivided(euglena.getParticle(new cessnalib_1.cessnalib.being.alive.dna.condition.ParticleReference(cessnalib_template.being.alive.constants.particles.EuglenaName, euglenaName)).content));
+                    let euglena = euglena_1.euglena.being.alive.Euglena.generateInstance(chromosome, injection.StaticTools.readFileParticles(applicationDirectory));
+                    euglena.receiveParticle(new euglena_template.being.alive.particles.EuglenaHasBeenDivided(euglena.getParticle(new euglena_1.euglena.being.alive.dna.condition.ParticleReference(euglena_template.being.alive.constants.particles.EuglenaName, euglenaName)).content));
                     return euglena;
                 }
             }
@@ -217,7 +217,7 @@ var cessnalib_template;
                 (function (impactthrower) {
                     var incomingparticles;
                     (function (incomingparticles) {
-                        class ThrowImpact extends cessnalib_1.cessnalib.being.Particle {
+                        class ThrowImpact extends euglena_1.euglena.being.Particle {
                             constructor(content, of) {
                                 super(constants.incomingparticles.ThrowImpact, content, of);
                             }
@@ -242,7 +242,7 @@ var cessnalib_template;
                             }
                         }
                         incomingparticles.Listen = Listen;
-                        class ThrowImpact extends cessnalib_1.cessnalib.being.Particle {
+                        class ThrowImpact extends euglena_1.euglena.being.Particle {
                             constructor(content, of) {
                                 super(constants.incomingparticles.ThrowImpact, content, of);
                             }
@@ -251,19 +251,19 @@ var cessnalib_template;
                     })(incomingparticles = reception.incomingparticles || (reception.incomingparticles = {}));
                     var outgoingparticles;
                     (function (outgoingparticles) {
-                        class ImpactReceived extends cessnalib_1.cessnalib.being.Particle {
+                        class ImpactReceived extends euglena_1.euglena.being.Particle {
                             constructor(impact, of) {
                                 super(constants.outgoingparticles.ImpactReceived, impact, of);
                             }
                         }
                         outgoingparticles.ImpactReceived = ImpactReceived;
-                        class ConnectedToEuglena extends cessnalib_1.cessnalib.being.Particle {
+                        class ConnectedToEuglena extends euglena_1.euglena.being.Particle {
                             constructor(euglenaInfo, of) {
                                 super(constants.outgoingparticles.ConnectedToEuglena, euglenaInfo, of);
                             }
                         }
                         outgoingparticles.ConnectedToEuglena = ConnectedToEuglena;
-                        class DisconnectedFromEuglena extends cessnalib_1.cessnalib.being.Particle {
+                        class DisconnectedFromEuglena extends euglena_1.euglena.being.Particle {
                             constructor(euglenaInfo, of) {
                                 super(constants.outgoingparticles.ConnectedToEuglena, euglenaInfo, of);
                             }
@@ -289,13 +289,13 @@ var cessnalib_template;
                 (function (impacttransmitter) {
                     var incomingparticles;
                     (function (incomingparticles) {
-                        class ConnectToEuglena extends cessnalib_1.cessnalib.being.Particle {
+                        class ConnectToEuglena extends euglena_1.euglena.being.Particle {
                             constructor(euglenaInfo, of) {
                                 super(constants.incomingparticles.ConnectToEuglena, euglenaInfo, of);
                             }
                         }
                         incomingparticles.ConnectToEuglena = ConnectToEuglena;
-                        class ThrowImpact extends cessnalib_1.cessnalib.being.Particle {
+                        class ThrowImpact extends euglena_1.euglena.being.Particle {
                             constructor(content, of) {
                                 super(constants.incomingparticles.ThrowImpact, content, of);
                             }
@@ -324,7 +324,7 @@ var cessnalib_template;
                     })(constants = web.constants || (web.constants = {}));
                     var incomingparticles;
                     (function (incomingparticles) {
-                        var VoidParticle = cessnalib_template.being.particles.VoidParticle;
+                        var VoidParticle = euglena_template.being.particles.VoidParticle;
                         class Serve extends VoidParticle {
                             constructor(of) {
                                 super(constants.incomingparticles.Serve, of);
@@ -347,7 +347,7 @@ var cessnalib_template;
                 })(web = euglena.web || (euglena.web = {}));
                 var time;
                 (function (time_1) {
-                    var Particle = cessnalib_1.cessnalib.being.Particle;
+                    var Particle = euglena_1.euglena.being.Particle;
                     var incomingparticles;
                     (function (incomingparticles) {
                         class SetTime extends Particle {
@@ -374,7 +374,7 @@ var cessnalib_template;
                 })(time = euglena.time || (euglena.time = {}));
                 var db;
                 (function (db) {
-                    var Particle = cessnalib_1.cessnalib.being.Particle;
+                    var Particle = euglena_1.euglena.being.Particle;
                     var incomingparticles;
                     (function (incomingparticles) {
                         class StartDatabase extends Particle {
@@ -401,12 +401,12 @@ var cessnalib_template;
                 })(db = euglena.db || (euglena.db = {}));
             })(euglena = ghost.euglena || (ghost.euglena = {}));
         })(ghost = being.ghost || (being.ghost = {}));
-    })(being = cessnalib_template.being || (cessnalib_template.being = {}));
+    })(being = euglena_template.being || (euglena_template.being = {}));
     var reference;
     (function (reference) {
         var being;
         (function (being) {
-            being.Particle = new cessnalib_1.cessnalib.being.Particle("Reference Particle", true, "mine");
+            being.Particle = new euglena_1.euglena.being.Particle("Reference Particle", true, "mine");
             var interaction;
             (function (interaction) {
                 interaction.Impact = {
@@ -415,6 +415,6 @@ var cessnalib_template;
                 };
             })(interaction = being.interaction || (being.interaction = {}));
         })(being = reference.being || (reference.being = {}));
-    })(reference = cessnalib_template.reference || (cessnalib_template.reference = {}));
-})(cessnalib_template = exports.cessnalib_template || (exports.cessnalib_template = {}));
-//# sourceMappingURL=cessnalib_template.js.map
+    })(reference = euglena_template.reference || (euglena_template.reference = {}));
+})(euglena_template = exports.euglena_template || (exports.euglena_template = {}));
+//# sourceMappingURL=euglena_template.js.map

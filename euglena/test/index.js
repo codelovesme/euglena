@@ -3,10 +3,10 @@
  */
 ///<reference path="..\typings\mocha\mocha.d.ts"/>
 ///<reference path="..\typings\chai\chai.d.ts"/>
-///<reference path="../src/cessnalib.ts"/>
-var cessnalib_1 = require("../src/cessnalib");
+///<reference path="../src/euglena.ts"/>
+var euglena_1 = require("../src/euglena");
 var chai = require("chai");
-describe("cessnalib", function () {
+describe("euglena", function () {
     describe("js", function () {
         describe("Class", function () {
             describe("extend", function () {
@@ -15,7 +15,7 @@ describe("cessnalib", function () {
                     var subInstance = {};
                     var parentInstance = {};
                     //when
-                    var extendedObject = cessnalib_1.cessnalib.js.Class.extend(subInstance, parentInstance);
+                    var extendedObject = euglena_1.euglena.js.Class.extend(subInstance, parentInstance);
                     //then
                     chai.expect(extendedObject).to.be.empty;
                 });
@@ -24,7 +24,7 @@ describe("cessnalib", function () {
                     var subInstance = {};
                     var parentInstance = { name: "fedai" };
                     //when
-                    var extendedObject = cessnalib_1.cessnalib.js.Class.extend(subInstance, parentInstance);
+                    var extendedObject = euglena_1.euglena.js.Class.extend(subInstance, parentInstance);
                     var propCount = Object.keys(extendedObject).length;
                     //then
                     chai.expect(extendedObject).not.to.be.eqls(null);
@@ -38,7 +38,7 @@ describe("cessnalib", function () {
                     var subInstance = { surname: "kaya" };
                     var parentInstance = { name: "fedai" };
                     //when
-                    var extendedObject = cessnalib_1.cessnalib.js.Class.extend(subInstance, parentInstance);
+                    var extendedObject = euglena_1.euglena.js.Class.extend(subInstance, parentInstance);
                     var propCount = Object.keys(extendedObject).length;
                     //then
                     chai.expect(extendedObject).to.be.eqls({ name: "fedai", surname: "kaya" });

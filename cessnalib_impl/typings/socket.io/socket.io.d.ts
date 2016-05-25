@@ -3,7 +3,7 @@
 // Definitions by: PROGRE <https://github.com/progre/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
-/// <reference path="C:/git/me.codeloves/cessnalib/cessnalib/typings/node/node.d.ts" />
+/// <reference path="C:/git/me.codeloves/euglena/euglena/typings/node/node.d.ts" />
 
 declare module 'socket.io' {
     var server: SocketIOStatic;

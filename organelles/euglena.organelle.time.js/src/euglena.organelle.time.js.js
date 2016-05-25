@@ -1,34 +1,34 @@
 "use strict";
-var cessnalib_template_1 = require("../node_modules/cessnalib/cessnalib_template/src/cessnalib_template");
-class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.organelles.TimeOrganelle {
+var euglena_template_1 = require("../node_modules/euglena/euglena_template/src/euglena_template");
+class Organelle extends euglena_template_1.euglena_template.being.alive.organelles.TimeOrganelle {
     constructor() {
         super("TimeOrganelleImplJs");
     }
     receiveParticle(particle) {
         switch (particle.name) {
-            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.time.constants.incomingparticles.SetTime:
+            case euglena_template_1.euglena_template.being.ghost.euglena.time.constants.incomingparticles.SetTime:
                 this.time = particle.content;
                 break;
-            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.time.constants.incomingparticles.StartClock:
+            case euglena_template_1.euglena_template.being.ghost.euglena.time.constants.incomingparticles.StartClock:
                 setInterval(() => {
                     //let newDate = new Date(this.time.date.year, this.time.date.month - 1, this.time.date.day,
                     //    this.time.clock.hour, this.time.clock.minute, this.time.clock.second + 1);
                     let newDate = new Date();
                     if (newDate.getSeconds() != this.time.clock.second) {
                         this.time.clock.second = newDate.getSeconds();
-                        //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Second(this.time.clock.second));
+                        //this.nucleus.receiveParticle(new euglena_template.being.alive.particles.Second(this.time.clock.second));
                         if (newDate.getMinutes() != this.time.clock.minute) {
                             this.time.clock.minute = newDate.getMinutes();
-                            //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Minute(this.time.clock.minute));
+                            //this.nucleus.receiveParticle(new euglena_template.being.alive.particles.Minute(this.time.clock.minute));
                             if (newDate.getHours() != this.time.clock.hour) {
                                 this.time.clock.hour = newDate.getHours();
-                                //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Hour(this.time.clock.hour));
+                                //this.nucleus.receiveParticle(new euglena_template.being.alive.particles.Hour(this.time.clock.hour));
                                 if (newDate.getDate() != this.time.date.day) {
                                     this.time.date.day = newDate.getDate();
-                                    //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Day(this.time.date.day));
+                                    //this.nucleus.receiveParticle(new euglena_template.being.alive.particles.Day(this.time.date.day));
                                     if (newDate.getMonth() + 1 != this.time.date.month) {
                                         this.time.date.month = newDate.getMonth() + 1;
-                                        //this.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.Month(this.time.date.month));
+                                        //this.nucleus.receiveParticle(new euglena_template.being.alive.particles.Month(this.time.date.month));
                                         if (newDate.getFullYear() != this.time.date.year) {
                                             this.time.date.year = newDate.getFullYear();
                                         }
@@ -37,7 +37,7 @@ class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.orga
                             }
                         }
                     }
-                    this.saveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.Time(this.time, cessnalib_template_1.cessnalib_template.being.alive.constants.organelles.TimeOrganelle));
+                    this.saveParticle(new euglena_template_1.euglena_template.being.alive.particles.Time(this.time, euglena_template_1.euglena_template.being.alive.constants.organelles.TimeOrganelle));
                 }, 1000);
                 break;
         }

@@ -10,7 +10,7 @@
 * #Seperate particle, request, event
 *
 */
-export module cessnalib {
+export module euglena {
     export const JavascriptDate = Date;
     export namespace js {
         export class Class {
@@ -158,21 +158,21 @@ export module cessnalib {
                 name: string;
             }
             export class Time implements Classifiable {
-                className: string = "cessnalib.sys.type.Time";
+                className: string = "euglena.sys.type.Time";
                 constructor(public date: Date, public clock: Clock) { }
             }
             export class Date implements Classifiable {
-                className: string = "cessnalib.sys.type.Date";
+                className: string = "euglena.sys.type.Date";
                 constructor(public year: number, public month: number, public day: number) { }
             }
             export class Clock implements Classifiable {
-                className: string = "cessnalib.sys.type.Clock";
+                className: string = "euglena.sys.type.Clock";
                 constructor(public hour: number, public minute: number, public second: number) { }
             }
             export namespace StaticTools {
                 export class Exception {
                     public static isNotException<T>(t: T | Exception): t is T {
-                        return !cessnalib.js.Class.instanceOf(cessnalib.reference.sys.type.Exception, t);
+                        return !euglena.js.Class.instanceOf(euglena.reference.sys.type.Exception, t);
                     }
                 }
                 export class UUID {
@@ -280,13 +280,13 @@ export module cessnalib {
         }
     }
     export namespace being {
-        import Classifiable = cessnalib.sys.type.Classifiable;
-        import Named = cessnalib.sys.type.Named;
+        import Classifiable = euglena.sys.type.Classifiable;
+        import Named = euglena.sys.type.Named;
         export class Particle {
             constructor(public name: string, public content: any,public of:string) { }
         }
         export namespace interaction {
-            import EuglenaInfo = cessnalib.being.alive.EuglenaInfo;
+            import EuglenaInfo = euglena.being.alive.EuglenaInfo;
             export interface ReceiveParticle {
                 (particle: Particle): void;
             }
@@ -301,16 +301,16 @@ export module cessnalib {
             }
         }
         export namespace alive {
-            import Classifiable = cessnalib.sys.type.Classifiable;
-            import Particle = cessnalib.being.Particle;
-            import Gene = cessnalib.being.alive.dna.Gene;
-            import Impact = cessnalib.being.interaction.Impact;
+            import Classifiable = euglena.sys.type.Classifiable;
+            import Particle = euglena.being.Particle;
+            import Gene = euglena.being.alive.dna.Gene;
+            import Impact = euglena.being.interaction.Impact;
             export namespace dna {
-                import Time = cessnalib.sys.type.Time;
-                import Classifiable = cessnalib.sys.type.Classifiable;
-                import ParticleReference = cessnalib.being.alive.dna.condition.ParticleReference;
-                import CanReceiveParticle = cessnalib.being.interaction.CanReceiveParticle;
-                import DoesParticalExist = cessnalib.being.alive.dna.condition.DoesParticalExist;
+                import Time = euglena.sys.type.Time;
+                import Classifiable = euglena.sys.type.Classifiable;
+                import ParticleReference = euglena.being.alive.dna.condition.ParticleReference;
+                import CanReceiveParticle = euglena.being.interaction.CanReceiveParticle;
+                import DoesParticalExist = euglena.being.alive.dna.condition.DoesParticalExist;
                 export class Gene implements Named {
                     constructor(
                         public name: string,
@@ -321,24 +321,24 @@ export module cessnalib {
                         public expiretime?:Time) { }
                 }
                 export namespace condition {
-                    import Date = cessnalib.sys.type.Date;
-                    import Clock = cessnalib.sys.type.Clock;
+                    import Date = euglena.sys.type.Date;
+                    import Clock = euglena.sys.type.Clock;
                     export namespace constants {
-                        export const DoesParticalExist = "cessnalib.being.alive.dna.condition.DoesParticalExist";
-                        export const TimeComparison = "cessnalib.being.alive.dna.condition.TimeComparison";
-                        export const NumberComparison = "cessnalib.being.alive.dna.condition.NumberComparison";
-                        export const StringComparison = "cessnalib.being.alive.dna.condition.StringComparison";
-                        export const LogicalPhrase = "cessnalib.being.alive.dna.condition.ConditionPhrase";
-                        export const CalculationPhrase = "cessnalib.being.alive.dna.condition.CalculationPhrase";
-                        export const ClockComparison = "cessnalib.being.alive.dna.condition.ClockComparison";
-                        export const DateComparison = "cessnalib.being.alive.dna.condition.DateComparison";
-                        export const DateTemplateComparison = "cessnalib.being.alive.dna.condition.DateTemplateComparison";
-                        export const DateTemplate = "cessnalib.being.alive.dna.condition.DateTemplate";
-                        export const ClockTemplateComparison = "cessnalib.being.alive.dna.condition.ClockTemplateComparison";
-                        export const ClockTemplate = "cessnalib.being.alive.dna.condition.ClockTemplate";
-                        export const TimeTemplateComparison = "cessnalib.being.alive.dna.condition.TimeTemplateComparison";
-                        export const TimeTemplate = "cessnalib.being.alive.dna.condition.TimeTemplate";
-                        export const DetailedParticleReference = "cessnalib.being.alive.dna.condition.DetailedParticleReference";
+                        export const DoesParticalExist = "euglena.being.alive.dna.condition.DoesParticalExist";
+                        export const TimeComparison = "euglena.being.alive.dna.condition.TimeComparison";
+                        export const NumberComparison = "euglena.being.alive.dna.condition.NumberComparison";
+                        export const StringComparison = "euglena.being.alive.dna.condition.StringComparison";
+                        export const LogicalPhrase = "euglena.being.alive.dna.condition.ConditionPhrase";
+                        export const CalculationPhrase = "euglena.being.alive.dna.condition.CalculationPhrase";
+                        export const ClockComparison = "euglena.being.alive.dna.condition.ClockComparison";
+                        export const DateComparison = "euglena.being.alive.dna.condition.DateComparison";
+                        export const DateTemplateComparison = "euglena.being.alive.dna.condition.DateTemplateComparison";
+                        export const DateTemplate = "euglena.being.alive.dna.condition.DateTemplate";
+                        export const ClockTemplateComparison = "euglena.being.alive.dna.condition.ClockTemplateComparison";
+                        export const ClockTemplate = "euglena.being.alive.dna.condition.ClockTemplate";
+                        export const TimeTemplateComparison = "euglena.being.alive.dna.condition.TimeTemplateComparison";
+                        export const TimeTemplate = "euglena.being.alive.dna.condition.TimeTemplate";
+                        export const DetailedParticleReference = "euglena.being.alive.dna.condition.DetailedParticleReference";
                     }
                     export class DoesParticalExist implements Classifiable {
                         public className = constants.DoesParticalExist;
@@ -403,7 +403,7 @@ export module cessnalib {
                             if (typeof condition === "string" || typeof condition === "number") {
                                 result = condition;
                             }
-                            if (cessnalib.js.Class.instanceOf(new Particle("Reference", true,"mine"), condition)) {
+                            if (euglena.js.Class.instanceOf(new Particle("Reference", true,"mine"), condition)) {
                                 result = condition.name === interaction.constants.ReceivedParticleReference ? receivedParticle.content : this.executeParticleReference(condition);
                             } else {
                                 switch (condition.className) {
@@ -508,8 +508,8 @@ export module cessnalib {
                                     }
                                     break;
                                 case constants.DateComparison:
-                                    let date1: cessnalib.sys.type.Date = operand1;
-                                    let date2: cessnalib.sys.type.Date = operand2;
+                                    let date1: euglena.sys.type.Date = operand1;
+                                    let date2: euglena.sys.type.Date = operand2;
                                     switch (comparison.operator) {
                                         case condition.operator.ComparisonOperator.BIGGERTHAN:
                                             result = date1.year > date2.year ? true : date1.year < date2.year ? false :
@@ -542,8 +542,8 @@ export module cessnalib {
                                     }
                                     break;
                                 case constants.ClockComparison:
-                                    let clock1: cessnalib.sys.type.Clock = operand1;
-                                    let clock2: cessnalib.sys.type.Clock = operand2;
+                                    let clock1: euglena.sys.type.Clock = operand1;
+                                    let clock2: euglena.sys.type.Clock = operand2;
                                     switch (comparison.operator) {
                                         case condition.operator.ComparisonOperator.BIGGERTHAN:
                                             result = clock1.hour > clock2.hour ? true : clock1.hour < clock2.hour ? false :
@@ -859,8 +859,8 @@ export module cessnalib {
                     setInterval(()=>{
                         let toBeRemoved:string[] = [];  
                         for(let a of chromosome){
-                            if(a.expiretime && cessnalib.sys.type.StaticTools.Time.biggerThan(
-                                cessnalib.sys.type.StaticTools.Time.now(),
+                            if(a.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(
+                                euglena.sys.type.StaticTools.Time.now(),
                                 a.expiretime
                             )){
                                 toBeRemoved.push(a.name);
@@ -881,11 +881,11 @@ export module cessnalib {
             export class Euglena implements interaction.CanReceiveParticle {
                 public static instance: Euglena = null;
                 private garbageCollector:GarbageCollector = null;
-                private executor: cessnalib.being.alive.dna.condition.Executor = null;
+                private executor: euglena.being.alive.dna.condition.Executor = null;
                 private organelles: any;
                 constructor(public chromosome: dna.Gene[], private particles: Particle[]) {
                     this.organelles = {};
-                    this.executor = new cessnalib.being.alive.dna.condition.Executor(this.particles);
+                    this.executor = new euglena.being.alive.dna.condition.Executor(this.particles);
                     this.garbageCollector = new GarbageCollector(this.chromosome);
                     this.garbageCollector.start();
                 }
@@ -936,7 +936,7 @@ export module cessnalib {
                 public getOrganelle(organelleName: string): being.alive.Organelle<any> {
                     return Euglena.instance.organelles[organelleName];
                 }
-                public setOrganelle(organelle:cessnalib.being.alive.Organelle<{}>):void{
+                public setOrganelle(organelle:euglena.being.alive.Organelle<{}>):void{
                     organelle.nucleus = Euglena.instance;
                     organelle.saveParticle = Euglena.instance.saveParticle;
                     Euglena.instance.organelles[organelle.name] = organelle;
@@ -947,7 +947,7 @@ export module cessnalib {
     export namespace reference {
         export namespace sys {
             export namespace type {
-                export const Exception = new cessnalib.sys.type.Exception("Exception", null);
+                export const Exception = new euglena.sys.type.Exception("Exception", null);
             }
         }
     }

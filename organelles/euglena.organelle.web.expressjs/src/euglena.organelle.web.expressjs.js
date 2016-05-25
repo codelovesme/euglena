@@ -5,8 +5,8 @@
 /// <reference path="../typings/body-parser/body-parser.d.ts" />
 /// <reference path="../typings/express-session/express-session.d.ts" />
 "use strict";
-var cessnalib_1 = require("../node_modules/cessnalib/cessnalib/src/cessnalib");
-var cessnalib_template_1 = require("../node_modules/cessnalib/cessnalib_template/src/cessnalib_template");
+var euglena_1 = require("../node_modules/euglena/euglena/src/euglena");
+var euglena_template_1 = require("../node_modules/euglena/euglena_template/src/euglena_template");
 var express = require('express');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -17,8 +17,8 @@ var http = require("http");
 const OrganelleName = "WebOrganelleImplExpressJs";
 let organelle = null;
 let this_ = null;
-var vallueCell = new cessnalib_1.cessnalib.sys.type.Map();
-class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.organelles.WebOrganelle {
+var vallueCell = new euglena_1.euglena.sys.type.Map();
+class Organelle extends euglena_template_1.euglena_template.being.alive.organelles.WebOrganelle {
     constructor() {
         super(OrganelleName);
         this.router = null;
@@ -30,7 +30,7 @@ class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.orga
             try{console.log(JSON.stringify(req.body));}catch(e){
                 console.log(e.message);
             }
-            this_.nucleus.receiveParticle(new cessnalib_template_1.cessnalib_template.being.alive.particles.ImpactReceived(req.body, this_.name));
+            this_.nucleus.receiveParticle(new euglena_template_1.euglena_template.being.alive.particles.ImpactReceived(req.body, this_.name));
             let result = { result: "ok" };
             res.send(JSON.stringify(result));
         });
@@ -126,7 +126,7 @@ class Organelle extends cessnalib_template_1.cessnalib_template.being.alive.orga
     receiveParticle(particle) {
         console.log("Organelle Web says 'received particle: " + particle.name + "'");
         switch (particle.name) {
-            case cessnalib_template_1.cessnalib_template.being.ghost.euglena.web.constants.incomingparticles.Serve:
+            case euglena_template_1.euglena_template.being.ghost.euglena.web.constants.incomingparticles.Serve:
                 this.serve();
                 break;
             default:

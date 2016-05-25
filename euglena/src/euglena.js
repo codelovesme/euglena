@@ -10,9 +10,9 @@
 * #Seperate particle, request, event
 *
 */
-var cessnalib;
-(function (cessnalib) {
-    cessnalib.JavascriptDate = Date;
+var euglena;
+(function (euglena) {
+    euglena.JavascriptDate = Date;
     var js;
     (function (js) {
         class Class {
@@ -76,7 +76,7 @@ var cessnalib;
             }
         }
         js.Class = Class;
-    })(js = cessnalib.js || (cessnalib.js = {}));
+    })(js = euglena.js || (euglena.js = {}));
     var injection;
     (function (injection) {
         class StaticTools {
@@ -97,7 +97,7 @@ var cessnalib;
         class ObjectChooser {
         }
         injection.ObjectChooser = ObjectChooser;
-    })(injection = cessnalib.injection || (cessnalib.injection = {}));
+    })(injection = euglena.injection || (euglena.injection = {}));
     var sys;
     (function (sys) {
         var type;
@@ -171,7 +171,7 @@ var cessnalib;
                 constructor(date, clock) {
                     this.date = date;
                     this.clock = clock;
-                    this.className = "cessnalib.sys.type.Time";
+                    this.className = "euglena.sys.type.Time";
                 }
             }
             type.Time = Time;
@@ -180,7 +180,7 @@ var cessnalib;
                     this.year = year;
                     this.month = month;
                     this.day = day;
-                    this.className = "cessnalib.sys.type.Date";
+                    this.className = "euglena.sys.type.Date";
                 }
             }
             type.Date = Date;
@@ -189,7 +189,7 @@ var cessnalib;
                     this.hour = hour;
                     this.minute = minute;
                     this.second = second;
-                    this.className = "cessnalib.sys.type.Clock";
+                    this.className = "euglena.sys.type.Clock";
                 }
             }
             type.Clock = Clock;
@@ -197,7 +197,7 @@ var cessnalib;
             (function (StaticTools) {
                 class Exception {
                     static isNotException(t) {
-                        return !cessnalib.js.Class.instanceOf(cessnalib.reference.sys.type.Exception, t);
+                        return !euglena.js.Class.instanceOf(euglena.reference.sys.type.Exception, t);
                     }
                 }
                 StaticTools.Exception = Exception;
@@ -223,11 +223,11 @@ var cessnalib;
                         return Date.equals(time1.date, time2.date) && Clock.equals(time1.clock, time2.clock);
                     }
                     static now() {
-                        let newDate = new cessnalib.JavascriptDate();
+                        let newDate = new euglena.JavascriptDate();
                         return new sys.type.Time(new sys.type.Date(newDate.getUTCFullYear(), newDate.getUTCMonth() + 1, newDate.getUTCDate()), new sys.type.Clock(newDate.getUTCHours(), newDate.getUTCMinutes(), newDate.getUTCSeconds()));
                     }
                     static addMiliseconds(time, miliseconds) {
-                        return Time.fromJavascriptDate(new cessnalib.JavascriptDate(Time.toJavascriptDate(time).getTime() + miliseconds));
+                        return Time.fromJavascriptDate(new euglena.JavascriptDate(Time.toJavascriptDate(time).getTime() + miliseconds));
                     }
                     static DayToMiliseconds(minute) {
                         return minute * 86400000;
@@ -245,7 +245,7 @@ var cessnalib;
                         return new sys.type.Time(new sys.type.Date(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()), new sys.type.Clock(date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()));
                     }
                     static toJavascriptDate(time) {
-                        let date = new cessnalib.JavascriptDate();
+                        let date = new euglena.JavascriptDate();
                         date.setUTCFullYear(time.date.year);
                         date.setUTCMonth(time.date.month - 1);
                         date.setUTCDate(time.date.day);
@@ -307,7 +307,7 @@ var cessnalib;
                 StaticTools.Array = Array;
             })(StaticTools = type.StaticTools || (type.StaticTools = {}));
         })(type = sys.type || (sys.type = {}));
-    })(sys = cessnalib.sys || (cessnalib.sys = {}));
+    })(sys = euglena.sys || (euglena.sys = {}));
     var being;
     (function (being) {
         class Particle {
@@ -334,7 +334,7 @@ var cessnalib;
         })(interaction = being.interaction || (being.interaction = {}));
         var alive;
         (function (alive) {
-            var Particle = cessnalib.being.Particle;
+            var Particle = euglena.being.Particle;
             var dna;
             (function (dna) {
                 class Gene {
@@ -350,25 +350,25 @@ var cessnalib;
                 dna.Gene = Gene;
                 var condition;
                 (function (condition_1) {
-                    var Date = cessnalib.sys.type.Date;
-                    var Clock = cessnalib.sys.type.Clock;
+                    var Date = euglena.sys.type.Date;
+                    var Clock = euglena.sys.type.Clock;
                     var constants;
                     (function (constants) {
-                        constants.DoesParticalExist = "cessnalib.being.alive.dna.condition.DoesParticalExist";
-                        constants.TimeComparison = "cessnalib.being.alive.dna.condition.TimeComparison";
-                        constants.NumberComparison = "cessnalib.being.alive.dna.condition.NumberComparison";
-                        constants.StringComparison = "cessnalib.being.alive.dna.condition.StringComparison";
-                        constants.LogicalPhrase = "cessnalib.being.alive.dna.condition.ConditionPhrase";
-                        constants.CalculationPhrase = "cessnalib.being.alive.dna.condition.CalculationPhrase";
-                        constants.ClockComparison = "cessnalib.being.alive.dna.condition.ClockComparison";
-                        constants.DateComparison = "cessnalib.being.alive.dna.condition.DateComparison";
-                        constants.DateTemplateComparison = "cessnalib.being.alive.dna.condition.DateTemplateComparison";
-                        constants.DateTemplate = "cessnalib.being.alive.dna.condition.DateTemplate";
-                        constants.ClockTemplateComparison = "cessnalib.being.alive.dna.condition.ClockTemplateComparison";
-                        constants.ClockTemplate = "cessnalib.being.alive.dna.condition.ClockTemplate";
-                        constants.TimeTemplateComparison = "cessnalib.being.alive.dna.condition.TimeTemplateComparison";
-                        constants.TimeTemplate = "cessnalib.being.alive.dna.condition.TimeTemplate";
-                        constants.DetailedParticleReference = "cessnalib.being.alive.dna.condition.DetailedParticleReference";
+                        constants.DoesParticalExist = "euglena.being.alive.dna.condition.DoesParticalExist";
+                        constants.TimeComparison = "euglena.being.alive.dna.condition.TimeComparison";
+                        constants.NumberComparison = "euglena.being.alive.dna.condition.NumberComparison";
+                        constants.StringComparison = "euglena.being.alive.dna.condition.StringComparison";
+                        constants.LogicalPhrase = "euglena.being.alive.dna.condition.ConditionPhrase";
+                        constants.CalculationPhrase = "euglena.being.alive.dna.condition.CalculationPhrase";
+                        constants.ClockComparison = "euglena.being.alive.dna.condition.ClockComparison";
+                        constants.DateComparison = "euglena.being.alive.dna.condition.DateComparison";
+                        constants.DateTemplateComparison = "euglena.being.alive.dna.condition.DateTemplateComparison";
+                        constants.DateTemplate = "euglena.being.alive.dna.condition.DateTemplate";
+                        constants.ClockTemplateComparison = "euglena.being.alive.dna.condition.ClockTemplateComparison";
+                        constants.ClockTemplate = "euglena.being.alive.dna.condition.ClockTemplate";
+                        constants.TimeTemplateComparison = "euglena.being.alive.dna.condition.TimeTemplateComparison";
+                        constants.TimeTemplate = "euglena.being.alive.dna.condition.TimeTemplate";
+                        constants.DetailedParticleReference = "euglena.being.alive.dna.condition.DetailedParticleReference";
                     })(constants = condition_1.constants || (condition_1.constants = {}));
                     class DoesParticalExist {
                         constructor(name, of) {
@@ -452,7 +452,7 @@ var cessnalib;
                             if (typeof condition === "string" || typeof condition === "number") {
                                 result = condition;
                             }
-                            if (cessnalib.js.Class.instanceOf(new Particle("Reference", true, "mine"), condition)) {
+                            if (euglena.js.Class.instanceOf(new Particle("Reference", true, "mine"), condition)) {
                                 result = condition.name === interaction.constants.ReceivedParticleReference ? receivedParticle.content : this.executeParticleReference(condition);
                             }
                             else {
@@ -889,7 +889,7 @@ var cessnalib;
                     setInterval(() => {
                         let toBeRemoved = [];
                         for (let a of chromosome) {
-                            if (a.expiretime && cessnalib.sys.type.StaticTools.Time.biggerThan(cessnalib.sys.type.StaticTools.Time.now(), a.expiretime)) {
+                            if (a.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(euglena.sys.type.StaticTools.Time.now(), a.expiretime)) {
                                 toBeRemoved.push(a.name);
                             }
                         }
@@ -913,7 +913,7 @@ var cessnalib;
                     this.garbageCollector = null;
                     this.executor = null;
                     this.organelles = {};
-                    this.executor = new cessnalib.being.alive.dna.condition.Executor(this.particles);
+                    this.executor = new euglena.being.alive.dna.condition.Executor(this.particles);
                     this.garbageCollector = new GarbageCollector(this.chromosome);
                     this.garbageCollector.start();
                 }
@@ -974,16 +974,16 @@ var cessnalib;
             Euglena.instance = null;
             alive.Euglena = Euglena;
         })(alive = being.alive || (being.alive = {}));
-    })(being = cessnalib.being || (cessnalib.being = {}));
+    })(being = euglena.being || (euglena.being = {}));
     var reference;
     (function (reference) {
         var sys;
         (function (sys) {
             var type;
             (function (type) {
-                type.Exception = new cessnalib.sys.type.Exception("Exception", null);
+                type.Exception = new euglena.sys.type.Exception("Exception", null);
             })(type = sys.type || (sys.type = {}));
         })(sys = reference.sys || (reference.sys = {}));
-    })(reference = cessnalib.reference || (cessnalib.reference = {}));
-})(cessnalib = exports.cessnalib || (exports.cessnalib = {}));
-//# sourceMappingURL=cessnalib.js.map
+    })(reference = euglena.reference || (euglena.reference = {}));
+})(euglena = exports.euglena || (exports.euglena = {}));
+//# sourceMappingURL=euglena.js.map

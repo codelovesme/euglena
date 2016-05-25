@@ -7,8 +7,8 @@
 /// <reference path="../typings/express-session/express-session.d.ts" />
 
 "use strict";
-import {cessnalib} from "../node_modules/cessnalib/cessnalib/src/cessnalib";
-import {cessnalib_template} from "../node_modules/cessnalib/cessnalib_template/src/cessnalib_template";
+import {euglena} from "../node_modules/euglena/euglena/src/euglena";
+import {euglena_template} from "../node_modules/euglena/euglena_template/src/euglena_template";
 
 import * as express from 'express';
 import favicon = require('serve-favicon');
@@ -19,16 +19,16 @@ import session = require('express-session');
 import * as path from "path";
 import * as http from "http";
 
-import Particle = cessnalib.being.Particle;
+import Particle = euglena.being.Particle;
 
 const OrganelleName = "WebOrganelleImplExpressJs";
 let organelle = null;
 
 let this_:Organelle = null;
 
-var vallueCell = new cessnalib.sys.type.Map<string,Particle>();
+var vallueCell = new euglena.sys.type.Map<string,Particle>();
 
-export class Organelle extends cessnalib_template.being.alive.organelles.WebOrganelle {
+export class Organelle extends euglena_template.being.alive.organelles.WebOrganelle {
     private router:express.Router = null;
     private server:http.Server = null;
     constructor(){
@@ -37,7 +37,7 @@ export class Organelle extends cessnalib_template.being.alive.organelles.WebOrga
         this_ = this;
         this.router.post("/", function(req, res, next) {
             console.log("dfdfdfdfdf : "+JSON.stringify(req));
-            this_.nucleus.receiveParticle(new cessnalib_template.being.alive.particles.ImpactReceived(req.params,this_.name));
+            this_.nucleus.receiveParticle(new euglena_template.being.alive.particles.ImpactReceived(req.params,this_.name));
             let result = {result:"ok"};
             res.send(JSON.stringify(result));
         });
@@ -138,7 +138,7 @@ export class Organelle extends cessnalib_template.being.alive.organelles.WebOrga
     public receiveParticle(particle:Particle):void{
         console.log("Organelle Web says 'received particle: "+particle.name+"'");
         switch (particle.name) {
-            case cessnalib_template.being.ghost.euglena.web.constants.incomingparticles.Serve:
+            case euglena_template.being.ghost.euglena.web.constants.incomingparticles.Serve:
                 this.serve();
                 break;
             default:

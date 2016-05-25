@@ -7,5 +7,5 @@
         "sourceMap": true,
         "declaration":true
     },
-    "files": [ "src/cessnalib.ts"]
+    "files": [ "src/euglena.ts"]
 }

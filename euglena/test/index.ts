@@ -5,12 +5,12 @@
 ///<reference path="..\typings\mocha\mocha.d.ts"/>
 ///<reference path="..\typings\chai\chai.d.ts"/>
 
-///<reference path="../src/cessnalib.ts"/>
+///<reference path="../src/euglena.ts"/>
 
-import {cessnalib} from "../src/cessnalib";
+import {euglena} from "../src/euglena";
 import * as chai from "chai";
 
-describe("cessnalib",()=>{
+describe("euglena",()=>{
     describe("js",()=>{
         describe("Class",()=>{
             describe("extend",()=>{
@@ -21,7 +21,7 @@ describe("cessnalib",()=>{
                    var parentInstance = {};
 
                    //when
-                   var extendedObject = cessnalib.js.Class.extend(subInstance,parentInstance);
+                   var extendedObject = euglena.js.Class.extend(subInstance,parentInstance);
 
                    //then
                    chai.expect(extendedObject).to.be.empty;
@@ -34,7 +34,7 @@ describe("cessnalib",()=>{
                    var parentInstance = {name:"fedai"};
 
                    //when
-                   var extendedObject = cessnalib.js.Class.extend(subInstance,parentInstance);
+                   var extendedObject = euglena.js.Class.extend(subInstance,parentInstance);
                    var propCount = Object.keys(extendedObject).length;
 
                    //then
@@ -52,7 +52,7 @@ describe("cessnalib",()=>{
                    var parentInstance = {name:"fedai"};
 
                    //when
-                   var extendedObject = cessnalib.js.Class.extend(subInstance,parentInstance);
+                   var extendedObject = euglena.js.Class.extend(subInstance,parentInstance);
                    var propCount = Object.keys(extendedObject).length;
 
                    //then

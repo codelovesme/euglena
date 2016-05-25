@@ -1,5 +1,5 @@
 {
-  "name": "cessnalib",
+  "name": "euglena",
   "domain":"codeloves.me",
   "version": "0.0.1",
   "private": false,
@@ -8,7 +8,7 @@
 	"name" : "Fedai Kaya",
 	"email" : "codelovesme@gmail.com"
   },
-  "typings": "./typings/cessnalib/cessnalib.d.ts",
+  "typings": "./typings/euglena/euglena.d.ts",
   "devDependencies":{
 	"chai":"*",
 	"mocha":"*",

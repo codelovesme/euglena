@@ -1,23 +1,23 @@
-/// <reference path="../../cessnalib/typings/node/node.d.ts" />
+/// <reference path="../../euglena/typings/node/node.d.ts" />
 
 "use strict";
 
 /**
  * Created by codelovesme on 6/19/2015.
  */
-import {cessnalib} from "../node_modules/cessnalib/cessnalib";
+import {euglena} from "../node_modules/euglena/euglena";
 import * as path from "path";
 import * as fs from "fs";
 var jsonminify = require("jsonminify");
-import Exception = cessnalib.sys.type.Exception;
+import Exception = euglena.sys.type.Exception;
 
-import Impact = cessnalib.being.interaction.Impact;
-import interaction = cessnalib.being.interaction;
+import Impact = euglena.being.interaction.Impact;
+import interaction = euglena.being.interaction;
 
-export module cessnalib_template {
+export module euglena_template {
     export namespace injection {
         export class StaticTools {
-            public static readFileParticles(applicationDirectory:string): cessnalib.injection.Configuration {
+            public static readFileParticles(applicationDirectory:string): euglena.injection.Configuration {
                 let particles = fs.readFileSync(path.join(path.resolve(applicationDirectory), "particles.json"), "utf8");
                 return JSON.parse(jsonminify(particles));
             }
@@ -25,19 +25,19 @@ export module cessnalib_template {
     }
     export namespace being {
         export namespace particles {
-            export class BooleanParticle extends cessnalib.being.Particle {
+            export class BooleanParticle extends euglena.being.Particle {
                 constructor(name:string,content:boolean,of:string){ super(name,content,of); }
             }
-            export class VoidParticle extends cessnalib.being.Particle {
+            export class VoidParticle extends euglena.being.Particle {
                 constructor(name:string,of:string){ super(name,null,of); }
             }
         }
         export namespace alive {
-            import Particle = cessnalib.being.Particle;
-            import Euglena = cessnalib.being.alive.Euglena;
-            import Gene = cessnalib.being.alive.dna.Gene;
-            import Reaction = cessnalib.being.alive.dna.Reaction;
-            import Time = cessnalib.sys.type.Time;
+            import Particle = euglena.being.Particle;
+            import Euglena = euglena.being.alive.Euglena;
+            import Gene = euglena.being.alive.dna.Gene;
+            import Reaction = euglena.being.alive.dna.Reaction;
+            import Time = euglena.sys.type.Time;
             export namespace constants {
                 export namespace particles {
                     export const OrganelleList = "OrganelleList";
@@ -62,7 +62,7 @@ export module cessnalib_template {
                     export const TimeOrganelle = "TimeOrganelle";
                     export const WebOrganelle = "WebOrganelle";
                     export const DbOrganelle = "DbOrganelle";
-                    export const WebUIOrganelle = "WebUIOrganelle";
+                    export const NucleusOrganelle = "NucleusOrganelle";
                 }
                 export namespace impacts {
                     export const TimeChanged = "TimeChanged";
@@ -74,14 +74,14 @@ export module cessnalib_template {
                 }
             }
             export namespace organelles {
-                import Organelle = cessnalib.being.alive.Organelle;
-                export abstract class WebUIOrganelle extends Organelle<{}>{
-                    constructor(className:string){super(alive.constants.organelles.WebUIOrganelle,className)}
+                import Organelle = euglena.being.alive.Organelle;
+                export abstract class NucleusOrganelle extends Organelle<{}>{
+                    constructor(className:string){super(alive.constants.organelles.NucleusOrganelle,className)}
                 }
                 export abstract class TimeOrganelle extends Organelle<{}> {
                     constructor(className:string) { super(alive.constants.organelles.TimeOrganelle,className);}
                 }
-                export abstract class ReceptionOrganelle extends Organelle<{port:string,euglenaInfo:cessnalib.being.alive.EuglenaInfo}> {
+                export abstract class ReceptionOrganelle extends Organelle<{port:string,euglenaInfo:euglena.being.alive.EuglenaInfo}> {
                     constructor(className:string) { super(constants.organelles.ReceptionOrganelle,className); }
                 }
                 export abstract class WebOrganelle extends Organelle<{port:string}>{
@@ -98,11 +98,11 @@ export module cessnalib_template {
                 export class Token extends Particle {
                     constructor(content:string,of:string){super(constants.particles.Token,content,of);}
                 }
-                export class Exception extends cessnalib.being.Particle {
-                    constructor(content: cessnalib.sys.type.Exception,of:string) { super(constants.particles.Exception, content,of); }
+                export class Exception extends euglena.being.Particle {
+                    constructor(content: euglena.sys.type.Exception,of:string) { super(constants.particles.Exception, content,of); }
                 }
-                export class Time extends cessnalib.being.Particle {
-                    constructor(content: cessnalib.sys.type.Time,of:string) { super(constants.particles.Time, content,of); }
+                export class Time extends euglena.being.Particle {
+                    constructor(content: euglena.sys.type.Time,of:string) { super(constants.particles.Time, content,of); }
                 }
                 export interface AcknowledgeContent{
                     of:string,
@@ -124,7 +124,7 @@ export module cessnalib_template {
                     constructor(content:Particle,of:string) { super(constants.impacts.SaveParticle, content,of); }
                 }
                 export class ReadParticle extends Particle {
-                    constructor(content:cessnalib.being.alive.dna.condition.ParticleReference,of:string){ super(constants.impacts.ReadParticle,content,of); }
+                    constructor(content:euglena.being.alive.dna.condition.ParticleReference,of:string){ super(constants.impacts.ReadParticle,content,of); }
                 }
                 export class ReadParticles extends Particle {
                     constructor(particleName:string,of:string){ super(constants.impacts.ReadParticles,particleName,of); }
@@ -143,14 +143,14 @@ export module cessnalib_template {
                 export class DoesParticleExist extends Particle {
                     constructor(content:DoesParticleExistContent,of:string){super(alive.constants.particles.DoesParticleExist,content,of);}
                 }
-                export class ImpactReceived extends cessnalib.being.Particle {
+                export class ImpactReceived extends euglena.being.Particle {
                     constructor(public content:Impact,of:string) { super(constants.particles.ImpactReceived,content,of); }
                 }
             }
             export class StaticTools{
                 public static instantiateEuglena(applicationDirectory: string, chromosome: any[],euglenaName:string): Euglena {
-                    let euglena = cessnalib.being.alive.Euglena.generateInstance(chromosome, injection.StaticTools.readFileParticles(applicationDirectory));
-                    euglena.receiveParticle(new cessnalib_template.being.alive.particles.EuglenaHasBeenDivided(euglena.getParticle(new cessnalib.being.alive.dna.condition.ParticleReference(cessnalib_template.being.alive.constants.particles.EuglenaName,euglenaName)).content));
+                    let euglena = euglena.being.alive.Euglena.generateInstance(chromosome, injection.StaticTools.readFileParticles(applicationDirectory));
+                    euglena.receiveParticle(new euglena_template.being.alive.particles.EuglenaHasBeenDivided(euglena.getParticle(new euglena.being.alive.dna.condition.ParticleReference(euglena_template.being.alive.constants.particles.EuglenaName,euglenaName)).content));
                     return euglena;
                 }
             }
@@ -160,11 +160,11 @@ export module cessnalib_template {
                 export namespace impactthrower {
                     export namespace incomingparticles {
                         export interface ThrowImpactContent {
-                            to: cessnalib.being.alive.EuglenaInfo,
+                            to: euglena.being.alive.EuglenaInfo,
                             impact: Impact
                         }
-                        export class ThrowImpact extends cessnalib.being.Particle {
-                            constructor(content: { to: cessnalib.being.alive.EuglenaInfo, impact: Impact },of:string) { super(constants.incomingparticles.ThrowImpact, content,of); }
+                        export class ThrowImpact extends euglena.being.Particle {
+                            constructor(content: { to: euglena.being.alive.EuglenaInfo, impact: Impact },of:string) { super(constants.incomingparticles.ThrowImpact, content,of); }
                         }
                     }
                     export namespace constants {
@@ -179,22 +179,22 @@ export module cessnalib_template {
                             constructor(of:string) { super(constants.incomingparticles.Listen,of); }
                         }
                         export interface ThrowImpactContent {
-                            to: cessnalib.being.alive.EuglenaInfo,
+                            to: euglena.being.alive.EuglenaInfo,
                             impact: Impact
                         }
-                        export class ThrowImpact extends cessnalib.being.Particle {
+                        export class ThrowImpact extends euglena.being.Particle {
                             constructor(content: ThrowImpactContent,of:string) { super(constants.incomingparticles.ThrowImpact, content,of); }
                         }
                     }
                     export namespace outgoingparticles {
-                        export class ImpactReceived extends cessnalib.being.Particle {
-                            constructor(impact:cessnalib.being.interaction.Impact,of:string) { super(constants.outgoingparticles.ImpactReceived,impact,of); }
+                        export class ImpactReceived extends euglena.being.Particle {
+                            constructor(impact:euglena.being.interaction.Impact,of:string) { super(constants.outgoingparticles.ImpactReceived,impact,of); }
                         }
-                        export class ConnectedToEuglena extends cessnalib.being.Particle{
-                            constructor(euglenaInfo:cessnalib.being.alive.EuglenaInfo,of:string){super(constants.outgoingparticles.ConnectedToEuglena,euglenaInfo,of);}
+                        export class ConnectedToEuglena extends euglena.being.Particle{
+                            constructor(euglenaInfo:euglena.being.alive.EuglenaInfo,of:string){super(constants.outgoingparticles.ConnectedToEuglena,euglenaInfo,of);}
                         }
-                        export class DisconnectedFromEuglena extends cessnalib.being.Particle{
-                            constructor(euglenaInfo:cessnalib.being.alive.EuglenaInfo,of:string){super(constants.outgoingparticles.ConnectedToEuglena,euglenaInfo,of);}
+                        export class DisconnectedFromEuglena extends euglena.being.Particle{
+                            constructor(euglenaInfo:euglena.being.alive.EuglenaInfo,of:string){super(constants.outgoingparticles.ConnectedToEuglena,euglenaInfo,of);}
                         }
                     }
                     export namespace constants {
@@ -211,16 +211,16 @@ export module cessnalib_template {
                 }
                 export namespace impacttransmitter {
                     export namespace incomingparticles {
-                        export class ConnectToEuglena extends cessnalib.being.Particle {
-                            constructor(euglenaInfo: cessnalib.being.alive.EuglenaInfo,of:string) {
+                        export class ConnectToEuglena extends euglena.being.Particle {
+                            constructor(euglenaInfo: euglena.being.alive.EuglenaInfo,of:string) {
                                 super(constants.incomingparticles.ConnectToEuglena, euglenaInfo,of);
                             }
                         }
                         export interface ThrowImpactContent {
-                            to: cessnalib.being.alive.EuglenaInfo,
+                            to: euglena.being.alive.EuglenaInfo,
                             impact: Impact
                         }
-                        export class ThrowImpact extends cessnalib.being.Particle {
+                        export class ThrowImpact extends euglena.being.Particle {
                             constructor(content: { to: string, impact: ThrowImpactContent},of:string) { super(constants.incomingparticles.ThrowImpact,content,of); }
                         }
                     }
@@ -240,7 +240,7 @@ export module cessnalib_template {
                         }
                     }
                     export namespace incomingparticles {
-                        import VoidParticle = cessnalib_template.being.particles.VoidParticle;
+                        import VoidParticle = euglena_template.being.particles.VoidParticle;
                         export class Serve extends VoidParticle{
                             constructor(of:string){super(constants.incomingparticles.Serve,of);}
                         }
@@ -253,13 +253,13 @@ export module cessnalib_template {
                     }
                 }
                 export namespace time {
-                    import Particle = cessnalib.being.Particle;
+                    import Particle = euglena.being.Particle;
                     export namespace outgoingparticles {
 
                     }
                     export namespace incomingparticles {
                         export class SetTime extends Particle {
-                            constructor(time: cessnalib.sys.type.Time,of:string) { super(constants.incomingparticles.SetTime, time,of); }
+                            constructor(time: euglena.sys.type.Time,of:string) { super(constants.incomingparticles.SetTime, time,of); }
                         }
                         export class StartClock extends being.particles.VoidParticle {
                             constructor(of:string) { super(constants.incomingparticles.StartClock,of); }
@@ -276,7 +276,7 @@ export module cessnalib_template {
                     }
                 }
                 export namespace db {
-                    import Particle = cessnalib.being.Particle;
+                    import Particle = euglena.being.Particle;
                     export namespace outgoingparticles {
                         
                     }
@@ -300,9 +300,9 @@ export module cessnalib_template {
     }
     export namespace reference {
         export namespace being {
-            export const Particle = new cessnalib.being.Particle("Reference Particle", true,"mine");
+            export const Particle = new euglena.being.Particle("Reference Particle", true,"mine");
             export namespace interaction {
-                export const Impact:cessnalib.being.interaction.Impact = {
+                export const Impact:euglena.being.interaction.Impact = {
                     particle: being.Particle,
                     token: "token"
                 }

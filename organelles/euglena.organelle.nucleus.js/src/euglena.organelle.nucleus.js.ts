@@ -3,7 +3,7 @@ import {euglena_template} from "../node_modules/euglena/euglena_template/src/eug
 import {euglena} from "../node_modules/euglena/euglena/src/euglena";
 import Particle = euglena.being.Particle;
 
-export class Organelle extends euglena_template.being.alive.organelles.TimeOrganelle {
+export class Organelle extends euglena_template.being.alive.organelles.NucleusOrganelle {
     private time: euglena.sys.type.Time;
     constructor(){
         super("TimeOrganelleImplJs");

@@ -5,7 +5,7 @@
 
 // Documentation : http://mongodb.github.io/node-mongodb-native/2.1/api/
 
-/// <reference path="C:/git/me.codeloves/cessnalib/cessnalib/typings/node/node.d.ts" />
+/// <reference path="C:/git/me.codeloves/euglena/euglena/typings/node/node.d.ts" />
 
 declare module "mongodb" {
   import {EventEmitter} from 'events';

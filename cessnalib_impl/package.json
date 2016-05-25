@@ -1,5 +1,5 @@
 {
-  "name": "cessnalib_template",
+  "name": "euglena_impl",
   "domain": "codeloves.me",
   "version": "0.0.1",
   "private": false,
@@ -8,9 +8,9 @@
     "name": "Fedai Kaya",
     "email": "codelovesme@gmail.com"
   },
-  "typings": "./typings/cessnalib/cessnalib.d.ts",
+  "typings": "./typings/euglena/euglena.d.ts",
   "dependencies": {
-    "cessnalib_template": "*",
+    "euglena_template": "*",
     "mongodb": "^2.1.7",
     "socket.io": "^1.3.5",
     "socket.io-client": "^1.3.5"
