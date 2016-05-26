@@ -20,6 +20,7 @@ import * as path from "path";
 import * as http from "http";
 
 import Particle = euglena.being.Particle;
+import interaction = euglena.being.interaction;
 
 const OrganelleName = "WebOrganelleImplExpressJs";
 let organelle = null;
@@ -37,7 +38,7 @@ export class Organelle extends euglena_template.being.alive.organelles.WebOrgane
         this_ = this;
         this.router.post("/", function(req, res, next) {
             console.log("dfdfdfdfdf : "+JSON.stringify(req));
-            this_.nucleus.receiveParticle(new euglena_template.being.alive.particles.ImpactReceived(req.params,this_.name));
+            this_.send(new euglena_template.being.alive.particles.ImpactReceived(req.params,this_.name));
             let result = {result:"ok"};
             res.send(JSON.stringify(result));
         });
@@ -135,10 +136,10 @@ export class Organelle extends euglena_template.being.alive.organelles.WebOrgane
                 throw error;
         }
     }
-    public receiveParticle(particle:Particle):void{
+        public receive(particle: Particle,response:interaction.Response): void{
         console.log("Organelle Web says 'received particle: "+particle.name+"'");
         switch (particle.name) {
-            case euglena_template.being.ghost.euglena.web.constants.incomingparticles.Serve:
+            case euglena_template.being.ghost.organelle.web.constants.incomingparticles.Serve:
                 this.serve();
                 break;
             default:

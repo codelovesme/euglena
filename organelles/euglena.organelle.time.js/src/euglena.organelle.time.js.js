@@ -4,12 +4,12 @@ class Organelle extends euglena_template_1.euglena_template.being.alive.organell
     constructor() {
         super("TimeOrganelleImplJs");
     }
-    receiveParticle(particle) {
+    receive(particle, response) {
         switch (particle.name) {
-            case euglena_template_1.euglena_template.being.ghost.euglena.time.constants.incomingparticles.SetTime:
+            case euglena_template_1.euglena_template.being.ghost.organelle.time.constants.incomingparticles.SetTime:
                 this.time = particle.content;
                 break;
-            case euglena_template_1.euglena_template.being.ghost.euglena.time.constants.incomingparticles.StartClock:
+            case euglena_template_1.euglena_template.being.ghost.organelle.time.constants.incomingparticles.StartClock:
                 setInterval(() => {
                     //let newDate = new Date(this.time.date.year, this.time.date.month - 1, this.time.date.day,
                     //    this.time.clock.hour, this.time.clock.minute, this.time.clock.second + 1);
@@ -37,7 +37,7 @@ class Organelle extends euglena_template_1.euglena_template.being.alive.organell
                             }
                         }
                     }
-                    this.saveParticle(new euglena_template_1.euglena_template.being.alive.particles.Time(this.time, euglena_template_1.euglena_template.being.alive.constants.organelles.TimeOrganelle));
+                    this.send(new euglena_template_1.euglena_template.being.alive.particles.Time(this.time, "this"));
                 }, 1000);
                 break;
         }

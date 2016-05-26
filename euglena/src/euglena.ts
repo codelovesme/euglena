@@ -287,17 +287,20 @@ export module euglena {
         }
         export namespace interaction {
             import EuglenaInfo = euglena.being.alive.EuglenaInfo;
-            export interface ReceiveParticle {
-                (particle: Particle): void;
-            }
             export interface CanReceiveParticle {
-                receiveParticle: ReceiveParticle;
+                receive: Receive;
+            }
+            export interface Receive{
+                (particle: Particle,response?:interaction.Response): void;
             }
             export class Impact {
                 constructor(public particle: Particle,public token:string){}
             }
             export namespace constants{
                 export const ReceivedParticleReference = "ReceivedParticleReference";
+            }
+            export interface Response{
+                (particle:Particle):void;
             }
         }
         export namespace alive {
@@ -314,7 +317,6 @@ export module euglena {
                         public name: string,
                         public triggers: string[],
                         public reaction: Reaction,
-                        public parameters?:Object,
                         public expiretime?:Time) { }
                 }
                 export class ParticleReference extends Particle {
@@ -323,7 +325,7 @@ export module euglena {
                         }
                     }
                 export interface Reaction {
-                    (particle: Particle, euglena: Euglena,parameters?:Object): void;
+                    (particle: Particle, body: Body,response:interaction.Response): void;
                 }
             }
             export namespace constants {
@@ -337,10 +339,9 @@ export module euglena {
                 constructor(
                     public name: string,
                     public className:string,
-                    public nucleus?: interaction.CanReceiveParticle,
-                    public saveParticle?:(particle:Particle)=>void,
+                    public send?: interaction.Receive,
                     public initialProperties?: InitialProperties) { }
-                public abstract receiveParticle(particle: Particle): void;
+                public abstract receive(particle: Particle,response:interaction.Response): void;
             }
             export class EuglenaInfo implements Named {
                 constructor(public name: string, public url: string, public port: string) { }
@@ -376,65 +377,53 @@ export module euglena {
                     },this.timeout)
                 }
             }
-            export class Euglena implements interaction.CanReceiveParticle {
-                public static instance: Euglena = null;
+            export class Body {
+                public static instance: Body = null;
                 private garbageCollector:GarbageCollector = null;
                 private organelles: any;
-                constructor(public chromosome: dna.Gene[], private particles: Particle[]) {
+                constructor(private particles: Particle[], private receive:interaction.Receive) {
                     this.organelles = {};
-                    this.garbageCollector = new GarbageCollector(this.chromosome);
-                    this.garbageCollector.start();
                 }
-                public static generateInstance(chromosome: dna.Gene[], particles: any) {
-                    if (!Euglena.instance) {
-                        Euglena.instance = new Euglena(chromosome, particles);
+                public static generateInstance(particles: any,receive:interaction.Receive) {
+                    if (!Body.instance) {
+                        Body.instance = new Body(particles,receive);
                     }
-                    return Euglena.instance;
+                    return Body.instance;
                 }
-                public addGene(gene:Gene):void{
-                    this.chromosome.push(gene);
-                }
-                public receiveParticle(particle: Particle) {
-                    console.log("received Particle: " + particle.name);
-                    for (var i = 0; i < Euglena.instance.chromosome.length; i++) {
-                        if (sys.type.StaticTools.Array.contains(Euglena.instance.chromosome[i].triggers, particle.name)) {
-                            var reaction = Euglena.instance.chromosome[i].reaction;
-                            var parameters = Euglena.instance.chromosome[i].parameters;
-                            var particles = Euglena.instance.particles;
-                            var organelles = Euglena.instance.organelles;
-                            var receiveParticle = Euglena.instance.receiveParticle;
-                            console.log("triggering gene " + Euglena.instance.chromosome[i].name);
-                            reaction(particle, Euglena.instance,parameters);
-                        }
-                    }
+                public transmit(organelleName: string, particle: Particle, response?: interaction.Response) {
+                    console.log("received Particle: " + particle.name+" sent to: "+organelleName);
+                    let organelle:Organelle<any> = Body.instance.organelles[organelleName] as Organelle<any>;
+                    organelle.receive(particle,(resp:Particle)=>{
+                        console.log("Response :"+resp.name +" from: "+organelleName+ " for: "+particle.name);
+                        response ? response(resp):false;
+                    });
                 }
                 public getParticle(particleReference: dna.ParticleReference): being.Particle {
-                    let index = Euglena.instance.indexOfParticle(particleReference);
-                    return index >=0 ? Euglena.instance.particles[index] : null;
+                    let index = Body.instance.indexOfParticle(particleReference);
+                    return index >=0 ? Body.instance.particles[index] : null;
                 }
                 private indexOfParticle(particleReference: dna.ParticleReference):number{
-                    for(let i=0;i<Euglena.instance.particles.length;i++){
-                        if(Euglena.instance.particles[i].name === particleReference.name && Euglena.instance.particles[i].of === particleReference.of){
+                    for(let i=0;i<Body.instance.particles.length;i++){
+                        if(Body.instance.particles[i].name === particleReference.name && Body.instance.particles[i].of === particleReference.of){
                             return i;
                         }
                     }
                     return -1;
                 }
                 public saveParticle(particle: being.Particle) {
-                    let index = Euglena.instance.indexOfParticle(particle);
+                    let index = Body.instance.indexOfParticle(particle);
                     if(index >= 0){
-                        Euglena.instance.particles[index] = particle;
+                        Body.instance.particles[index] = particle;
                     }else{
-                        Euglena.instance.particles.push(particle);
+                        Body.instance.particles.push(particle);
                     }
                 }
                 public getOrganelle(organelleName: string): being.alive.Organelle<any> {
-                    return Euglena.instance.organelles[organelleName];
+                    return Body.instance.organelles[organelleName];
                 }
                 public setOrganelle(organelle:euglena.being.alive.Organelle<{}>):void{
-                    organelle.nucleus = Euglena.instance;
-                    organelle.saveParticle = Euglena.instance.saveParticle;
-                    Euglena.instance.organelles[organelle.name] = organelle;
+                    organelle.send = this.receive;
+                    Body.instance.organelles[organelle.name] = organelle;
                 }
             }
         }

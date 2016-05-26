@@ -3,10 +3,11 @@
 /**
  * Created by codelovesme on 6/19/2015.
  */
-var euglena_1 = require("../node_modules/euglena/euglena");
+var euglena_1 = require("../node_modules/euglena/euglena/src/euglena");
 var path = require("path");
 var fs = require("fs");
 var jsonminify = require("jsonminify");
+var ParticleReference = euglena_1.euglena.being.alive.dna.ParticleReference;
 var euglena_template;
 (function (euglena_template) {
     var injection;
@@ -62,11 +63,11 @@ var euglena_template;
                 })(particles = constants.particles || (constants.particles = {}));
                 var organelles;
                 (function (organelles) {
-                    organelles.ReceptionOrganelle = "ReceptionOrganelle";
+                    organelles.Net = "ReceptionOrganelle";
                     organelles.TimeOrganelle = "TimeOrganelle";
                     organelles.WebOrganelle = "WebOrganelle";
-                    organelles.DbOrganelle = "DbOrganelle";
-                    organelles.WebUIOrganelle = "WebUIOrganelle";
+                    organelles.Db = "DbOrganelle";
+                    organelles.Nucleus = "NucleusOrganelle";
                 })(organelles = constants.organelles || (constants.organelles = {}));
                 var impacts;
                 (function (impacts) {
@@ -81,12 +82,12 @@ var euglena_template;
             var organelles;
             (function (organelles) {
                 var Organelle = euglena_1.euglena.being.alive.Organelle;
-                class WebUIOrganelle extends Organelle {
+                class Nucleus extends Organelle {
                     constructor(className) {
-                        super(alive.constants.organelles.WebUIOrganelle, className);
+                        super(alive.constants.organelles.Nucleus, className);
                     }
                 }
-                organelles.WebUIOrganelle = WebUIOrganelle;
+                organelles.Nucleus = Nucleus;
                 class TimeOrganelle extends Organelle {
                     constructor(className) {
                         super(alive.constants.organelles.TimeOrganelle, className);
@@ -95,7 +96,7 @@ var euglena_template;
                 organelles.TimeOrganelle = TimeOrganelle;
                 class ReceptionOrganelle extends Organelle {
                     constructor(className) {
-                        super(constants.organelles.ReceptionOrganelle, className);
+                        super(constants.organelles.Net, className);
                     }
                 }
                 organelles.ReceptionOrganelle = ReceptionOrganelle;
@@ -107,7 +108,7 @@ var euglena_template;
                 organelles.WebOrganelle = WebOrganelle;
                 class DbOrganelle extends Organelle {
                     constructor(className) {
-                        super(constants.organelles.DbOrganelle, className);
+                        super(constants.organelles.Db, className);
                     }
                 }
                 organelles.DbOrganelle = DbOrganelle;
@@ -201,18 +202,38 @@ var euglena_template;
                 particles.ImpactReceived = ImpactReceived;
             })(particles = alive.particles || (alive.particles = {}));
             class StaticTools {
-                static instantiateEuglena(applicationDirectory, chromosome, euglenaName) {
-                    let euglena = euglena_1.euglena.being.alive.Euglena.generateInstance(chromosome, injection.StaticTools.readFileParticles(applicationDirectory));
-                    euglena.receiveParticle(new euglena_template.being.alive.particles.EuglenaHasBeenDivided(euglena.getParticle(new euglena_1.euglena.being.alive.dna.condition.ParticleReference(euglena_template.being.alive.constants.particles.EuglenaName, euglenaName)).content));
-                    return euglena;
+                static instantiateEuglena(applicationDirectory, euglenaName) {
+                    let receive = (particle, response) => {
+                        //TODO
+                    };
+                    let body = euglena_1.euglena.being.alive.Body.generateInstance(injection.StaticTools.readFileParticles(applicationDirectory), receive);
+                    let files = fs.readdirSync(path.join(applicationDirectory, "./organelles"));
+                    let organelleList = body.getParticle(new ParticleReference(constants.particles.OrganelleList, euglenaName)).content;
+                    for (let file of files) {
+                        let organelle = new (require(path.join(applicationDirectory, "./organelles/", file))).Organelle();
+                        if (organelleList.indexOf(organelle.name) < 0)
+                            continue;
+                        switch (organelle.name) {
+                            case euglena_template.being.alive.constants.organelles.WebOrganelle:
+                                organelle.initialProperties = body.getParticle(new ParticleReference(euglena_template.being.alive.constants.particles.WebOrganelleInitialProperties, euglenaName)).content;
+                                break;
+                            case euglena_template.being.alive.constants.organelles.Net:
+                                organelle.initialProperties = body.getParticle(new ParticleReference(euglena_template.being.alive.constants.particles.ReceptionOrganelleInitialProperties, euglenaName)).content;
+                            default:
+                                break;
+                        }
+                        body.setOrganelle(organelle);
+                    }
+                    body.transmit(constants.organelles.Nucleus, new euglena_template.being.alive.particles.EuglenaHasBeenDivided(body.getParticle(new euglena_1.euglena.being.alive.dna.ParticleReference(euglena_template.being.alive.constants.particles.EuglenaName, euglenaName)).content));
+                    return body;
                 }
             }
             alive.StaticTools = StaticTools;
         })(alive = being.alive || (being.alive = {}));
         var ghost;
         (function (ghost) {
-            var euglena;
-            (function (euglena) {
+            var organelle;
+            (function (organelle) {
                 var impactthrower;
                 (function (impactthrower) {
                     var incomingparticles;
@@ -231,7 +252,7 @@ var euglena_template;
                             incomingparticles.ThrowImpact = "ThrowImpact";
                         })(incomingparticles = constants.incomingparticles || (constants.incomingparticles = {}));
                     })(constants = impactthrower.constants || (impactthrower.constants = {}));
-                })(impactthrower = euglena.impactthrower || (euglena.impactthrower = {}));
+                })(impactthrower = organelle.impactthrower || (organelle.impactthrower = {}));
                 var reception;
                 (function (reception) {
                     var incomingparticles;
@@ -284,7 +305,7 @@ var euglena_template;
                             outgoingparticles.DisconnectedFromEuglena = "DisconnectedFromEuglena";
                         })(outgoingparticles = constants.outgoingparticles || (constants.outgoingparticles = {}));
                     })(constants = reception.constants || (reception.constants = {}));
-                })(reception = euglena.reception || (euglena.reception = {}));
+                })(reception = organelle.reception || (organelle.reception = {}));
                 var impacttransmitter;
                 (function (impacttransmitter) {
                     var incomingparticles;
@@ -310,7 +331,7 @@ var euglena_template;
                             incomingparticles.ThrowImpact = "ThrowImpact";
                         })(incomingparticles = constants.incomingparticles || (constants.incomingparticles = {}));
                     })(constants = impacttransmitter.constants || (impacttransmitter.constants = {}));
-                })(impacttransmitter = euglena.impacttransmitter || (euglena.impacttransmitter = {}));
+                })(impacttransmitter = organelle.impacttransmitter || (organelle.impacttransmitter = {}));
                 var web;
                 (function (web) {
                     var constants;
@@ -344,7 +365,7 @@ var euglena_template;
                         }
                         incomingparticles.ReturnIfConnectedToTheInternet = ReturnIfConnectedToTheInternet;
                     })(incomingparticles = web.incomingparticles || (web.incomingparticles = {}));
-                })(web = euglena.web || (euglena.web = {}));
+                })(web = organelle.web || (organelle.web = {}));
                 var time;
                 (function (time_1) {
                     var Particle = euglena_1.euglena.being.Particle;
@@ -371,7 +392,7 @@ var euglena_template;
                             incomingparticles.StartClock = "StartClock";
                         })(incomingparticles = constants.incomingparticles || (constants.incomingparticles = {}));
                     })(constants = time_1.constants || (time_1.constants = {}));
-                })(time = euglena.time || (euglena.time = {}));
+                })(time = organelle.time || (organelle.time = {}));
                 var db;
                 (function (db) {
                     var Particle = euglena_1.euglena.being.Particle;
@@ -398,8 +419,8 @@ var euglena_template;
                         constants.StartDatabase = "StartDatabase";
                         constants.DbIsOnline = "DbIsOnline";
                     })(constants = db.constants || (db.constants = {}));
-                })(db = euglena.db || (euglena.db = {}));
-            })(euglena = ghost.euglena || (ghost.euglena = {}));
+                })(db = organelle.db || (organelle.db = {}));
+            })(organelle = ghost.organelle || (ghost.organelle = {}));
         })(ghost = being.ghost || (being.ghost = {}));
     })(being = euglena_template.being || (euglena_template.being = {}));
     var reference;

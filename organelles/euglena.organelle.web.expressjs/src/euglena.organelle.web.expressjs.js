@@ -26,11 +26,8 @@ class Organelle extends euglena_template_1.euglena_template.being.alive.organell
         this.router = express.Router();
         this_ = this;
         this.router.post("/", function (req, res, next) {
-            console.log("test")
-            try{console.log(JSON.stringify(req.body));}catch(e){
-                console.log(e.message);
-            }
-            this_.nucleus.receiveParticle(new euglena_template_1.euglena_template.being.alive.particles.ImpactReceived(req.body, this_.name));
+            console.log("dfdfdfdfdf : " + JSON.stringify(req));
+            this_.send(new euglena_template_1.euglena_template.being.alive.particles.ImpactReceived(req.params, this_.name));
             let result = { result: "ok" };
             res.send(JSON.stringify(result));
         });
@@ -123,10 +120,10 @@ class Organelle extends euglena_template_1.euglena_template.being.alive.organell
                 throw error;
         }
     }
-    receiveParticle(particle) {
+    receive(particle, response) {
         console.log("Organelle Web says 'received particle: " + particle.name + "'");
         switch (particle.name) {
-            case euglena_template_1.euglena_template.being.ghost.euglena.web.constants.incomingparticles.Serve:
+            case euglena_template_1.euglena_template.being.ghost.organelle.web.constants.incomingparticles.Serve:
                 this.serve();
                 break;
             default:

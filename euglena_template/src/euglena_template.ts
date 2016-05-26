@@ -5,11 +5,12 @@
 /**
  * Created by codelovesme on 6/19/2015.
  */
-import {euglena} from "../node_modules/euglena/euglena";
+import {euglena} from "../node_modules/euglena/euglena/src/euglena";
 import * as path from "path";
 import * as fs from "fs";
 var jsonminify = require("jsonminify");
 import Exception = euglena.sys.type.Exception;
+import ParticleReference = euglena.being.alive.dna.ParticleReference;
 
 import Impact = euglena.being.interaction.Impact;
 import interaction = euglena.being.interaction;
@@ -34,7 +35,7 @@ export module euglena_template {
         }
         export namespace alive {
             import Particle = euglena.being.Particle;
-            import Euglena = euglena.being.alive.Euglena;
+            import Body = euglena.being.alive.Body;
             import Gene = euglena.being.alive.dna.Gene;
             import Reaction = euglena.being.alive.dna.Reaction;
             import Time = euglena.sys.type.Time;
@@ -58,11 +59,11 @@ export module euglena_template {
                     export const DoesUniqueParticleExist = "DoesUniqueParticleExist";
                 }
                 export namespace organelles {
-                    export const ReceptionOrganelle = "ReceptionOrganelle";
+                    export const Net = "ReceptionOrganelle";
                     export const TimeOrganelle = "TimeOrganelle";
                     export const WebOrganelle = "WebOrganelle";
-                    export const DbOrganelle = "DbOrganelle";
-                    export const NucleusOrganelle = "NucleusOrganelle";
+                    export const Db = "DbOrganelle";
+                    export const Nucleus = "NucleusOrganelle";
                 }
                 export namespace impacts {
                     export const TimeChanged = "TimeChanged";
@@ -75,20 +76,20 @@ export module euglena_template {
             }
             export namespace organelles {
                 import Organelle = euglena.being.alive.Organelle;
-                export abstract class NucleusOrganelle extends Organelle<{}>{
-                    constructor(className:string){super(alive.constants.organelles.NucleusOrganelle,className)}
+                export abstract class Nucleus extends Organelle<{applicationDir:string}>{
+                    constructor(className:string){super(alive.constants.organelles.Nucleus,className)}
                 }
                 export abstract class TimeOrganelle extends Organelle<{}> {
                     constructor(className:string) { super(alive.constants.organelles.TimeOrganelle,className);}
                 }
                 export abstract class ReceptionOrganelle extends Organelle<{port:string,euglenaInfo:euglena.being.alive.EuglenaInfo}> {
-                    constructor(className:string) { super(constants.organelles.ReceptionOrganelle,className); }
+                    constructor(className:string) { super(constants.organelles.Net,className); }
                 }
                 export abstract class WebOrganelle extends Organelle<{port:string}>{
                     constructor(className:string) { super(constants.organelles.WebOrganelle,className); }
                 }
                 export abstract class DbOrganelle extends Organelle<{url:string,port:number}>{
-                    constructor(className:string) { super(constants.organelles.DbOrganelle,className); }
+                    constructor(className:string) { super(constants.organelles.Db,className); }
                 }
             }
             export namespace particles {
@@ -124,7 +125,7 @@ export module euglena_template {
                     constructor(content:Particle,of:string) { super(constants.impacts.SaveParticle, content,of); }
                 }
                 export class ReadParticle extends Particle {
-                    constructor(content:euglena.being.alive.dna.condition.ParticleReference,of:string){ super(constants.impacts.ReadParticle,content,of); }
+                    constructor(content:euglena.being.alive.dna.ParticleReference,of:string){ super(constants.impacts.ReadParticle,content,of); }
                 }
                 export class ReadParticles extends Particle {
                     constructor(particleName:string,of:string){ super(constants.impacts.ReadParticles,particleName,of); }
@@ -148,15 +149,45 @@ export module euglena_template {
                 }
             }
             export class StaticTools{
-                public static instantiateEuglena(applicationDirectory: string, chromosome: any[],euglenaName:string): Euglena {
-                    let euglena = euglena.being.alive.Euglena.generateInstance(chromosome, injection.StaticTools.readFileParticles(applicationDirectory));
-                    euglena.receiveParticle(new euglena_template.being.alive.particles.EuglenaHasBeenDivided(euglena.getParticle(new euglena.being.alive.dna.condition.ParticleReference(euglena_template.being.alive.constants.particles.EuglenaName,euglenaName)).content));
-                    return euglena;
+                public static instantiateEuglena(applicationDirectory: string,euglenaName:string): Body {
+                    let receive = (particle:Particle,response?:interaction.Response)=>{
+                        //TODO
+                    }
+                    let body = euglena.being.alive.Body.generateInstance(injection.StaticTools.readFileParticles(applicationDirectory),receive);
+                    
+                    let files = fs.readdirSync(path.join(applicationDirectory, "./organelles"));
+                    let organelleList: Array<string> = body.getParticle(new ParticleReference(constants.particles.OrganelleList, euglenaName)).content;
+                    for (let file of files) {
+                        let organelle = <euglena.being.alive.Organelle<{}>>new (require(path.join(applicationDirectory, "./organelles/", file))).Organelle();
+                        if (organelleList.indexOf(organelle.name) < 0) continue;
+                        switch (organelle.name) {
+                            case euglena_template.being.alive.constants.organelles.WebOrganelle:
+                                organelle.initialProperties = body.getParticle(new ParticleReference(euglena_template.being.alive.constants.particles.WebOrganelleInitialProperties, euglenaName)).content;
+                                break;
+                            case euglena_template.being.alive.constants.organelles.Net:
+                                organelle.initialProperties = body.getParticle(new ParticleReference(euglena_template.being.alive.constants.particles.ReceptionOrganelleInitialProperties, euglenaName)).content;
+                            default:
+                                break;
+                        }
+                        body.setOrganelle(organelle);
+                    }
+                    
+                    body.transmit(
+                        constants.organelles.Nucleus,
+                        new euglena_template.being.alive.particles.EuglenaHasBeenDivided(
+                            body.getParticle(
+                                new euglena.being.alive.dna.ParticleReference(
+                                    euglena_template.being.alive.constants.particles.EuglenaName,
+                                    euglenaName)
+                            ).content
+                        )
+                    );
+                    return body;
                 }
             }
         }
         export namespace ghost {
-            export namespace euglena {
+            export namespace organelle {
                 export namespace impactthrower {
                     export namespace incomingparticles {
                         export interface ThrowImpactContent {

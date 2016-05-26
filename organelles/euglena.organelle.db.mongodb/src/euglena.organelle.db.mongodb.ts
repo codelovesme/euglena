@@ -18,15 +18,15 @@ export class Organelle extends euglena_template.being.alive.organelles.DbOrganel
         this.euglenaInfos.add("idcore", new euglena.being.alive.EuglenaInfo("idcore", "localhost", "1337"));
         this.euglenaInfos.add("postman", new euglena.being.alive.EuglenaInfo("idcore", "localhost", "1337"));
     }
-    public receiveParticle(particle: Particle): void {
+    public receive(particle: Particle,response:euglena.being.interaction.Response): void {
         switch (particle.name) {
-            case euglena_template.being.ghost.euglena.db.constants.StartDatabase:
+            case euglena_template.being.ghost.organelle.db.constants.StartDatabase:
                 let this3_: Organelle = this;
-                let startDatabase = particle as euglena_template.being.ghost.euglena.db.incomingparticles.StartDatabase;
+                let startDatabase = particle as euglena_template.being.ghost.organelle.db.incomingparticles.StartDatabase;
                 mongodb.MongoClient.connect("mongodb://" + this.initialProperties.url + ":" + this.initialProperties.port + "/" + startDatabase.content.euglenaName, (err, db) => {
                     if (!err) {
                         this.db = db;
-                        this3_.nucleus.receiveParticle(new euglena_template.being.ghost.euglena.db.outgoingparticles.DbIsOnline(particle.of));
+                        this3_.send(new euglena_template.being.ghost.organelle.db.outgoingparticles.DbIsOnline(particle.of));
                     } else {
                         //TODO
                     }
@@ -35,14 +35,14 @@ export class Organelle extends euglena_template.being.alive.organelles.DbOrganel
             case euglena_template.being.alive.constants.impacts.ReadParticle:
                 let this_ = this;
                 this.db.collection(particle.content.name).find({ of: particle.content.of }).toArray((err, doc) => {
-                    this_.nucleus.receiveParticle(doc[0]);
+                    this_.send(doc[0]);
                 });
                 break;
             case euglena_template.being.alive.constants.impacts.ReadParticles:
                 let this4_ = this;
                 this.db.collection(particle.content).find({}).toArray((err, doc) => {
                     for (var index = 0; index < doc.length; index++) {
-                        this4_.nucleus.receiveParticle(doc[index]);
+                        this4_.send(doc[index]);
                     }
                 });
                 break;
@@ -58,7 +58,7 @@ export class Organelle extends euglena_template.being.alive.organelles.DbOrganel
                     if (err) {
                         //TODO
                     } else {
-                        this2_.nucleus.receiveParticle(new euglena_template.being.alive.particles.Acknowledge({ of: saveParticle.of, id: saveParticle.content.name }, euglena_template.being.alive.constants.organelles.DbOrganelle));
+                        this2_.send(new euglena_template.being.alive.particles.Acknowledge({ of: saveParticle.of, id: saveParticle.content.name }, euglena_template.being.alive.constants.organelles.Db));
                     }
                 });
                 break;
