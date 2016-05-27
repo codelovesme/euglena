@@ -325,7 +325,7 @@ export module euglena {
                         }
                     }
                 export interface Reaction {
-                    (particle: Particle, body: Body,response:interaction.Response): void;
+                    (particle: Particle, body: Body): void;
                 }
             }
             export namespace constants {

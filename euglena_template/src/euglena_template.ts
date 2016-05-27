@@ -93,7 +93,7 @@ export module euglena_template {
                 }
             }
             export namespace particles {
-                export class OrganelleList extends Particle{
+                export class OrganelleList extends Particle {
                     constructor(content:Array<string>,of:string){super(constants.particles.OrganelleList,content,of);}
                 }
                 export class Token extends Particle {
