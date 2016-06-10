@@ -105,7 +105,7 @@ export module euglena {
                         throw "KeyAlreadyExistException";
                     }
                 }
-                public keyExists(key:K):boolean{
+                public keyExists(key: K): boolean {
                     return this.indexOf(key) >= 0;
                 }
                 public set(key: K, value: V): void {
@@ -122,7 +122,7 @@ export module euglena {
                     this.keys.slice(index, 1);
                     this.values.slice(index, 1);
                 }
-                public indexOf(key:K):number{
+                public indexOf(key: K): number {
                     let index = -1;
                     if (this.condition) {
                         this.keys.forEach((k: K) => {
@@ -187,7 +187,7 @@ export module euglena {
                     }
                 }
                 export class Time {
-                    public static biggerThan(time1:sys.type.Time, time2:sys.type.Time):boolean {
+                    public static biggerThan(time1: sys.type.Time, time2: sys.type.Time): boolean {
                         return Date.biggerThan(time1.date, time2.date) ? true :
                             Date.biggerThan(time1.date, time2.date) ? false :
                                 Clock.biggerThan(time1.clock, time2.clock);
@@ -200,30 +200,30 @@ export module euglena {
                         return new sys.type.Time(new sys.type.Date(newDate.getUTCFullYear(), newDate.getUTCMonth() + 1, newDate.getUTCDate()),
                             new sys.type.Clock(newDate.getUTCHours(), newDate.getUTCMinutes(), newDate.getUTCSeconds()));
                     }
-                    public static addMiliseconds(time:sys.type.Time,miliseconds:number):sys.type.Time {
+                    public static addMiliseconds(time: sys.type.Time, miliseconds: number): sys.type.Time {
                         return Time.fromJavascriptDate(new JavascriptDate(
-                            Time.toJavascriptDate(time).getTime()+miliseconds));
+                            Time.toJavascriptDate(time).getTime() + miliseconds));
                     }
-                    public static DayToMiliseconds(minute:number): number {
+                    public static DayToMiliseconds(minute: number): number {
                         return minute * 86400000;
                     }
-                    public static HourToMiliseconds(minute:number): number {
+                    public static HourToMiliseconds(minute: number): number {
                         return minute * 3600000;
                     }
-                    public static MinuteToMiliseconds(minute:number): number {
+                    public static MinuteToMiliseconds(minute: number): number {
                         return minute * 60000;
                     }
-                    public static SecondToMiliseconds(minute:number): number {
+                    public static SecondToMiliseconds(minute: number): number {
                         return minute * 1000;
                     }
-                    public static fromJavascriptDate(date:any):sys.type.Time{
+                    public static fromJavascriptDate(date: any): sys.type.Time {
                         return new sys.type.Time(new sys.type.Date(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()),
                             new sys.type.Clock(date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()));
                     }
-                    public static toJavascriptDate(time:sys.type.Time): any{
+                    public static toJavascriptDate(time: sys.type.Time): any {
                         let date = new JavascriptDate();
                         date.setUTCFullYear(time.date.year);
-                        date.setUTCMonth(time.date.month-1);
+                        date.setUTCMonth(time.date.month - 1);
                         date.setUTCDate(time.date.day);
                         date.setUTCHours(time.clock.hour);
                         date.setUTCMinutes(time.clock.minute);
@@ -237,7 +237,7 @@ export module euglena {
                             date1.month == date2.month &&
                             date1.day == date2.day;
                     }
-                    public static biggerThan(date1:sys.type.Date,date2:sys.type.Date):boolean { 
+                    public static biggerThan(date1: sys.type.Date, date2: sys.type.Date): boolean {
                         return date1.year > date2.year ? true : date1.year < date2.year ? false :
                             date1.month > date2.month ? true : date1.month < date2.month ? false :
                                 date1.day > date2.day;
@@ -249,15 +249,40 @@ export module euglena {
                             clock1.minute == clock2.minute &&
                             clock1.second == clock2.second;
                     }
-                    public static biggerThan(clock1:sys.type.Clock,clock2:sys.type.Clock):boolean{
+                    public static biggerThan(clock1: sys.type.Clock, clock2: sys.type.Clock): boolean {
                         return clock1.hour > clock2.hour ? true : clock1.hour < clock2.hour ? false :
                             clock1.minute > clock2.minute ? true : clock1.minute < clock2.minute ? false :
                                 clock1.second > clock2.second;
                     }
                 }
                 export class Array {
+                    public static combine<T>(array1:T[],array2:T[]):T[]{
+                        let a = array1.concat(array2);
+                        for(var i=0; i<a.length; ++i) {
+                            for(var j=i+1; j<a.length; ++j) {
+                                if(a[i] === a[j])
+                                    a.splice(j--, 1);
+                            }
+                        }
+                        return a;
+                    }
+                    public static equals<T>(array1: T[], array2: T[], compare?: (t1: T, t2: T) => boolean): boolean {
+                        if(!array1 && !array2) return true;
+                        if(!array1 || !array2) return false;
+                        if (array1.length !== array2.length) return false;
+                        for (let i = 0; i < array1.length; i++) {
+                            if (array1[i] !== array2[i]) return false;
+                        }
+                        return true;
+                    }
                     public static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean {
                         return Array.indexOf(array, t, compare) >= 0;
+                    }
+                    public static containsArray<T>(master: T[], slave: T[], compare?: (t1: T, t2: T) => boolean): boolean { 
+                        for (let s of slave) {
+                            if (!Array.contains(master, s, compare)) return false;
+                        }
+                        return true;
                     }
                     public static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number {
                         if (compare) {
@@ -283,128 +308,88 @@ export module euglena {
         import Classifiable = euglena.sys.type.Classifiable;
         import Named = euglena.sys.type.Named;
         export class Particle {
-            constructor(public name: string, public content: any,public of:string) { }
+            constructor(
+                public name: string,
+                public content: any,
+                public of: string,
+                public primaryKeys?: Array<string>) { }
         }
         export namespace interaction {
-            import EuglenaInfo = euglena.being.alive.EuglenaInfo;
             export interface CanReceiveParticle {
                 receive: Receive;
             }
-            export interface Receive{
-                (particle: Particle,response?:interaction.Response): void;
+            export interface Receive {
+                (particle: Particle, response: interaction.Response): void;
             }
             export class Impact {
-                constructor(public particle: Particle,public token:string){}
+                constructor(public particle: Particle, public token: string) { }
             }
-            export namespace constants{
+            export namespace constants {
                 export const ReceivedParticleReference = "ReceivedParticleReference";
             }
-            export interface Response{
-                (particle:Particle):void;
+            export interface Response {
+                (particle: Particle): void;
             }
         }
         export namespace alive {
             import Classifiable = euglena.sys.type.Classifiable;
             import Particle = euglena.being.Particle;
-            import Gene = euglena.being.alive.dna.Gene;
             import Impact = euglena.being.interaction.Impact;
             export namespace dna {
-                import Time = euglena.sys.type.Time;
-                import Classifiable = euglena.sys.type.Classifiable;
-                import CanReceiveParticle = euglena.being.interaction.CanReceiveParticle;
-                export class Gene implements Named {
-                    constructor(
-                        public name: string,
-                        public triggers: string[],
-                        public reaction: Reaction,
-                        public expiretime?:Time) { }
-                }
                 export class ParticleReference extends Particle {
-                        constructor(name: string,of:string) {
-                            super(name, null,of);
+                    constructor(name: string, of: string,primaryKeys?:string[],content?:any) {
+                        super(name, content, of,primaryKeys);
+                    }
+                }
+                export class StaticTools {
+                    public static ParticleReference = {
+                        equals: (ref1: ParticleReference, ref2: ParticleReference) => {
+                            return ref1.name === ref2.name &&
+                                ref1.of === ref2.of &&
+                                euglena.sys.type.StaticTools.Array.equals(ref1.primaryKeys, ref2.primaryKeys);
                         }
                     }
-                export interface Reaction {
-                    (particle: Particle, body: Body): void;
                 }
             }
             export namespace constants {
                 export const OutSide = "OutSide";
-                export const EuglenaInfo = "EuglenaInfo";
-                export namespace particles {
-                    export const EuglenaName = "EuglenaName";
-                }
             }
-            export abstract class Organelle<InitialProperties> implements Named,Classifiable, interaction.CanReceiveParticle {
+            export abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {
                 constructor(
                     public name: string,
-                    public className:string,
+                    public className: string,
                     public send?: interaction.Receive,
                     public initialProperties?: InitialProperties) { }
-                public abstract receive(particle: Particle,response:interaction.Response): void;
+                public abstract receive(particle: Particle, response: interaction.Response): void;
             }
-            export class EuglenaInfo implements Named {
-                constructor(public name: string, public url: string, public port: string) { }
-            }
-            export class GarbageCollector {
-                //private timeout = 3600000;
-                private timeout = 1000;
-                private chromosome:Gene[] = [];
-                constructor(chromosome:Gene[]){
-                    this.chromosome = chromosome;
-                }
-                public start():void{
-                    let chromosome = this.chromosome;
-                    setInterval(()=>{
-                        let toBeRemoved:string[] = [];  
-                        for(let a of chromosome){
-                            if(a.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(
-                                euglena.sys.type.StaticTools.Time.now(),
-                                a.expiretime
-                            )){
-                                toBeRemoved.push(a.name);
-                            }
-                        }
-                        for(let b of toBeRemoved){
-                            for (var index = 0; index < chromosome.length; index++) {
-                                var element = chromosome[index];
-                                if(element.name === b){
-                                    chromosome.splice(index,1);
-                                    break;
-                                }
-                            }
-                        }
-                    },this.timeout)
-                }
-            }
+
             export class Body {
                 public static instance: Body = null;
-                private garbageCollector:GarbageCollector = null;
                 private organelles: any;
-                constructor(private particles: Particle[], private receive:interaction.Receive) {
+                constructor(private particles: Particle[]) {
                     this.organelles = {};
                 }
-                public static generateInstance(particles: any,receive:interaction.Receive) {
+                public static generateInstance(particles: any) {
                     if (!Body.instance) {
-                        Body.instance = new Body(particles,receive);
+                        Body.instance = new Body(particles);
                     }
                     return Body.instance;
                 }
                 public transmit(organelleName: string, particle: Particle, response?: interaction.Response) {
-                    console.log("received Particle: " + particle.name+" sent to: "+organelleName);
-                    let organelle:Organelle<any> = Body.instance.organelles[organelleName] as Organelle<any>;
-                    organelle.receive(particle,(resp:Particle)=>{
-                        console.log("Response :"+resp.name +" from: "+organelleName+ " for: "+particle.name);
-                        response ? response(resp):false;
+                    console.log("received Particle: " + particle.name + " sent to: " + organelleName);
+                    let organelle: Organelle<any> = Body.instance.organelles[organelleName] as Organelle<any>;
+                    organelle.receive(particle, (resp: Particle) => {
+                        console.log("Response :" + resp.name + " from: " + organelleName + " for: " + particle.name);
+                        response ? response(resp) : false;
                     });
                 }
                 public getParticle(particleReference: dna.ParticleReference): being.Particle {
                     let index = Body.instance.indexOfParticle(particleReference);
-                    return index >=0 ? Body.instance.particles[index] : null;
+                    return index >= 0 ? Body.instance.particles[index] : null;
                 }
-                private indexOfParticle(particleReference: dna.ParticleReference):number{
-                    for(let i=0;i<Body.instance.particles.length;i++){
-                        if(Body.instance.particles[i].name === particleReference.name && Body.instance.particles[i].of === particleReference.of){
+                private indexOfParticle(particleReference: dna.ParticleReference): number {
+                    for (let i = 0; i < Body.instance.particles.length; i++) {
+                        if (dna.StaticTools.ParticleReference.equals(Body.instance.particles[i],particleReference)) {
                             return i;
                         }
                     }
@@ -412,17 +397,16 @@ export module euglena {
                 }
                 public saveParticle(particle: being.Particle) {
                     let index = Body.instance.indexOfParticle(particle);
-                    if(index >= 0){
+                    if (index >= 0) {
                         Body.instance.particles[index] = particle;
-                    }else{
+                    } else {
                         Body.instance.particles.push(particle);
                     }
                 }
                 public getOrganelle(organelleName: string): being.alive.Organelle<any> {
                     return Body.instance.organelles[organelleName];
                 }
-                public setOrganelle(organelle:euglena.being.alive.Organelle<{}>):void{
-                    organelle.send = this.receive;
+                public setOrganelle(organelle: euglena.being.alive.Organelle<{}>): void {
                     Body.instance.organelles[organelle.name] = organelle;
                 }
             }

@@ -24,9 +24,9 @@
 	"args": [
 		//"organelles/euglena.organelle.net.nodejs/src/euglena.organelle.net.nodejs.ts",
 		//"organelles/euglena.organelle.nucleus.js/src/euglena.organelle.nucleus.js.ts",
-		//"organelles/euglena.organelle.db.mongodb/src/euglena.organelle.db.mongodb.ts",
-		//"organelles/euglena.organelle.net.nodejs/src/euglena.organelle.net.nodejs.ts",
-		"organelles/euglena.organelle.nucleus.js/src/euglena.organelle.nucleus.js.ts",
+		"organelles/euglena.organelle.db.mongodb/src/euglena.organelle.db.mongodb.ts",
+		//"organelles/euglena.organelle.web.expressjs/src/euglena.organelle.web.expressjs.ts",
+		//"organelles/euglena.organelle.nucleus.js/src/euglena.organelle.nucleus.js.ts",
 		//"organelles/euglena.organelle.time.js/src/euglena.organelle.time.js.ts",
 		//"organelles/euglena.organelle.web.expressjs/src/euglena.organelle.web.expressjs.ts",
 		"-module","commonjs","--sourceMap","-target","es6"],

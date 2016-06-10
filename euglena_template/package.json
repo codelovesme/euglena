@@ -10,7 +10,6 @@
   },
   "typings": "./typings/euglena/euglena.d.ts",
   "dependencies": {
-    "jsonminify": "^0.2.3",
     "socket.io": "^1.3.5",
     "socket.io-client": "^1.3.5"
   }

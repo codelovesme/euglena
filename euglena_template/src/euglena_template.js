@@ -1,40 +1,35 @@
 /// <reference path="../../euglena/typings/node/node.d.ts" />
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 /**
  * Created by codelovesme on 6/19/2015.
  */
 var euglena_1 = require("../node_modules/euglena/euglena/src/euglena");
-var path = require("path");
-var fs = require("fs");
-var jsonminify = require("jsonminify");
-var ParticleReference = euglena_1.euglena.being.alive.dna.ParticleReference;
 var euglena_template;
 (function (euglena_template) {
-    var injection;
-    (function (injection) {
-        class StaticTools {
-            static readFileParticles(applicationDirectory) {
-                let particles = fs.readFileSync(path.join(path.resolve(applicationDirectory), "particles.json"), "utf8");
-                return JSON.parse(jsonminify(particles));
-            }
-        }
-        injection.StaticTools = StaticTools;
-    })(injection = euglena_template.injection || (euglena_template.injection = {}));
     var being;
     (function (being) {
         var particles;
         (function (particles) {
-            class BooleanParticle extends euglena_1.euglena.being.Particle {
-                constructor(name, content, of) {
-                    super(name, content, of);
+            var BooleanParticle = (function (_super) {
+                __extends(BooleanParticle, _super);
+                function BooleanParticle(name, content, of) {
+                    _super.call(this, name, content, of);
                 }
-            }
+                return BooleanParticle;
+            })(euglena_1.euglena.being.Particle);
             particles.BooleanParticle = BooleanParticle;
-            class VoidParticle extends euglena_1.euglena.being.Particle {
-                constructor(name, of) {
-                    super(name, null, of);
+            var VoidParticle = (function (_super) {
+                __extends(VoidParticle, _super);
+                function VoidParticle(name, of) {
+                    _super.call(this, name, null, of);
                 }
-            }
+                return VoidParticle;
+            })(euglena_1.euglena.being.Particle);
             particles.VoidParticle = VoidParticle;
         })(particles = being.particles || (being.particles = {}));
         var alive;
@@ -44,9 +39,12 @@ var euglena_template;
             (function (constants) {
                 var particles;
                 (function (particles) {
+                    particles.ParticlesOf = "ParticlesOf";
+                    particles.EuglenaInfo = "EuglenaInfo";
                     particles.OrganelleList = "OrganelleList";
                     particles.DbOrganelleInitialProperties = "DbOrganelleInitialProperties";
                     particles.WebOrganelleInitialProperties = "WebOrganelleInitialProperties";
+                    particles.NucleusOrganelleInitialProperties = "NucleusOrganelleInitialProperties";
                     particles.ReceptionOrganelleInitialProperties = "ReceptionOrganelleInitialProperties";
                     particles.EuglenaName = "EuglenaName";
                     particles.ImpactReceived = "ImpactReceived";
@@ -60,6 +58,7 @@ var euglena_template;
                     particles.Impacts = "Impacts";
                     particles.DoesParticleExist = "DoesParticleExist";
                     particles.DoesUniqueParticleExist = "DoesUniqueParticleExist";
+                    particles.Gene = "Gene";
                 })(particles = constants.particles || (constants.particles = {}));
                 var organelles;
                 (function (organelles) {
@@ -71,164 +70,201 @@ var euglena_template;
                 })(organelles = constants.organelles || (constants.organelles = {}));
                 var impacts;
                 (function (impacts) {
+                    impacts.AddGene = "AddGene";
                     impacts.TimeChanged = "TimeChanged";
                     impacts.ExceptionOccurred = "ExceptionOccurred";
                     impacts.SaveParticle = "SaveParticle";
                     impacts.ReadParticle = "ReadParticle";
                     impacts.ReadParticles = "ReadParticles";
+                    impacts.ReadParticlesOf = "ReadParticlesOf";
                     impacts.RemoveParticle = "RemoveParticle";
                 })(impacts = constants.impacts || (constants.impacts = {}));
             })(constants = alive.constants || (alive.constants = {}));
             var organelles;
             (function (organelles) {
                 var Organelle = euglena_1.euglena.being.alive.Organelle;
-                class Nucleus extends Organelle {
-                    constructor(className) {
-                        super(alive.constants.organelles.Nucleus, className);
+                var Nucleus = (function (_super) {
+                    __extends(Nucleus, _super);
+                    function Nucleus(className) {
+                        _super.call(this, alive.constants.organelles.Nucleus, className);
                     }
-                }
+                    return Nucleus;
+                })(Organelle);
                 organelles.Nucleus = Nucleus;
-                class TimeOrganelle extends Organelle {
-                    constructor(className) {
-                        super(alive.constants.organelles.TimeOrganelle, className);
+                var TimeOrganelle = (function (_super) {
+                    __extends(TimeOrganelle, _super);
+                    function TimeOrganelle(className) {
+                        _super.call(this, alive.constants.organelles.TimeOrganelle, className);
                     }
-                }
+                    return TimeOrganelle;
+                })(Organelle);
                 organelles.TimeOrganelle = TimeOrganelle;
-                class ReceptionOrganelle extends Organelle {
-                    constructor(className) {
-                        super(constants.organelles.Net, className);
+                var ReceptionOrganelle = (function (_super) {
+                    __extends(ReceptionOrganelle, _super);
+                    function ReceptionOrganelle(className) {
+                        _super.call(this, constants.organelles.Net, className);
                     }
-                }
+                    return ReceptionOrganelle;
+                })(Organelle);
                 organelles.ReceptionOrganelle = ReceptionOrganelle;
-                class WebOrganelle extends Organelle {
-                    constructor(className) {
-                        super(constants.organelles.WebOrganelle, className);
+                var WebOrganelle = (function (_super) {
+                    __extends(WebOrganelle, _super);
+                    function WebOrganelle(className) {
+                        _super.call(this, constants.organelles.WebOrganelle, className);
                     }
-                }
+                    return WebOrganelle;
+                })(Organelle);
                 organelles.WebOrganelle = WebOrganelle;
-                class DbOrganelle extends Organelle {
-                    constructor(className) {
-                        super(constants.organelles.Db, className);
+                var DbOrganelle = (function (_super) {
+                    __extends(DbOrganelle, _super);
+                    function DbOrganelle(className) {
+                        _super.call(this, constants.organelles.Db, className);
                     }
-                }
+                    return DbOrganelle;
+                })(Organelle);
                 organelles.DbOrganelle = DbOrganelle;
             })(organelles = alive.organelles || (alive.organelles = {}));
             var particles;
-            (function (particles) {
-                class OrganelleList extends Particle {
-                    constructor(content, of) {
-                        super(constants.particles.OrganelleList, content, of);
+            (function (particles_1) {
+                var EuglenaInfo = (function () {
+                    function EuglenaInfo(name, url, port) {
+                        this.name = name;
+                        this.url = url;
+                        this.port = port;
                     }
-                }
-                particles.OrganelleList = OrganelleList;
-                class Token extends Particle {
-                    constructor(content, of) {
-                        super(constants.particles.Token, content, of);
+                    return EuglenaInfo;
+                })();
+                particles_1.EuglenaInfo = EuglenaInfo;
+                var OrganelleList = (function (_super) {
+                    __extends(OrganelleList, _super);
+                    function OrganelleList(content, of) {
+                        _super.call(this, constants.particles.OrganelleList, content, of);
                     }
-                }
-                particles.Token = Token;
-                class Exception extends euglena_1.euglena.being.Particle {
-                    constructor(content, of) {
-                        super(constants.particles.Exception, content, of);
+                    return OrganelleList;
+                })(Particle);
+                particles_1.OrganelleList = OrganelleList;
+                var Token = (function (_super) {
+                    __extends(Token, _super);
+                    function Token(content, of) {
+                        _super.call(this, constants.particles.Token, content, of);
                     }
-                }
-                particles.Exception = Exception;
-                class Time extends euglena_1.euglena.being.Particle {
-                    constructor(content, of) {
-                        super(constants.particles.Time, content, of);
+                    return Token;
+                })(Particle);
+                particles_1.Token = Token;
+                var Exception = (function (_super) {
+                    __extends(Exception, _super);
+                    function Exception(content, of) {
+                        _super.call(this, constants.particles.Exception, content, of);
                     }
-                }
-                particles.Time = Time;
-                class Acknowledge extends being.particles.VoidParticle {
-                    constructor(content, of) {
-                        super(constants.particles.Acknowledge, of);
+                    return Exception;
+                })(euglena_1.euglena.being.Particle);
+                particles_1.Exception = Exception;
+                var Time = (function (_super) {
+                    __extends(Time, _super);
+                    function Time(content, of) {
+                        _super.call(this, constants.particles.Time, content, of);
                     }
-                }
-                particles.Acknowledge = Acknowledge;
-                class ConnectedToTheInternet extends being.particles.BooleanParticle {
-                    constructor(content, of) {
-                        super(constants.particles.ConnectedToTheInternet, content, of);
+                    return Time;
+                })(euglena_1.euglena.being.Particle);
+                particles_1.Time = Time;
+                var Acknowledge = (function (_super) {
+                    __extends(Acknowledge, _super);
+                    function Acknowledge(content, of) {
+                        _super.call(this, constants.particles.Acknowledge, of);
                     }
-                }
-                particles.ConnectedToTheInternet = ConnectedToTheInternet;
-                class EuglenaHasBeenBorn extends being.particles.BooleanParticle {
-                    constructor(of) {
-                        super(constants.particles.EuglenaHasBeenBorn, true, of);
+                    return Acknowledge;
+                })(being.particles.VoidParticle);
+                particles_1.Acknowledge = Acknowledge;
+                var ConnectedToTheInternet = (function (_super) {
+                    __extends(ConnectedToTheInternet, _super);
+                    function ConnectedToTheInternet(content, of) {
+                        _super.call(this, constants.particles.ConnectedToTheInternet, content, of);
                     }
-                }
-                particles.EuglenaHasBeenBorn = EuglenaHasBeenBorn;
-                class EuglenaHasBeenDivided extends being.particles.BooleanParticle {
-                    constructor(of) {
-                        super(constants.particles.EuglenaHasBeenDivided, true, of);
+                    return ConnectedToTheInternet;
+                })(being.particles.BooleanParticle);
+                particles_1.ConnectedToTheInternet = ConnectedToTheInternet;
+                var EuglenaHasBeenBorn = (function (_super) {
+                    __extends(EuglenaHasBeenBorn, _super);
+                    function EuglenaHasBeenBorn(of) {
+                        _super.call(this, constants.particles.EuglenaHasBeenBorn, true, of);
                     }
-                }
-                particles.EuglenaHasBeenDivided = EuglenaHasBeenDivided;
-                class SaveParticle extends Particle {
-                    constructor(content, of) {
-                        super(constants.impacts.SaveParticle, content, of);
+                    return EuglenaHasBeenBorn;
+                })(being.particles.BooleanParticle);
+                particles_1.EuglenaHasBeenBorn = EuglenaHasBeenBorn;
+                var EuglenaHasBeenDivided = (function (_super) {
+                    __extends(EuglenaHasBeenDivided, _super);
+                    function EuglenaHasBeenDivided(of) {
+                        _super.call(this, constants.particles.EuglenaHasBeenDivided, true, of);
                     }
-                }
-                particles.SaveParticle = SaveParticle;
-                class ReadParticle extends Particle {
-                    constructor(content, of) {
-                        super(constants.impacts.ReadParticle, content, of);
+                    return EuglenaHasBeenDivided;
+                })(being.particles.BooleanParticle);
+                particles_1.EuglenaHasBeenDivided = EuglenaHasBeenDivided;
+                var SaveParticle = (function (_super) {
+                    __extends(SaveParticle, _super);
+                    function SaveParticle(content, of) {
+                        _super.call(this, constants.impacts.SaveParticle, content, of);
                     }
-                }
-                particles.ReadParticle = ReadParticle;
-                class ReadParticles extends Particle {
-                    constructor(particleName, of) {
-                        super(constants.impacts.ReadParticles, particleName, of);
+                    return SaveParticle;
+                })(Particle);
+                particles_1.SaveParticle = SaveParticle;
+                var ReadParticle = (function (_super) {
+                    __extends(ReadParticle, _super);
+                    function ReadParticle(content, of) {
+                        _super.call(this, constants.impacts.ReadParticle, content, of);
                     }
-                }
-                particles.ReadParticles = ReadParticles;
-                class RemoveParticle extends Particle {
-                    constructor(content, of) {
-                        super(constants.impacts.RemoveParticle, content, of);
+                    return ReadParticle;
+                })(Particle);
+                particles_1.ReadParticle = ReadParticle;
+                var ReadParticles = (function (_super) {
+                    __extends(ReadParticles, _super);
+                    function ReadParticles(particleName, of) {
+                        _super.call(this, constants.impacts.ReadParticles, particleName, of);
                     }
-                }
-                particles.RemoveParticle = RemoveParticle;
-                class DoesParticleExist extends Particle {
-                    constructor(content, of) {
-                        super(alive.constants.particles.DoesParticleExist, content, of);
+                    return ReadParticles;
+                })(Particle);
+                particles_1.ReadParticles = ReadParticles;
+                var ReadParticlesOf = (function (_super) {
+                    __extends(ReadParticlesOf, _super);
+                    function ReadParticlesOf(whose, of) {
+                        _super.call(this, constants.impacts.ReadParticlesOf, whose, of);
                     }
-                }
-                particles.DoesParticleExist = DoesParticleExist;
-                class ImpactReceived extends euglena_1.euglena.being.Particle {
-                    constructor(content, of) {
-                        super(constants.particles.ImpactReceived, content, of);
+                    return ReadParticlesOf;
+                })(Particle);
+                particles_1.ReadParticlesOf = ReadParticlesOf;
+                var ParticlesOf = (function (_super) {
+                    __extends(ParticlesOf, _super);
+                    function ParticlesOf(particles, of) {
+                        _super.call(this, constants.particles.ParticlesOf, particles, of);
+                    }
+                    return ParticlesOf;
+                })(Particle);
+                particles_1.ParticlesOf = ParticlesOf;
+                var RemoveParticle = (function (_super) {
+                    __extends(RemoveParticle, _super);
+                    function RemoveParticle(content, of) {
+                        _super.call(this, constants.impacts.RemoveParticle, content, of);
+                    }
+                    return RemoveParticle;
+                })(Particle);
+                particles_1.RemoveParticle = RemoveParticle;
+                var DoesParticleExist = (function (_super) {
+                    __extends(DoesParticleExist, _super);
+                    function DoesParticleExist(content, of) {
+                        _super.call(this, alive.constants.particles.DoesParticleExist, content, of);
+                    }
+                    return DoesParticleExist;
+                })(Particle);
+                particles_1.DoesParticleExist = DoesParticleExist;
+                var ImpactReceived = (function (_super) {
+                    __extends(ImpactReceived, _super);
+                    function ImpactReceived(content, of) {
+                        _super.call(this, constants.particles.ImpactReceived, content, of);
                         this.content = content;
                     }
-                }
-                particles.ImpactReceived = ImpactReceived;
+                    return ImpactReceived;
+                })(euglena_1.euglena.being.Particle);
+                particles_1.ImpactReceived = ImpactReceived;
             })(particles = alive.particles || (alive.particles = {}));
-            class StaticTools {
-                static instantiateEuglena(applicationDirectory, euglenaName) {
-                    let receive = (particle, response) => {
-                        //TODO
-                    };
-                    let body = euglena_1.euglena.being.alive.Body.generateInstance(injection.StaticTools.readFileParticles(applicationDirectory), receive);
-                    let files = fs.readdirSync(path.join(applicationDirectory, "./organelles"));
-                    let organelleList = body.getParticle(new ParticleReference(constants.particles.OrganelleList, euglenaName)).content;
-                    for (let file of files) {
-                        let organelle = new (require(path.join(applicationDirectory, "./organelles/", file))).Organelle();
-                        if (organelleList.indexOf(organelle.name) < 0)
-                            continue;
-                        switch (organelle.name) {
-                            case euglena_template.being.alive.constants.organelles.WebOrganelle:
-                                organelle.initialProperties = body.getParticle(new ParticleReference(euglena_template.being.alive.constants.particles.WebOrganelleInitialProperties, euglenaName)).content;
-                                break;
-                            case euglena_template.being.alive.constants.organelles.Net:
-                                organelle.initialProperties = body.getParticle(new ParticleReference(euglena_template.being.alive.constants.particles.ReceptionOrganelleInitialProperties, euglenaName)).content;
-                            default:
-                                break;
-                        }
-                        body.setOrganelle(organelle);
-                    }
-                    body.transmit(constants.organelles.Nucleus, new euglena_template.being.alive.particles.EuglenaHasBeenDivided(body.getParticle(new euglena_1.euglena.being.alive.dna.ParticleReference(euglena_template.being.alive.constants.particles.EuglenaName, euglenaName)).content));
-                    return body;
-                }
-            }
-            alive.StaticTools = StaticTools;
         })(alive = being.alive || (being.alive = {}));
         var ghost;
         (function (ghost) {
@@ -238,11 +274,13 @@ var euglena_template;
                 (function (impactthrower) {
                     var incomingparticles;
                     (function (incomingparticles) {
-                        class ThrowImpact extends euglena_1.euglena.being.Particle {
-                            constructor(content, of) {
-                                super(constants.incomingparticles.ThrowImpact, content, of);
+                        var ThrowImpact = (function (_super) {
+                            __extends(ThrowImpact, _super);
+                            function ThrowImpact(content, of) {
+                                _super.call(this, constants.incomingparticles.ThrowImpact, content, of);
                             }
-                        }
+                            return ThrowImpact;
+                        })(euglena_1.euglena.being.Particle);
                         incomingparticles.ThrowImpact = ThrowImpact;
                     })(incomingparticles = impactthrower.incomingparticles || (impactthrower.incomingparticles = {}));
                     var constants;
@@ -257,38 +295,48 @@ var euglena_template;
                 (function (reception) {
                     var incomingparticles;
                     (function (incomingparticles) {
-                        class Listen extends being.particles.VoidParticle {
-                            constructor(of) {
-                                super(constants.incomingparticles.Listen, of);
+                        var Listen = (function (_super) {
+                            __extends(Listen, _super);
+                            function Listen(of) {
+                                _super.call(this, constants.incomingparticles.Listen, of);
                             }
-                        }
+                            return Listen;
+                        })(being.particles.VoidParticle);
                         incomingparticles.Listen = Listen;
-                        class ThrowImpact extends euglena_1.euglena.being.Particle {
-                            constructor(content, of) {
-                                super(constants.incomingparticles.ThrowImpact, content, of);
+                        var ThrowImpact = (function (_super) {
+                            __extends(ThrowImpact, _super);
+                            function ThrowImpact(content, of) {
+                                _super.call(this, constants.incomingparticles.ThrowImpact, content, of);
                             }
-                        }
+                            return ThrowImpact;
+                        })(euglena_1.euglena.being.Particle);
                         incomingparticles.ThrowImpact = ThrowImpact;
                     })(incomingparticles = reception.incomingparticles || (reception.incomingparticles = {}));
                     var outgoingparticles;
                     (function (outgoingparticles) {
-                        class ImpactReceived extends euglena_1.euglena.being.Particle {
-                            constructor(impact, of) {
-                                super(constants.outgoingparticles.ImpactReceived, impact, of);
+                        var ImpactReceived = (function (_super) {
+                            __extends(ImpactReceived, _super);
+                            function ImpactReceived(impact, of) {
+                                _super.call(this, constants.outgoingparticles.ImpactReceived, impact, of);
                             }
-                        }
+                            return ImpactReceived;
+                        })(euglena_1.euglena.being.Particle);
                         outgoingparticles.ImpactReceived = ImpactReceived;
-                        class ConnectedToEuglena extends euglena_1.euglena.being.Particle {
-                            constructor(euglenaInfo, of) {
-                                super(constants.outgoingparticles.ConnectedToEuglena, euglenaInfo, of);
+                        var ConnectedToEuglena = (function (_super) {
+                            __extends(ConnectedToEuglena, _super);
+                            function ConnectedToEuglena(euglenaInfo, of) {
+                                _super.call(this, constants.outgoingparticles.ConnectedToEuglena, euglenaInfo, of);
                             }
-                        }
+                            return ConnectedToEuglena;
+                        })(euglena_1.euglena.being.Particle);
                         outgoingparticles.ConnectedToEuglena = ConnectedToEuglena;
-                        class DisconnectedFromEuglena extends euglena_1.euglena.being.Particle {
-                            constructor(euglenaInfo, of) {
-                                super(constants.outgoingparticles.ConnectedToEuglena, euglenaInfo, of);
+                        var DisconnectedFromEuglena = (function (_super) {
+                            __extends(DisconnectedFromEuglena, _super);
+                            function DisconnectedFromEuglena(euglenaInfo, of) {
+                                _super.call(this, constants.outgoingparticles.ConnectedToEuglena, euglenaInfo, of);
                             }
-                        }
+                            return DisconnectedFromEuglena;
+                        })(euglena_1.euglena.being.Particle);
                         outgoingparticles.DisconnectedFromEuglena = DisconnectedFromEuglena;
                     })(outgoingparticles = reception.outgoingparticles || (reception.outgoingparticles = {}));
                     var constants;
@@ -310,17 +358,21 @@ var euglena_template;
                 (function (impacttransmitter) {
                     var incomingparticles;
                     (function (incomingparticles) {
-                        class ConnectToEuglena extends euglena_1.euglena.being.Particle {
-                            constructor(euglenaInfo, of) {
-                                super(constants.incomingparticles.ConnectToEuglena, euglenaInfo, of);
+                        var ConnectToEuglena = (function (_super) {
+                            __extends(ConnectToEuglena, _super);
+                            function ConnectToEuglena(euglenaInfo, of) {
+                                _super.call(this, constants.incomingparticles.ConnectToEuglena, euglenaInfo, of);
                             }
-                        }
+                            return ConnectToEuglena;
+                        })(euglena_1.euglena.being.Particle);
                         incomingparticles.ConnectToEuglena = ConnectToEuglena;
-                        class ThrowImpact extends euglena_1.euglena.being.Particle {
-                            constructor(content, of) {
-                                super(constants.incomingparticles.ThrowImpact, content, of);
+                        var ThrowImpact = (function (_super) {
+                            __extends(ThrowImpact, _super);
+                            function ThrowImpact(content, of) {
+                                _super.call(this, constants.incomingparticles.ThrowImpact, content, of);
                             }
-                        }
+                            return ThrowImpact;
+                        })(euglena_1.euglena.being.Particle);
                         incomingparticles.ThrowImpact = ThrowImpact;
                     })(incomingparticles = impacttransmitter.incomingparticles || (impacttransmitter.incomingparticles = {}));
                     var constants;
@@ -346,23 +398,29 @@ var euglena_template;
                     var incomingparticles;
                     (function (incomingparticles) {
                         var VoidParticle = euglena_template.being.particles.VoidParticle;
-                        class Serve extends VoidParticle {
-                            constructor(of) {
-                                super(constants.incomingparticles.Serve, of);
+                        var Serve = (function (_super) {
+                            __extends(Serve, _super);
+                            function Serve(of) {
+                                _super.call(this, constants.incomingparticles.Serve, of);
                             }
-                        }
+                            return Serve;
+                        })(VoidParticle);
                         incomingparticles.Serve = Serve;
-                        class ReturnCurrentTime extends VoidParticle {
-                            constructor(of) {
-                                super(constants.incomingparticles.ReturnCurrentTime, of);
+                        var ReturnCurrentTime = (function (_super) {
+                            __extends(ReturnCurrentTime, _super);
+                            function ReturnCurrentTime(of) {
+                                _super.call(this, constants.incomingparticles.ReturnCurrentTime, of);
                             }
-                        }
+                            return ReturnCurrentTime;
+                        })(VoidParticle);
                         incomingparticles.ReturnCurrentTime = ReturnCurrentTime;
-                        class ReturnIfConnectedToTheInternet extends VoidParticle {
-                            constructor(of) {
-                                super(constants.incomingparticles.ReturnIfConnectedToTheInternet, of);
+                        var ReturnIfConnectedToTheInternet = (function (_super) {
+                            __extends(ReturnIfConnectedToTheInternet, _super);
+                            function ReturnIfConnectedToTheInternet(of) {
+                                _super.call(this, constants.incomingparticles.ReturnIfConnectedToTheInternet, of);
                             }
-                        }
+                            return ReturnIfConnectedToTheInternet;
+                        })(VoidParticle);
                         incomingparticles.ReturnIfConnectedToTheInternet = ReturnIfConnectedToTheInternet;
                     })(incomingparticles = web.incomingparticles || (web.incomingparticles = {}));
                 })(web = organelle.web || (organelle.web = {}));
@@ -371,17 +429,21 @@ var euglena_template;
                     var Particle = euglena_1.euglena.being.Particle;
                     var incomingparticles;
                     (function (incomingparticles) {
-                        class SetTime extends Particle {
-                            constructor(time, of) {
-                                super(constants.incomingparticles.SetTime, time, of);
+                        var SetTime = (function (_super) {
+                            __extends(SetTime, _super);
+                            function SetTime(time, of) {
+                                _super.call(this, constants.incomingparticles.SetTime, time, of);
                             }
-                        }
+                            return SetTime;
+                        })(Particle);
                         incomingparticles.SetTime = SetTime;
-                        class StartClock extends being.particles.VoidParticle {
-                            constructor(of) {
-                                super(constants.incomingparticles.StartClock, of);
+                        var StartClock = (function (_super) {
+                            __extends(StartClock, _super);
+                            function StartClock(of) {
+                                _super.call(this, constants.incomingparticles.StartClock, of);
                             }
-                        }
+                            return StartClock;
+                        })(being.particles.VoidParticle);
                         incomingparticles.StartClock = StartClock;
                     })(incomingparticles = time_1.incomingparticles || (time_1.incomingparticles = {}));
                     var constants;
@@ -395,23 +457,26 @@ var euglena_template;
                 })(time = organelle.time || (organelle.time = {}));
                 var db;
                 (function (db) {
-                    var Particle = euglena_1.euglena.being.Particle;
                     var incomingparticles;
                     (function (incomingparticles) {
-                        class StartDatabase extends Particle {
-                            constructor(content, of) {
-                                super(constants.StartDatabase, content, of);
+                        var StartDatabase = (function (_super) {
+                            __extends(StartDatabase, _super);
+                            function StartDatabase(of) {
+                                _super.call(this, constants.StartDatabase, of);
                             }
-                        }
+                            return StartDatabase;
+                        })(being.particles.VoidParticle);
                         incomingparticles.StartDatabase = StartDatabase;
                     })(incomingparticles = db.incomingparticles || (db.incomingparticles = {}));
                     var outgoingparticles;
                     (function (outgoingparticles) {
-                        class DbIsOnline extends being.particles.VoidParticle {
-                            constructor(of) {
-                                super(constants.DbIsOnline, of);
+                        var DbIsOnline = (function (_super) {
+                            __extends(DbIsOnline, _super);
+                            function DbIsOnline(of) {
+                                _super.call(this, constants.DbIsOnline, of);
                             }
-                        }
+                            return DbIsOnline;
+                        })(being.particles.VoidParticle);
                         outgoingparticles.DbIsOnline = DbIsOnline;
                     })(outgoingparticles = db.outgoingparticles || (db.outgoingparticles = {}));
                     var constants;
@@ -423,19 +488,5 @@ var euglena_template;
             })(organelle = ghost.organelle || (ghost.organelle = {}));
         })(ghost = being.ghost || (being.ghost = {}));
     })(being = euglena_template.being || (euglena_template.being = {}));
-    var reference;
-    (function (reference) {
-        var being;
-        (function (being) {
-            being.Particle = new euglena_1.euglena.being.Particle("Reference Particle", true, "mine");
-            var interaction;
-            (function (interaction) {
-                interaction.Impact = {
-                    particle: being.Particle,
-                    token: "token"
-                };
-            })(interaction = being.interaction || (being.interaction = {}));
-        })(being = reference.being || (reference.being = {}));
-    })(reference = euglena_template.reference || (euglena_template.reference = {}));
 })(euglena_template = exports.euglena_template || (exports.euglena_template = {}));
 //# sourceMappingURL=euglena_template.js.map
