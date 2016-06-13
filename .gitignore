@@ -1,8 +1,8 @@
-*.js.map
-.idea/
-.ntvs_analysis.dat
-*.njsproj
+.git/
 node_modules/
+bin/
 obj/
-*.sln
-*.tmp
+.ntvs_analysis.dat
+*.js.map
+*.js
+
