@@ -23,6 +23,7 @@
 	// args is the HelloWorld program to compile.
 	"args": [
 		"src/euglena.ts",
+		"--declaration",
 		"-module","commonjs","--sourceMap","-target","es6"],
 
 	// use the standard tsc problem matcher to find compile problems
