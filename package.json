@@ -2,6 +2,7 @@
   "name": "euglena",
   "domain":"codeloves.me",
   "version": "0.0.1",
+  "main": "src/euglena.js",
   "private": false,
   "license":"GPL v2",
   "author": { 
