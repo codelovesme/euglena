@@ -412,12 +412,5 @@ export module euglena {
             }
         }
     }
-    export namespace reference {
-        export namespace sys {
-            export namespace type {
-                export const Exception = new euglena.sys.type.Exception("Exception", null);
-            }
-        }
-    }
 }
 

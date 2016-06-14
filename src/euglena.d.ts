@@ -189,11 +189,4 @@ export declare module euglena {
             }
         }
     }
-    namespace reference {
-        namespace sys {
-            namespace type {
-                const Exception: euglena.sys.type.Exception;
-            }
-        }
-    }
 }

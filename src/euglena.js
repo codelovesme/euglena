@@ -449,15 +449,5 @@ var euglena;
             alive.Body = Body;
         })(alive = being.alive || (being.alive = {}));
     })(being = euglena.being || (euglena.being = {}));
-    var reference;
-    (function (reference) {
-        var sys;
-        (function (sys) {
-            var type;
-            (function (type) {
-                type.Exception = new euglena.sys.type.Exception("Exception", null);
-            })(type = sys.type || (sys.type = {}));
-        })(sys = reference.sys || (reference.sys = {}));
-    })(reference = euglena.reference || (euglena.reference = {}));
 })(euglena = exports.euglena || (exports.euglena = {}));
 //# sourceMappingURL=euglena.js.map
