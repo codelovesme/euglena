@@ -193,11 +193,15 @@ var euglena;
                 }
             }
             type.Clock = Clock;
+            var reference;
+            (function (reference) {
+                reference.Exception = new euglena.sys.type.Exception("Exception", null);
+            })(reference = type.reference || (type.reference = {}));
             var StaticTools;
             (function (StaticTools) {
                 class Exception {
                     static isNotException(t) {
-                        return !euglena.js.Class.instanceOf(euglena.reference.sys.type.Exception, t);
+                        return !euglena.js.Class.instanceOf(reference.Exception, t);
                     }
                 }
                 StaticTools.Exception = Exception;

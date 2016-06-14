@@ -1,19 +1,19 @@
 {
   "name": "euglena",
-  "domain":"codeloves.me",
-  "version": "0.0.1",
+  "domain": "codeloves.me",
+  "version": "0.0.3",
   "main": "src/euglena.js",
   "private": false,
-  "license":"GPL v2",
-  "author": { 
-	"name" : "Fedai Kaya",
-	"email" : "codelovesme@gmail.com"
+  "license": "GPL v2",
+  "author": {
+    "name": "Fedai Kaya",
+    "email": "codelovesme@gmail.com"
   },
-  "typings": "./typings/euglena/euglena.d.ts",
-  "devDependencies":{
-	"chai":"*",
-	"mocha":"*",
-	"sinona":"*"
+  "typings": "./src/euglena.d.ts",
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*",
+    "sinona": "*"
   },
   "scripts": {
     "test": "mocha test"

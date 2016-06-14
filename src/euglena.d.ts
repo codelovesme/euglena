@@ -85,6 +85,9 @@ export declare module euglena {
                 className: string;
                 constructor(hour: number, minute: number, second: number);
             }
+            namespace reference {
+                const Exception: Exception;
+            }
             namespace StaticTools {
                 class Exception {
                     static isNotException<T>(t: T | Exception): t is T;

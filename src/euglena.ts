@@ -169,10 +169,13 @@ export module euglena {
                 className: string = "euglena.sys.type.Clock";
                 constructor(public hour: number, public minute: number, public second: number) { }
             }
+            export namespace reference {
+                export const Exception = new euglena.sys.type.Exception("Exception", null);
+            }
             export namespace StaticTools {
                 export class Exception {
                     public static isNotException<T>(t: T | Exception): t is T {
-                        return !euglena.js.Class.instanceOf(euglena.reference.sys.type.Exception, t);
+                        return !euglena.js.Class.instanceOf(reference.Exception, t);
                     }
                 }
                 export class UUID {
@@ -256,19 +259,19 @@ export module euglena {
                     }
                 }
                 export class Array {
-                    public static combine<T>(array1:T[],array2:T[]):T[]{
+                    public static combine<T>(array1: T[], array2: T[]): T[] {
                         let a = array1.concat(array2);
-                        for(var i=0; i<a.length; ++i) {
-                            for(var j=i+1; j<a.length; ++j) {
-                                if(a[i] === a[j])
+                        for (var i = 0; i < a.length; ++i) {
+                            for (var j = i + 1; j < a.length; ++j) {
+                                if (a[i] === a[j])
                                     a.splice(j--, 1);
                             }
                         }
                         return a;
                     }
                     public static equals<T>(array1: T[], array2: T[], compare?: (t1: T, t2: T) => boolean): boolean {
-                        if(!array1 && !array2) return true;
-                        if(!array1 || !array2) return false;
+                        if (!array1 && !array2) return true;
+                        if (!array1 || !array2) return false;
                         if (array1.length !== array2.length) return false;
                         for (let i = 0; i < array1.length; i++) {
                             if (array1[i] !== array2[i]) return false;
@@ -278,7 +281,7 @@ export module euglena {
                     public static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean {
                         return Array.indexOf(array, t, compare) >= 0;
                     }
-                    public static containsArray<T>(master: T[], slave: T[], compare?: (t1: T, t2: T) => boolean): boolean { 
+                    public static containsArray<T>(master: T[], slave: T[], compare?: (t1: T, t2: T) => boolean): boolean {
                         for (let s of slave) {
                             if (!Array.contains(master, s, compare)) return false;
                         }
@@ -337,8 +340,8 @@ export module euglena {
             import Impact = euglena.being.interaction.Impact;
             export namespace dna {
                 export class ParticleReference extends Particle {
-                    constructor(name: string, of: string,primaryKeys?:string[],content?:any) {
-                        super(name, content, of,primaryKeys);
+                    constructor(name: string, of: string, primaryKeys?: string[], content?: any) {
+                        super(name, content, of, primaryKeys);
                     }
                 }
                 export class StaticTools {
@@ -389,7 +392,7 @@ export module euglena {
                 }
                 private indexOfParticle(particleReference: dna.ParticleReference): number {
                     for (let i = 0; i < Body.instance.particles.length; i++) {
-                        if (dna.StaticTools.ParticleReference.equals(Body.instance.particles[i],particleReference)) {
+                        if (dna.StaticTools.ParticleReference.equals(Body.instance.particles[i], particleReference)) {
                             return i;
                         }
                     }
