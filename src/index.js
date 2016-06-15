@@ -454,4 +454,4 @@ var euglena;
         })(alive = being.alive || (being.alive = {}));
     })(being = euglena.being || (euglena.being = {}));
 })(euglena = exports.euglena || (exports.euglena = {}));
-//# sourceMappingURL=euglena.js.map
+//# sourceMappingURL=index.js.map

@@ -1,7 +1,7 @@
 /**
  * Created by codelovesme on 6/19/2015.
  */
-export declare module euglena {
+declare module "euglena" {
     const JavascriptDate: DateConstructor;
     namespace js {
         class Class {
@@ -126,7 +126,7 @@ export declare module euglena {
         }
     }
     namespace being {
-        import Named = euglena.sys.type.Named;
+        import Named = sys.type.Named;
         class Particle {
             name: string;
             content: any;
@@ -154,8 +154,8 @@ export declare module euglena {
             }
         }
         namespace alive {
-            import Classifiable = euglena.sys.type.Classifiable;
-            import Particle = euglena.being.Particle;
+            import Classifiable = sys.type.Classifiable;
+            import Particle = being.Particle;
             namespace dna {
                 class ParticleReference extends Particle {
                     constructor(name: string, of: string, primaryKeys?: string[], content?: any);
@@ -188,7 +188,7 @@ export declare module euglena {
                 private indexOfParticle(particleReference);
                 saveParticle(particle: being.Particle): void;
                 getOrganelle(organelleName: string): being.alive.Organelle<any>;
-                setOrganelle(organelle: euglena.being.alive.Organelle<{}>): void;
+                setOrganelle(organelle: being.alive.Organelle<{}>): void;
             }
         }
     }

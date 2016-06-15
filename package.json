@@ -2,14 +2,14 @@
   "name": "euglena",
   "domain": "codeloves.me",
   "version": "0.0.4",
-  "main": "src/euglena.js",
+  "main": "src/index.js",
   "private": false,
   "license": "GPL v2",
   "author": {
     "name": "Fedai Kaya",
     "email": "codelovesme@gmail.com"
   },
-  "typings": "./src/euglena.d.ts",
+  "typings": "./src/index.d.ts",
   "devDependencies": {
     "chai": "*",
     "mocha": "*",
