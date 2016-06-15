@@ -13,14 +13,6 @@
             "args": [
                 "tsc -p ."
             ]
-        },
-        {
-            "taskName": "Increment package version patch",
-            "suppressTaskName": true,
-            "isBuildCommand": true,
-            "args": [
-                "npm version patch"
-            ]
         }
     ]
 }
