@@ -178,14 +178,14 @@ export declare module euglena {
                 abstract receive(particle: Particle, response: interaction.Response): void;
             }
             class Body {
-                private particles;
+                particles: Particle[];
                 static instance: Body;
-                private organelles;
+                organelles: any;
                 constructor(particles: Particle[]);
                 static generateInstance(particles: any): Body;
                 transmit(organelleName: string, particle: Particle, response?: interaction.Response): void;
                 getParticle(particleReference: dna.ParticleReference): being.Particle;
-                private indexOfParticle(particleReference);
+                indexOfParticle(particleReference: dna.ParticleReference): number;
                 saveParticle(particle: being.Particle): void;
                 getOrganelle(organelleName: string): being.alive.Organelle<any>;
                 setOrganelle(organelle: euglena.being.alive.Organelle<{}>): void;

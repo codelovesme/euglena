@@ -368,8 +368,8 @@ export module euglena {
 
             export class Body {
                 public static instance: Body = null;
-                private organelles: any;
-                constructor(private particles: Particle[]) {
+                public organelles: any;
+                constructor(public particles: Particle[]) {
                     this.organelles = {};
                 }
                 public static generateInstance(particles: any) {
@@ -390,7 +390,7 @@ export module euglena {
                     let index = Body.instance.indexOfParticle(particleReference);
                     return index >= 0 ? Body.instance.particles[index] : null;
                 }
-                private indexOfParticle(particleReference: dna.ParticleReference): number {
+                public indexOfParticle(particleReference: dna.ParticleReference): number {
                     for (let i = 0; i < Body.instance.particles.length; i++) {
                         if (dna.StaticTools.ParticleReference.equals(Body.instance.particles[i], particleReference)) {
                             return i;
