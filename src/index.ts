@@ -66,6 +66,17 @@ export module euglena {
                 }
                 return true;
             }
+            public static doesCover(obj1: any, obj2: any): boolean {
+                for (let key in obj2) {
+                    if (obj1[key] === undefined) return false;
+                    if (Class.isPrimaryType(obj2[key])) {
+                        if (obj1[key] !== obj2[key]) return false;
+                    } else {
+                        if (!Class.doesCover(obj1[key],obj2[key])) return false;
+                    }
+                }
+                return true;
+            }
         }
     }
     export namespace injection {
@@ -316,6 +327,13 @@ export module euglena {
                 public content: any,
                 public of: string,
                 public primaryKeys?: Array<string>) { }
+        }
+        export class StaticTools {
+            public static Particle = {
+                covers: (p1: Particle, p2: Particle) => {
+
+                }
+            }
         }
         export namespace interaction {
             export interface CanReceiveParticle {

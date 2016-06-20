@@ -12,6 +12,7 @@ export declare module euglena {
             static valuefy(instance: any): any;
             static isPrimaryType(obj: any): boolean;
             static instanceOf<T>(referenceObject: T, obj: any | T): obj is T;
+            static doesCover(obj1: any, obj2: any): boolean;
         }
     }
     namespace injection {
@@ -133,6 +134,11 @@ export declare module euglena {
             of: string;
             primaryKeys: Array<string>;
             constructor(name: string, content: any, of: string, primaryKeys?: Array<string>);
+        }
+        class StaticTools {
+            static Particle: {
+                covers: (p1: Particle, p2: Particle) => void;
+            };
         }
         namespace interaction {
             interface CanReceiveParticle {

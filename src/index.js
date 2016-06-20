@@ -74,6 +74,21 @@ var euglena;
                 }
                 return true;
             }
+            static doesCover(obj1, obj2) {
+                for (let key in obj2) {
+                    if (obj1[key] === undefined)
+                        return false;
+                    if (Class.isPrimaryType(obj2[key])) {
+                        if (obj1[key] !== obj2[key])
+                            return false;
+                    }
+                    else {
+                        if (!Class.doesCover(obj1[key], obj2[key]))
+                            return false;
+                    }
+                }
+                return true;
+            }
         }
         js.Class = Class;
     })(js = euglena.js || (euglena.js = {}));
@@ -353,6 +368,13 @@ var euglena;
             }
         }
         being.Particle = Particle;
+        class StaticTools {
+        }
+        StaticTools.Particle = {
+            covers: (p1, p2) => {
+            }
+        };
+        being.StaticTools = StaticTools;
         var interaction;
         (function (interaction) {
             class Impact {
