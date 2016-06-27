@@ -156,6 +156,9 @@ export module euglena {
                     return this.values;
                 }
             }
+            export interface Callback<T> {
+                (t: T | Exception): void
+            }
             export interface Classifiable {
                 className: string;
             }
@@ -276,8 +279,6 @@ export module euglena {
                             }
                         }
                         return a;
-
-
                     }
                     public static equals<T>(array1: T[], array2: T[], compare?: (t1: T, t2: T) => boolean): boolean {
                         if (!array1 && !array2) return true;
@@ -339,16 +340,13 @@ export module euglena {
                 receive: Receive;
             }
             export interface Receive {
-                (particle: Particle, response: interaction.Response): void;
+                (particle: Particle): void;
             }
             export class Impact {
                 constructor(public particle: Particle, public token: string) { }
             }
             export namespace constants {
                 export const ReceivedParticleReference = "ReceivedParticleReference";
-            }
-            export interface Response {
-                (particle: Particle): void;
             }
         }
         export namespace alive {
@@ -380,7 +378,7 @@ export module euglena {
                     public className: string,
                     public send?: interaction.Receive,
                     public initialProperties?: InitialProperties) { }
-                public abstract receive(particle: Particle, response: interaction.Response): void;
+                public abstract receive(particle: Particle): void;
             }
 
             export class Body {
@@ -395,13 +393,10 @@ export module euglena {
                     }
                     return Body.instance;
                 }
-                public transmit(organelleName: string, particle: Particle, response?: interaction.Response) {
+                public transmit(organelleName: string, particle: Particle) {
                     console.log("received Particle: " + particle.name + " sent to: " + organelleName);
                     let organelle: Organelle<any> = Body.instance.organelles[organelleName] as Organelle<any>;
-                    organelle.receive(particle, (resp: Particle) => {
-                        console.log("Response :" + resp.name + " from: " + organelleName + " for: " + particle.name);
-                        response ? response(resp) : false;
-                    });
+                    organelle.receive(particle);
                 }
                 public getParticle(particleReference: dna.ParticleReference): being.Particle {
                     let index = Body.instance.indexOfParticle(particleReference);

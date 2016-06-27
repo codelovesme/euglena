@@ -435,13 +435,10 @@ var euglena;
                     }
                     return Body.instance;
                 }
-                transmit(organelleName, particle, response) {
+                transmit(organelleName, particle) {
                     console.log("received Particle: " + particle.name + " sent to: " + organelleName);
                     let organelle = Body.instance.organelles[organelleName];
-                    organelle.receive(particle, (resp) => {
-                        console.log("Response :" + resp.name + " from: " + organelleName + " for: " + particle.name);
-                        response ? response(resp) : false;
-                    });
+                    organelle.receive(particle);
                 }
                 getParticle(particleReference) {
                     let index = Body.instance.indexOfParticle(particleReference);

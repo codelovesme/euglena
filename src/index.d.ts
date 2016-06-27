@@ -54,6 +54,9 @@ export declare module euglena {
                 getKeys(): K[];
                 getValues(): V[];
             }
+            interface Callback<T> {
+                (t: T | Exception): void;
+            }
             interface Classifiable {
                 className: string;
             }
@@ -142,7 +145,7 @@ export declare module euglena {
                 receive: Receive;
             }
             interface Receive {
-                (particle: Particle, response: interaction.Response): void;
+                (particle: Particle): void;
             }
             class Impact {
                 particle: Particle;
@@ -151,9 +154,6 @@ export declare module euglena {
             }
             namespace constants {
                 const ReceivedParticleReference: string;
-            }
-            interface Response {
-                (particle: Particle): void;
             }
         }
         namespace alive {
@@ -178,7 +178,7 @@ export declare module euglena {
                 send: interaction.Receive;
                 initialProperties: InitialProperties;
                 constructor(name: string, className: string, send?: interaction.Receive, initialProperties?: InitialProperties);
-                abstract receive(particle: Particle, response: interaction.Response): void;
+                abstract receive(particle: Particle): void;
             }
             class Body {
                 particles: Particle[];
@@ -186,7 +186,7 @@ export declare module euglena {
                 organelles: any;
                 constructor(particles: Particle[]);
                 static generateInstance(particles: any): Body;
-                transmit(organelleName: string, particle: Particle, response?: interaction.Response): void;
+                transmit(organelleName: string, particle: Particle): void;
                 getParticle(particleReference: dna.ParticleReference): being.Particle;
                 indexOfParticle(particleReference: dna.ParticleReference): number;
                 saveParticle(particle: being.Particle): void;
