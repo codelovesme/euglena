@@ -156,9 +156,6 @@ export module euglena {
                     return this.values;
                 }
             }
-            export interface Callback<T> {
-                (t: T | Exception): void
-            }
             export interface Classifiable {
                 className: string;
             }
@@ -279,6 +276,8 @@ export module euglena {
                             }
                         }
                         return a;
+
+
                     }
                     public static equals<T>(array1: T[], array2: T[], compare?: (t1: T, t2: T) => boolean): boolean {
                         if (!array1 && !array2) return true;

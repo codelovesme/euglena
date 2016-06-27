@@ -54,9 +54,6 @@ export declare module euglena {
                 getKeys(): K[];
                 getValues(): V[];
             }
-            interface Callback<T> {
-                (t: T | Exception): void;
-            }
             interface Classifiable {
                 className: string;
             }
