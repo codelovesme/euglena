@@ -57,6 +57,9 @@ export declare module euglena {
             interface Callback<T> {
                 (t: T | Exception): void;
             }
+            interface Callback<T> {
+                (t: T | Exception): void;
+            }
             interface Classifiable {
                 className: string;
             }
