@@ -370,8 +370,8 @@ export module euglena {
                 }
             }
             export namespace particles {
-                export class BringToLife<T> extends Particle {
-                    constructor(content: T, of: string) { super(constants.particles.BringToLife, content, of); }
+                export class BringToLife<InitialProperties> extends Particle {
+                    constructor(content: InitialProperties, of: string) { super(constants.particles.BringToLife, content, of); }
                 }
             }
             export namespace constants {
@@ -385,9 +385,9 @@ export module euglena {
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
                 constructor(public name: string, public className: string, public send?: interaction.Receive) {
                     this.actions = new sys.type.Map<string, (particle: Particle) => void>();
-                    this.addAction(constants.particles.BringToLife, this.onGettingAlive);
+                    this.addAction(constants.particles.BringToLife, this._onGettingAlive);
                 }
-                protected abstract onGettingAlive(particle: particles.BringToLife<InitialProperties>): void;
+                protected abstract onGettingAlive(): void;
                 public receive(particle: Particle): void {
                     let action = this.actions.get(particle.name);
                     if (action) {
@@ -396,6 +396,10 @@ export module euglena {
                 }
                 protected addAction(particleName: string, action: (particle: Particle) => void): void {
                     this.actions.add(particleName, action);
+                }
+                private _onGettingAlive(particle: particles.BringToLife<InitialProperties>): void {
+                    this.initialProperties = particle.content;
+                    this.onGettingAlive();
                 }
             }
             export class Body {

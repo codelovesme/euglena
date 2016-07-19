@@ -434,7 +434,7 @@ var euglena;
                     this.className = className;
                     this.send = send;
                     this.actions = new sys.type.Map();
-                    this.addAction(constants.particles.BringToLife, this.onGettingAlive);
+                    this.addAction(constants.particles.BringToLife, this._onGettingAlive);
                 }
                 receive(particle) {
                     let action = this.actions.get(particle.name);
@@ -444,6 +444,10 @@ var euglena;
                 }
                 addAction(particleName, action) {
                     this.actions.add(particleName, action);
+                }
+                _onGettingAlive(particle) {
+                    this.initialProperties = particle.content;
+                    this.onGettingAlive();
                 }
             }
             alive.Organelle = Organelle;

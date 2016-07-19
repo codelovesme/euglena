@@ -170,8 +170,8 @@ export declare module euglena {
                 }
             }
             namespace particles {
-                class BringToLife<T> extends Particle {
-                    constructor(content: T, of: string);
+                class BringToLife<InitialProperties> extends Particle {
+                    constructor(content: InitialProperties, of: string);
                 }
             }
             namespace constants {
@@ -187,9 +187,10 @@ export declare module euglena {
                 private initialProperties;
                 private actions;
                 constructor(name: string, className: string, send?: interaction.Receive);
-                protected abstract onGettingAlive(particle: particles.BringToLife<InitialProperties>): void;
+                protected abstract onGettingAlive(): void;
                 receive(particle: Particle): void;
                 protected addAction(particleName: string, action: (particle: Particle) => void): void;
+                private _onGettingAlive(particle);
             }
             class Body {
                 particles: Particle[];
