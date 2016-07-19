@@ -370,8 +370,8 @@ export module euglena {
                 }
             }
             export namespace particles {
-                export abstract class BringToLife<InitialProperties> extends Particle {
-                    constructor(content: InitialProperties, of: string) { super(constants.particles.BringToLife, content, of); }
+                export class BringToLife extends Particle {
+                    constructor(content: any, of: string) { super(constants.particles.BringToLife, content, of); }
                 }
             }
             export namespace constants {
@@ -400,7 +400,7 @@ export module euglena {
                 protected addAction(particleName: string, action: (particle: Particle) => void): void {
                     this.actions.add(particleName, action);
                 }
-                private _onGettingAlive(particle: particles.BringToLife<InitialProperties>): void {
+                private _onGettingAlive(particle: particles.BringToLife): void {
                     this._initialProperties = particle.content;
                     this.onGettingAlive();
                 }
