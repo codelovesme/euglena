@@ -72,7 +72,7 @@ export module euglena {
                     if (Class.isPrimaryType(obj2[key])) {
                         if (obj1[key] !== obj2[key]) return false;
                     } else {
-                        if (!Class.doesCover(obj1[key],obj2[key])) return false;
+                        if (!Class.doesCover(obj1[key], obj2[key])) return false;
                     }
                 }
                 return true;
@@ -369,16 +369,31 @@ export module euglena {
                     }
                 }
             }
+            export namespace particles {
+                export class BringToLife<T> extends Particle {
+                    constructor(content: T, of: string) { super(constants.particles.BringToLife, content, of); }
+                }
+            }
             export namespace constants {
                 export const OutSide = "OutSide";
+                export namespace particles {
+                    export const BringToLife = "BringToLife";
+                }
             }
             export abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {
-                constructor(
-                    public name: string,
-                    public className: string,
-                    public send?: interaction.Receive,
-                    public initialProperties?: InitialProperties) { }
-                public abstract receive(particle: Particle): void;
+                private initialProperties: InitialProperties;
+                private actions: sys.type.Map<string, (particle: Particle) => void>;
+                constructor(public name: string, public className: string, public send?: interaction.Receive) {
+                    this.actions = new sys.type.Map<string, (particle: Particle) => void>();
+                    this.actions.add(constants.particles.BringToLife, this.onGettingAlive);
+                }
+                protected abstract onGettingAlive(particle: particles.BringToLife<InitialProperties>): void;
+                public receive(particle: Particle): void {
+                    let action = this.actions.get(particle.name);
+                    if (action) {
+                        action(particle);
+                    }
+                }
             }
 
             export class Body {

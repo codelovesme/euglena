@@ -411,16 +411,36 @@ var euglena;
                 };
                 dna.StaticTools = StaticTools;
             })(dna = alive.dna || (alive.dna = {}));
+            var particles;
+            (function (particles) {
+                class BringToLife extends Particle {
+                    constructor(content, of) {
+                        super(constants.particles.BringToLife, content, of);
+                    }
+                }
+                particles.BringToLife = BringToLife;
+            })(particles = alive.particles || (alive.particles = {}));
             var constants;
             (function (constants) {
                 constants.OutSide = "OutSide";
+                var particles;
+                (function (particles) {
+                    particles.BringToLife = "BringToLife";
+                })(particles = constants.particles || (constants.particles = {}));
             })(constants = alive.constants || (alive.constants = {}));
             class Organelle {
-                constructor(name, className, send, initialProperties) {
+                constructor(name, className, send) {
                     this.name = name;
                     this.className = className;
                     this.send = send;
-                    this.initialProperties = initialProperties;
+                    this.actions = new sys.type.Map();
+                    this.actions.add(constants.particles.BringToLife, this.onGettingAlive);
+                }
+                receive(particle) {
+                    let action = this.actions.get(particle.name);
+                    if (action) {
+                        action(particle);
+                    }
                 }
             }
             alive.Organelle = Organelle;

@@ -57,9 +57,6 @@ export declare module euglena {
             interface Callback<T> {
                 (t: T | Exception): void;
             }
-            interface Callback<T> {
-                (t: T | Exception): void;
-            }
             interface Classifiable {
                 className: string;
             }
@@ -172,16 +169,26 @@ export declare module euglena {
                     };
                 }
             }
+            namespace particles {
+                class BringToLife<T> extends Particle {
+                    constructor(content: T, of: string);
+                }
+            }
             namespace constants {
                 const OutSide: string;
+                namespace particles {
+                    const BringToLife: string;
+                }
             }
             abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {
                 name: string;
                 className: string;
                 send: interaction.Receive;
-                initialProperties: InitialProperties;
-                constructor(name: string, className: string, send?: interaction.Receive, initialProperties?: InitialProperties);
-                abstract receive(particle: Particle): void;
+                private initialProperties;
+                private actions;
+                constructor(name: string, className: string, send?: interaction.Receive);
+                protected abstract onGettingAlive(particle: particles.BringToLife<InitialProperties>): void;
+                receive(particle: Particle): void;
             }
             class Body {
                 particles: Particle[];
