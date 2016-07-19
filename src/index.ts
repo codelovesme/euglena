@@ -370,7 +370,7 @@ export module euglena {
                 }
             }
             export namespace particles {
-                export class BringToLife<InitialProperties> extends Particle {
+                export abstract class BringToLife<InitialProperties> extends Particle {
                     constructor(content: InitialProperties, of: string) { super(constants.particles.BringToLife, content, of); }
                 }
             }
