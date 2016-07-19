@@ -385,7 +385,7 @@ export module euglena {
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
                 constructor(public name: string, public className: string, public send?: interaction.Receive) {
                     this.actions = new sys.type.Map<string, (particle: Particle) => void>();
-                    this.actions.add(constants.particles.BringToLife, this.onGettingAlive);
+                    this.addAction(constants.particles.BringToLife, this.onGettingAlive);
                 }
                 protected abstract onGettingAlive(particle: particles.BringToLife<InitialProperties>): void;
                 public receive(particle: Particle): void {
@@ -394,8 +394,10 @@ export module euglena {
                         action(particle);
                     }
                 }
+                protected addAction(particleName: string, action: (particle: Particle) => void): void {
+                    this.actions.add(particleName, action);
+                }
             }
-
             export class Body {
                 public static instance: Body = null;
                 public organelles: any;

@@ -189,6 +189,7 @@ export declare module euglena {
                 constructor(name: string, className: string, send?: interaction.Receive);
                 protected abstract onGettingAlive(particle: particles.BringToLife<InitialProperties>): void;
                 receive(particle: Particle): void;
+                protected addAction(particleName: string, action: (particle: Particle) => void): void;
             }
             class Body {
                 particles: Particle[];
