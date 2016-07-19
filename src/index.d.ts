@@ -184,7 +184,8 @@ export declare module euglena {
                 name: string;
                 className: string;
                 send: interaction.Receive;
-                private initialProperties;
+                private _initialProperties;
+                protected initialProperties: InitialProperties;
                 private actions;
                 constructor(name: string, className: string, send?: interaction.Receive);
                 protected abstract onGettingAlive(): void;

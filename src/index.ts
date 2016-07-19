@@ -381,7 +381,10 @@ export module euglena {
                 }
             }
             export abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {
-                private initialProperties: InitialProperties;
+                private _initialProperties: InitialProperties;
+                protected get initialProperties(){
+                    return this._initialProperties;
+                }
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
                 constructor(public name: string, public className: string, public send?: interaction.Receive) {
                     this.actions = new sys.type.Map<string, (particle: Particle) => void>();
@@ -398,7 +401,7 @@ export module euglena {
                     this.actions.add(particleName, action);
                 }
                 private _onGettingAlive(particle: particles.BringToLife<InitialProperties>): void {
-                    this.initialProperties = particle.content;
+                    this._initialProperties = particle.content;
                     this.onGettingAlive();
                 }
             }

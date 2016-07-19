@@ -436,6 +436,9 @@ var euglena;
                     this.actions = new sys.type.Map();
                     this.addAction(constants.particles.BringToLife, this._onGettingAlive);
                 }
+                get initialProperties() {
+                    return this._initialProperties;
+                }
                 receive(particle) {
                     let action = this.actions.get(particle.name);
                     if (action) {
@@ -446,7 +449,7 @@ var euglena;
                     this.actions.add(particleName, action);
                 }
                 _onGettingAlive(particle) {
-                    this.initialProperties = particle.content;
+                    this._initialProperties = particle.content;
                     this.onGettingAlive();
                 }
             }
