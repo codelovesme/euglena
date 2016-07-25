@@ -423,7 +423,7 @@ export module euglena {
             }
             export abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {
                 private _initialProperties: InitialProperties;
-                protected get initialProperties(){
+                protected get initialProperties() {
                     return this._initialProperties;
                 }
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
@@ -448,9 +448,12 @@ export module euglena {
             }
             export class Body {
                 public static instance: Body = null;
-                constructor(public particles: Particle[], public organelles: any, public chromosome: dna.Gene[]) { 
+                constructor(public particles: Particle[], public organelles: any, public chromosome: dna.Gene[]) {
                     if (Body.instance) {
                         throw "There exists already a Body instance.";
+                    }
+                    for(let organelle of organelles){
+                        organelle.send = this.receive;
                     }
                     Body.instance = this;
                 }
@@ -497,18 +500,6 @@ export module euglena {
                     let organelle: Organelle<any> = Body.instance.organelles[organelleName] as Organelle<any>;
                     organelle.receive(particle);
                 }
-                public getParticle(particleReference: dna.ParticleReference): being.Particle {
-                    let index = Body.instance.indexOfParticle(particleReference);
-                    return index >= 0 ? Body.instance.particles[index] : null;
-                }
-                public indexOfParticle(particleReference: dna.ParticleReference): number {
-                    for (let i = 0; i < Body.instance.particles.length; i++) {
-                        if (dna.StaticTools.ParticleReference.equals(Body.instance.particles[i], particleReference)) {
-                            return i;
-                        }
-                    }
-                    return -1;
-                }
                 public saveParticle(particle: being.Particle) {
                     let index = Body.instance.indexOfParticle(particle);
                     if (index >= 0) {
@@ -517,11 +508,17 @@ export module euglena {
                         Body.instance.particles.push(particle);
                     }
                 }
-                public getOrganelle(organelleName: string): being.alive.Organelle<any> {
-                    return Body.instance.organelles[organelleName];
+                public getParticle(particleReference: dna.ParticleReference): being.Particle {
+                    let index = Body.instance.indexOfParticle(particleReference);
+                    return index >= 0 ? Body.instance.particles[index] : null;
                 }
-                public setOrganelle(organelle: euglena.being.alive.Organelle<{}>): void {
-                    Body.instance.organelles[organelle.name] = organelle;
+                private indexOfParticle(particleReference: dna.ParticleReference): number {
+                    for (let i = 0; i < Body.instance.particles.length; i++) {
+                        if (dna.StaticTools.ParticleReference.equals(Body.instance.particles[i], particleReference)) {
+                            return i;
+                        }
+                    }
+                    return -1;
                 }
             }
         }

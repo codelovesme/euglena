@@ -218,11 +218,9 @@ export declare module euglena {
                 constructor(particles: Particle[], organelles: any, chromosome: dna.Gene[]);
                 receive(particle: Particle): void;
                 transmit(organelleName: string, particle: Particle): void;
-                getParticle(particleReference: dna.ParticleReference): being.Particle;
-                indexOfParticle(particleReference: dna.ParticleReference): number;
                 saveParticle(particle: being.Particle): void;
-                getOrganelle(organelleName: string): being.alive.Organelle<any>;
-                setOrganelle(organelle: euglena.being.alive.Organelle<{}>): void;
+                getParticle(particleReference: dna.ParticleReference): being.Particle;
+                private indexOfParticle(particleReference);
             }
         }
     }

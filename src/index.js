@@ -501,6 +501,9 @@ var euglena;
                     if (Body.instance) {
                         throw "There exists already a Body instance.";
                     }
+                    for (let organelle of organelles) {
+                        organelle.send = this.receive;
+                    }
                     Body.instance = this;
                 }
                 receive(particle) {
@@ -548,6 +551,15 @@ var euglena;
                     let organelle = Body.instance.organelles[organelleName];
                     organelle.receive(particle);
                 }
+                saveParticle(particle) {
+                    let index = Body.instance.indexOfParticle(particle);
+                    if (index >= 0) {
+                        Body.instance.particles[index] = particle;
+                    }
+                    else {
+                        Body.instance.particles.push(particle);
+                    }
+                }
                 getParticle(particleReference) {
                     let index = Body.instance.indexOfParticle(particleReference);
                     return index >= 0 ? Body.instance.particles[index] : null;
@@ -559,21 +571,6 @@ var euglena;
                         }
                     }
                     return -1;
-                }
-                saveParticle(particle) {
-                    let index = Body.instance.indexOfParticle(particle);
-                    if (index >= 0) {
-                        Body.instance.particles[index] = particle;
-                    }
-                    else {
-                        Body.instance.particles.push(particle);
-                    }
-                }
-                getOrganelle(organelleName) {
-                    return Body.instance.organelles[organelleName];
-                }
-                setOrganelle(organelle) {
-                    Body.instance.organelles[organelle.name] = organelle;
                 }
             }
             Body.instance = null;
