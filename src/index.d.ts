@@ -187,14 +187,14 @@ export declare module euglena {
                 }
             }
             namespace particles {
-                class BringToLife extends Particle {
+                class Sap extends Particle {
                     constructor(content: any, of: string);
                 }
             }
             namespace constants {
                 const OutSide: string;
                 namespace particles {
-                    const BringToLife: string;
+                    const Sap: string;
                 }
             }
             abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {

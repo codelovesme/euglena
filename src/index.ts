@@ -411,14 +411,14 @@ export module euglena {
                 }
             }
             export namespace particles {
-                export class BringToLife extends Particle {
-                    constructor(content: any, of: string) { super(constants.particles.BringToLife, content, of); }
+                export class Sap extends Particle {
+                    constructor(content: any, of: string) { super(constants.particles.Sap, content, of); }
                 }
             }
             export namespace constants {
                 export const OutSide = "OutSide";
                 export namespace particles {
-                    export const BringToLife = "BringToLife";
+                    export const Sap = "Sap";
                 }
             }
             export abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {
@@ -429,7 +429,7 @@ export module euglena {
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
                 constructor(public name: string, public className: string, public send?: interaction.Receive) {
                     this.actions = new sys.type.Map<string, (particle: Particle) => void>();
-                    this.addAction(constants.particles.BringToLife, this._onGettingAlive);
+                    this.addAction(constants.particles.Sap, this._onGettingAlive);
                 }
                 protected abstract onGettingAlive(): void;
                 public receive(particle: Particle): void {
@@ -441,7 +441,7 @@ export module euglena {
                 protected addAction(particleName: string, action: (particle: Particle) => void): void {
                     this.actions.add(particleName, action);
                 }
-                private _onGettingAlive(particle: particles.BringToLife): void {
+                private _onGettingAlive(particle: particles.Sap): void {
                     this._initialProperties = particle.content;
                     this.onGettingAlive();
                 }

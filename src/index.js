@@ -452,19 +452,19 @@ var euglena;
             })(dna = alive.dna || (alive.dna = {}));
             var particles;
             (function (particles) {
-                class BringToLife extends Particle {
+                class Sap extends Particle {
                     constructor(content, of) {
-                        super(constants.particles.BringToLife, content, of);
+                        super(constants.particles.Sap, content, of);
                     }
                 }
-                particles.BringToLife = BringToLife;
+                particles.Sap = Sap;
             })(particles = alive.particles || (alive.particles = {}));
             var constants;
             (function (constants) {
                 constants.OutSide = "OutSide";
                 var particles;
                 (function (particles) {
-                    particles.BringToLife = "BringToLife";
+                    particles.Sap = "Sap";
                 })(particles = constants.particles || (constants.particles = {}));
             })(constants = alive.constants || (alive.constants = {}));
             class Organelle {
@@ -473,7 +473,7 @@ var euglena;
                     this.className = className;
                     this.send = send;
                     this.actions = new sys.type.Map();
-                    this.addAction(constants.particles.BringToLife, this._onGettingAlive);
+                    this.addAction(constants.particles.Sap, this._onGettingAlive);
                 }
                 get initialProperties() {
                     return this._initialProperties;
