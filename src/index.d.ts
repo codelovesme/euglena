@@ -168,6 +168,23 @@ export declare module euglena {
                         equals: (ref1: ParticleReference, ref2: ParticleReference) => boolean;
                     };
                 }
+                interface Reaction {
+                    (particle: Particle, body: Body): void;
+                }
+                class Gene implements euglena.sys.type.Named {
+                    name: string;
+                    triggers: Object;
+                    reaction: Reaction;
+                    override: string;
+                    expiretime: euglena.sys.type.Time;
+                    constructor(name: string, triggers: Object, reaction: Reaction, override?: string, expiretime?: euglena.sys.type.Time);
+                }
+                class GarbageCollector {
+                    private timeout;
+                    private chromosome;
+                    constructor(chromosome: Gene[]);
+                    start(): void;
+                }
             }
             namespace particles {
                 class BringToLife extends Particle {
@@ -195,10 +212,11 @@ export declare module euglena {
             }
             class Body {
                 particles: Particle[];
-                static instance: Body;
                 organelles: any;
-                constructor(particles: Particle[]);
-                static generateInstance(particles: any): Body;
+                chromosome: dna.Gene[];
+                static instance: Body;
+                constructor(particles: Particle[], organelles: any, chromosome: dna.Gene[]);
+                receive(particle: Particle): void;
                 transmit(organelleName: string, particle: Particle): void;
                 getParticle(particleReference: dna.ParticleReference): being.Particle;
                 indexOfParticle(particleReference: dna.ParticleReference): number;

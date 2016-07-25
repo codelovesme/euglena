@@ -410,6 +410,45 @@ var euglena;
                     }
                 };
                 dna.StaticTools = StaticTools;
+                class Gene {
+                    constructor(name, triggers, // particle prop - value match
+                        reaction, override, expiretime) {
+                        this.name = name;
+                        this.triggers = triggers;
+                        this.reaction = reaction;
+                        this.override = override;
+                        this.expiretime = expiretime;
+                    }
+                }
+                dna.Gene = Gene;
+                class GarbageCollector {
+                    constructor(chromosome) {
+                        this.timeout = 1000;
+                        this.chromosome = [];
+                        this.chromosome = chromosome;
+                    }
+                    start() {
+                        let chromosome = this.chromosome;
+                        setInterval(() => {
+                            let toBeRemoved = [];
+                            for (let a of chromosome) {
+                                if (a.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(euglena.sys.type.StaticTools.Time.now(), a.expiretime)) {
+                                    toBeRemoved.push(a.name);
+                                }
+                            }
+                            for (let b of toBeRemoved) {
+                                for (var index = 0; index < chromosome.length; index++) {
+                                    var element = chromosome[index];
+                                    if (element.name === b) {
+                                        chromosome.splice(index, 1);
+                                        break;
+                                    }
+                                }
+                            }
+                        }, this.timeout);
+                    }
+                }
+                dna.GarbageCollector = GarbageCollector;
             })(dna = alive.dna || (alive.dna = {}));
             var particles;
             (function (particles) {
@@ -455,15 +494,54 @@ var euglena;
             }
             alive.Organelle = Organelle;
             class Body {
-                constructor(particles) {
+                constructor(particles, organelles, chromosome) {
                     this.particles = particles;
-                    this.organelles = {};
-                }
-                static generateInstance(particles) {
-                    if (!Body.instance) {
-                        Body.instance = new Body(particles);
+                    this.organelles = organelles;
+                    this.chromosome = chromosome;
+                    if (Body.instance) {
+                        throw "There exists already a Body instance.";
                     }
-                    return Body.instance;
+                    Body.instance = this;
+                }
+                receive(particle) {
+                    console.log("Organelle Nucleus says received particle " + particle.name);
+                    //find which genes are matched with properties of the particle 
+                    let triggerableReactions = new Array();
+                    for (var i = 0; i < this.chromosome.length; i++) {
+                        let triggers = this.chromosome[i].triggers;
+                        if (euglena.js.Class.doesCover(particle, triggers)) {
+                            var reaction = this.chromosome[i].reaction;
+                            triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
+                        }
+                    }
+                    //get rid of overrided reactions
+                    let reactions = Array();
+                    for (let tr of triggerableReactions) {
+                        let doTrigger = true;
+                        //Check if the tr is contained by others, if true
+                        for (let tr2 of triggerableReactions) {
+                            //if it is the same object, do nothing 
+                            if (tr.index === tr2.index)
+                                continue;
+                            //then if triggers of tr2 does not contain triggers of tr, do nothing
+                            if (!euglena.sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers))
+                                continue;
+                            //then check if tr2 overrides tr
+                            doTrigger = !(this.chromosome[tr2.index].override === this.chromosome[tr.index].name);
+                        }
+                        if (doTrigger) {
+                            reactions.push(tr.reaction);
+                        }
+                    }
+                    //trigger collected reactions
+                    for (let reaction of reactions) {
+                        try {
+                            reaction(particle, this);
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
+                    }
                 }
                 transmit(organelleName, particle) {
                     console.log("received Particle: " + particle.name + " sent to: " + organelleName);
