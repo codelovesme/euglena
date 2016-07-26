@@ -448,12 +448,15 @@ export module euglena {
             }
             export class Body {
                 public static instance: Body = null;
-                constructor(public particles: Particle[], public organelles: any, public chromosome: dna.Gene[]) {
+                public organelles: any = null;
+                constructor(public particles: Particle[], organelles: Organelle<any>[], public chromosome: dna.Gene[]) {
                     if (Body.instance) {
                         throw "There exists already a Body instance.";
                     }
-                    for(let organelle of organelles){
+                    this.organelles = {};
+                    for (let organelle of organelles) {
                         organelle.send = this.receive;
+                        this.organelles[organelle.name] = organelle;
                     }
                     Body.instance = this;
                 }

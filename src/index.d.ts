@@ -212,10 +212,10 @@ export declare module euglena {
             }
             class Body {
                 particles: Particle[];
-                organelles: any;
                 chromosome: dna.Gene[];
                 static instance: Body;
-                constructor(particles: Particle[], organelles: any, chromosome: dna.Gene[]);
+                organelles: any;
+                constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
                 receive(particle: Particle): void;
                 transmit(organelleName: string, particle: Particle): void;
                 saveParticle(particle: being.Particle): void;

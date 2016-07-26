@@ -496,13 +496,15 @@ var euglena;
             class Body {
                 constructor(particles, organelles, chromosome) {
                     this.particles = particles;
-                    this.organelles = organelles;
                     this.chromosome = chromosome;
+                    this.organelles = null;
                     if (Body.instance) {
                         throw "There exists already a Body instance.";
                     }
+                    this.organelles = {};
                     for (let organelle of organelles) {
                         organelle.send = this.receive;
+                        this.organelles[organelle.name] = organelle;
                     }
                     Body.instance = this;
                 }
