@@ -473,7 +473,11 @@ var euglena;
                     this.className = className;
                     this.send = send;
                     this.actions = new sys.type.Map();
-                    this.addAction(constants.particles.Sap, this._onGettingAlive);
+                    let this_ = this;
+                    this.addAction(constants.particles.Sap, (particle) => {
+                        this_._initialProperties = particle.content;
+                        this_.onGettingAlive();
+                    });
                 }
                 get initialProperties() {
                     return this._initialProperties;
@@ -487,10 +491,6 @@ var euglena;
                 addAction(particleName, action) {
                     this.actions.add(particleName, action);
                 }
-                _onGettingAlive(particle) {
-                    this._initialProperties = particle.content;
-                    this.onGettingAlive();
-                }
             }
             alive.Organelle = Organelle;
             class Body {
@@ -503,19 +503,19 @@ var euglena;
                     }
                     this.organelles = {};
                     for (let organelle of organelles) {
-                        organelle.send = this.receive;
+                        organelle.send = Body.receive;
                         this.organelles[organelle.name] = organelle;
                     }
                     Body.instance = this;
                 }
-                receive(particle) {
+                static receive(particle) {
                     console.log("Organelle Nucleus says received particle " + particle.name);
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array();
-                    for (var i = 0; i < this.chromosome.length; i++) {
-                        let triggers = this.chromosome[i].triggers;
+                    for (var i = 0; i < Body.instance.chromosome.length; i++) {
+                        let triggers = Body.instance.chromosome[i].triggers;
                         if (euglena.js.Class.doesCover(particle, triggers)) {
-                            var reaction = this.chromosome[i].reaction;
+                            var reaction = Body.instance.chromosome[i].reaction;
                             triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                         }
                     }
@@ -532,7 +532,7 @@ var euglena;
                             if (!euglena.sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers))
                                 continue;
                             //then check if tr2 overrides tr
-                            doTrigger = !(this.chromosome[tr2.index].override === this.chromosome[tr.index].name);
+                            doTrigger = !(Body.instance.chromosome[tr2.index].override === Body.instance.chromosome[tr.index].name);
                         }
                         if (doTrigger) {
                             reactions.push(tr.reaction);
@@ -541,7 +541,7 @@ var euglena;
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         try {
-                            reaction(particle, this);
+                            reaction(particle, Body.instance);
                         }
                         catch (e) {
                             console.log(e);

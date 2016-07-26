@@ -208,7 +208,6 @@ export declare module euglena {
                 protected abstract onGettingAlive(): void;
                 receive(particle: Particle): void;
                 protected addAction(particleName: string, action: (particle: Particle) => void): void;
-                private _onGettingAlive(particle);
             }
             class Body {
                 particles: Particle[];
@@ -216,7 +215,7 @@ export declare module euglena {
                 static instance: Body;
                 organelles: any;
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
-                receive(particle: Particle): void;
+                static receive(particle: Particle): void;
                 transmit(organelleName: string, particle: Particle): void;
                 saveParticle(particle: being.Particle): void;
                 getParticle(particleReference: dna.ParticleReference): being.Particle;
