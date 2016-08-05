@@ -197,12 +197,14 @@ export declare module euglena {
                     const Sap: string;
                 }
             }
-            abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {
+            abstract class Organelle<Sap extends {
+                euglenaName: string;
+            }> implements Named, Classifiable, interaction.CanReceiveParticle {
                 name: string;
                 className: string;
                 send: interaction.Receive;
-                private _initialProperties;
-                protected initialProperties: InitialProperties;
+                private _sap;
+                protected sap: Sap;
                 private actions;
                 constructor(name: string, className: string, send?: interaction.Receive);
                 protected abstract onGettingAlive(): void;

@@ -421,17 +421,17 @@ export module euglena {
                     export const Sap = "Sap";
                 }
             }
-            export abstract class Organelle<InitialProperties> implements Named, Classifiable, interaction.CanReceiveParticle {
-                private _initialProperties: InitialProperties;
-                protected get initialProperties() {
-                    return this._initialProperties;
+            export abstract class Organelle<Sap extends { euglenaName: string }> implements Named, Classifiable, interaction.CanReceiveParticle {
+                private _sap: Sap;
+                protected get sap() {
+                    return this._sap;
                 }
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
                 constructor(public name: string, public className: string, public send?: interaction.Receive) {
                     this.actions = new sys.type.Map<string, (particle: Particle) => void>();
                     let this_ = this;
                     this.addAction(constants.particles.Sap, (particle) => {
-                        this_._initialProperties = particle.content;
+                        this_._sap = particle.content;
                         this_.onGettingAlive();
                     });
                 }

@@ -475,12 +475,12 @@ var euglena;
                     this.actions = new sys.type.Map();
                     let this_ = this;
                     this.addAction(constants.particles.Sap, (particle) => {
-                        this_._initialProperties = particle.content;
+                        this_._sap = particle.content;
                         this_.onGettingAlive();
                     });
                 }
-                get initialProperties() {
-                    return this._initialProperties;
+                get sap() {
+                    return this._sap;
                 }
                 receive(particle) {
                     let action = this.actions.get(particle.name);
