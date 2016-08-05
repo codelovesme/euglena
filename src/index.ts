@@ -411,6 +411,9 @@ export module euglena {
                 }
             }
             export namespace particles {
+                export interface SapContent {
+                    euglenaName: string
+                }
                 export class Sap extends Particle {
                     constructor(content: any, of: string) { super(constants.particles.Sap, content, of); }
                 }
@@ -421,8 +424,8 @@ export module euglena {
                     export const Sap = "Sap";
                 }
             }
-            export abstract class Organelle<Sap extends { euglenaName: string }> implements Named, Classifiable, interaction.CanReceiveParticle {
-                private _sap: Sap;
+            export abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
+                private _sap: particles.SapContent;
                 protected get sap() {
                     return this._sap;
                 }
