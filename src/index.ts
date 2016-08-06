@@ -420,10 +420,6 @@ export module euglena {
                 export const OutSide = "OutSide";
             }
             export abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
-                private _sap: particles.SapContent;
-                protected get sap() {
-                    return this._sap;
-                }
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
                 constructor(public name: string, public className: string, public send?: interaction.Receive) {
                     let this_ = this;

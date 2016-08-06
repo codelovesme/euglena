@@ -198,8 +198,6 @@ export declare module euglena {
                 name: string;
                 className: string;
                 send: interaction.Receive;
-                private _sap;
-                protected sap: particles.SapContent;
                 private actions;
                 constructor(name: string, className: string, send?: interaction.Receive);
                 protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle) => void) => void): void;

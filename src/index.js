@@ -466,9 +466,6 @@ var euglena;
                         this_.actions.add(particleName, action);
                     });
                 }
-                get sap() {
-                    return this._sap;
-                }
                 receive(particle) {
                     let action = this.actions.get(particle.name);
                     if (action) {
