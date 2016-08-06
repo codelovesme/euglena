@@ -365,6 +365,7 @@ export module euglena {
                             return ref1.name === ref2.name &&
                                 ref1.of === ref2.of &&
                                 euglena.sys.type.StaticTools.Array.equals(ref1.primaryKeys, ref2.primaryKeys);
+                            //TODO compare vlues of primaryKeys
                         }
                     }
                 }
@@ -414,15 +415,9 @@ export module euglena {
                 export interface SapContent {
                     euglenaName: string
                 }
-                export class Sap extends Particle {
-                    constructor(content: any, of: string) { super(constants.particles.Sap, content, of); }
-                }
             }
             export namespace constants {
                 export const OutSide = "OutSide";
-                export namespace particles {
-                    export const Sap = "Sap";
-                }
             }
             export abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
                 private _sap: particles.SapContent;
@@ -431,22 +426,18 @@ export module euglena {
                 }
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
                 constructor(public name: string, public className: string, public send?: interaction.Receive) {
-                    this.actions = new sys.type.Map<string, (particle: Particle) => void>();
                     let this_ = this;
-                    this.addAction(constants.particles.Sap, (particle) => {
-                        this_._sap = particle.content;
-                        this_.onGettingAlive();
+                    this.actions = new sys.type.Map<string, (particle: Particle) => void>();
+                    this.bindActions((particleName: string, action: (particle: Particle) => void) => {
+                        this_.actions.add(particleName, action);
                     });
                 }
-                protected abstract onGettingAlive(): void;
+                protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle) => void) => void): void;
                 public receive(particle: Particle): void {
                     let action = this.actions.get(particle.name);
                     if (action) {
                         action(particle);
                     }
-                }
-                protected addAction(particleName: string, action: (particle: Particle) => void): void {
-                    this.actions.add(particleName, action);
                 }
             }
             export class Body {

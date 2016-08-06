@@ -190,15 +190,9 @@ export declare module euglena {
                 interface SapContent {
                     euglenaName: string;
                 }
-                class Sap extends Particle {
-                    constructor(content: any, of: string);
-                }
             }
             namespace constants {
                 const OutSide: string;
-                namespace particles {
-                    const Sap: string;
-                }
             }
             abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
                 name: string;
@@ -208,9 +202,8 @@ export declare module euglena {
                 protected sap: particles.SapContent;
                 private actions;
                 constructor(name: string, className: string, send?: interaction.Receive);
-                protected abstract onGettingAlive(): void;
+                protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle) => void) => void): void;
                 receive(particle: Particle): void;
-                protected addAction(particleName: string, action: (particle: Particle) => void): void;
             }
             class Body {
                 particles: Particle[];

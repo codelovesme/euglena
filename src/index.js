@@ -407,6 +407,7 @@ var euglena;
                         return ref1.name === ref2.name &&
                             ref1.of === ref2.of &&
                             euglena.sys.type.StaticTools.Array.equals(ref1.primaryKeys, ref2.primaryKeys);
+                        //TODO compare vlues of primaryKeys
                     }
                 };
                 dna.StaticTools = StaticTools;
@@ -450,33 +451,19 @@ var euglena;
                 }
                 dna.GarbageCollector = GarbageCollector;
             })(dna = alive.dna || (alive.dna = {}));
-            var particles;
-            (function (particles) {
-                class Sap extends Particle {
-                    constructor(content, of) {
-                        super(constants.particles.Sap, content, of);
-                    }
-                }
-                particles.Sap = Sap;
-            })(particles = alive.particles || (alive.particles = {}));
             var constants;
             (function (constants) {
                 constants.OutSide = "OutSide";
-                var particles;
-                (function (particles) {
-                    particles.Sap = "Sap";
-                })(particles = constants.particles || (constants.particles = {}));
             })(constants = alive.constants || (alive.constants = {}));
             class Organelle {
                 constructor(name, className, send) {
                     this.name = name;
                     this.className = className;
                     this.send = send;
-                    this.actions = new sys.type.Map();
                     let this_ = this;
-                    this.addAction(constants.particles.Sap, (particle) => {
-                        this_._sap = particle.content;
-                        this_.onGettingAlive();
+                    this.actions = new sys.type.Map();
+                    this.bindActions((particleName, action) => {
+                        this_.actions.add(particleName, action);
                     });
                 }
                 get sap() {
@@ -487,9 +474,6 @@ var euglena;
                     if (action) {
                         action(particle);
                     }
-                }
-                addAction(particleName, action) {
-                    this.actions.add(particleName, action);
                 }
             }
             alive.Organelle = Organelle;
