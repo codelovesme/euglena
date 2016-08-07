@@ -370,7 +370,7 @@ export module euglena {
                     }
                 }
                 export interface Reaction {
-                    (particle: Particle, body: Cytoplasm): void;
+                    (particle: Particle): void;
                 }
                 export class Gene implements euglena.sys.type.Named {
                     constructor(
