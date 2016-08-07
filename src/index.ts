@@ -485,7 +485,7 @@ export module euglena {
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         try {
-                            reaction(particle, Cytoplasm.instance);
+                            reaction(particle);
                         } catch (e) {
                             console.log(e);
                             //response(new euglena_template.being.alive.particles.Exception(new euglena.sys.type.Exception(e.message), this.name));

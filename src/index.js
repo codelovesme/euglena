@@ -521,7 +521,7 @@ var euglena;
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         try {
-                            reaction(particle, Cytoplasm.instance);
+                            reaction(particle);
                         }
                         catch (e) {
                             console.log(e);
