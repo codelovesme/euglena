@@ -474,29 +474,28 @@ var euglena;
                 }
             }
             alive.Organelle = Organelle;
-            class Body {
+            class Cytoplasm {
                 constructor(particles, organelles, chromosome) {
-                    this.particles = particles;
-                    this.chromosome = chromosome;
-                    this.organelles = null;
-                    if (Body.instance) {
-                        throw "There exists already a Body instance.";
+                    if (Cytoplasm.instance) {
+                        throw "There exists a cytoplasm instance already.";
                     }
-                    this.organelles = {};
+                    Cytoplasm.particles = particles;
+                    Cytoplasm.chromosome = chromosome;
+                    Cytoplasm.organelles = {};
                     for (let organelle of organelles) {
-                        organelle.send = Body.receive;
-                        this.organelles[organelle.name] = organelle;
+                        organelle.send = Cytoplasm.receive;
+                        Cytoplasm.organelles[organelle.name] = organelle;
                     }
-                    Body.instance = this;
+                    Cytoplasm.instance = this;
                 }
                 static receive(particle) {
-                    console.log("Organelle Nucleus says received particle " + particle.name);
+                    console.log("Cytoplasm says received particle " + particle.name);
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array();
-                    for (var i = 0; i < Body.instance.chromosome.length; i++) {
-                        let triggers = Body.instance.chromosome[i].triggers;
+                    for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
+                        let triggers = Cytoplasm.chromosome[i].triggers;
                         if (euglena.js.Class.doesCover(particle, triggers)) {
-                            var reaction = Body.instance.chromosome[i].reaction;
+                            var reaction = Cytoplasm.chromosome[i].reaction;
                             triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                         }
                     }
@@ -513,7 +512,7 @@ var euglena;
                             if (!euglena.sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers))
                                 continue;
                             //then check if tr2 overrides tr
-                            doTrigger = !(Body.instance.chromosome[tr2.index].override === Body.instance.chromosome[tr.index].name);
+                            doTrigger = !(Cytoplasm.chromosome[tr2.index].override === Cytoplasm.chromosome[tr.index].name);
                         }
                         if (doTrigger) {
                             reactions.push(tr.reaction);
@@ -522,42 +521,43 @@ var euglena;
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         try {
-                            reaction(particle, Body.instance);
+                            reaction(particle, Cytoplasm.instance);
                         }
                         catch (e) {
                             console.log(e);
                         }
                     }
                 }
-                transmit(organelleName, particle) {
+                static transmit(organelleName, particle) {
                     console.log("received Particle: " + particle.name + " sent to: " + organelleName);
-                    let organelle = Body.instance.organelles[organelleName];
+                    let organelle = Cytoplasm.organelles[organelleName];
                     organelle.receive(particle);
                 }
-                saveParticle(particle) {
-                    let index = Body.instance.indexOfParticle(particle);
+                static saveParticle(particle) {
+                    let index = Cytoplasm.indexOfParticle(particle);
                     if (index >= 0) {
-                        Body.instance.particles[index] = particle;
+                        Cytoplasm.particles[index] = particle;
                     }
                     else {
-                        Body.instance.particles.push(particle);
+                        Cytoplasm.particles.push(particle);
                     }
                 }
-                getParticle(particleReference) {
-                    let index = Body.instance.indexOfParticle(particleReference);
-                    return index >= 0 ? Body.instance.particles[index] : null;
+                static getParticle(particleReference) {
+                    let index = Cytoplasm.indexOfParticle(particleReference);
+                    return index >= 0 ? Cytoplasm.particles[index] : null;
                 }
-                indexOfParticle(particleReference) {
-                    for (let i = 0; i < Body.instance.particles.length; i++) {
-                        if (dna.StaticTools.ParticleReference.equals(Body.instance.particles[i], particleReference)) {
+                static indexOfParticle(particleReference) {
+                    for (let i = 0; i < Cytoplasm.particles.length; i++) {
+                        if (dna.StaticTools.ParticleReference.equals(Cytoplasm.particles[i], particleReference)) {
                             return i;
                         }
                     }
                     return -1;
                 }
             }
-            Body.instance = null;
-            alive.Body = Body;
+            Cytoplasm.instance = null;
+            Cytoplasm.organelles = null;
+            alive.Cytoplasm = Cytoplasm;
         })(alive = being.alive || (being.alive = {}));
     })(being = euglena.being || (euglena.being = {}));
 })(euglena = exports.euglena || (exports.euglena = {}));

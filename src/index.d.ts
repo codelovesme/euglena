@@ -169,7 +169,7 @@ export declare module euglena {
                     };
                 }
                 interface Reaction {
-                    (particle: Particle, body: Body): void;
+                    (particle: Particle, body: Cytoplasm): void;
                 }
                 class Gene implements euglena.sys.type.Named {
                     name: string;
@@ -203,17 +203,17 @@ export declare module euglena {
                 protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle) => void) => void): void;
                 receive(particle: Particle): void;
             }
-            class Body {
-                particles: Particle[];
-                chromosome: dna.Gene[];
-                static instance: Body;
-                organelles: any;
+            class Cytoplasm {
+                static instance: Cytoplasm;
+                private static organelles;
+                static particles: Particle[];
+                static chromosome: dna.Gene[];
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
                 static receive(particle: Particle): void;
-                transmit(organelleName: string, particle: Particle): void;
-                saveParticle(particle: being.Particle): void;
-                getParticle(particleReference: dna.ParticleReference): being.Particle;
-                private indexOfParticle(particleReference);
+                static transmit(organelleName: string, particle: Particle): void;
+                static saveParticle(particle: being.Particle): void;
+                static getParticle(particleReference: dna.ParticleReference): being.Particle;
+                private static indexOfParticle(particleReference);
             }
         }
     }

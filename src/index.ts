@@ -370,7 +370,7 @@ export module euglena {
                     }
                 }
                 export interface Reaction {
-                    (particle: Particle, body: Body): void;
+                    (particle: Particle, body: Cytoplasm): void;
                 }
                 export class Gene implements euglena.sys.type.Named {
                     constructor(
@@ -436,28 +436,32 @@ export module euglena {
                     }
                 }
             }
-            export class Body {
-                public static instance: Body = null;
-                public organelles: any = null;
-                constructor(public particles: Particle[], organelles: Organelle<any>[], public chromosome: dna.Gene[]) {
-                    if (Body.instance) {
-                        throw "There exists already a Body instance.";
+            export class Cytoplasm {
+                public static instance: Cytoplasm = null;
+                private static organelles: any = null;
+                public static particles: Particle[];
+                public static chromosome: dna.Gene[];
+                constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]) {
+                    if (Cytoplasm.instance) {
+                        throw "There exists a cytoplasm instance already.";
                     }
-                    this.organelles = {};
+                    Cytoplasm.particles = particles;
+                    Cytoplasm.chromosome = chromosome;
+                    Cytoplasm.organelles = {};
                     for (let organelle of organelles) {
-                        organelle.send = Body.receive;
-                        this.organelles[organelle.name] = organelle;
+                        organelle.send = Cytoplasm.receive;
+                        Cytoplasm.organelles[organelle.name] = organelle;
                     }
-                    Body.instance = this;
+                    Cytoplasm.instance = this;
                 }
                 public static receive(particle: Particle) {
-                    console.log("Organelle Nucleus says received particle " + particle.name);
+                    console.log("Cytoplasm says received particle " + particle.name);
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
-                    for (var i = 0; i < Body.instance.chromosome.length; i++) {
-                        let triggers: any = Body.instance.chromosome[i].triggers;
+                    for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
+                        let triggers: any = Cytoplasm.chromosome[i].triggers;
                         if (euglena.js.Class.doesCover(particle, triggers)) {
-                            var reaction = Body.instance.chromosome[i].reaction;
+                            var reaction = Cytoplasm.chromosome[i].reaction;
                             triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                         }
                     }
@@ -472,7 +476,7 @@ export module euglena {
                             //then if triggers of tr2 does not contain triggers of tr, do nothing
                             if (!euglena.sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers)) continue;
                             //then check if tr2 overrides tr
-                            doTrigger = !(Body.instance.chromosome[tr2.index].override === Body.instance.chromosome[tr.index].name);
+                            doTrigger = !(Cytoplasm.chromosome[tr2.index].override === Cytoplasm.chromosome[tr.index].name);
                         }
                         if (doTrigger) {
                             reactions.push(tr.reaction);
@@ -481,33 +485,33 @@ export module euglena {
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         try {
-                            reaction(particle, Body.instance);
+                            reaction(particle, Cytoplasm.instance);
                         } catch (e) {
                             console.log(e);
                             //response(new euglena_template.being.alive.particles.Exception(new euglena.sys.type.Exception(e.message), this.name));
                         }
                     }
                 }
-                public transmit(organelleName: string, particle: Particle) {
+                public static transmit(organelleName: string, particle: Particle) {
                     console.log("received Particle: " + particle.name + " sent to: " + organelleName);
-                    let organelle: Organelle<any> = Body.instance.organelles[organelleName] as Organelle<any>;
+                    let organelle: Organelle<any> = Cytoplasm.organelles[organelleName] as Organelle<any>;
                     organelle.receive(particle);
                 }
-                public saveParticle(particle: being.Particle) {
-                    let index = Body.instance.indexOfParticle(particle);
+                public static saveParticle(particle: being.Particle) {
+                    let index = Cytoplasm.indexOfParticle(particle);
                     if (index >= 0) {
-                        Body.instance.particles[index] = particle;
+                        Cytoplasm.particles[index] = particle;
                     } else {
-                        Body.instance.particles.push(particle);
+                        Cytoplasm.particles.push(particle);
                     }
                 }
-                public getParticle(particleReference: dna.ParticleReference): being.Particle {
-                    let index = Body.instance.indexOfParticle(particleReference);
-                    return index >= 0 ? Body.instance.particles[index] : null;
+                public static getParticle(particleReference: dna.ParticleReference): being.Particle {
+                    let index = Cytoplasm.indexOfParticle(particleReference);
+                    return index >= 0 ? Cytoplasm.particles[index] : null;
                 }
-                private indexOfParticle(particleReference: dna.ParticleReference): number {
-                    for (let i = 0; i < Body.instance.particles.length; i++) {
-                        if (dna.StaticTools.ParticleReference.equals(Body.instance.particles[i], particleReference)) {
+                private static indexOfParticle(particleReference: dna.ParticleReference): number {
+                    for (let i = 0; i < Cytoplasm.particles.length; i++) {
+                        if (dna.StaticTools.ParticleReference.equals(Cytoplasm.particles[i], particleReference)) {
                             return i;
                         }
                     }
