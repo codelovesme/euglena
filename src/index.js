@@ -418,7 +418,7 @@ var euglena;
             (function (dna) {
                 class ParticleReference extends Particle {
                     constructor(meta) {
-                        super(meta, undefined);
+                        super(meta, null);
                     }
                 }
                 dna.ParticleReference = ParticleReference;

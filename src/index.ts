@@ -368,7 +368,7 @@ export module euglena {
             export namespace dna {
                 export class ParticleReference extends Particle {
                     constructor(meta: any) {
-                        super(meta, undefined);
+                        super(meta, null);
                     }
                 }
                 export class StaticTools {
