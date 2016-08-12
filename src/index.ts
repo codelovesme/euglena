@@ -10,8 +10,9 @@
 * #Seperate particle, request, event
 *
 */
+export const JavascriptDate = Date;
+export const JavascriptObject = Object;
 export module euglena {
-    export const JavascriptDate = Date;
     export namespace js {
         export class Class {
             public static extend(subInstance: any, parentInstance: any): void {
@@ -184,6 +185,28 @@ export module euglena {
                 export const Exception = new euglena.sys.type.Exception("Exception", null);
             }
             export namespace StaticTools {
+                export class Object {
+                    public static equals(obj1: any, obj2: any, deep?: boolean) {
+                        let obj1keys = JavascriptObject.keys(obj1);
+                        let obj2keys = JavascriptObject.keys(obj2);
+                        if (!Array.equals(obj1keys, obj2keys)) return false;
+                        if (obj1keys.length == 0) return true;
+                        if (deep) {
+                            for (let key of obj1keys) {
+                                if (typeof obj1[key] == "object") {
+                                    if (!Object.equals(obj1[key], obj2[key])) return false;
+                                } else {
+                                    if (obj1[key] != obj2[key]) return false;
+                                }
+                            }
+                        } else {
+                            for (let key of obj1keys) {
+                                if (obj1[key] != obj2[key]) return false;
+                            }
+                        }
+                        return true;
+                    }
+                }
                 export class Exception {
                     public static isNotException<T>(t: T | Exception): t is T {
                         return !euglena.js.Class.instanceOf(reference.Exception, t);
@@ -322,18 +345,7 @@ export module euglena {
         import Classifiable = euglena.sys.type.Classifiable;
         import Named = euglena.sys.type.Named;
         export class Particle {
-            constructor(
-                public name: string,
-                public content: any,
-                public of: string,
-                public primaryKeys?: Array<string>) { }
-        }
-        export class StaticTools {
-            public static Particle = {
-                covers: (p1: Particle, p2: Particle) => {
-
-                }
-            }
+            constructor(public meta: any, public data: any) { }
         }
         export namespace interaction {
             export interface CanReceiveParticle {
@@ -355,17 +367,14 @@ export module euglena {
             import Impact = euglena.being.interaction.Impact;
             export namespace dna {
                 export class ParticleReference extends Particle {
-                    constructor(name: string, of: string, primaryKeys?: string[], content?: any) {
-                        super(name, content, of, primaryKeys);
+                    constructor(meta: any) {
+                        super(meta, undefined);
                     }
                 }
                 export class StaticTools {
                     public static ParticleReference = {
                         equals: (ref1: ParticleReference, ref2: ParticleReference) => {
-                            return ref1.name === ref2.name &&
-                                ref1.of === ref2.of &&
-                                euglena.sys.type.StaticTools.Array.equals(ref1.primaryKeys, ref2.primaryKeys);
-                            //TODO compare vlues of primaryKeys
+                            return sys.type.StaticTools.Object.equals(ref1.meta, ref2.meta);
                         }
                     }
                 }
@@ -430,7 +439,7 @@ export module euglena {
                 }
                 protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle) => void) => void): void;
                 public receive(particle: Particle): void {
-                    let action = this.actions.get(particle.name);
+                    let action = this.actions.get(particle.meta.name);
                     if (action) {
                         action(particle);
                     }
@@ -455,7 +464,7 @@ export module euglena {
                     Cytoplasm.instance = this;
                 }
                 public static receive(particle: Particle) {
-                    console.log("Cytoplasm says received particle " + particle.name);
+                    console.log("Cytoplasm says received particle " + particle.meta.name);
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
@@ -493,7 +502,7 @@ export module euglena {
                     }
                 }
                 public static transmit(organelleName: string, particle: Particle) {
-                    console.log("received Particle: " + particle.name + " sent to: " + organelleName);
+                    console.log("received Particle: " + particle.meta.name + " sent to: " + organelleName);
                     let organelle: Organelle<any> = Cytoplasm.organelles[organelleName] as Organelle<any>;
                     organelle.receive(particle);
                 }

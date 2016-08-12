@@ -9,10 +9,76 @@ import {euglena} from "../src/index";
 import * as chai from "chai";
 
 import Class = euglena.js.Class;
+import StaticTools = euglena.sys.type.StaticTools;
 
 describe("euglena", () => {
     describe("js", () => {
         describe("Class", () => {
+            describe("equals", () => {
+                it("should return true if both of object empty", () => {
+                    //given
+                    let obj1 = {};
+                    let obj2 = {};
+                    //when
+                    let result = StaticTools.Object.equals(obj1, obj2);
+                    //then
+                    chai.expect(result).to.be.true;
+                });
+                it("should return true if both of object is equal in shadow", () => {
+                    //given
+                    let obj1 = { name: "fedai", surname: "kaya" };
+                    let obj2 = { name: "fedai", surname: "kaya" };
+                    //when
+                    let result = StaticTools.Object.equals(obj1, obj2);
+                    //then
+                    chai.expect(result).to.be.true;
+                });
+                it("should return true if both of object is equal in deep", () => {
+                    //given
+                    let obj1 = { name: "fedai", surname: "kaya" };
+                    let obj2 = { name: "fedai", surname: "kaya" };
+                    //when
+                    let result = StaticTools.Object.equals(obj1, obj2);
+                    //then
+                    chai.expect(result).to.be.true;
+                });
+                it("should return true if both of object is equal in deep 2", () => {
+                    //given
+                    let obj1 = { name: "fedai", surname: "kaya", pet: { name: "Doggy" } };
+                    let obj2 = { name: "fedai", surname: "kaya", pet: { name: "Doggy" } };
+                    //when
+                    let result = StaticTools.Object.equals(obj1, obj2, true);
+                    //then
+                    chai.expect(result).to.be.true;
+                });
+                it("should return true if both of object is equal", () => {
+                    //given
+                    let obj = {};
+                    let obj1 = { name: "fedai", surname: "kaya", obj: obj };
+                    let obj2 = { name: "fedai", surname: "kaya", obj: obj };
+                    //when
+                    let result = StaticTools.Object.equals(obj1, obj2);
+                    let result2 = StaticTools.Object.equals(obj1, obj2, true);
+                    //then
+                    chai.expect(result).to.be.true;
+                    chai.expect(result2).to.be.true;
+                });
+                it("should return false if they are different of has deifferent values", () => {
+                    //given
+                    let obj = {};
+                    let obj1 = { name: "fedai", surname: "kaya" };
+                    let obj2 = { name: "ahmet", surname: "efendi" };
+                    let obj3 = { J: "j" };
+                    //when
+                    let result = StaticTools.Object.equals(obj1, obj2);
+                    let result2 = StaticTools.Object.equals(obj1, obj3, true);
+                    let result3 = StaticTools.Object.equals(obj1, obj, true);
+                    //then
+                    chai.expect(result).to.be.false;
+                    chai.expect(result2).to.be.false;
+                    chai.expect(result3).to.be.false;
+                });
+            });
             describe("doesCover", () => {
                 it("should return false if obj1 is empty obj2 has some keys", () => {
                     //given
@@ -70,8 +136,8 @@ describe("euglena", () => {
                 });
                 it("should return true if both of them is empty objects", () => {
                     //given
-                    let obj1 = {   };
-                    let obj2 = { };
+                    let obj1 = {};
+                    let obj2 = {};
                     //when
                     let result = Class.doesCover(obj1, obj2);
                     //then

@@ -10,9 +10,10 @@
 * #Seperate particle, request, event
 *
 */
+exports.JavascriptDate = Date;
+exports.JavascriptObject = Object;
 var euglena;
 (function (euglena) {
-    euglena.JavascriptDate = Date;
     var js;
     (function (js) {
         class Class {
@@ -214,6 +215,36 @@ var euglena;
             })(reference = type.reference || (type.reference = {}));
             var StaticTools;
             (function (StaticTools) {
+                class Object {
+                    static equals(obj1, obj2, deep) {
+                        let obj1keys = exports.JavascriptObject.keys(obj1);
+                        let obj2keys = exports.JavascriptObject.keys(obj2);
+                        if (!Array.equals(obj1keys, obj2keys))
+                            return false;
+                        if (obj1keys.length == 0)
+                            return true;
+                        if (deep) {
+                            for (let key of obj1keys) {
+                                if (typeof obj1[key] == "object") {
+                                    if (!Object.equals(obj1[key], obj2[key]))
+                                        return false;
+                                }
+                                else {
+                                    if (obj1[key] != obj2[key])
+                                        return false;
+                                }
+                            }
+                        }
+                        else {
+                            for (let key of obj1keys) {
+                                if (obj1[key] != obj2[key])
+                                    return false;
+                            }
+                        }
+                        return true;
+                    }
+                }
+                StaticTools.Object = Object;
                 class Exception {
                     static isNotException(t) {
                         return !euglena.js.Class.instanceOf(reference.Exception, t);
@@ -242,11 +273,11 @@ var euglena;
                         return Date.equals(time1.date, time2.date) && Clock.equals(time1.clock, time2.clock);
                     }
                     static now() {
-                        let newDate = new euglena.JavascriptDate();
+                        let newDate = new exports.JavascriptDate();
                         return new sys.type.Time(new sys.type.Date(newDate.getUTCFullYear(), newDate.getUTCMonth() + 1, newDate.getUTCDate()), new sys.type.Clock(newDate.getUTCHours(), newDate.getUTCMinutes(), newDate.getUTCSeconds()));
                     }
                     static addMiliseconds(time, miliseconds) {
-                        return Time.fromJavascriptDate(new euglena.JavascriptDate(Time.toJavascriptDate(time).getTime() + miliseconds));
+                        return Time.fromJavascriptDate(new exports.JavascriptDate(Time.toJavascriptDate(time).getTime() + miliseconds));
                     }
                     static DayToMiliseconds(minute) {
                         return minute * 86400000;
@@ -264,7 +295,7 @@ var euglena;
                         return new sys.type.Time(new sys.type.Date(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()), new sys.type.Clock(date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()));
                     }
                     static toJavascriptDate(time) {
-                        let date = new euglena.JavascriptDate();
+                        let date = new exports.JavascriptDate();
                         date.setUTCFullYear(time.date.year);
                         date.setUTCMonth(time.date.month - 1);
                         date.setUTCDate(time.date.day);
@@ -360,21 +391,12 @@ var euglena;
     var being;
     (function (being) {
         class Particle {
-            constructor(name, content, of, primaryKeys) {
-                this.name = name;
-                this.content = content;
-                this.of = of;
-                this.primaryKeys = primaryKeys;
+            constructor(meta, data) {
+                this.meta = meta;
+                this.data = data;
             }
         }
         being.Particle = Particle;
-        class StaticTools {
-        }
-        StaticTools.Particle = {
-            covers: (p1, p2) => {
-            }
-        };
-        being.StaticTools = StaticTools;
         var interaction;
         (function (interaction) {
             class Impact {
@@ -395,8 +417,8 @@ var euglena;
             var dna;
             (function (dna) {
                 class ParticleReference extends Particle {
-                    constructor(name, of, primaryKeys, content) {
-                        super(name, content, of, primaryKeys);
+                    constructor(meta) {
+                        super(meta, undefined);
                     }
                 }
                 dna.ParticleReference = ParticleReference;
@@ -404,10 +426,7 @@ var euglena;
                 }
                 StaticTools.ParticleReference = {
                     equals: (ref1, ref2) => {
-                        return ref1.name === ref2.name &&
-                            ref1.of === ref2.of &&
-                            euglena.sys.type.StaticTools.Array.equals(ref1.primaryKeys, ref2.primaryKeys);
-                        //TODO compare vlues of primaryKeys
+                        return sys.type.StaticTools.Object.equals(ref1.meta, ref2.meta);
                     }
                 };
                 dna.StaticTools = StaticTools;
@@ -467,7 +486,7 @@ var euglena;
                     });
                 }
                 receive(particle) {
-                    let action = this.actions.get(particle.name);
+                    let action = this.actions.get(particle.meta.name);
                     if (action) {
                         action(particle);
                     }
@@ -489,7 +508,7 @@ var euglena;
                     Cytoplasm.instance = this;
                 }
                 static receive(particle) {
-                    console.log("Cytoplasm says received particle " + particle.name);
+                    console.log("Cytoplasm says received particle " + particle.meta.name);
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
@@ -529,7 +548,7 @@ var euglena;
                     }
                 }
                 static transmit(organelleName, particle) {
-                    console.log("received Particle: " + particle.name + " sent to: " + organelleName);
+                    console.log("received Particle: " + particle.meta.name + " sent to: " + organelleName);
                     let organelle = Cytoplasm.organelles[organelleName];
                     organelle.receive(particle);
                 }

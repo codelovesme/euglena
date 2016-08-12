@@ -11,7 +11,7 @@
   },
   "typings": "./src/index.d.ts",
   "devDependencies": {
-    "chai": "*",
+    "chai": "^3.5.0",
     "mocha": "*"
   },
   "scripts": {

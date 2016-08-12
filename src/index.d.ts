@@ -1,8 +1,9 @@
 /**
  * Created by codelovesme on 6/19/2015.
  */
+export declare const JavascriptDate: DateConstructor;
+export declare const JavascriptObject: ObjectConstructor;
 export declare module euglena {
-    const JavascriptDate: DateConstructor;
     namespace js {
         class Class {
             static extend(subInstance: any, parentInstance: any): void;
@@ -90,6 +91,9 @@ export declare module euglena {
                 const Exception: Exception;
             }
             namespace StaticTools {
+                class Object {
+                    static equals(obj1: any, obj2: any, deep?: boolean): boolean;
+                }
                 class Exception {
                     static isNotException<T>(t: T | Exception): t is T;
                 }
@@ -129,16 +133,9 @@ export declare module euglena {
     namespace being {
         import Named = euglena.sys.type.Named;
         class Particle {
-            name: string;
-            content: any;
-            of: string;
-            primaryKeys: Array<string>;
-            constructor(name: string, content: any, of: string, primaryKeys?: Array<string>);
-        }
-        class StaticTools {
-            static Particle: {
-                covers: (p1: Particle, p2: Particle) => void;
-            };
+            meta: any;
+            data: any;
+            constructor(meta: any, data: any);
         }
         namespace interaction {
             interface CanReceiveParticle {
@@ -161,7 +158,7 @@ export declare module euglena {
             import Particle = euglena.being.Particle;
             namespace dna {
                 class ParticleReference extends Particle {
-                    constructor(name: string, of: string, primaryKeys?: string[], content?: any);
+                    constructor(meta: any);
                 }
                 class StaticTools {
                     static ParticleReference: {
