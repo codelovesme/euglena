@@ -507,7 +507,7 @@ var euglena;
                     }
                     Cytoplasm.instance = this;
                 }
-                static receive(particle) {
+                static receive(particle, source) {
                     console.log("Cytoplasm says received particle " + particle.meta.name);
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array();
@@ -540,7 +540,7 @@ var euglena;
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         try {
-                            reaction(particle);
+                            reaction(particle, source);
                         }
                         catch (e) {
                             console.log(e);

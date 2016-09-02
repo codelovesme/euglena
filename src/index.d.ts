@@ -142,7 +142,7 @@ export declare module euglena {
                 receive: Receive;
             }
             interface Receive {
-                (particle: Particle): void;
+                (particle: Particle, source: string): void;
             }
             class Impact {
                 particle: Particle;
@@ -166,7 +166,7 @@ export declare module euglena {
                     };
                 }
                 interface Reaction {
-                    (particle: Particle): void;
+                    (particle: Particle, sourceOrganelle: string): void;
                 }
                 class Gene implements euglena.sys.type.Named {
                     name: string;
@@ -206,7 +206,7 @@ export declare module euglena {
                 static particles: Particle[];
                 static chromosome: dna.Gene[];
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
-                static receive(particle: Particle): void;
+                static receive(particle: Particle, source: string): void;
                 static transmit(organelleName: string, particle: Particle): void;
                 static saveParticle(particle: being.Particle): void;
                 static getParticle(particleReference: dna.ParticleReference): being.Particle;

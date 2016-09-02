@@ -352,7 +352,7 @@ export module euglena {
                 receive: Receive;
             }
             export interface Receive {
-                (particle: Particle): void;
+                (particle: Particle, source: string): void;
             }
             export class Impact {
                 constructor(public particle: Particle, public token: string) { }
@@ -379,7 +379,7 @@ export module euglena {
                     }
                 }
                 export interface Reaction {
-                    (particle: Particle): void;
+                    (particle: Particle, sourceOrganelle: string): void;
                 }
                 export class Gene implements euglena.sys.type.Named {
                     constructor(
@@ -463,7 +463,7 @@ export module euglena {
                     }
                     Cytoplasm.instance = this;
                 }
-                public static receive(particle: Particle) {
+                public static receive(particle: Particle, source: string) {
                     console.log("Cytoplasm says received particle " + particle.meta.name);
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
@@ -494,7 +494,7 @@ export module euglena {
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         try {
-                            reaction(particle);
+                            reaction(particle, source);
                         } catch (e) {
                             console.log(e);
                             //response(new euglena_template.being.alive.particles.Exception(new euglena.sys.type.Exception(e.message), this.name));
