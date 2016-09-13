@@ -493,12 +493,12 @@ export module euglena {
                     }
                     //trigger collected reactions
                     for (let reaction of reactions) {
-                        try {
+                        //try {
                             reaction(particle, source);
-                        } catch (e) {
-                            console.log(e);
+                        //} catch (e) {
+                          //  console.log(e);
                             //response(new euglena_template.being.alive.particles.Exception(new euglena.sys.type.Exception(e.message), this.name));
-                        }
+                        //}
                     }
                 }
                 public static transmit(organelleName: string, particle: Particle) {
