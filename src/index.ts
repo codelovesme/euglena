@@ -296,7 +296,7 @@ export module euglena {
                     }
                 }
                 export class Array {
-                    public remove<T>(array:T[],index: number): T {
+                    public static remove<T>(array:T[],index: number): T {
                         return array.splice(index, 1)[0];
                     }
                     public static combine<T>(array1: T[], array2: T[]): T[] {
