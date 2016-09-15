@@ -15,6 +15,9 @@ export const JavascriptObject = Object;
 export module euglena {
     export namespace js {
         export class Class {
+            public static clean(obj: Object): void {
+                delete (obj as any).__proto__;
+            }
             public static extend(subInstance: any, parentInstance: any): void {
                 for (let prop in parentInstance) {
                     if (!subInstance[prop]) subInstance[prop] = parentInstance[prop];
@@ -494,10 +497,10 @@ export module euglena {
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         //try {
-                            reaction(particle, source);
+                        reaction(particle, source);
                         //} catch (e) {
-                          //  console.log(e);
-                            //response(new euglena_template.being.alive.particles.Exception(new euglena.sys.type.Exception(e.message), this.name));
+                        //  console.log(e);
+                        //response(new euglena_template.being.alive.particles.Exception(new euglena.sys.type.Exception(e.message), this.name));
                         //}
                     }
                 }

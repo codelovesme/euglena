@@ -17,6 +17,9 @@ var euglena;
     var js;
     (function (js) {
         class Class {
+            static clean(obj) {
+                delete obj.__proto__;
+            }
             static extend(subInstance, parentInstance) {
                 for (let prop in parentInstance) {
                     if (!subInstance[prop])

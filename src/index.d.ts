@@ -6,6 +6,7 @@ export declare const JavascriptObject: ObjectConstructor;
 export declare module euglena {
     namespace js {
         class Class {
+            static clean(obj: Object): void;
             static extend(subInstance: any, parentInstance: any): void;
             static clone<T extends any>(obj: T, deep: boolean): T;
             static merge(primaryInstance: any, secondaryInstance: any): any;
