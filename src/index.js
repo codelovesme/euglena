@@ -336,6 +336,9 @@ var euglena;
                 }
                 StaticTools.Clock = Clock;
                 class Array {
+                    remove(array, index) {
+                        return array.splice(index, 1)[0];
+                    }
                     static combine(array1, array2) {
                         let a = array1.concat(array2);
                         for (var i = 0; i < a.length; ++i) {

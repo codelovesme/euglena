@@ -296,6 +296,9 @@ export module euglena {
                     }
                 }
                 export class Array {
+                    public remove<T>(array:T[],index: number): T {
+                        return array.splice(index, 1)[0];
+                    }
                     public static combine<T>(array1: T[], array2: T[]): T[] {
                         let a = array1.concat(array2);
                         for (var i = 0; i < a.length; ++i) {
@@ -522,7 +525,7 @@ export module euglena {
                     return index >= 0 ? Cytoplasm.particles[index] : null;
                 }
                 public static getMatchedParticle(particleReference: dna.ParticleReference): being.Particle {
-                    for(let p of Cytoplasm.particles){
+                    for (let p of Cytoplasm.particles) {
                         if (euglena.js.Class.doesCover(p, particleReference)) {
                             return p;
                         }

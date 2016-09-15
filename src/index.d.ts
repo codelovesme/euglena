@@ -122,6 +122,7 @@ export declare module euglena {
                     static biggerThan(clock1: sys.type.Clock, clock2: sys.type.Clock): boolean;
                 }
                 class Array {
+                    remove<T>(array: T[], index: number): T;
                     static combine<T>(array1: T[], array2: T[]): T[];
                     static equals<T>(array1: T[], array2: T[], compare?: (t1: T, t2: T) => boolean): boolean;
                     static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean;
