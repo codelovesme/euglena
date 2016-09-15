@@ -521,6 +521,14 @@ export module euglena {
                     let index = Cytoplasm.indexOfParticle(particleReference);
                     return index >= 0 ? Cytoplasm.particles[index] : null;
                 }
+                public static getMatchedParticle(particleReference: dna.ParticleReference): being.Particle {
+                    for(let p of Cytoplasm.particles){
+                        if (euglena.js.Class.doesCover(p, particleReference)) {
+                            return p;
+                        }
+                    }
+                    return null;
+                }
                 private static indexOfParticle(particleReference: dna.ParticleReference): number {
                     for (let i = 0; i < Cytoplasm.particles.length; i++) {
                         if (dna.StaticTools.ParticleReference.equals(Cytoplasm.particles[i], particleReference)) {

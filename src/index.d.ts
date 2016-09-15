@@ -211,6 +211,7 @@ export declare module euglena {
                 static transmit(organelleName: string, particle: Particle): void;
                 static saveParticle(particle: being.Particle): void;
                 static getParticle(particleReference: dna.ParticleReference): being.Particle;
+                static getMatchedParticle(particleReference: dna.ParticleReference): being.Particle;
                 private static indexOfParticle(particleReference);
             }
         }
