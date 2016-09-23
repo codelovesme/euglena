@@ -1,4 +1,9 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 /**
  * Created by codelovesme on 6/19/2015.
  */
@@ -16,39 +21,41 @@ var euglena;
 (function (euglena) {
     var js;
     (function (js) {
-        class Class {
-            static clean(obj) {
-                delete obj.__proto__;
+        var Class = (function () {
+            function Class() {
             }
-            static extend(subInstance, parentInstance) {
-                for (let prop in parentInstance) {
+            Class.clean = function (obj) {
+                delete obj.__proto__;
+            };
+            Class.extend = function (subInstance, parentInstance) {
+                for (var prop in parentInstance) {
                     if (!subInstance[prop])
                         subInstance[prop] = parentInstance[prop];
                 }
                 return subInstance;
-            }
-            static clone(obj, deep) {
+            };
+            Class.clone = function (obj, deep) {
                 var sub = {};
                 for (var prop in obj) {
                     sub[prop] = (deep && ('object' === typeof obj[prop])) ? Class.clone(obj[prop], true) : obj[prop];
                 }
                 return sub;
-            }
-            static merge(primaryInstance, secondaryInstance) {
+            };
+            Class.merge = function (primaryInstance, secondaryInstance) {
                 for (var prop in secondaryInstance) {
                     if (!primaryInstance[prop])
                         primaryInstance[prop] = secondaryInstance[prop];
                 }
                 return primaryInstance;
-            }
-            static classify(emptyInstance, valueObj) {
+            };
+            Class.classify = function (emptyInstance, valueObj) {
                 for (var prop in emptyInstance) {
                     if (("function" !== typeof emptyInstance[prop]) && !emptyInstance[prop])
                         emptyInstance[prop] = valueObj[prop];
                 }
                 return emptyInstance;
-            }
-            static valuefy(instance) {
+            };
+            Class.valuefy = function (instance) {
                 var valueObj = {};
                 var propToValuefy = null;
                 for (var prop in instance) {
@@ -63,13 +70,13 @@ var euglena;
                     }
                 }
                 return valueObj;
-            }
-            static isPrimaryType(obj) {
+            };
+            Class.isPrimaryType = function (obj) {
                 return typeof obj === "string" ||
                     typeof obj === "number" ||
                     typeof obj === "boolean";
-            }
-            static instanceOf(referenceObject, obj) {
+            };
+            Class.instanceOf = function (referenceObject, obj) {
                 if (Class.isPrimaryType(referenceObject))
                     return typeof referenceObject === typeof obj;
                 for (var prop in referenceObject) {
@@ -77,9 +84,9 @@ var euglena;
                         return false;
                 }
                 return true;
-            }
-            static doesCover(obj1, obj2) {
-                for (let key in obj2) {
+            };
+            Class.doesCover = function (obj1, obj2) {
+                for (var key in obj2) {
                     if (obj1[key] === undefined)
                         return false;
                     if (Class.isPrimaryType(obj2[key])) {
@@ -92,49 +99,61 @@ var euglena;
                     }
                 }
                 return true;
-            }
-        }
+            };
+            return Class;
+        }());
         js.Class = Class;
     })(js = euglena.js || (euglena.js = {}));
     var injection;
     (function (injection) {
-        class StaticTools {
-            static valueOfValueChooser(valueChooser) {
-                return valueChooser.values[valueChooser.index];
+        var StaticTools = (function () {
+            function StaticTools() {
             }
-        }
+            StaticTools.valueOfValueChooser = function (valueChooser) {
+                return valueChooser.values[valueChooser.index];
+            };
+            return StaticTools;
+        }());
         injection.StaticTools = StaticTools;
-        class Configuration {
-        }
+        var Configuration = (function () {
+            function Configuration() {
+            }
+            return Configuration;
+        }());
         injection.Configuration = Configuration;
-        class ValueChooser {
-            constructor() {
+        var ValueChooser = (function () {
+            function ValueChooser() {
                 this.index = 0;
             }
-        }
+            return ValueChooser;
+        }());
         injection.ValueChooser = ValueChooser;
-        class ObjectChooser {
-        }
+        var ObjectChooser = (function () {
+            function ObjectChooser() {
+            }
+            return ObjectChooser;
+        }());
         injection.ObjectChooser = ObjectChooser;
     })(injection = euglena.injection || (euglena.injection = {}));
     var sys;
     (function (sys) {
         var type;
         (function (type) {
-            class Exception {
-                constructor(message, innerException) {
+            var Exception = (function () {
+                function Exception(message, innerException) {
                     this.message = message;
                     this.innerException = innerException;
                 }
-            }
+                return Exception;
+            }());
             type.Exception = Exception;
-            class Map {
-                constructor(condition) {
+            var Map = (function () {
+                function Map(condition) {
                     this.condition = condition;
                     this.keys = new Array();
                     this.values = new Array();
                 }
-                add(key, value) {
+                Map.prototype.add = function (key, value) {
                     if (!this.get(key)) {
                         this.keys.push(key);
                         this.values.push(value);
@@ -142,11 +161,11 @@ var euglena;
                     else {
                         throw "KeyAlreadyExistException";
                     }
-                }
-                keyExists(key) {
+                };
+                Map.prototype.keyExists = function (key) {
                     return this.indexOf(key) >= 0;
-                }
-                set(key, value) {
+                };
+                Map.prototype.set = function (key, value) {
                     var index = this.keys.indexOf(key);
                     if (index >= 0) {
                         this.values[index] = value;
@@ -155,18 +174,19 @@ var euglena;
                         this.keys.push(key);
                         this.values.push(value);
                     }
-                }
-                remove(key) {
+                };
+                Map.prototype.remove = function (key) {
                     var index = this.keys.indexOf(key);
                     this.keys.slice(index, 1);
                     this.values.slice(index, 1);
-                }
-                indexOf(key) {
-                    let index = -1;
+                };
+                Map.prototype.indexOf = function (key) {
+                    var _this = this;
+                    var index = -1;
                     if (this.condition) {
-                        this.keys.forEach((k) => {
-                            if (this.condition(k, key)) {
-                                index = this.keys.indexOf(k);
+                        this.keys.forEach(function (k) {
+                            if (_this.condition(k, key)) {
+                                index = _this.keys.indexOf(k);
                             }
                         });
                     }
@@ -174,43 +194,47 @@ var euglena;
                         index = this.keys.indexOf(key);
                     }
                     return index;
-                }
-                get(key) {
+                };
+                Map.prototype.get = function (key) {
                     return this.values[this.indexOf(key)];
-                }
-                getKeys() {
+                };
+                Map.prototype.getKeys = function () {
                     return this.keys;
-                }
-                getValues() {
+                };
+                Map.prototype.getValues = function () {
                     return this.values;
-                }
-            }
+                };
+                return Map;
+            }());
             type.Map = Map;
-            class Time {
-                constructor(date, clock) {
+            var Time = (function () {
+                function Time(date, clock) {
                     this.date = date;
                     this.clock = clock;
                     this.className = "euglena.sys.type.Time";
                 }
-            }
+                return Time;
+            }());
             type.Time = Time;
-            class Date {
-                constructor(year, month, day) {
+            var Date = (function () {
+                function Date(year, month, day) {
                     this.year = year;
                     this.month = month;
                     this.day = day;
                     this.className = "euglena.sys.type.Date";
                 }
-            }
+                return Date;
+            }());
             type.Date = Date;
-            class Clock {
-                constructor(hour, minute, second) {
+            var Clock = (function () {
+                function Clock(hour, minute, second) {
                     this.hour = hour;
                     this.minute = minute;
                     this.second = second;
                     this.className = "euglena.sys.type.Clock";
                 }
-            }
+                return Clock;
+            }());
             type.Clock = Clock;
             var reference;
             (function (reference) {
@@ -218,16 +242,19 @@ var euglena;
             })(reference = type.reference || (type.reference = {}));
             var StaticTools;
             (function (StaticTools) {
-                class Object {
-                    static equals(obj1, obj2, deep) {
-                        let obj1keys = exports.JavascriptObject.keys(obj1);
-                        let obj2keys = exports.JavascriptObject.keys(obj2);
+                var Object = (function () {
+                    function Object() {
+                    }
+                    Object.equals = function (obj1, obj2, deep) {
+                        var obj1keys = exports.JavascriptObject.keys(obj1);
+                        var obj2keys = exports.JavascriptObject.keys(obj2);
                         if (!Array.equals(obj1keys, obj2keys))
                             return false;
                         if (obj1keys.length == 0)
                             return true;
                         if (deep) {
-                            for (let key of obj1keys) {
+                            for (var _i = 0, obj1keys_1 = obj1keys; _i < obj1keys_1.length; _i++) {
+                                var key = obj1keys_1[_i];
                                 if (typeof obj1[key] == "object") {
                                     if (!Object.equals(obj1[key], obj2[key]))
                                         return false;
@@ -239,23 +266,30 @@ var euglena;
                             }
                         }
                         else {
-                            for (let key of obj1keys) {
+                            for (var _a = 0, obj1keys_2 = obj1keys; _a < obj1keys_2.length; _a++) {
+                                var key = obj1keys_2[_a];
                                 if (obj1[key] != obj2[key])
                                     return false;
                             }
                         }
                         return true;
-                    }
-                }
+                    };
+                    return Object;
+                }());
                 StaticTools.Object = Object;
-                class Exception {
-                    static isNotException(t) {
-                        return !euglena.js.Class.instanceOf(reference.Exception, t);
+                var Exception = (function () {
+                    function Exception() {
                     }
-                }
+                    Exception.isNotException = function (t) {
+                        return !euglena.js.Class.instanceOf(reference.Exception, t);
+                    };
+                    return Exception;
+                }());
                 StaticTools.Exception = Exception;
-                class UUID {
-                    static generate() {
+                var UUID = (function () {
+                    function UUID() {
+                    }
+                    UUID.generate = function () {
                         function word() {
                             return Math.floor((1 + Math.random()) * 0x10000)
                                 .toString(16)
@@ -263,42 +297,45 @@ var euglena;
                         }
                         return word() + word() + '-' + word() + '-' + word() + '-' +
                             word() + '-' + word() + word() + word();
-                    }
-                }
+                    };
+                    return UUID;
+                }());
                 StaticTools.UUID = UUID;
-                class Time {
-                    static biggerThan(time1, time2) {
+                var Time = (function () {
+                    function Time() {
+                    }
+                    Time.biggerThan = function (time1, time2) {
                         return Date.biggerThan(time1.date, time2.date) ? true :
                             Date.biggerThan(time1.date, time2.date) ? false :
                                 Clock.biggerThan(time1.clock, time2.clock);
-                    }
-                    static equals(time1, time2) {
+                    };
+                    Time.equals = function (time1, time2) {
                         return Date.equals(time1.date, time2.date) && Clock.equals(time1.clock, time2.clock);
-                    }
-                    static now() {
-                        let newDate = new exports.JavascriptDate();
+                    };
+                    Time.now = function () {
+                        var newDate = new exports.JavascriptDate();
                         return new sys.type.Time(new sys.type.Date(newDate.getUTCFullYear(), newDate.getUTCMonth() + 1, newDate.getUTCDate()), new sys.type.Clock(newDate.getUTCHours(), newDate.getUTCMinutes(), newDate.getUTCSeconds()));
-                    }
-                    static addMiliseconds(time, miliseconds) {
+                    };
+                    Time.addMiliseconds = function (time, miliseconds) {
                         return Time.fromJavascriptDate(new exports.JavascriptDate(Time.toJavascriptDate(time).getTime() + miliseconds));
-                    }
-                    static DayToMiliseconds(minute) {
+                    };
+                    Time.DayToMiliseconds = function (minute) {
                         return minute * 86400000;
-                    }
-                    static HourToMiliseconds(minute) {
+                    };
+                    Time.HourToMiliseconds = function (minute) {
                         return minute * 3600000;
-                    }
-                    static MinuteToMiliseconds(minute) {
+                    };
+                    Time.MinuteToMiliseconds = function (minute) {
                         return minute * 60000;
-                    }
-                    static SecondToMiliseconds(minute) {
+                    };
+                    Time.SecondToMiliseconds = function (minute) {
                         return minute * 1000;
-                    }
-                    static fromJavascriptDate(date) {
+                    };
+                    Time.fromJavascriptDate = function (date) {
                         return new sys.type.Time(new sys.type.Date(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()), new sys.type.Clock(date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()));
-                    }
-                    static toJavascriptDate(time) {
-                        let date = new exports.JavascriptDate();
+                    };
+                    Time.toJavascriptDate = function (time) {
+                        var date = new exports.JavascriptDate();
                         date.setUTCFullYear(time.date.year);
                         date.setUTCMonth(time.date.month - 1);
                         date.setUTCDate(time.date.day);
@@ -306,38 +343,47 @@ var euglena;
                         date.setUTCMinutes(time.clock.minute);
                         date.setUTCSeconds(time.clock.second);
                         return date;
-                    }
-                }
+                    };
+                    return Time;
+                }());
                 StaticTools.Time = Time;
-                class Date {
-                    static equals(date1, date2) {
+                var Date = (function () {
+                    function Date() {
+                    }
+                    Date.equals = function (date1, date2) {
                         return date1.year == date2.year &&
                             date1.month == date2.month &&
                             date1.day == date2.day;
-                    }
-                    static biggerThan(date1, date2) {
+                    };
+                    Date.biggerThan = function (date1, date2) {
                         return date1.year > date2.year ? true : date1.year < date2.year ? false :
                             date1.month > date2.month ? true : date1.month < date2.month ? false :
                                 date1.day > date2.day;
-                    }
-                }
+                    };
+                    return Date;
+                }());
                 StaticTools.Date = Date;
-                class Clock {
-                    static equals(clock1, clock2) {
+                var Clock = (function () {
+                    function Clock() {
+                    }
+                    Clock.equals = function (clock1, clock2) {
                         return clock1.hour == clock2.hour &&
                             clock1.minute == clock2.minute &&
                             clock1.second == clock2.second;
-                    }
-                    static biggerThan(clock1, clock2) {
+                    };
+                    Clock.biggerThan = function (clock1, clock2) {
                         return clock1.hour > clock2.hour ? true : clock1.hour < clock2.hour ? false :
                             clock1.minute > clock2.minute ? true : clock1.minute < clock2.minute ? false :
                                 clock1.second > clock2.second;
-                    }
-                }
+                    };
+                    return Clock;
+                }());
                 StaticTools.Clock = Clock;
-                class Array {
-                    static combine(array1, array2) {
-                        let a = array1.concat(array2);
+                var Array = (function () {
+                    function Array() {
+                    }
+                    Array.combine = function (array1, array2) {
+                        var a = array1.concat(array2);
                         for (var i = 0; i < a.length; ++i) {
                             for (var j = i + 1; j < a.length; ++j) {
                                 if (a[i] === a[j])
@@ -345,31 +391,32 @@ var euglena;
                             }
                         }
                         return a;
-                    }
-                    static equals(array1, array2, compare) {
+                    };
+                    Array.equals = function (array1, array2, compare) {
                         if (!array1 && !array2)
                             return true;
                         if (!array1 || !array2)
                             return false;
                         if (array1.length !== array2.length)
                             return false;
-                        for (let i = 0; i < array1.length; i++) {
+                        for (var i = 0; i < array1.length; i++) {
                             if (array1[i] !== array2[i])
                                 return false;
                         }
                         return true;
-                    }
-                    static contains(array, t, compare) {
+                    };
+                    Array.contains = function (array, t, compare) {
                         return Array.indexOf(array, t, compare) >= 0;
-                    }
-                    static containsArray(master, slave, compare) {
-                        for (let s of slave) {
+                    };
+                    Array.containsArray = function (master, slave, compare) {
+                        for (var _i = 0, slave_1 = slave; _i < slave_1.length; _i++) {
+                            var s = slave_1[_i];
                             if (!Array.contains(master, s, compare))
                                 return false;
                         }
                         return true;
-                    }
-                    static indexOf(array, t, compare) {
+                    };
+                    Array.indexOf = function (array, t, compare) {
                         if (compare) {
                             for (var i = 0; i < array.length; i++) {
                                 if (compare(array[i], t)) {
@@ -385,30 +432,30 @@ var euglena;
                             }
                         }
                         return -1;
-                    }
-                    static removeAt(array, index) {
+                    };
+                    Array.removeAt = function (array, index) {
                         return array.splice(index, 1)[0];
-                    }
-                    static remove(array, t, compare) {
+                    };
+                    Array.remove = function (array, t, compare) {
                         if (compare) {
-                            for (let i = 0; i < array.length; i++) {
+                            for (var i = 0; i < array.length; i++) {
                                 if (compare(array[i], t)) {
                                     return array.splice(i, 1)[0];
                                 }
                             }
                         }
                         else {
-                            for (let i = 0; i < array.length; i++) {
+                            for (var i = 0; i < array.length; i++) {
                                 if (array[i] == t) {
                                     return array.splice(i, 1)[0];
                                 }
                             }
                         }
-                    }
-                    static removeAllMatched(array, t, compare) {
-                        let returnValue = [];
+                    };
+                    Array.removeAllMatched = function (array, t, compare) {
+                        var returnValue = [];
                         if (compare) {
-                            for (let i = 0; i < array.length; i++) {
+                            for (var i = 0; i < array.length; i++) {
                                 if (compare(array[i], t)) {
                                     returnValue.push(array.splice(i, 1)[0]);
                                     i--;
@@ -416,7 +463,7 @@ var euglena;
                             }
                         }
                         else {
-                            for (let i = 0; i < array.length; i++) {
+                            for (var i = 0; i < array.length; i++) {
                                 if (array[i] == t) {
                                     returnValue.push(array.splice(i, 1)[0]);
                                     i--;
@@ -424,29 +471,32 @@ var euglena;
                             }
                         }
                         return returnValue;
-                    }
-                }
+                    };
+                    return Array;
+                }());
                 StaticTools.Array = Array;
             })(StaticTools = type.StaticTools || (type.StaticTools = {}));
         })(type = sys.type || (sys.type = {}));
     })(sys = euglena.sys || (euglena.sys = {}));
     var being;
     (function (being) {
-        class Particle {
-            constructor(meta, data) {
+        var Particle = (function () {
+            function Particle(meta, data) {
                 this.meta = meta;
                 this.data = data;
             }
-        }
+            return Particle;
+        }());
         being.Particle = Particle;
         var interaction;
         (function (interaction) {
-            class Impact {
-                constructor(particle, token) {
+            var Impact = (function () {
+                function Impact(particle, token) {
                     this.particle = particle;
                     this.token = token;
                 }
-            }
+                return Impact;
+            }());
             interaction.Impact = Impact;
             var constants;
             (function (constants) {
@@ -458,46 +508,55 @@ var euglena;
             var Particle = euglena.being.Particle;
             var dna;
             (function (dna) {
-                class ParticleReference extends Particle {
-                    constructor(meta) {
-                        super(meta, null);
+                var ParticleReference = (function (_super) {
+                    __extends(ParticleReference, _super);
+                    function ParticleReference(meta) {
+                        _super.call(this, meta, null);
                     }
-                }
+                    return ParticleReference;
+                }(Particle));
                 dna.ParticleReference = ParticleReference;
-                class StaticTools {
-                }
-                StaticTools.ParticleReference = {
-                    equals: (ref1, ref2) => {
-                        return sys.type.StaticTools.Object.equals(ref1.meta, ref2.meta);
+                var StaticTools = (function () {
+                    function StaticTools() {
                     }
-                };
+                    StaticTools.ParticleReference = {
+                        equals: function (ref1, ref2) {
+                            return sys.type.StaticTools.Object.equals(ref1.meta, ref2.meta);
+                        }
+                    };
+                    return StaticTools;
+                }());
                 dna.StaticTools = StaticTools;
-                class Gene extends Particle {
-                    constructor(name, triggers, // particle prop - value match
+                var Gene = (function (_super) {
+                    __extends(Gene, _super);
+                    function Gene(name, triggers, // particle prop - value match
                         reaction, override, expiretime) {
-                        super({ expiretime: expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override });
+                        _super.call(this, { expiretime: expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override });
                     }
-                }
+                    return Gene;
+                }(Particle));
                 dna.Gene = Gene;
-                class GarbageCollector {
-                    constructor(chromosome, particles) {
+                var GarbageCollector = (function () {
+                    function GarbageCollector(chromosome, particles) {
                         this.timeout = 1000;
                         this.chromosome = [];
                         this.particles = [];
                         this.chromosome = chromosome;
                         this.particles = particles;
                     }
-                    start() {
-                        let chromosome = this.chromosome;
-                        let particles = this.particles;
-                        setInterval(() => {
+                    GarbageCollector.prototype.start = function () {
+                        var _this = this;
+                        var chromosome = this.chromosome;
+                        var particles = this.particles;
+                        setInterval(function () {
                             //process genes
-                            euglena.sys.type.StaticTools.Array.removeAllMatched(this.chromosome, new Gene("", {}, null, null, euglena.sys.type.StaticTools.Time.now()), (ai, now) => euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
+                            euglena.sys.type.StaticTools.Array.removeAllMatched(_this.chromosome, new Gene("", {}, null, null, euglena.sys.type.StaticTools.Time.now()), function (ai, now) { return euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime); });
                             //process particles
-                            euglena.sys.type.StaticTools.Array.removeAllMatched(this.particles, { meta: { expiretime: euglena.sys.type.StaticTools.Time.now() }, data: null }, (ai, now) => euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
+                            euglena.sys.type.StaticTools.Array.removeAllMatched(_this.particles, { meta: { expiretime: euglena.sys.type.StaticTools.Time.now() }, data: null }, function (ai, now) { return euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime); });
                         }, this.timeout);
-                    }
-                }
+                    };
+                    return GarbageCollector;
+                }());
                 dna.GarbageCollector = GarbageCollector;
             })(dna = alive.dna || (alive.dna = {}));
             var constants;
@@ -509,34 +568,36 @@ var euglena;
                     particles.Chromosome = "Chromosome";
                 })(particles = constants.particles || (constants.particles = {}));
             })(constants = alive.constants || (alive.constants = {}));
-            class Organelle {
-                constructor(name, className, send) {
+            var Organelle = (function () {
+                function Organelle(name, className, send) {
                     this.name = name;
                     this.className = className;
                     this.send = send;
-                    let this_ = this;
+                    var this_ = this;
                     this.actions = new sys.type.Map();
-                    this.bindActions((particleName, action) => {
+                    this.bindActions(function (particleName, action) {
                         this_.actions.add(particleName, action);
                     });
                 }
-                receive(particle) {
-                    let action = this.actions.get(particle.meta.name);
+                Organelle.prototype.receive = function (particle) {
+                    var action = this.actions.get(particle.meta.name);
                     if (action) {
                         action(particle);
                     }
-                }
-            }
+                };
+                return Organelle;
+            }());
             alive.Organelle = Organelle;
-            class Cytoplasm {
-                constructor(particles, organelles, chromosome) {
+            var Cytoplasm = (function () {
+                function Cytoplasm(particles, organelles, chromosome) {
                     if (Cytoplasm.instance) {
                         throw "There exists a cytoplasm instance already.";
                     }
                     Cytoplasm.particles = particles;
                     Cytoplasm.particles.push({ meta: { name: alive.constants.particles.Chromosome }, data: chromosome });
                     Cytoplasm.organelles = {};
-                    for (let organelle of organelles) {
+                    for (var _i = 0, organelles_1 = organelles; _i < organelles_1.length; _i++) {
+                        var organelle = organelles_1[_i];
                         organelle.send = Cytoplasm.receive;
                         Cytoplasm.organelles[organelle.name] = organelle;
                     }
@@ -544,26 +605,32 @@ var euglena;
                     Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome, particles);
                     Cytoplasm.garbageCollector.start();
                 }
-                static get chromosome() {
-                    return Cytoplasm.getParticle({ meta: alive.constants.particles.Chromosome, data: null }).data;
-                }
-                static receive(particle, source) {
+                Object.defineProperty(Cytoplasm, "chromosome", {
+                    get: function () {
+                        return Cytoplasm.getParticle({ meta: alive.constants.particles.Chromosome, data: null }).data;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Cytoplasm.receive = function (particle, source) {
                     console.log("Cytoplasm says received particle " + particle.meta.name);
                     //find which genes are matched with properties of the particle 
-                    let triggerableReactions = new Array();
+                    var triggerableReactions = new Array();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
-                        let triggers = Cytoplasm.chromosome[i].data.triggers;
+                        var triggers = Cytoplasm.chromosome[i].data.triggers;
                         if (euglena.js.Class.doesCover(particle, triggers)) {
                             var reaction = Cytoplasm.chromosome[i].data.reaction;
                             triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                         }
                     }
                     //get rid of overrided reactions
-                    let reactions = Array();
-                    for (let tr of triggerableReactions) {
-                        let doTrigger = true;
+                    var reactions = Array();
+                    for (var _i = 0, triggerableReactions_1 = triggerableReactions; _i < triggerableReactions_1.length; _i++) {
+                        var tr = triggerableReactions_1[_i];
+                        var doTrigger = true;
                         //Check if the tr is contained by others, if true
-                        for (let tr2 of triggerableReactions) {
+                        for (var _a = 0, triggerableReactions_2 = triggerableReactions; _a < triggerableReactions_2.length; _a++) {
+                            var tr2 = triggerableReactions_2[_a];
                             //if it is the same object, do nothing 
                             if (tr.index === tr2.index)
                                 continue;
@@ -578,48 +645,51 @@ var euglena;
                         }
                     }
                     //trigger collected reactions
-                    for (let reaction of reactions) {
+                    for (var _b = 0, reactions_1 = reactions; _b < reactions_1.length; _b++) {
+                        var reaction_1 = reactions_1[_b];
                         //try {
-                        reaction(particle, source);
+                        reaction_1(particle, source);
                     }
-                }
-                static transmit(organelleName, particle) {
+                };
+                Cytoplasm.transmit = function (organelleName, particle) {
                     console.log("received Particle: " + particle.meta.name + " sent to: " + organelleName);
-                    let organelle = Cytoplasm.organelles[organelleName];
+                    var organelle = Cytoplasm.organelles[organelleName];
                     organelle.receive(particle);
-                }
-                static saveParticle(particle) {
-                    let index = Cytoplasm.indexOfParticle(particle);
+                };
+                Cytoplasm.saveParticle = function (particle) {
+                    var index = Cytoplasm.indexOfParticle(particle);
                     if (index >= 0) {
                         Cytoplasm.particles[index] = particle;
                     }
                     else {
                         Cytoplasm.particles.push(particle);
                     }
-                }
-                static getParticle(particleReference) {
-                    let index = Cytoplasm.indexOfParticle(particleReference);
+                };
+                Cytoplasm.getParticle = function (particleReference) {
+                    var index = Cytoplasm.indexOfParticle(particleReference);
                     return index >= 0 ? Cytoplasm.particles[index] : null;
-                }
-                static getMatchedParticle(particleReference) {
-                    for (let p of Cytoplasm.particles) {
+                };
+                Cytoplasm.getMatchedParticle = function (particleReference) {
+                    for (var _i = 0, _a = Cytoplasm.particles; _i < _a.length; _i++) {
+                        var p = _a[_i];
                         if (euglena.js.Class.doesCover(p, particleReference)) {
                             return p;
                         }
                     }
                     return null;
-                }
-                static indexOfParticle(particleReference) {
-                    for (let i = 0; i < Cytoplasm.particles.length; i++) {
+                };
+                Cytoplasm.indexOfParticle = function (particleReference) {
+                    for (var i = 0; i < Cytoplasm.particles.length; i++) {
                         if (dna.StaticTools.ParticleReference.equals(Cytoplasm.particles[i], particleReference)) {
                             return i;
                         }
                     }
                     return -1;
-                }
-            }
-            Cytoplasm.instance = null;
-            Cytoplasm.organelles = null;
+                };
+                Cytoplasm.instance = null;
+                Cytoplasm.organelles = null;
+                return Cytoplasm;
+            }());
             alive.Cytoplasm = Cytoplasm;
         })(alive = being.alive || (being.alive = {}));
     })(being = euglena.being || (euglena.being = {}));

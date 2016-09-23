@@ -4,145 +4,145 @@
 "use strict";
 ///<reference path="..\typings\mocha\mocha.d.ts"/>
 ///<reference path="..\typings\chai\chai.d.ts"/>
-const index_1 = require("../src/index");
-const chai = require("chai");
+var index_1 = require("../src/index");
+var chai = require("chai");
 var Class = index_1.euglena.js.Class;
 var StaticTools = index_1.euglena.sys.type.StaticTools;
-describe("euglena", () => {
-    describe("js", () => {
-        describe("Class", () => {
-            describe("equals", () => {
-                it("should return true if both of object empty", () => {
+describe("euglena", function () {
+    describe("js", function () {
+        describe("Class", function () {
+            describe("equals", function () {
+                it("should return true if both of object empty", function () {
                     //given
-                    let obj1 = {};
-                    let obj2 = {};
+                    var obj1 = {};
+                    var obj2 = {};
                     //when
-                    let result = StaticTools.Object.equals(obj1, obj2);
+                    var result = StaticTools.Object.equals(obj1, obj2);
                     //then
                     chai.expect(result).to.be.true;
                 });
-                it("should return true if both of object is equal in shadow", () => {
+                it("should return true if both of object is equal in shadow", function () {
                     //given
-                    let obj1 = { name: "fedai", surname: "kaya" };
-                    let obj2 = { name: "fedai", surname: "kaya" };
+                    var obj1 = { name: "fedai", surname: "kaya" };
+                    var obj2 = { name: "fedai", surname: "kaya" };
                     //when
-                    let result = StaticTools.Object.equals(obj1, obj2);
+                    var result = StaticTools.Object.equals(obj1, obj2);
                     //then
                     chai.expect(result).to.be.true;
                 });
-                it("should return true if both of object is equal in deep", () => {
+                it("should return true if both of object is equal in deep", function () {
                     //given
-                    let obj1 = { name: "fedai", surname: "kaya" };
-                    let obj2 = { name: "fedai", surname: "kaya" };
+                    var obj1 = { name: "fedai", surname: "kaya" };
+                    var obj2 = { name: "fedai", surname: "kaya" };
                     //when
-                    let result = StaticTools.Object.equals(obj1, obj2);
+                    var result = StaticTools.Object.equals(obj1, obj2);
                     //then
                     chai.expect(result).to.be.true;
                 });
-                it("should return true if both of object is equal in deep 2", () => {
+                it("should return true if both of object is equal in deep 2", function () {
                     //given
-                    let obj1 = { name: "fedai", surname: "kaya", pet: { name: "Doggy" } };
-                    let obj2 = { name: "fedai", surname: "kaya", pet: { name: "Doggy" } };
+                    var obj1 = { name: "fedai", surname: "kaya", pet: { name: "Doggy" } };
+                    var obj2 = { name: "fedai", surname: "kaya", pet: { name: "Doggy" } };
                     //when
-                    let result = StaticTools.Object.equals(obj1, obj2, true);
+                    var result = StaticTools.Object.equals(obj1, obj2, true);
                     //then
                     chai.expect(result).to.be.true;
                 });
-                it("should return true if both of object is equal", () => {
+                it("should return true if both of object is equal", function () {
                     //given
-                    let obj = {};
-                    let obj1 = { name: "fedai", surname: "kaya", obj: obj };
-                    let obj2 = { name: "fedai", surname: "kaya", obj: obj };
+                    var obj = {};
+                    var obj1 = { name: "fedai", surname: "kaya", obj: obj };
+                    var obj2 = { name: "fedai", surname: "kaya", obj: obj };
                     //when
-                    let result = StaticTools.Object.equals(obj1, obj2);
-                    let result2 = StaticTools.Object.equals(obj1, obj2, true);
+                    var result = StaticTools.Object.equals(obj1, obj2);
+                    var result2 = StaticTools.Object.equals(obj1, obj2, true);
                     //then
                     chai.expect(result).to.be.true;
                     chai.expect(result2).to.be.true;
                 });
-                it("should return false if they are different of has deifferent values", () => {
+                it("should return false if they are different of has deifferent values", function () {
                     //given
-                    let obj = {};
-                    let obj1 = { name: "fedai", surname: "kaya" };
-                    let obj2 = { name: "ahmet", surname: "efendi" };
-                    let obj3 = { J: "j" };
+                    var obj = {};
+                    var obj1 = { name: "fedai", surname: "kaya" };
+                    var obj2 = { name: "ahmet", surname: "efendi" };
+                    var obj3 = { J: "j" };
                     //when
-                    let result = StaticTools.Object.equals(obj1, obj2);
-                    let result2 = StaticTools.Object.equals(obj1, obj3, true);
-                    let result3 = StaticTools.Object.equals(obj1, obj, true);
+                    var result = StaticTools.Object.equals(obj1, obj2);
+                    var result2 = StaticTools.Object.equals(obj1, obj3, true);
+                    var result3 = StaticTools.Object.equals(obj1, obj, true);
                     //then
                     chai.expect(result).to.be.false;
                     chai.expect(result2).to.be.false;
                     chai.expect(result3).to.be.false;
                 });
             });
-            describe("doesCover", () => {
-                it("should return false if obj1 is empty obj2 has some keys", () => {
+            describe("doesCover", function () {
+                it("should return false if obj1 is empty obj2 has some keys", function () {
                     //given
-                    let obj1 = {};
-                    let obj2 = { name: "fedai" };
+                    var obj1 = {};
+                    var obj2 = { name: "fedai" };
                     //when
-                    let result = Class.doesCover(obj1, obj2);
+                    var result = Class.doesCover(obj1, obj2);
                     //then
                     chai.expect(result).to.be.false;
                 });
-                it("should return true if obj1 is and obj2 same object", () => {
+                it("should return true if obj1 is and obj2 same object", function () {
                     //given
-                    let obj1 = { name: "fedai" };
-                    let obj2 = { name: "fedai" };
+                    var obj1 = { name: "fedai" };
+                    var obj2 = { name: "fedai" };
                     //when
-                    let result = Class.doesCover(obj1, obj2);
+                    var result = Class.doesCover(obj1, obj2);
                     //then
                     chai.expect(result).to.be.true;
                 });
-                it("should return true if obj1 is and obj2 same object and has inner object", () => {
+                it("should return true if obj1 is and obj2 same object and has inner object", function () {
                     //given
-                    let obj1 = { name: { surname: "kaya" } };
-                    let obj2 = { name: { surname: "kaya" } };
+                    var obj1 = { name: { surname: "kaya" } };
+                    var obj2 = { name: { surname: "kaya" } };
                     //when
-                    let result = Class.doesCover(obj1, obj2);
+                    var result = Class.doesCover(obj1, obj2);
                     //then
                     chai.expect(result).to.be.true;
                 });
-                it("should return true if obj1 is and obj2 different object and has inner object", () => {
+                it("should return true if obj1 is and obj2 different object and has inner object", function () {
                     //given
-                    let obj1 = { name: { surname: "fedai" } };
-                    let obj2 = { name: { surname: "kaya" } };
+                    var obj1 = { name: { surname: "fedai" } };
+                    var obj2 = { name: { surname: "kaya" } };
                     //when
-                    let result = Class.doesCover(obj1, obj2);
+                    var result = Class.doesCover(obj1, obj2);
                     //then
                     chai.expect(result).to.be.false;
                 });
-                it("should return true if obj2 is empty", () => {
+                it("should return true if obj2 is empty", function () {
                     //given
-                    let obj1 = { name: { surname: "fedai" } };
-                    let obj2 = {};
+                    var obj1 = { name: { surname: "fedai" } };
+                    var obj2 = {};
                     //when
-                    let result = Class.doesCover(obj1, obj2);
+                    var result = Class.doesCover(obj1, obj2);
                     //then
                     chai.expect(result).to.be.true;
                 });
-                it("should return false if obj2 has dıfferent keys", () => {
+                it("should return false if obj2 has dıfferent keys", function () {
                     //given
-                    let obj1 = { name: { surname: "fedai" } };
-                    let obj2 = { surname: "fedai" };
+                    var obj1 = { name: { surname: "fedai" } };
+                    var obj2 = { surname: "fedai" };
                     //when
-                    let result = Class.doesCover(obj1, obj2);
+                    var result = Class.doesCover(obj1, obj2);
                     //then
                     chai.expect(result).to.be.false;
                 });
-                it("should return true if both of them is empty objects", () => {
+                it("should return true if both of them is empty objects", function () {
                     //given
-                    let obj1 = {};
-                    let obj2 = {};
+                    var obj1 = {};
+                    var obj2 = {};
                     //when
-                    let result = Class.doesCover(obj1, obj2);
+                    var result = Class.doesCover(obj1, obj2);
                     //then
                     chai.expect(result).to.be.true;
                 });
             });
-            describe("extend", () => {
-                it("should return empty object if subInstance and parentInstance are both empty objects", () => {
+            describe("extend", function () {
+                it("should return empty object if subInstance and parentInstance are both empty objects", function () {
                     //given
                     var subInstance = {};
                     var parentInstance = {};
@@ -151,7 +151,7 @@ describe("euglena", () => {
                     //then
                     chai.expect(extendedObject).to.be.empty;
                 });
-                it("should return an object contains prop name for empty object as subInstance and an object has a property named 'name' as parentInstance", () => {
+                it("should return an object contains prop name for empty object as subInstance and an object has a property named 'name' as parentInstance", function () {
                     //given
                     var subInstance = {};
                     var parentInstance = { name: "fedai" };
@@ -165,7 +165,7 @@ describe("euglena", () => {
                     chai.expect(extendedObject).to.be.eqls({ name: "fedai" });
                     chai.expect(propCount).to.be.equals(1);
                 });
-                it("should return an object contains prop name and surname for an object has prop surname as subInstance and an object has a property named 'name' as parentInstance", () => {
+                it("should return an object contains prop name and surname for an object has prop surname as subInstance and an object has a property named 'name' as parentInstance", function () {
                     //given
                     var subInstance = { surname: "kaya" };
                     var parentInstance = { name: "fedai" };
@@ -179,9 +179,9 @@ describe("euglena", () => {
             });
         });
     });
-    describe("being", () => {
-        describe("alive", () => {
-            describe("alive", () => {
+    describe("being", function () {
+        describe("alive", function () {
+            describe("alive", function () {
             });
         });
     });
