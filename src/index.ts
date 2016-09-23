@@ -447,12 +447,12 @@ export module euglena {
                             euglena.sys.type.StaticTools.Array.removeAllMatched(
                                 this.chromosome,
                                 new Gene("", {}, null, null, euglena.sys.type.StaticTools.Time.now()),
-                                (ai: Gene, now: Gene) => euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
+                                (ai: Gene, now: Gene) => ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
                             //process particles
                             euglena.sys.type.StaticTools.Array.removeAllMatched(
                                 this.particles,
                                 { meta: { expiretime: euglena.sys.type.StaticTools.Time.now() }, data: null },
-                                (ai: Particle, now: Particle) => euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
+                                (ai: Particle, now: Particle) => ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
                         }, this.timeout)
                     }
                 }

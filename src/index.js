@@ -492,9 +492,9 @@ var euglena;
                         let particles = this.particles;
                         setInterval(() => {
                             //process genes
-                            euglena.sys.type.StaticTools.Array.removeAllMatched(this.chromosome, new Gene("", {}, null, null, euglena.sys.type.StaticTools.Time.now()), (ai, now) => euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
+                            euglena.sys.type.StaticTools.Array.removeAllMatched(this.chromosome, new Gene("", {}, null, null, euglena.sys.type.StaticTools.Time.now()), (ai, now) => ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
                             //process particles
-                            euglena.sys.type.StaticTools.Array.removeAllMatched(this.particles, { meta: { expiretime: euglena.sys.type.StaticTools.Time.now() }, data: null }, (ai, now) => euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
+                            euglena.sys.type.StaticTools.Array.removeAllMatched(this.particles, { meta: { expiretime: euglena.sys.type.StaticTools.Time.now() }, data: null }, (ai, now) => ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
                         }, this.timeout);
                     }
                 }
