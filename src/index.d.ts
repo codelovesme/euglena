@@ -192,6 +192,7 @@ export declare module euglena {
                 const OutSide: string;
                 namespace particles {
                     const Gene: string;
+                    const Chromosome: string;
                 }
             }
             abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
@@ -207,8 +208,8 @@ export declare module euglena {
                 static instance: Cytoplasm;
                 private static organelles;
                 static particles: Particle[];
-                static chromosome: dna.Gene[];
                 static garbageCollector: dna.GarbageCollector;
+                private static chromosome;
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
                 static receive(particle: Particle, source: string): void;
                 static transmit(organelleName: string, particle: Particle): void;

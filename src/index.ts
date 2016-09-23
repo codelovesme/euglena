@@ -461,6 +461,7 @@ export module euglena {
                 export const OutSide = "OutSide";
                 export namespace particles {
                     export const Gene = "Gene";
+                    export const Chromosome = "Chromosome";
                 }
             }
             export abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
@@ -484,14 +485,16 @@ export module euglena {
                 public static instance: Cytoplasm = null;
                 private static organelles: any = null;
                 public static particles: Particle[];
-                public static chromosome: dna.Gene[];
                 public static garbageCollector: dna.GarbageCollector;
+                private static get chromosome(): dna.Gene[] {
+                    return Cytoplasm.getParticle({ meta: alive.constants.particles.Chromosome, data: null }).data;
+                }
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]) {
                     if (Cytoplasm.instance) {
                         throw "There exists a cytoplasm instance already.";
                     }
                     Cytoplasm.particles = particles;
-                    Cytoplasm.chromosome = chromosome;
+                    Cytoplasm.particles.push({ meta: { name: alive.constants.particles.Chromosome }, data: chromosome });
                     Cytoplasm.organelles = {};
                     for (let organelle of organelles) {
                         organelle.send = Cytoplasm.receive;

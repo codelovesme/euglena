@@ -504,6 +504,7 @@ var euglena;
                 var particles;
                 (function (particles) {
                     particles.Gene = "Gene";
+                    particles.Chromosome = "Chromosome";
                 })(particles = constants.particles || (constants.particles = {}));
             })(constants = alive.constants || (alive.constants = {}));
             class Organelle {
@@ -531,7 +532,7 @@ var euglena;
                         throw "There exists a cytoplasm instance already.";
                     }
                     Cytoplasm.particles = particles;
-                    Cytoplasm.chromosome = chromosome;
+                    Cytoplasm.particles.push({ meta: { name: alive.constants.particles.Chromosome }, data: chromosome });
                     Cytoplasm.organelles = {};
                     for (let organelle of organelles) {
                         organelle.send = Cytoplasm.receive;
@@ -540,6 +541,9 @@ var euglena;
                     Cytoplasm.instance = this;
                     Cytoplasm.garbageCollector = new dna.GarbageCollector();
                     Cytoplasm.garbageCollector.start();
+                }
+                static get chromosome() {
+                    return Cytoplasm.getParticle({ meta: alive.constants.particles.Chromosome, data: null }).data;
                 }
                 static receive(particle, source) {
                     console.log("Cytoplasm says received particle " + particle.meta.name);
