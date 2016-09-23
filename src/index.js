@@ -545,7 +545,7 @@ var euglena;
                     Cytoplasm.garbageCollector.start();
                 }
                 static get chromosome() {
-                    return Cytoplasm.getParticle({ meta: alive.constants.particles.Chromosome, data: null }).data;
+                    return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome }, data: null }).data;
                 }
                 static receive(particle, source) {
                     console.log("Cytoplasm says received particle " + particle.meta.name);

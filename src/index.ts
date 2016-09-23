@@ -435,7 +435,7 @@ export module euglena {
                     private timeout = 1000;
                     private chromosome: Gene[] = [];
                     private particles: Particle[] = [];
-                    constructor(chromosome: Gene[], particles: Particle[]) { 
+                    constructor(chromosome: Gene[], particles: Particle[]) {
                         this.chromosome = chromosome;
                         this.particles = particles;
                     }
@@ -492,7 +492,7 @@ export module euglena {
                 public static particles: Particle[];
                 public static garbageCollector: dna.GarbageCollector;
                 private static get chromosome(): dna.Gene[] {
-                    return Cytoplasm.getParticle({ meta: alive.constants.particles.Chromosome, data: null }).data;
+                    return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome }, data: null }).data;
                 }
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]) {
                     if (Cytoplasm.instance) {
@@ -506,7 +506,7 @@ export module euglena {
                         Cytoplasm.organelles[organelle.name] = organelle;
                     }
                     Cytoplasm.instance = this;
-                    Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome,particles);
+                    Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome, particles);
                     Cytoplasm.garbageCollector.start();
                 }
                 public static receive(particle: Particle, source: string) {
