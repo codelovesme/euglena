@@ -282,6 +282,10 @@ var euglena;
                     static addMiliseconds(time, miliseconds) {
                         return Time.fromJavascriptDate(new exports.JavascriptDate(Time.toJavascriptDate(time).getTime() + miliseconds));
                     }
+                    static addMinutes(time, minutes) {
+                        let miliseconds = minutes * 60000;
+                        return Time.addMiliseconds(time, miliseconds);
+                    }
                     static DayToMiliseconds(minute) {
                         return minute * 86400000;
                     }

@@ -106,6 +106,7 @@ export declare module euglena {
                     static equals(time1: sys.type.Time, time2: sys.type.Time): boolean;
                     static now(): sys.type.Time;
                     static addMiliseconds(time: sys.type.Time, miliseconds: number): sys.type.Time;
+                    static addMinutes(time: sys.type.Time, minutes: number): sys.type.Time;
                     static DayToMiliseconds(minute: number): number;
                     static HourToMiliseconds(minute: number): number;
                     static MinuteToMiliseconds(minute: number): number;

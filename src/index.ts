@@ -244,6 +244,10 @@ export module euglena {
                         return Time.fromJavascriptDate(new JavascriptDate(
                             Time.toJavascriptDate(time).getTime() + miliseconds));
                     }
+                    public static addMinutes(time: sys.type.Time, minutes: number): sys.type.Time {
+                        let miliseconds = minutes * 60000;
+                        return Time.addMiliseconds(time,miliseconds);
+                    }
                     public static DayToMiliseconds(minute: number): number {
                         return minute * 86400000;
                     }
