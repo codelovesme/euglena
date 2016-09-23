@@ -480,10 +480,12 @@ var euglena;
                 }
                 dna.Gene = Gene;
                 class GarbageCollector {
-                    constructor(chromosome = [], particles = []) {
+                    constructor(chromosome, particles) {
+                        this.timeout = 1000;
+                        this.chromosome = [];
+                        this.particles = [];
                         this.chromosome = chromosome;
                         this.particles = particles;
-                        this.timeout = 1000;
                     }
                     start() {
                         let chromosome = this.chromosome;

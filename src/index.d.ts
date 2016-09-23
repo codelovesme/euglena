@@ -176,10 +176,10 @@ export declare module euglena {
                     constructor(name: string, triggers: Object, reaction: Reaction, override?: string, expiretime?: euglena.sys.type.Time);
                 }
                 class GarbageCollector {
+                    private timeout;
                     private chromosome;
                     private particles;
-                    private timeout;
-                    constructor(chromosome?: Gene[], particles?: Particle[]);
+                    constructor(chromosome: Gene[], particles: Particle[]);
                     start(): void;
                 }
             }

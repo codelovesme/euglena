@@ -433,7 +433,12 @@ export module euglena {
                 }
                 export class GarbageCollector {
                     private timeout = 1000;
-                    constructor(private chromosome: Gene[] = [], private particles: Particle[] = []) { }
+                    private chromosome: Gene[] = [];
+                    private particles: Particle[] = [];
+                    constructor(chromosome: Gene[], particles: Particle[]) { 
+                        this.chromosome = chromosome;
+                        this.particles = particles;
+                    }
                     public start(): void {
                         let chromosome = this.chromosome;
                         let particles = this.particles;
