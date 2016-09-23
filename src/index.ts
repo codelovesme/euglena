@@ -296,9 +296,6 @@ export module euglena {
                     }
                 }
                 export class Array {
-                    public static remove<T>(array:T[],index: number): T {
-                        return array.splice(index, 1)[0];
-                    }
                     public static combine<T>(array1: T[], array2: T[]): T[] {
                         let a = array1.concat(array2);
                         for (var i = 0; i < a.length; ++i) {
@@ -342,6 +339,9 @@ export module euglena {
                             }
                         }
                         return -1;
+                    }
+                    public static removeAt<T>(array: T[], index: number): T {
+                        return array.splice(index, 1)[0];
                     }
                 }
             }
@@ -397,12 +397,10 @@ export module euglena {
                 }
                 export class GarbageCollector {
                     private timeout = 1000;
-                    private chromosome: Gene[] = [];
-                    constructor(chromosome: Gene[]) {
-                        this.chromosome = chromosome;
-                    }
+                    constructor(private chromosome: Gene[] = [], private particles: Particle[] = []) { }
                     public start(): void {
                         let chromosome = this.chromosome;
+                        let particles = this.particles;
                         setInterval(() => {
                             let toBeRemoved: string[] = [];
                             for (let a of chromosome) {
@@ -420,6 +418,17 @@ export module euglena {
                                         chromosome.splice(index, 1);
                                         break;
                                     }
+                                }
+                            }
+                            //process particles
+                            for (let i = 0; i < this.particles.length; i++) {
+                                let particle = particles[i];
+                                if (particle.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(
+                                    euglena.sys.type.StaticTools.Time.now(),
+                                    particle.meta.expiretime
+                                )) {
+                                    //delete
+                                    euglena.sys.type.StaticTools.Array.removeAt(this.particles,i);
                                 }
                             }
                         }, this.timeout)

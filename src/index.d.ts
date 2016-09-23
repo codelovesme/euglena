@@ -122,12 +122,12 @@ export declare module euglena {
                     static biggerThan(clock1: sys.type.Clock, clock2: sys.type.Clock): boolean;
                 }
                 class Array {
-                    static remove<T>(array: T[], index: number): T;
                     static combine<T>(array1: T[], array2: T[]): T[];
                     static equals<T>(array1: T[], array2: T[], compare?: (t1: T, t2: T) => boolean): boolean;
                     static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean;
                     static containsArray<T>(master: T[], slave: T[], compare?: (t1: T, t2: T) => boolean): boolean;
                     static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number;
+                    static removeAt<T>(array: T[], index: number): T;
                 }
             }
         }
@@ -179,9 +179,10 @@ export declare module euglena {
                     constructor(name: string, triggers: Object, reaction: Reaction, override?: string, expiretime?: euglena.sys.type.Time);
                 }
                 class GarbageCollector {
-                    private timeout;
                     private chromosome;
-                    constructor(chromosome: Gene[]);
+                    private particles;
+                    private timeout;
+                    constructor(chromosome?: Gene[], particles?: Particle[]);
                     start(): void;
                 }
             }
