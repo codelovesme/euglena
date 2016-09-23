@@ -172,12 +172,7 @@ export declare module euglena {
                 interface Reaction {
                     (particle: Particle, sourceOrganelle: string): void;
                 }
-                class Gene implements euglena.sys.type.Named {
-                    name: string;
-                    triggers: Object;
-                    reaction: Reaction;
-                    override: string;
-                    expiretime: euglena.sys.type.Time;
+                class Gene extends Particle {
                     constructor(name: string, triggers: Object, reaction: Reaction, override?: string, expiretime?: euglena.sys.type.Time);
                 }
                 class GarbageCollector {
@@ -195,6 +190,9 @@ export declare module euglena {
             }
             namespace constants {
                 const OutSide: string;
+                namespace particles {
+                    const Gene: string;
+                }
             }
             abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
                 name: string;
@@ -210,6 +208,7 @@ export declare module euglena {
                 private static organelles;
                 static particles: Particle[];
                 static chromosome: dna.Gene[];
+                static garbageCollector: dna.GarbageCollector;
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
                 static receive(particle: Particle, source: string): void;
                 static transmit(organelleName: string, particle: Particle): void;

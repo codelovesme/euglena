@@ -359,7 +359,7 @@ export module euglena {
                         }
                     }
                     public static removeAllMatched<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T[] {
-                        let returnValue:T[] = [];
+                        let returnValue: T[] = [];
                         if (compare) {
                             for (let i = 0; i < array.length; i++) {
                                 if (compare(array[i], t)) {
@@ -421,13 +421,15 @@ export module euglena {
                 export interface Reaction {
                     (particle: Particle, sourceOrganelle: string): void;
                 }
-                export class Gene implements euglena.sys.type.Named {
+                export class Gene extends Particle {
                     constructor(
-                        public name: string,
-                        public triggers: Object, // particle prop - value match
-                        public reaction: Reaction,
-                        public override?: string,
-                        public expiretime?: euglena.sys.type.Time) { }
+                        name: string,
+                        triggers: Object, // particle prop - value match
+                        reaction: Reaction,
+                        override?: string,
+                        expiretime?: euglena.sys.type.Time) {
+                        super({ expiretime: expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override });
+                    }
                 }
                 export class GarbageCollector {
                     private timeout = 1000;
@@ -436,35 +438,16 @@ export module euglena {
                         let chromosome = this.chromosome;
                         let particles = this.particles;
                         setInterval(() => {
-                            let toBeRemoved: string[] = [];
-                            for (let a of chromosome) {
-                                if (a.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(
-                                    euglena.sys.type.StaticTools.Time.now(),
-                                    a.expiretime
-                                )) {
-                                    toBeRemoved.push(a.name);
-                                }
-                            }
-                            for (let b of toBeRemoved) {
-                                for (var index = 0; index < chromosome.length; index++) {
-                                    var element = chromosome[index];
-                                    if (element.name === b) {
-                                        chromosome.splice(index, 1);
-                                        break;
-                                    }
-                                }
-                            }
+                            //process genes
+                            euglena.sys.type.StaticTools.Array.removeAllMatched(
+                                this.chromosome,
+                                new Gene("", {}, null, null, euglena.sys.type.StaticTools.Time.now()),
+                                (ai: Gene, now: Gene) => euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
                             //process particles
-                            for (let i = 0; i < this.particles.length; i++) {
-                                let particle = particles[i];
-                                if (particle.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(
-                                    euglena.sys.type.StaticTools.Time.now(),
-                                    particle.meta.expiretime
-                                )) {
-                                    //delete
-                                    euglena.sys.type.StaticTools.Array.removeAt(this.particles, i);
-                                }
-                            }
+                            euglena.sys.type.StaticTools.Array.removeAllMatched(
+                                this.particles,
+                                { meta: { expiretime: euglena.sys.type.StaticTools.Time.now() }, data: null },
+                                (ai: Particle, now: Particle) => euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
                         }, this.timeout)
                     }
                 }
@@ -476,6 +459,9 @@ export module euglena {
             }
             export namespace constants {
                 export const OutSide = "OutSide";
+                export namespace particles {
+                    export const Gene = "Gene";
+                }
             }
             export abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
                 private actions: sys.type.Map<string, (particle: Particle) => void>;
@@ -499,6 +485,7 @@ export module euglena {
                 private static organelles: any = null;
                 public static particles: Particle[];
                 public static chromosome: dna.Gene[];
+                public static garbageCollector: dna.GarbageCollector;
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]) {
                     if (Cytoplasm.instance) {
                         throw "There exists a cytoplasm instance already.";
@@ -511,15 +498,17 @@ export module euglena {
                         Cytoplasm.organelles[organelle.name] = organelle;
                     }
                     Cytoplasm.instance = this;
+                    Cytoplasm.garbageCollector = new dna.GarbageCollector();
+                    Cytoplasm.garbageCollector.start();
                 }
                 public static receive(particle: Particle, source: string) {
                     console.log("Cytoplasm says received particle " + particle.meta.name);
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
-                        let triggers: any = Cytoplasm.chromosome[i].triggers;
+                        let triggers: any = Cytoplasm.chromosome[i].data.triggers;
                         if (euglena.js.Class.doesCover(particle, triggers)) {
-                            var reaction = Cytoplasm.chromosome[i].reaction;
+                            var reaction = Cytoplasm.chromosome[i].data.reaction;
                             triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                         }
                     }
@@ -534,7 +523,7 @@ export module euglena {
                             //then if triggers of tr2 does not contain triggers of tr, do nothing
                             if (!euglena.sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers)) continue;
                             //then check if tr2 overrides tr
-                            doTrigger = !(Cytoplasm.chromosome[tr2.index].override === Cytoplasm.chromosome[tr.index].name);
+                            doTrigger = !(Cytoplasm.chromosome[tr2.index].data.override === Cytoplasm.chromosome[tr.index].data.name);
                         }
                         if (doTrigger) {
                             reactions.push(tr.reaction);
