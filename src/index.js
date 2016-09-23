@@ -389,6 +389,42 @@ var euglena;
                     static removeAt(array, index) {
                         return array.splice(index, 1)[0];
                     }
+                    static remove(array, t, compare) {
+                        if (compare) {
+                            for (let i = 0; i < array.length; i++) {
+                                if (compare(array[i], t)) {
+                                    return array.splice(i, 1)[0];
+                                }
+                            }
+                        }
+                        else {
+                            for (let i = 0; i < array.length; i++) {
+                                if (array[i] == t) {
+                                    return array.splice(i, 1)[0];
+                                }
+                            }
+                        }
+                    }
+                    static removeAllMatched(array, t, compare) {
+                        let returnValue = [];
+                        if (compare) {
+                            for (let i = 0; i < array.length; i++) {
+                                if (compare(array[i], t)) {
+                                    returnValue.push(array.splice(i, 1)[0]);
+                                    i--;
+                                }
+                            }
+                        }
+                        else {
+                            for (let i = 0; i < array.length; i++) {
+                                if (array[i] == t) {
+                                    returnValue.push(array.splice(i, 1)[0]);
+                                    i--;
+                                }
+                            }
+                        }
+                        return returnValue;
+                    }
                 }
                 StaticTools.Array = Array;
             })(StaticTools = type.StaticTools || (type.StaticTools = {}));

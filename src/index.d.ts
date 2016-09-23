@@ -128,6 +128,8 @@ export declare module euglena {
                     static containsArray<T>(master: T[], slave: T[], compare?: (t1: T, t2: T) => boolean): boolean;
                     static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number;
                     static removeAt<T>(array: T[], index: number): T;
+                    static remove<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T;
+                    static removeAllMatched<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T[];
                 }
             }
         }

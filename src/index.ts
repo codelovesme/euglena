@@ -343,6 +343,40 @@ export module euglena {
                     public static removeAt<T>(array: T[], index: number): T {
                         return array.splice(index, 1)[0];
                     }
+                    public static remove<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T {
+                        if (compare) {
+                            for (let i = 0; i < array.length; i++) {
+                                if (compare(array[i], t)) {
+                                    return array.splice(i, 1)[0];
+                                }
+                            }
+                        } else {
+                            for (let i = 0; i < array.length; i++) {
+                                if (array[i] == t) {
+                                    return array.splice(i, 1)[0];
+                                }
+                            }
+                        }
+                    }
+                    public static removeAllMatched<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T[] {
+                        let returnValue:T[] = [];
+                        if (compare) {
+                            for (let i = 0; i < array.length; i++) {
+                                if (compare(array[i], t)) {
+                                    returnValue.push(array.splice(i, 1)[0]);
+                                    i--;
+                                }
+                            }
+                        } else {
+                            for (let i = 0; i < array.length; i++) {
+                                if (array[i] == t) {
+                                    returnValue.push(array.splice(i, 1)[0]);
+                                    i--;
+                                }
+                            }
+                        }
+                        return returnValue;
+                    }
                 }
             }
         }
@@ -428,7 +462,7 @@ export module euglena {
                                     particle.meta.expiretime
                                 )) {
                                     //delete
-                                    euglena.sys.type.StaticTools.Array.removeAt(this.particles,i);
+                                    euglena.sys.type.StaticTools.Array.removeAt(this.particles, i);
                                 }
                             }
                         }, this.timeout)
