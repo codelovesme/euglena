@@ -605,6 +605,9 @@ var euglena;
                     let index = Cytoplasm.indexOfParticle(particleReference);
                     return index >= 0 ? Cytoplasm.particles[index] : null;
                 }
+                static removeMatchedParticles(reference) {
+                    return euglena.sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, reference, (ai, t) => euglena.js.Class.doesCover(ai, reference));
+                }
                 static getMatchedParticle(particleReference) {
                     for (let p of Cytoplasm.particles) {
                         if (euglena.js.Class.doesCover(p, particleReference)) {

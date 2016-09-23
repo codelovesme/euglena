@@ -246,7 +246,7 @@ export module euglena {
                     }
                     public static addMinutes(time: sys.type.Time, minutes: number): sys.type.Time {
                         let miliseconds = minutes * 60000;
-                        return Time.addMiliseconds(time,miliseconds);
+                        return Time.addMiliseconds(time, miliseconds);
                     }
                     public static DayToMiliseconds(minute: number): number {
                         return minute * 86400000;
@@ -567,6 +567,10 @@ export module euglena {
                 public static getParticle(particleReference: dna.ParticleReference): being.Particle {
                     let index = Cytoplasm.indexOfParticle(particleReference);
                     return index >= 0 ? Cytoplasm.particles[index] : null;
+                }
+                public static removeMatchedParticles(reference: Particle): Particle[] {
+                    return euglena.sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, reference,
+                        (ai, t) => euglena.js.Class.doesCover(ai, reference));
                 }
                 public static getMatchedParticle(particleReference: dna.ParticleReference): being.Particle {
                     for (let p of Cytoplasm.particles) {
