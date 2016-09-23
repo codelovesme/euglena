@@ -506,7 +506,7 @@ export module euglena {
                         Cytoplasm.organelles[organelle.name] = organelle;
                     }
                     Cytoplasm.instance = this;
-                    Cytoplasm.garbageCollector = new dna.GarbageCollector();
+                    Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome,particles);
                     Cytoplasm.garbageCollector.start();
                 }
                 public static receive(particle: Particle, source: string) {

@@ -541,7 +541,7 @@ var euglena;
                         Cytoplasm.organelles[organelle.name] = organelle;
                     }
                     Cytoplasm.instance = this;
-                    Cytoplasm.garbageCollector = new dna.GarbageCollector();
+                    Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome, particles);
                     Cytoplasm.garbageCollector.start();
                 }
                 static get chromosome() {
