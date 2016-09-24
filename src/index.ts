@@ -519,7 +519,7 @@ export module euglena {
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
                         let triggers: any = Cytoplasm.chromosome[i].data.triggers;
-                        if (euglena.js.Class.doesCover(particle, triggers)) {
+                        if (Cytoplasm.doesMongoCover(particle, triggers)) {
                             var reaction = Cytoplasm.chromosome[i].data.reaction;
                             triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                         }
@@ -587,6 +587,21 @@ export module euglena {
                         }
                     }
                     return -1;
+                }
+                public static doesMongoCover(obj1: any, obj2: any): boolean {
+                    let exists = { $exists: true };
+                    let notExists = { $exists: false };
+                    for (let key in obj2) {
+                        if(euglena.sys.type.StaticTools.Object.equals(obj2[key],exists) && !obj1.hasOwnProperty(key)) return false;
+                        if(euglena.sys.type.StaticTools.Object.equals(obj2[key],notExists) && obj1.hasOwnProperty(key)) return false;
+                        if (obj1[key] === undefined) return false;
+                        if (euglena.js.Class.isPrimaryType(obj2[key])) {
+                            if (obj1[key] !== obj2[key]) return false;
+                        } else {
+                            if (!Cytoplasm.doesMongoCover(obj1[key], obj2[key])) return false;
+                        }
+                    }
+                    return true;
                 }
             }
         }
