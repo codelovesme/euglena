@@ -592,8 +592,14 @@ export module euglena {
                     let exists = { $exists: true };
                     let notExists = { $exists: false };
                     for (let key in obj2) {
-                        if(euglena.sys.type.StaticTools.Object.equals(obj2[key],exists) && !obj1.hasOwnProperty(key)) return false;
-                        if(euglena.sys.type.StaticTools.Object.equals(obj2[key],notExists) && obj1.hasOwnProperty(key)) return false;
+                        if (euglena.sys.type.StaticTools.Object.equals(obj2[key], exists)) {
+                            if(!obj1.hasOwnProperty(key)) return false;
+                            continue;
+                        }
+                        if (euglena.sys.type.StaticTools.Object.equals(obj2[key], notExists)) { 
+                            if (obj1.hasOwnProperty(key))  return false;
+                            continue;
+                        }
                         if (obj1[key] === undefined) return false;
                         if (euglena.js.Class.isPrimaryType(obj2[key])) {
                             if (obj1[key] !== obj2[key]) return false;
