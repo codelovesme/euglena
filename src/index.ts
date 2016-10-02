@@ -514,7 +514,7 @@ export module euglena {
                     Cytoplasm.garbageCollector.start();
                 }
                 public static receive(particle: Particle, source: string) {
-                    console.log("Cytoplasm says received particle " + particle.meta.name);
+                    console.log("Cytoplasm says : received " + JSON.stringify(particle));
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
@@ -552,7 +552,7 @@ export module euglena {
                     }
                 }
                 public static transmit(organelleName: string, particle: Particle) {
-                    console.log("received Particle: " + particle.meta.name + " sent to: " + organelleName);
+                    console.log("Cytoplasm says : transmitting " + JSON.stringify(particle)+" to "+organelleName);
                     let organelle: Organelle<any> = Cytoplasm.organelles[organelleName] as Organelle<any>;
                     organelle.receive(particle);
                 }

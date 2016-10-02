@@ -552,7 +552,7 @@ var euglena;
                     return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome }, data: null }).data;
                 }
                 static receive(particle, source) {
-                    console.log("Cytoplasm says received particle " + particle.meta.name);
+                    console.log("Cytoplasm says : received " + JSON.stringify(particle));
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
@@ -588,7 +588,7 @@ var euglena;
                     }
                 }
                 static transmit(organelleName, particle) {
-                    console.log("received Particle: " + particle.meta.name + " sent to: " + organelleName);
+                    console.log("Cytoplasm says : transmitting " + JSON.stringify(particle) + " to " + organelleName);
                     let organelle = Cytoplasm.organelles[organelleName];
                     organelle.receive(particle);
                 }

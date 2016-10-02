@@ -210,7 +210,7 @@ export declare module euglena {
                 private static organelles;
                 static particles: Particle[];
                 static garbageCollector: dna.GarbageCollector;
-                private static chromosome;
+                private static readonly chromosome;
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
                 static receive(particle: Particle, source: string): void;
                 static transmit(organelleName: string, particle: Particle): void;
