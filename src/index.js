@@ -55,7 +55,7 @@ var euglena;
                     if ("function" !== typeof instance[prop]) {
                         valueObj[prop] = instance[prop];
                     }
-                    else if (typeof prop === "object") {
+                    else if (typeof instance[prop] === "object") {
                         valueObj[prop] = Class.valuefy(instance[prop]);
                     }
                     else if ((prop.substring(0, 3) === "get") && (propToValuefy = prop.substring(3, prop.length))) {
@@ -552,7 +552,7 @@ var euglena;
                     return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome }, data: null }).data;
                 }
                 static receive(particle, source) {
-                    console.log("Cytoplasm says : received " + JSON.stringify(particle));
+                    console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
@@ -588,7 +588,7 @@ var euglena;
                     }
                 }
                 static transmit(organelleName, particle) {
-                    console.log("Cytoplasm says : transmitting " + JSON.stringify(particle) + " to " + organelleName);
+                    console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + organelleName);
                     let organelle = Cytoplasm.organelles[organelleName];
                     organelle.receive(particle);
                 }

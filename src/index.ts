@@ -49,7 +49,7 @@ export module euglena {
                 for (var prop in instance) {
                     if ("function" !== typeof instance[prop]) {
                         valueObj[prop] = instance[prop];
-                    } else if (typeof prop === "object") {
+                    } else if (typeof instance[prop] === "object") {
                         valueObj[prop] = Class.valuefy(instance[prop]);
                     } else if ((prop.substring(0, 3) === "get") && (propToValuefy = prop.substring(3, prop.length))) {
                         valueObj[propToValuefy[0].toLowerCase() + propToValuefy.substring(1, propToValuefy.length)] = instance[prop]();
@@ -514,7 +514,7 @@ export module euglena {
                     Cytoplasm.garbageCollector.start();
                 }
                 public static receive(particle: Particle, source: string) {
-                    console.log("Cytoplasm says : received " + JSON.stringify(particle));
+                    console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
@@ -552,7 +552,7 @@ export module euglena {
                     }
                 }
                 public static transmit(organelleName: string, particle: Particle) {
-                    console.log("Cytoplasm says : transmitting " + JSON.stringify(particle)+" to "+organelleName);
+                    console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta)+" to "+organelleName);
                     let organelle: Organelle<any> = Cytoplasm.organelles[organelleName] as Organelle<any>;
                     organelle.receive(particle);
                 }
