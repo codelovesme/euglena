@@ -218,6 +218,7 @@ export declare module euglena {
                 static getParticle(particleReference: dna.ParticleReference): being.Particle;
                 static removeMatchedParticles(reference: Particle): Particle[];
                 static getMatchedParticle(particleReference: dna.ParticleReference): being.Particle;
+                static getMatchedParticles(particleReference: dna.ParticleReference): being.Particle[];
                 private static indexOfParticle(particleReference);
                 static doesMongoCover(obj1: any, obj2: any): boolean;
             }

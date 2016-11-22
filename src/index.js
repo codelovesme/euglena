@@ -616,6 +616,15 @@ var euglena;
                     }
                     return null;
                 }
+                static getMatchedParticles(particleReference) {
+                    let returnList = Array();
+                    for (let p of Cytoplasm.particles) {
+                        if (euglena.js.Class.doesCover(p, particleReference)) {
+                            returnList.push(p);
+                        }
+                    }
+                    return returnList;
+                }
                 static indexOfParticle(particleReference) {
                     for (let i = 0; i < Cytoplasm.particles.length; i++) {
                         if (dna.StaticTools.ParticleReference.equals(Cytoplasm.particles[i], particleReference)) {

@@ -580,6 +580,15 @@ export module euglena {
                     }
                     return null;
                 }
+                public static getMatchedParticles(particleReference: dna.ParticleReference): being.Particle[] {
+                    let returnList = Array<Particle>();
+                    for (let p of Cytoplasm.particles) {
+                        if (euglena.js.Class.doesCover(p, particleReference)) {
+                            returnList.push(p);
+                        }
+                    }
+                    return returnList;
+                }
                 private static indexOfParticle(particleReference: dna.ParticleReference): number {
                     for (let i = 0; i < Cytoplasm.particles.length; i++) {
                         if (dna.StaticTools.ParticleReference.equals(Cytoplasm.particles[i], particleReference)) {
