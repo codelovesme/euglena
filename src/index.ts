@@ -564,15 +564,11 @@ export module euglena {
                         Cytoplasm.particles.push(particle);
                     }
                 }
-                public static getParticle(particleReference: dna.ParticleReference): being.Particle {
-                    let index = Cytoplasm.indexOfParticle(particleReference);
-                    return index >= 0 ? Cytoplasm.particles[index] : null;
-                }
-                public static removeMatchedParticles(reference: Particle): Particle[] {
+                public static removeParticles(reference: Particle): Particle[] {
                     return euglena.sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, reference,
                         (ai, t) => euglena.js.Class.doesCover(ai, reference));
                 }
-                public static getMatchedParticle(particleReference: dna.ParticleReference): being.Particle {
+                public static getParticle(particleReference: dna.ParticleReference): being.Particle {
                     for (let p of Cytoplasm.particles) {
                         if (euglena.js.Class.doesCover(p, particleReference)) {
                             return p;
@@ -580,7 +576,7 @@ export module euglena {
                     }
                     return null;
                 }
-                public static getMatchedParticles(particleReference: dna.ParticleReference): being.Particle[] {
+                public static getParticles(particleReference: dna.ParticleReference): being.Particle[] {
                     let returnList = Array<Particle>();
                     for (let p of Cytoplasm.particles) {
                         if (euglena.js.Class.doesCover(p, particleReference)) {
