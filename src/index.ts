@@ -396,8 +396,9 @@ export module euglena {
                 receive: Receive;
             }
             export interface Receive {
-                (particle: Particle, source: string): void;
+                (particle: Particle, source: string, callback?: being.interaction.Callback): void;
             }
+            export interface Callback extends euglena.sys.type.Callback<Particle> { }
             export class Impact {
                 constructor(public particle: Particle, public token: string) { }
             }
@@ -423,7 +424,7 @@ export module euglena {
                     }
                 }
                 export interface Reaction {
-                    (particle: Particle, sourceOrganelle: string): void;
+                    (particle: Particle, sourceOrganelle: string, callback?: being.interaction.Callback): void;
                 }
                 export class Gene extends Particle {
                     constructor(
@@ -473,20 +474,20 @@ export module euglena {
                     export const Chromosome = "Chromosome";
                 }
             }
-            export abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
-                private actions: sys.type.Map<string, (particle: Particle) => void>;
+            export abstract class Organelle<SapContent> implements Named, Classifiable {
+                private actions: sys.type.Map<string, (particle: Particle, callback?: being.interaction.Callback) => void>;
                 constructor(public name: string, public className: string, public send?: interaction.Receive) {
                     let this_ = this;
-                    this.actions = new sys.type.Map<string, (particle: Particle) => void>();
-                    this.bindActions((particleName: string, action: (particle: Particle) => void) => {
+                    this.actions = new sys.type.Map<string, (particle: Particle, callback?: being.interaction.Callback) => void>();
+                    this.bindActions((particleName: string, action: (particle: Particle, callback?: being.interaction.Callback) => void) => {
                         this_.actions.add(particleName, action);
                     });
                 }
-                protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle) => void) => void): void;
-                public receive(particle: Particle): void {
+                protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle, callback?: being.interaction.Callback) => void) => void): void;
+                public receive(particle: Particle, callback?: being.interaction.Callback): void {
                     let action = this.actions.get(particle.meta.name);
                     if (action) {
-                        action(particle);
+                        action(particle, callback);
                     }
                 }
             }
@@ -513,7 +514,7 @@ export module euglena {
                     Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome, particles);
                     Cytoplasm.garbageCollector.start();
                 }
-                public static receive(particle: Particle, source: string) {
+                public static receive(particle: Particle, source: string, callback?: being.interaction.Callback) {
                     console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
@@ -544,17 +545,24 @@ export module euglena {
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         //try {
-                        reaction(particle, source);
+                        console.log(`Cytoplasm says : triggering gene ${reaction.name}`);
+                        reaction(particle, source, callback ? (particle: Particle) => {
+                            console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + source);
+                            callback(particle);
+                        } : callback);
                         //} catch (e) {
                         //  console.log(e);
                         //response(new euglena_template.being.alive.particles.Exception(new euglena.sys.type.Exception(e.message), this.name));
                         //}
                     }
                 }
-                public static transmit(organelleName: string, particle: Particle) {
-                    console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta)+" to "+organelleName);
+                public static transmit(organelleName: string, particle: Particle, callback?: interaction.Callback) {
+                    console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + organelleName);
                     let organelle: Organelle<any> = Cytoplasm.organelles[organelleName] as Organelle<any>;
-                    organelle.receive(particle);
+                    organelle.receive(particle, callback ? (particle: Particle) => {
+                        console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
+                        callback(particle);
+                    } : callback);
                 }
                 public static saveParticle(particle: being.Particle) {
                     let index = Cytoplasm.indexOfParticle(particle);
@@ -598,11 +606,11 @@ export module euglena {
                     let notExists = { $exists: false };
                     for (let key in obj2) {
                         if (euglena.sys.type.StaticTools.Object.equals(obj2[key], exists)) {
-                            if(!obj1.hasOwnProperty(key)) return false;
+                            if (!obj1.hasOwnProperty(key)) return false;
                             continue;
                         }
-                        if (euglena.sys.type.StaticTools.Object.equals(obj2[key], notExists)) { 
-                            if (obj1.hasOwnProperty(key))  return false;
+                        if (euglena.sys.type.StaticTools.Object.equals(obj2[key], notExists)) {
+                            if (obj1.hasOwnProperty(key)) return false;
                             continue;
                         }
                         if (obj1[key] === undefined) return false;

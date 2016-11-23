@@ -524,10 +524,10 @@ var euglena;
                         this_.actions.add(particleName, action);
                     });
                 }
-                receive(particle) {
+                receive(particle, callback) {
                     let action = this.actions.get(particle.meta.name);
                     if (action) {
-                        action(particle);
+                        action(particle, callback);
                     }
                 }
             }
@@ -551,7 +551,7 @@ var euglena;
                 static get chromosome() {
                     return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome }, data: null }).data;
                 }
-                static receive(particle, source) {
+                static receive(particle, source, callback) {
                     console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
                     //find which genes are matched with properties of the particle 
                     let triggerableReactions = new Array();
@@ -584,13 +584,20 @@ var euglena;
                     //trigger collected reactions
                     for (let reaction of reactions) {
                         //try {
-                        reaction(particle, source);
+                        console.log(`Cytoplasm says : triggering gene ${reaction.name}`);
+                        reaction(particle, source, callback ? (particle) => {
+                            console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + source);
+                            callback(particle);
+                        } : callback);
                     }
                 }
-                static transmit(organelleName, particle) {
+                static transmit(organelleName, particle, callback) {
                     console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + organelleName);
                     let organelle = Cytoplasm.organelles[organelleName];
-                    organelle.receive(particle);
+                    organelle.receive(particle, callback ? (particle) => {
+                        console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
+                        callback(particle);
+                    } : callback);
                 }
                 static saveParticle(particle) {
                     let index = Cytoplasm.indexOfParticle(particle);

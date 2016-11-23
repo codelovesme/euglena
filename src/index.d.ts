@@ -147,7 +147,9 @@ export declare module euglena {
                 receive: Receive;
             }
             interface Receive {
-                (particle: Particle, source: string): void;
+                (particle: Particle, source: string, callback?: being.interaction.Callback): void;
+            }
+            interface Callback extends euglena.sys.type.Callback<Particle> {
             }
             class Impact {
                 particle: Particle;
@@ -171,7 +173,7 @@ export declare module euglena {
                     };
                 }
                 interface Reaction {
-                    (particle: Particle, sourceOrganelle: string): void;
+                    (particle: Particle, sourceOrganelle: string, callback?: being.interaction.Callback): void;
                 }
                 class Gene extends Particle {
                     constructor(name: string, triggers: Object, reaction: Reaction, override?: string, expiretime?: euglena.sys.type.Time);
@@ -196,14 +198,14 @@ export declare module euglena {
                     const Chromosome: string;
                 }
             }
-            abstract class Organelle<SapContent> implements Named, Classifiable, interaction.CanReceiveParticle {
+            abstract class Organelle<SapContent> implements Named, Classifiable {
                 name: string;
                 className: string;
                 send: interaction.Receive;
                 private actions;
                 constructor(name: string, className: string, send?: interaction.Receive);
-                protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle) => void) => void): void;
-                receive(particle: Particle): void;
+                protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle, callback?: being.interaction.Callback) => void) => void): void;
+                receive(particle: Particle, callback?: being.interaction.Callback): void;
             }
             class Cytoplasm {
                 static instance: Cytoplasm;
@@ -212,8 +214,8 @@ export declare module euglena {
                 static garbageCollector: dna.GarbageCollector;
                 private static readonly chromosome;
                 constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
-                static receive(particle: Particle, source: string): void;
-                static transmit(organelleName: string, particle: Particle): void;
+                static receive(particle: Particle, source: string, callback?: being.interaction.Callback): void;
+                static transmit(organelleName: string, particle: Particle, callback?: interaction.Callback): void;
                 static saveParticle(particle: being.Particle): void;
                 static removeParticles(reference: Particle): Particle[];
                 static getParticle(particleReference: dna.ParticleReference): being.Particle;
