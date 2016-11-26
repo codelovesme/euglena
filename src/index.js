@@ -565,6 +565,7 @@ var euglena;
                     }
                     //get rid of overrided reactions
                     let reactions = Array();
+                    let names = Array();
                     for (let tr of triggerableReactions) {
                         let doTrigger = true;
                         //Check if the tr is contained by others, if true
@@ -580,12 +581,14 @@ var euglena;
                         }
                         if (doTrigger) {
                             reactions.push(tr.reaction);
+                            names.push(Cytoplasm.chromosome[tr.index].data.name);
                         }
                     }
                     //trigger collected reactions
-                    for (let reaction of reactions) {
+                    for (let i = 0; i < reactions.length; i++) {
+                        let reaction = reactions[i];
                         //try {
-                        console.log(`Cytoplasm says : triggering gene ${reaction.name}`);
+                        console.log(`Cytoplasm says : triggering gene ${names[i]}`);
                         reaction(particle, source, callback ? (particle) => {
                             console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + source);
                             callback(particle);
