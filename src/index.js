@@ -588,7 +588,7 @@ var euglena;
                     for (let i = 0; i < reactions.length; i++) {
                         let reaction = reactions[i];
                         //try {
-                        console.log(`Cytoplasm says : triggering gene ${names[i]}`);
+                        console.log(`Cytoplasm says : triggering gene "${names[i]}"`);
                         reaction(particle, source, callback ? (particle) => {
                             console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + source);
                             callback(particle);
