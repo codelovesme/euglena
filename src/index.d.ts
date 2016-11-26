@@ -154,7 +154,8 @@ export declare module euglena {
             class Impact {
                 particle: Particle;
                 token: string;
-                constructor(particle: Particle, token: string);
+                from: string;
+                constructor(particle: Particle, token: string, from: string);
             }
             namespace constants {
                 const ReceivedParticleReference: string;

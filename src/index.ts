@@ -400,7 +400,7 @@ export module euglena {
             }
             export interface Callback extends euglena.sys.type.Callback<Particle> { }
             export class Impact {
-                constructor(public particle: Particle, public token: string) { }
+                constructor(public particle: Particle, public token: string,public from:string) { }
             }
             export namespace constants {
                 export const ReceivedParticleReference = "ReceivedParticleReference";

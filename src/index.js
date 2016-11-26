@@ -446,9 +446,10 @@ var euglena;
         var interaction;
         (function (interaction) {
             class Impact {
-                constructor(particle, token) {
+                constructor(particle, token, from) {
                     this.particle = particle;
                     this.token = token;
+                    this.from = from;
                 }
             }
             interaction.Impact = Impact;
