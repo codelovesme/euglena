@@ -6,3 +6,4 @@ The issues which framework covers :
 * Logic level communication among the apps
 * Application logic update at runtime
 * Build same structured applications
+
