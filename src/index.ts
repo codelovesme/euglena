@@ -391,6 +391,11 @@ export module euglena {
         export class Particle {
             constructor(public meta: any, public data: any) { }
         }
+        export class StaticTools {
+            public static validateParticle(particle: Particle): boolean {
+                return particle && particle.meta && particle.data;
+            }
+        }
         export namespace interaction {
             export interface CanReceiveParticle {
                 receive: Receive;
@@ -400,7 +405,7 @@ export module euglena {
             }
             export interface Callback extends euglena.sys.type.Callback<Particle> { }
             export class Impact {
-                constructor(public particle: Particle, public token: string,public from:string) { }
+                constructor(public particle: Particle, public token: string, public from: string) { }
             }
             export namespace constants {
                 export const ReceivedParticleReference = "ReceivedParticleReference";
@@ -545,7 +550,7 @@ export module euglena {
                         }
                     }
                     //trigger collected reactions
-                    for (let i =0 ;i < reactions.length;i++) {
+                    for (let i = 0; i < reactions.length; i++) {
                         let reaction = reactions[i];
                         //try {
                         console.log(`Cytoplasm says : triggering gene "${names[i]}"`);

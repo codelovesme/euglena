@@ -142,6 +142,9 @@ export declare module euglena {
             data: any;
             constructor(meta: any, data: any);
         }
+        class StaticTools {
+            static validateParticle(particle: Particle): boolean;
+        }
         namespace interaction {
             interface CanReceiveParticle {
                 receive: Receive;

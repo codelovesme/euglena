@@ -443,6 +443,12 @@ var euglena;
             }
         }
         being.Particle = Particle;
+        class StaticTools {
+            static validateParticle(particle) {
+                return particle && particle.meta && particle.data;
+            }
+        }
+        being.StaticTools = StaticTools;
         var interaction;
         (function (interaction) {
             class Impact {
