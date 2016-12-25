@@ -63,6 +63,7 @@ export module euglena {
                     typeof obj === "boolean";
             }
             public static instanceOf<T>(referenceObject: T, obj: any | T): obj is T {
+                if(obj === null || obj === undefined) return false;
                 if (Class.isPrimaryType(referenceObject)) return typeof referenceObject === typeof obj;
                 for (var prop in referenceObject) {
                     if (obj[prop] === undefined)

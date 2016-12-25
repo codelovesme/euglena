@@ -70,6 +70,8 @@ var euglena;
                     typeof obj === "boolean";
             }
             static instanceOf(referenceObject, obj) {
+                if (obj === null || obj === undefined)
+                    return false;
                 if (Class.isPrimaryType(referenceObject))
                     return typeof referenceObject === typeof obj;
                 for (var prop in referenceObject) {
