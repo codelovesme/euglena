@@ -161,7 +161,7 @@ export declare module euglena {
                 constructor(particle: Particle, token: string, from: string);
             }
             namespace constants {
-                const ReceivedParticleReference: string;
+                const ReceivedParticleReference = "ReceivedParticleReference";
             }
         }
         namespace alive {
@@ -196,10 +196,10 @@ export declare module euglena {
                 }
             }
             namespace constants {
-                const OutSide: string;
+                const OutSide = "OutSide";
                 namespace particles {
-                    const Gene: string;
-                    const Chromosome: string;
+                    const Gene = "Gene";
+                    const Chromosome = "Chromosome";
                 }
             }
             abstract class Organelle<SapContent> implements Named, Classifiable {

@@ -527,7 +527,7 @@ var euglena;
                 var ParticleReference = (function (_super) {
                     __extends(ParticleReference, _super);
                     function ParticleReference(meta) {
-                        _super.call(this, meta, null);
+                        return _super.call(this, meta, null) || this;
                     }
                     return ParticleReference;
                 }(Particle));
@@ -535,19 +535,19 @@ var euglena;
                 var StaticTools = (function () {
                     function StaticTools() {
                     }
-                    StaticTools.ParticleReference = {
-                        equals: function (ref1, ref2) {
-                            return sys.type.StaticTools.Object.equals(ref1.meta, ref2.meta);
-                        }
-                    };
                     return StaticTools;
                 }());
+                StaticTools.ParticleReference = {
+                    equals: function (ref1, ref2) {
+                        return sys.type.StaticTools.Object.equals(ref1.meta, ref2.meta);
+                    }
+                };
                 dna.StaticTools = StaticTools;
                 var Gene = (function (_super) {
                     __extends(Gene, _super);
                     function Gene(name, triggers, // particle prop - value match
                         reaction, override, expiretime) {
-                        _super.call(this, { expiretime: expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override });
+                        return _super.call(this, { expiretime: expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override }) || this;
                     }
                     return Gene;
                 }(Particle));
@@ -747,10 +747,10 @@ var euglena;
                     }
                     return true;
                 };
-                Cytoplasm.instance = null;
-                Cytoplasm.organelles = null;
                 return Cytoplasm;
             }());
+            Cytoplasm.instance = null;
+            Cytoplasm.organelles = null;
             alive.Cytoplasm = Cytoplasm;
         })(alive = being.alive || (being.alive = {}));
     })(being = euglena.being || (euglena.being = {}));
