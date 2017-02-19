@@ -150,8 +150,8 @@ var euglena;
             }());
             type.Exception = Exception;
             var Map = (function () {
-                function Map(condition) {
-                    this.condition = condition;
+                function Map(compareKeys) {
+                    this.compareKeys = compareKeys;
                     this.keys = new Array();
                     this.values = new Array();
                 }
@@ -168,7 +168,7 @@ var euglena;
                     return this.indexOf(key) >= 0;
                 };
                 Map.prototype.set = function (key, value) {
-                    var index = this.keys.indexOf(key);
+                    var index = this.indexOf(key);
                     if (index >= 0) {
                         this.values[index] = value;
                     }
@@ -178,16 +178,18 @@ var euglena;
                     }
                 };
                 Map.prototype.remove = function (key) {
-                    var index = this.keys.indexOf(key);
-                    this.keys.slice(index, 1);
-                    this.values.slice(index, 1);
+                    var index = this.indexOf(key);
+                    if (index >= 0) {
+                        this.keys.slice(index, 1);
+                        this.values.slice(index, 1);
+                    }
                 };
                 Map.prototype.indexOf = function (key) {
                     var _this = this;
                     var index = -1;
-                    if (this.condition) {
+                    if (this.compareKeys) {
                         this.keys.forEach(function (k) {
-                            if (_this.condition(k, key)) {
+                            if (_this.compareKeys(k, key)) {
                                 index = _this.keys.indexOf(k);
                             }
                         });

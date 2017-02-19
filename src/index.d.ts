@@ -43,10 +43,10 @@ export declare module euglena {
                 constructor(message: string, innerException?: Exception);
             }
             class Map<K, V> {
-                private condition;
+                private compareKeys;
                 private keys;
                 private values;
-                constructor(condition?: (key1: K, key2: K) => boolean);
+                constructor(compareKeys?: (key1: K, key2: K) => boolean);
                 add(key: K, value: V): void;
                 keyExists(key: K): boolean;
                 set(key: K, value: V): void;

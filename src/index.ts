@@ -63,7 +63,7 @@ export module euglena {
                     typeof obj === "boolean";
             }
             public static instanceOf<T>(referenceObject: T, obj: any | T): obj is T {
-                if(obj === null || obj === undefined) return false;
+                if (obj === null || obj === undefined) return false;
                 if (Class.isPrimaryType(referenceObject)) return typeof referenceObject === typeof obj;
                 for (var prop in referenceObject) {
                     if (obj[prop] === undefined)
@@ -112,7 +112,7 @@ export module euglena {
             export class Map<K, V> {
                 private keys = new Array<K>();
                 private values = new Array<V>();
-                constructor(private condition?: (key1: K, key2: K) => boolean) { }
+                constructor(private compareKeys?: (key1: K, key2: K) => boolean) { }
                 public add(key: K, value: V): void {
                     if (!this.get(key)) {
                         this.keys.push(key);
@@ -125,7 +125,7 @@ export module euglena {
                     return this.indexOf(key) >= 0;
                 }
                 public set(key: K, value: V): void {
-                    var index = this.keys.indexOf(key);
+                    var index = this.indexOf(key);
                     if (index >= 0) {
                         this.values[index] = value;
                     } else {
@@ -134,15 +134,18 @@ export module euglena {
                     }
                 }
                 public remove(key: K): void {
-                    var index = this.keys.indexOf(key);
-                    this.keys.slice(index, 1);
-                    this.values.slice(index, 1);
+                    var index = this.indexOf(key);
+                    if (index >= 0) {
+                        this.keys.slice(index, 1);
+                        this.values.slice(index, 1);
+                    }
+
                 }
                 public indexOf(key: K): number {
                     let index = -1;
-                    if (this.condition) {
+                    if (this.compareKeys) {
                         this.keys.forEach((k: K) => {
-                            if (this.condition(k, key)) {
+                            if (this.compareKeys(k, key)) {
                                 index = this.keys.indexOf(k);
                             }
                         });
