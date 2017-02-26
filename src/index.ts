@@ -178,12 +178,7 @@ export module euglena {
             }
             export class TimeSpan {
                 className: string = "euglena.sys.type.TimeSpan";
-                public days: number;
-                public hours: number;
-                public minutes: number;
-                public seconds: number;
-                constructor(timestamp: number) { }
-
+                constructor(public days: number, public hours: number, public minutes: number, public seconds: number) { }
             }
             export class Time implements Classifiable {
                 className: string = "euglena.sys.type.Time";
@@ -237,6 +232,23 @@ export module euglena {
                         }
                         return word() + word() + '-' + word() + '-' + word() + '-' +
                             word() + '-' + word() + word() + word();
+                    }
+                }
+                export class TimeSpan {
+                    public static fromUnixTimestamp(timestamp: number): sys.type.TimeSpan {
+                        var days = Math.floor(timestamp / (1000 * 60 * 60 * 24));
+                        timestamp -= days * (1000 * 60 * 60 * 24);
+
+                        var hours = Math.floor(timestamp / (1000 * 60 * 60));
+                        timestamp -= hours * (1000 * 60 * 60);
+
+                        var minutes = Math.floor(timestamp / (1000 * 60));
+                        timestamp -= minutes * (1000 * 60);
+
+                        var seconds = Math.floor(timestamp / (1000));
+                        timestamp -= seconds * (1000);
+
+                        return new sys.type.TimeSpan(days, hours, minutes, seconds);
                     }
                 }
                 export class Time {

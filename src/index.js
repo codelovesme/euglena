@@ -212,7 +212,11 @@ var euglena;
             }());
             type.Map = Map;
             var TimeSpan = (function () {
-                function TimeSpan(timestamp) {
+                function TimeSpan(days, hours, minutes, seconds) {
+                    this.days = days;
+                    this.hours = hours;
+                    this.minutes = minutes;
+                    this.seconds = seconds;
                     this.className = "euglena.sys.type.TimeSpan";
                 }
                 return TimeSpan;
@@ -312,6 +316,23 @@ var euglena;
                     return UUID;
                 }());
                 StaticTools.UUID = UUID;
+                var TimeSpan = (function () {
+                    function TimeSpan() {
+                    }
+                    TimeSpan.fromUnixTimestamp = function (timestamp) {
+                        var days = Math.floor(timestamp / (1000 * 60 * 60 * 24));
+                        timestamp -= days * (1000 * 60 * 60 * 24);
+                        var hours = Math.floor(timestamp / (1000 * 60 * 60));
+                        timestamp -= hours * (1000 * 60 * 60);
+                        var minutes = Math.floor(timestamp / (1000 * 60));
+                        timestamp -= minutes * (1000 * 60);
+                        var seconds = Math.floor(timestamp / (1000));
+                        timestamp -= seconds * (1000);
+                        return new sys.type.TimeSpan(days, hours, minutes, seconds);
+                    };
+                    return TimeSpan;
+                }());
+                StaticTools.TimeSpan = TimeSpan;
                 var Time = (function () {
                     function Time() {
                     }
