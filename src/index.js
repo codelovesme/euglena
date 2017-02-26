@@ -390,6 +390,20 @@ var euglena;
                 var Array = (function () {
                     function Array() {
                     }
+                    Array.orderBy = function (array, compare) {
+                        for (var i = 0; i < array.length - 1; i++) {
+                            for (var j = i + 1; j < array.length; j++) {
+                                if (compare(array[i], array[j])) {
+                                    Array.swap(array, i, j);
+                                }
+                            }
+                        }
+                    };
+                    Array.swap = function (array, index1, index2) {
+                        var temp = array[index1];
+                        array[index1] = array[index2];
+                        array[index2] = temp;
+                    };
                     Array.combine = function (array1, array2) {
                         var a = array1.concat(array2);
                         for (var i = 0; i < a.length; ++i) {

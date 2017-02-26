@@ -304,6 +304,20 @@ export module euglena {
                     }
                 }
                 export class Array {
+                    public static orderBy<T>(array: T[], compare?: (t1: T, t2: T) => boolean) {
+                        for (let i = 0; i < array.length - 1; i++) {
+                            for (let j = i + 1; j < array.length; j++) {
+                                if (compare(array[i], array[j])) {
+                                    Array.swap(array, i, j);
+                                }
+                            }
+                        }
+                    }
+                    public static swap<T>(array: T[], index1: number, index2: number) {
+                        let temp = array[index1];
+                        array[index1] = array[index2];
+                        array[index2] = temp;
+                    }
                     public static combine<T>(array1: T[], array2: T[]): T[] {
                         let a = array1.concat(array2);
                         for (var i = 0; i < a.length; ++i) {
