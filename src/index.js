@@ -211,6 +211,13 @@ var euglena;
                 return Map;
             }());
             type.Map = Map;
+            var TimeSpan = (function () {
+                function TimeSpan(timestamp) {
+                    this.className = "euglena.sys.type.TimeSpan";
+                }
+                return TimeSpan;
+            }());
+            type.TimeSpan = TimeSpan;
             var Time = (function () {
                 function Time(date, clock) {
                     this.date = date;

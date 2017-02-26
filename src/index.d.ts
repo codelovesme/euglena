@@ -68,6 +68,14 @@ export declare module euglena {
             interface Named {
                 name: string;
             }
+            class TimeSpan {
+                className: string;
+                days: number;
+                hours: number;
+                minutes: number;
+                seconds: number;
+                constructor(timestamp: number);
+            }
             class Time implements Classifiable {
                 date: Date;
                 clock: Clock;

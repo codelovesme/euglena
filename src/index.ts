@@ -176,6 +176,15 @@ export module euglena {
             export interface Named {
                 name: string;
             }
+            export class TimeSpan {
+                className: string = "euglena.sys.type.TimeSpan";
+                public days: number;
+                public hours: number;
+                public minutes: number;
+                public seconds: number;
+                constructor(timestamp: number) { }
+
+            }
             export class Time implements Classifiable {
                 className: string = "euglena.sys.type.Time";
                 constructor(public date: Date, public clock: Clock) { }
