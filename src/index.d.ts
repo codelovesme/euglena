@@ -73,8 +73,9 @@ export declare module euglena {
                 hours: number;
                 minutes: number;
                 seconds: number;
+                miliseconds: number;
                 className: string;
-                constructor(days: number, hours: number, minutes: number, seconds: number);
+                constructor(days: number, hours: number, minutes: number, seconds: number, miliseconds: number);
             }
             class Time implements Classifiable {
                 date: Date;
@@ -111,6 +112,7 @@ export declare module euglena {
                 }
                 class TimeSpan {
                     static fromUnixTimestamp(timestamp: number): sys.type.TimeSpan;
+                    static toUnixTimestamp(timespan: sys.type.TimeSpan): number;
                 }
                 class Time {
                     static biggerThan(time1: sys.type.Time, time2: sys.type.Time): boolean;

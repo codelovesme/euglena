@@ -178,7 +178,7 @@ export module euglena {
             }
             export class TimeSpan {
                 className: string = "euglena.sys.type.TimeSpan";
-                constructor(public days: number, public hours: number, public minutes: number, public seconds: number) { }
+                constructor(public days: number, public hours: number, public minutes: number, public seconds: number, public miliseconds: number) { }
             }
             export class Time implements Classifiable {
                 className: string = "euglena.sys.type.Time";
@@ -236,6 +236,7 @@ export module euglena {
                 }
                 export class TimeSpan {
                     public static fromUnixTimestamp(timestamp: number): sys.type.TimeSpan {
+                        timestamp *= 1000;
                         var days = Math.floor(timestamp / (1000 * 60 * 60 * 24));
                         timestamp -= days * (1000 * 60 * 60 * 24);
 
@@ -245,10 +246,20 @@ export module euglena {
                         var minutes = Math.floor(timestamp / (1000 * 60));
                         timestamp -= minutes * (1000 * 60);
 
-                        var seconds = Math.floor(timestamp / (1000));
-                        timestamp -= seconds * (1000);
+                        var seconds = Math.floor(timestamp / 1000);
+                        timestamp -= seconds * 1000;
 
-                        return new sys.type.TimeSpan(days, hours, minutes, seconds);
+                        var miliseconds = timestamp;
+
+                        return new sys.type.TimeSpan(days, hours, minutes, seconds, miliseconds);
+                    }
+                    public static toUnixTimestamp(timespan: sys.type.TimeSpan): number {
+                        let fromdays = timespan.days * 60 * 60 * 24;
+                        let fromhours = timespan.hours * 60 * 60;
+                        let fromminutes = timespan.minutes * 60;
+                        let fromseconds = timespan.seconds;
+                        let frommiliseconds = timespan.miliseconds / 1000;
+                        return fromdays + fromhours + fromminutes + fromseconds + frommiliseconds;
                     }
                 }
                 export class Time {

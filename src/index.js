@@ -212,11 +212,12 @@ var euglena;
             }());
             type.Map = Map;
             var TimeSpan = (function () {
-                function TimeSpan(days, hours, minutes, seconds) {
+                function TimeSpan(days, hours, minutes, seconds, miliseconds) {
                     this.days = days;
                     this.hours = hours;
                     this.minutes = minutes;
                     this.seconds = seconds;
+                    this.miliseconds = miliseconds;
                     this.className = "euglena.sys.type.TimeSpan";
                 }
                 return TimeSpan;
@@ -320,15 +321,25 @@ var euglena;
                     function TimeSpan() {
                     }
                     TimeSpan.fromUnixTimestamp = function (timestamp) {
+                        timestamp *= 1000;
                         var days = Math.floor(timestamp / (1000 * 60 * 60 * 24));
                         timestamp -= days * (1000 * 60 * 60 * 24);
                         var hours = Math.floor(timestamp / (1000 * 60 * 60));
                         timestamp -= hours * (1000 * 60 * 60);
                         var minutes = Math.floor(timestamp / (1000 * 60));
                         timestamp -= minutes * (1000 * 60);
-                        var seconds = Math.floor(timestamp / (1000));
-                        timestamp -= seconds * (1000);
-                        return new sys.type.TimeSpan(days, hours, minutes, seconds);
+                        var seconds = Math.floor(timestamp / 1000);
+                        timestamp -= seconds * 1000;
+                        var miliseconds = timestamp;
+                        return new sys.type.TimeSpan(days, hours, minutes, seconds, miliseconds);
+                    };
+                    TimeSpan.toUnixTimestamp = function (timespan) {
+                        var fromdays = timespan.days * 60 * 60 * 24;
+                        var fromhours = timespan.hours * 60 * 60;
+                        var fromminutes = timespan.minutes * 60;
+                        var fromseconds = timespan.seconds;
+                        var frommiliseconds = timespan.miliseconds / 1000;
+                        return fromdays + fromhours + fromminutes + fromseconds + frommiliseconds;
                     };
                     return TimeSpan;
                 }());
