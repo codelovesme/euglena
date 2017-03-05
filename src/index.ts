@@ -18,16 +18,16 @@ export module euglena {
             public static toDotNotation(obj: Object) {
                 let obj_ = obj as any;
                 //check if obj is object or not
-                if(!obj && typeof obj !== "object") return obj;
+                if (!obj && typeof obj !== "object") return obj;
                 //if the obj terminal then return itself
-                let ret_:any = {};
-                for(let key in obj){
-                    if(!Class.isPrimaryType(obj_[key])){
+                let ret_: any = {};
+                for (let key in obj) {
+                    if (!Class.isPrimaryType(obj_[key])) {
                         let r = Class.toDotNotation(obj_[key]);
-                        for(let k in r){
-                            ret_[key+"."+k] = r[k];
+                        for (let k in r) {
+                            ret_[key + "." + k] = r[k];
                         }
-                    }else{
+                    } else {
                         ret_[key] = obj_[key];
                     }
                 }
@@ -93,9 +93,11 @@ export module euglena {
                 }
                 return true;
             }
+            ///TODO must be upgraded
             public static doesCover(obj1: any, obj2: any): boolean {
                 for (let key in obj2) {
-                    if (obj1[key] === undefined) return false;
+                    if (obj2[key] === null || obj2[key] === undefined) continue;
+                    if (obj1[key] === undefined || obj1[key] === null) return false;
                     if (Class.isPrimaryType(obj2[key])) {
                         if (obj1[key] !== obj2[key]) return false;
                     } else {

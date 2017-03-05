@@ -111,9 +111,12 @@ var euglena;
                 }
                 return true;
             };
+            ///TODO must be upgraded
             Class.doesCover = function (obj1, obj2) {
                 for (var key in obj2) {
-                    if (obj1[key] === undefined)
+                    if (obj2[key] === null || obj2[key] === undefined)
+                        continue;
+                    if (obj1[key] === undefined || obj1[key] === null)
                         return false;
                     if (Class.isPrimaryType(obj2[key])) {
                         if (obj1[key] !== obj2[key])
