@@ -24,6 +24,26 @@ var euglena;
         var Class = (function () {
             function Class() {
             }
+            Class.toDotNotation = function (obj) {
+                var obj_ = obj;
+                //check if obj is object or not
+                if (!obj && typeof obj !== "object")
+                    return obj;
+                //if the obj terminal then return itself
+                var ret_ = {};
+                for (var key in obj) {
+                    if (!Class.isPrimaryType(obj_[key])) {
+                        var r = Class.toDotNotation(obj_[key]);
+                        for (var k in r) {
+                            ret_[key + "." + k] = r[k];
+                        }
+                    }
+                    else {
+                        ret_[key] = obj_[key];
+                    }
+                }
+                return ret_;
+            };
             Class.clean = function (obj) {
                 delete obj.__proto__;
             };
@@ -74,7 +94,11 @@ var euglena;
             Class.isPrimaryType = function (obj) {
                 return typeof obj === "string" ||
                     typeof obj === "number" ||
-                    typeof obj === "boolean";
+                    typeof obj === "boolean" ||
+                    obj === undefined ||
+                    obj === null ||
+                    typeof obj === "function" ||
+                    typeof obj === "symbol";
             };
             Class.instanceOf = function (referenceObject, obj) {
                 if (obj === null || obj === undefined)

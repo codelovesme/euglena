@@ -15,6 +15,24 @@ export const JavascriptObject = Object;
 export module euglena {
     export namespace js {
         export class Class {
+            public static toDotNotation(obj: Object) {
+                let obj_ = obj as any;
+                //check if obj is object or not
+                if(!obj && typeof obj !== "object") return obj;
+                //if the obj terminal then return itself
+                let ret_:any = {};
+                for(let key in obj){
+                    if(!Class.isPrimaryType(obj_[key])){
+                        let r = Class.toDotNotation(obj_[key]);
+                        for(let k in r){
+                            ret_[key+"."+k] = r[k];
+                        }
+                    }else{
+                        ret_[key] = obj_[key];
+                    }
+                }
+                return ret_;
+            }
             public static clean(obj: Object): void {
                 delete (obj as any).__proto__;
             }
@@ -60,7 +78,11 @@ export module euglena {
             public static isPrimaryType(obj: any): boolean {
                 return typeof obj === "string" ||
                     typeof obj === "number" ||
-                    typeof obj === "boolean";
+                    typeof obj === "boolean" ||
+                    obj === undefined ||
+                    obj === null ||
+                    typeof obj === "function" ||
+                    typeof obj === "symbol";
             }
             public static instanceOf<T>(referenceObject: T, obj: any | T): obj is T {
                 if (obj === null || obj === undefined) return false;
