@@ -81,7 +81,6 @@ export module euglena {
                     typeof obj === "boolean" ||
                     obj === undefined ||
                     obj === null ||
-                    typeof obj === "function" ||
                     typeof obj === "symbol";
             }
             public static instanceOf<T>(referenceObject: T, obj: any | T): obj is T {

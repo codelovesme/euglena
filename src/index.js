@@ -97,7 +97,6 @@ var euglena;
                     typeof obj === "boolean" ||
                     obj === undefined ||
                     obj === null ||
-                    typeof obj === "function" ||
                     typeof obj === "symbol";
             };
             Class.instanceOf = function (referenceObject, obj) {
