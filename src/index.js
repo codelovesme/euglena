@@ -91,6 +91,7 @@ var euglena;
                 }
                 return valueObj;
             };
+            ///TODO rename to isPrimitiveType
             Class.isPrimaryType = function (obj) {
                 return typeof obj === "string" ||
                     typeof obj === "number" ||

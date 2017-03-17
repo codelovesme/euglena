@@ -75,6 +75,7 @@ export module euglena {
                 }
                 return valueObj;
             }
+            ///TODO rename to isPrimitiveType
             public static isPrimaryType(obj: any): boolean {
                 return typeof obj === "string" ||
                     typeof obj === "number" ||
