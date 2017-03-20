@@ -804,7 +804,7 @@ var euglena;
                     return -1;
                 };
                 Cytoplasm.doesMongoCover = function (obj1, obj2) {
-                    var array = sift(obj1, [obj2]);
+                    var array = sift(obj2, [obj1]);
                     return array instanceof Array && array.length > 0;
                 };
                 return Cytoplasm;

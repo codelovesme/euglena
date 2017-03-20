@@ -685,7 +685,7 @@ export module euglena {
                     return -1;
                 }
                 public static doesMongoCover(obj1: any, obj2: any): boolean {
-                    let array = sift(obj1, [obj2]);
+                    let array = sift(obj2, [obj1]);
                     return array instanceof Array && array.length > 0;
                 }
             }
