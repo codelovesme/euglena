@@ -16,5 +16,8 @@
   },
   "scripts": {
     "test": "mocha test"
+  },
+  "dependencies": {
+    "sift": "^3.2.7"
   }
 }

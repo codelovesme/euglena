@@ -5,7 +5,7 @@
 ///<reference path="..\typings\mocha\mocha.d.ts"/>
 ///<reference path="..\typings\chai\chai.d.ts"/>
 
-import {euglena} from "../src/index";
+import { euglena } from "../src/index";
 import * as chai from "chai";
 
 import Class = euglena.js.Class;
@@ -186,8 +186,116 @@ describe("euglena", () => {
     });
     describe("being", () => {
         describe("alive", () => {
-            describe("alive", () => {
-
+            describe("Cytoplasm", () => {
+                describe("doesMongoCover", () => {
+                    it("should return true if obj1 mongoCover obj2 - 1", () => {
+                        //given
+                        let obj1 = {
+                            a: { $exists: true }
+                        };
+                        let obj2 = {
+                            a: "done"
+                        };
+                        //when
+                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj1, obj2);
+                        //then
+                        chai.expect(result).to.be.true;
+                    });
+                    it("should return false if obj1 doesnt mongoCover obj2 - 1", () => {
+                        //given
+                        let obj1 = {
+                            a: { $exists: false }
+                        };
+                        let obj2 = {
+                            a: "done"
+                        };
+                        //when
+                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj1, obj2);
+                        //then
+                        chai.expect(result).to.be.false;
+                    });
+                    it("should return true if obj1 mongoCover obj2 - 2", () => {
+                        //given
+                        let obj1 = {
+                            a: { $exists: true },
+                            k: { $exists: false },
+                            b: { $gte: 12 }
+                        };
+                        let obj2 = {
+                            a: "done",
+                            b: 34,
+                            c: { d: "d" }
+                        };
+                        //when
+                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj1, obj2);
+                        //then
+                        chai.expect(result).to.be.true;
+                    });
+                    it("should return false if obj1 mongoCover obj2 - 2", () => {
+                        //given
+                        let obj1 = {
+                            a: { $exists: true },
+                            b: { $gte: 12 },
+                            c: { d: "de" }
+                        };
+                        let obj2 = {
+                            a: "done",
+                            b: 34,
+                            c: { d: "d" }
+                        };
+                        //when
+                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj1, obj2);
+                        //then
+                        chai.expect(result).to.be.false;
+                    });
+                    it("should return true if obj1 mongoCover obj2 - 3", () => {
+                        //given
+                        let obj1 = {
+                            a: { $exists: true },
+                            b: { $gte: 12 },
+                            c: { d: "d" }
+                        };
+                        let obj2 = {
+                            a: "done",
+                            b: 34,
+                            c: { d: "d" }
+                        };
+                        //when
+                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj1, obj2);
+                        //then
+                        chai.expect(result).to.be.true;
+                    });
+                    it("should return true if obj1 mongoCover obj2 - 4", () => {
+                        //given
+                        let obj1 = {
+                            c: { d: "d" }
+                        };
+                        let obj2 = {
+                            a: "done",
+                            b: 34,
+                            c: { d: "d", e:"e" }
+                        };
+                        //when
+                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj1, obj2);
+                        //then
+                        chai.expect(result).to.be.true;
+                    });
+                    it("should return true if obj1 mongoCover obj2 - 5", () => {
+                        //given
+                        let obj1 = {
+                            "c.d": "d"
+                        };
+                        let obj2 = {
+                            a: "done",
+                            b: 34,
+                            c: { d: "d", e:"e" }
+                        };
+                        //when
+                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj1, obj2);
+                        //then
+                        chai.expect(result).to.be.true;
+                    });
+                });
             });
         });
     });

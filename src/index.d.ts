@@ -1,6 +1,3 @@
-/**
- * Created by codelovesme on 6/19/2015.
- */
 export declare const JavascriptDate: DateConstructor;
 export declare const JavascriptObject: ObjectConstructor;
 export declare module euglena {

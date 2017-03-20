@@ -10,6 +10,7 @@
 * #Seperate particle, request, event
 *
 */
+import * as sift from "sift";
 export const JavascriptDate = Date;
 export const JavascriptObject = Object;
 export module euglena {
@@ -684,25 +685,8 @@ export module euglena {
                     return -1;
                 }
                 public static doesMongoCover(obj1: any, obj2: any): boolean {
-                    let exists = { $exists: true };
-                    let notExists = { $exists: false };
-                    for (let key in obj2) {
-                        if (euglena.sys.type.StaticTools.Object.equals(obj2[key], exists)) {
-                            if (!obj1.hasOwnProperty(key)) return false;
-                            continue;
-                        }
-                        if (euglena.sys.type.StaticTools.Object.equals(obj2[key], notExists)) {
-                            if (obj1.hasOwnProperty(key)) return false;
-                            continue;
-                        }
-                        if (obj1[key] === undefined) return false;
-                        if (euglena.js.Class.isPrimaryType(obj2[key])) {
-                            if (obj1[key] !== obj2[key]) return false;
-                        } else {
-                            if (!Cytoplasm.doesMongoCover(obj1[key], obj2[key])) return false;
-                        }
-                    }
-                    return true;
+                    let array = sift(obj1, [obj2]);
+                    return array instanceof Array && array.length > 0;
                 }
             }
         }
