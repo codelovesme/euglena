@@ -300,7 +300,7 @@ var euglena;
                             for (var _i = 0, obj1keys_1 = obj1keys; _i < obj1keys_1.length; _i++) {
                                 var key = obj1keys_1[_i];
                                 if (typeof obj1[key] == "object") {
-                                    if (!Object.equals(obj1[key], obj2[key]))
+                                    if (!Object.equals(obj1[key], obj2[key], deep))
                                         return false;
                                 }
                                 else {

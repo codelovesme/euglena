@@ -230,7 +230,7 @@ export module euglena {
                         if (deep) {
                             for (let key of obj1keys) {
                                 if (typeof obj1[key] == "object") {
-                                    if (!Object.equals(obj1[key], obj2[key])) return false;
+                                    if (!Object.equals(obj1[key], obj2[key],deep)) return false;
                                 } else {
                                     if (obj1[key] != obj2[key]) return false;
                                 }
