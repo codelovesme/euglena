@@ -480,8 +480,9 @@ export module euglena {
             constructor(public meta: MetaV2, public data?: T) { }
         }
         export type Meta = MetaV1 | MetaV2;
-        export class MetaV1 {
-            constructor(public name: string, public of?: string) { }
+        export interface MetaV1 {
+            name: string;
+            of?: string;
         }
         export class MetaV2 {
             public version: string;
@@ -695,7 +696,7 @@ export module euglena {
                     } : callback);
                 }
                 public static saveParticle(particle: being.Particle) {
-                    let index = sys.type.StaticTools.Array.indexOf(Cytoplasm.particles,particle.meta,(tt,m)=>sys.type.StaticTools.Object.equals(tt.meta, m));
+                    let index = sys.type.StaticTools.Array.indexOf(Cytoplasm.particles, particle.meta, (tt, m) => sys.type.StaticTools.Object.equals(tt.meta, m));
                     if (index >= 0) {
                         Cytoplasm.particles[index] = particle;
                     } else {

@@ -163,10 +163,9 @@ export declare module euglena {
             constructor(meta: MetaV2, data?: T);
         }
         type Meta = MetaV1 | MetaV2;
-        class MetaV1 {
+        interface MetaV1 {
             name: string;
-            of: string;
-            constructor(name: string, of?: string);
+            of?: string;
         }
         class MetaV2 {
             name: string;

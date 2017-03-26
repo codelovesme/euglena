@@ -596,14 +596,6 @@ var euglena;
             return ParticleV2;
         }());
         being.ParticleV2 = ParticleV2;
-        var MetaV1 = (function () {
-            function MetaV1(name, of) {
-                this.name = name;
-                this.of = of;
-            }
-            return MetaV1;
-        }());
-        being.MetaV1 = MetaV1;
         var MetaV2 = (function () {
             function MetaV2(name, of, expireTime) {
                 this.name = name;
