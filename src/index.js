@@ -621,9 +621,9 @@ var euglena;
                         return false;
                     switch (particle.meta.version) {
                         case Versions.v2:
-                            particle = particle;
-                            return particle.meta.name && (typeof particle.meta.name === "string") && typeof particle.meta.of &&
-                                (typeof particle.meta.of === "string") && (particle.meta.version === Versions.v2) && (typeof particle.meta.createTime === "number");
+                            var meta = particle.meta;
+                            return meta.name && (typeof meta.name === "string") && typeof meta.of &&
+                                (typeof meta.of === "string") && (meta.version === Versions.v2) && (typeof meta.createTime === "number");
                         case Versions.v1:
                         case "undefined":
                             return particle.meta.name ? true : false;

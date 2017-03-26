@@ -472,9 +472,9 @@ export module euglena {
     export namespace being {
         import Classifiable = euglena.sys.type.Classifiable;
         import Named = euglena.sys.type.Named;
-        export type Particle = ParticleV1 | ParticleV2<any>;
-        export class ParticleV1 {
-            constructor(public meta: any, public data?: any) { }
+        export type Particle = ParticleV1<any> | ParticleV2<any>;
+        export class ParticleV1<M> {
+            constructor(public meta: M, public data?: any) { }
         }
         export class ParticleV2<T> {
             constructor(public meta: MetaV2, public data?: T) { }
@@ -497,9 +497,9 @@ export module euglena {
                     if (!particle || !particle.meta) return false;
                     switch ((particle.meta as any).version) {
                         case Versions.v2:
-                            particle = particle as ParticleV2<any>;
-                            return particle.meta.name && (typeof particle.meta.name === "string") && typeof particle.meta.of &&
-                                (typeof particle.meta.of === "string") && (particle.meta.version === Versions.v2) && (typeof particle.meta.createTime === "number");
+                            let meta = particle.meta as MetaV2;
+                            return meta.name && (typeof meta.name === "string") && typeof meta.of &&
+                                (typeof meta.of === "string") && (meta.version === Versions.v2) && (typeof meta.createTime === "number");
                         case Versions.v1:
                         case "undefined":
                             return particle.meta.name ? true : false;
@@ -532,7 +532,7 @@ export module euglena {
                     (particle: Particle, sourceOrganelle: string, callback?: being.interaction.Callback): void;
                 }
                 export type Gene = GeneV1 | GeneV2;
-                export class GeneV1 extends ParticleV1 {
+                export class GeneV1 extends ParticleV1<{ expiretime: euglena.sys.type.Time, name: string }> {
                     constructor(
                         name: string,
                         triggers: Object, // particle prop - value match
@@ -555,7 +555,7 @@ export module euglena {
                 }
                 export class GarbageCollector {
                     private timeout = 1000;
-                    private chromosome: GeneV1[] = [];
+                    private chromosome: Gene[] = [];
                     private particles: Particle[] = [];
                     constructor(chromosome: Gene[], particles: Particle[]) {
                         this.chromosome = chromosome;
