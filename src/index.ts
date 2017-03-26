@@ -473,11 +473,16 @@ export module euglena {
         import Classifiable = euglena.sys.type.Classifiable;
         import Named = euglena.sys.type.Named;
         export type Particle = ParticleV1<any> | ParticleV2<any>;
-        export class ParticleV1<M> {
+        export class ParticleV1<M extends MetaV1> {
             constructor(public meta: M, public data?: any) { }
         }
         export class ParticleV2<T> {
             constructor(public meta: MetaV2, public data?: T) { }
+        }
+        export type Meta = MetaV1 | MetaV2;
+        export interface MetaV1 {
+            name: string;
+            of?: string;
         }
         export class MetaV2 {
             public version: string;
@@ -701,7 +706,7 @@ export module euglena {
                 public static removeParticles(meta: any): Particle[] {
                     return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, meta, (ai, t) => js.Class.doesMongoCover(ai.meta, meta));
                 }
-                public static getParticle(meta: any): Particle {
+                public static getParticle(meta: Meta): Particle {
                     for (let p of Cytoplasm.particles) {
                         if (js.Class.doesMongoCover(p.meta, meta)) {
                             return p;

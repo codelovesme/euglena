@@ -152,7 +152,7 @@ export declare module euglena {
     namespace being {
         import Named = euglena.sys.type.Named;
         type Particle = ParticleV1<any> | ParticleV2<any>;
-        class ParticleV1<M> {
+        class ParticleV1<M extends MetaV1> {
             meta: M;
             data: any;
             constructor(meta: M, data?: any);
@@ -161,6 +161,11 @@ export declare module euglena {
             meta: MetaV2;
             data: T;
             constructor(meta: MetaV2, data?: T);
+        }
+        type Meta = MetaV1 | MetaV2;
+        interface MetaV1 {
+            name: string;
+            of?: string;
         }
         class MetaV2 {
             name: string;
@@ -270,7 +275,7 @@ export declare module euglena {
                 static transmit(organelleName: string, particle: Particle, callback?: interaction.Callback): void;
                 static saveParticle(particle: being.Particle): void;
                 static removeParticles(meta: any): Particle[];
-                static getParticle(meta: any): Particle;
+                static getParticle(meta: Meta): Particle;
                 static getParticles(meta: any): Particle[];
                 private static _indexOfParticle(meta);
             }
