@@ -703,7 +703,7 @@ export module euglena {
                 }
                 public static getParticle(meta: any): Particle {
                     for (let p of Cytoplasm.particles) {
-                        if (js.Class.doesMongoCover(p, meta)) {
+                        if (js.Class.doesMongoCover(p.meta, meta)) {
                             return p;
                         }
                     }

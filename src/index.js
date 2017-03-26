@@ -822,7 +822,7 @@ var euglena;
                 Cytoplasm.getParticle = function (meta) {
                     for (var _i = 0, _a = Cytoplasm.particles; _i < _a.length; _i++) {
                         var p = _a[_i];
-                        if (js.Class.doesMongoCover(p, meta)) {
+                        if (js.Class.doesMongoCover(p.meta, meta)) {
                             return p;
                         }
                     }
