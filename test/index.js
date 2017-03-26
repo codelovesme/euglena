@@ -192,7 +192,7 @@ describe("euglena", function () {
                             a: "done"
                         };
                         //when
-                        var result = index_1.euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        var result = index_1.euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });
@@ -205,7 +205,7 @@ describe("euglena", function () {
                             a: "done"
                         };
                         //when
-                        var result = index_1.euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        var result = index_1.euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.false;
                     });
@@ -222,7 +222,7 @@ describe("euglena", function () {
                             c: { d: "d" }
                         };
                         //when
-                        var result = index_1.euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        var result = index_1.euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });
@@ -239,7 +239,7 @@ describe("euglena", function () {
                             c: { d: "d" }
                         };
                         //when
-                        var result = index_1.euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        var result = index_1.euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.false;
                     });
@@ -256,7 +256,7 @@ describe("euglena", function () {
                             c: { d: "d" }
                         };
                         //when
-                        var result = index_1.euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        var result = index_1.euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });
@@ -271,7 +271,7 @@ describe("euglena", function () {
                             c: { d: "d", e: "e" }
                         };
                         //when
-                        var result = index_1.euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        var result = index_1.euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });
@@ -286,7 +286,7 @@ describe("euglena", function () {
                             c: { d: "d", e: "e" }
                         };
                         //when
-                        var result = index_1.euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        var result = index_1.euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });

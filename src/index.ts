@@ -23,7 +23,7 @@ export module euglena {
                 //if the obj terminal then return itself
                 let ret_: any = {};
                 for (let key in obj) {
-                    if (!Class.isPrimaryType(obj_[key])) {
+                    if (!Class.isPrimitiveType(obj_[key])) {
                         let r = Class.toDotNotation(obj_[key]);
                         for (let k in r) {
                             ret_[key + "." + k] = r[k];
@@ -76,8 +76,7 @@ export module euglena {
                 }
                 return valueObj;
             }
-            ///TODO rename to isPrimitiveType
-            public static isPrimaryType(obj: any): boolean {
+            public static isPrimitiveType(obj: any): boolean {
                 return typeof obj === "string" ||
                     typeof obj === "number" ||
                     typeof obj === "boolean" ||
@@ -87,7 +86,7 @@ export module euglena {
             }
             public static instanceOf<T>(referenceObject: T, obj: any | T): obj is T {
                 if (obj === null || obj === undefined) return false;
-                if (Class.isPrimaryType(referenceObject)) return typeof referenceObject === typeof obj;
+                if (Class.isPrimitiveType(referenceObject)) return typeof referenceObject === typeof obj;
                 for (var prop in referenceObject) {
                     if (obj[prop] === undefined)
                         return false;
@@ -99,13 +98,17 @@ export module euglena {
                 for (let key in obj2) {
                     if (obj2[key] === null || obj2[key] === undefined) continue;
                     if (obj1[key] === undefined || obj1[key] === null) return false;
-                    if (Class.isPrimaryType(obj2[key])) {
+                    if (Class.isPrimitiveType(obj2[key])) {
                         if (obj1[key] !== obj2[key]) return false;
                     } else {
                         if (!Class.doesCover(obj1[key], obj2[key])) return false;
                     }
                 }
                 return true;
+            }
+            public static doesMongoCover(obj: any, query: any): boolean {
+                let array = sift(query, [obj]);
+                return array instanceof Array && array.length > 0;
             }
         }
     }
@@ -230,7 +233,7 @@ export module euglena {
                         if (deep) {
                             for (let key of obj1keys) {
                                 if (typeof obj1[key] == "object") {
-                                    if (!Object.equals(obj1[key], obj2[key],deep)) return false;
+                                    if (!Object.equals(obj1[key], obj2[key], deep)) return false;
                                 } else {
                                     if (obj1[key] != obj2[key]) return false;
                                 }
@@ -385,34 +388,40 @@ export module euglena {
                         }
                         return a;
                     }
-                    public static equals<T>(array1: T[], array2: T[], compare?: (t1: T, t2: T) => boolean): boolean {
+                    public static equals<T, K>(array1: T[], array2: K[], compare?: (t: T, k: K) => boolean): boolean {
                         if (!array1 && !array2) return true;
                         if (!array1 || !array2) return false;
                         if (array1.length !== array2.length) return false;
-                        for (let i = 0; i < array1.length; i++) {
-                            if (array1[i] !== array2[i]) return false;
+                        if (compare) {
+                            for (let i = 0; i < array1.length; i++) {
+                                if (!compare(array1[i], array2[i])) return false;
+                            }
+                        } else {
+                            for (let i = 0; i < array1.length; i++) {
+                                if ((array1[i] as any) !== array2[i]) return false;
+                            }
                         }
                         return true;
                     }
-                    public static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean {
-                        return Array.indexOf(array, t, compare) >= 0;
+                    public static contains<T, K>(array: T[], k: K, compare?: (arrayItem: T, k: K) => boolean): boolean {
+                        return Array.indexOf(array, k, compare) >= 0;
                     }
-                    public static containsArray<T>(master: T[], slave: T[], compare?: (t1: T, t2: T) => boolean): boolean {
+                    public static containsArray<T, K>(master: T[], slave: K[], compare?: (t: T, k: K) => boolean): boolean {
                         for (let s of slave) {
                             if (!Array.contains(master, s, compare)) return false;
                         }
                         return true;
                     }
-                    public static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number {
+                    public static indexOf<T, K>(array: T[], k: K, compare?: (arrayItem: T, k: K) => boolean): number {
                         if (compare) {
                             for (var i = 0; i < array.length; i++) {
-                                if (compare(array[i], t)) {
+                                if (compare(array[i], k)) {
                                     return i;
                                 }
                             }
                         } else {
                             for (var i = 0; i < array.length; i++) {
-                                if (array[i] === t) {
+                                if ((array[i] as any) === k) {
                                     return i;
                                 }
                             }
@@ -422,33 +431,33 @@ export module euglena {
                     public static removeAt<T>(array: T[], index: number): T {
                         return array.splice(index, 1)[0];
                     }
-                    public static remove<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T {
+                    public static remove<T, K>(array: T[], k: K, compare?: (arrayItem: T, t: K) => boolean): T {
                         if (compare) {
                             for (let i = 0; i < array.length; i++) {
-                                if (compare(array[i], t)) {
+                                if (compare(array[i], k)) {
                                     return array.splice(i, 1)[0];
                                 }
                             }
                         } else {
                             for (let i = 0; i < array.length; i++) {
-                                if (array[i] == t) {
+                                if ((array[i] as any) == k) {
                                     return array.splice(i, 1)[0];
                                 }
                             }
                         }
                     }
-                    public static removeAllMatched<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T[] {
+                    public static removeAllMatched<T, K>(array: T[], k: K, compare?: (arrayItem: T, t: K) => boolean): T[] {
                         let returnValue: T[] = [];
                         if (compare) {
                             for (let i = 0; i < array.length; i++) {
-                                if (compare(array[i], t)) {
+                                if (compare(array[i], k)) {
                                     returnValue.push(array.splice(i, 1)[0]);
                                     i--;
                                 }
                             }
                         } else {
                             for (let i = 0; i < array.length; i++) {
-                                if (array[i] == t) {
+                                if ((array[i] as any) == k) {
                                     returnValue.push(array.splice(i, 1)[0]);
                                     i--;
                                 }
@@ -463,12 +472,39 @@ export module euglena {
     export namespace being {
         import Classifiable = euglena.sys.type.Classifiable;
         import Named = euglena.sys.type.Named;
-        export class Particle {
-            constructor(public meta: any, public data: any) { }
+        export type Particle = ParticleV1 | ParticleV2<any>;
+        export class ParticleV1 {
+            constructor(public meta: any, public data?: any) { }
         }
-        export class StaticTools {
-            public static validateParticle(particle: Particle): boolean {
-                return particle && particle.meta && particle.data;
+        export class ParticleV2<T> {
+            constructor(public meta: MetaV2, public data?: T) { }
+        }
+        export class MetaV2 {
+            public version: string;
+            public createTime: number;
+            constructor(public name: string, public of: string, public expireTime?: number) {
+                this.version = StaticTools.Particle.Versions.v2;
+                this.createTime = new JavascriptDate().getTime();
+            }
+        }
+        export namespace StaticTools {
+            export namespace Particle {
+                export namespace Versions {
+                    export const v1 = "v1";
+                    export const v2 = "v2";
+                }
+                export function validate(particle: Particle): boolean {
+                    if (!particle || !particle.meta) return false;
+                    switch ((particle.meta as any).version) {
+                        case Versions.v2:
+                            particle = particle as ParticleV2<any>;
+                            return particle.meta.name && (typeof particle.meta.name === "string") && typeof particle.meta.of &&
+                                (typeof particle.meta.of === "string") && (particle.meta.version === Versions.v2) && (typeof particle.meta.createTime === "number");
+                        case Versions.v1:
+                        case "undefined":
+                            return particle.meta.name ? true : false;
+                    }
+                }
             }
         }
         export namespace interaction {
@@ -489,36 +525,37 @@ export module euglena {
         export namespace alive {
             import Classifiable = euglena.sys.type.Classifiable;
             import Particle = euglena.being.Particle;
+            import ParticleV2 = euglena.being.ParticleV2;
             import Impact = euglena.being.interaction.Impact;
             export namespace dna {
-                export class ParticleReference extends Particle {
-                    constructor(meta: any) {
-                        super(meta, null);
-                    }
-                }
-                export class StaticTools {
-                    public static ParticleReference = {
-                        equals: (ref1: ParticleReference, ref2: ParticleReference) => {
-                            return sys.type.StaticTools.Object.equals(ref1.meta, ref2.meta);
-                        }
-                    }
-                }
                 export interface Reaction {
                     (particle: Particle, sourceOrganelle: string, callback?: being.interaction.Callback): void;
                 }
-                export class Gene extends Particle {
+                export type Gene = GeneV1 | GeneV2;
+                export class GeneV1 extends ParticleV1 {
                     constructor(
                         name: string,
                         triggers: Object, // particle prop - value match
                         reaction: Reaction,
                         override?: string,
                         expiretime?: euglena.sys.type.Time) {
-                        super({ expiretime: expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override });
+                        super({ expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override });
+                    }
+                }
+                export interface GeneDataV2 {
+                    name: string,
+                    triggers: ParticleV2<GeneDataV2>,
+                    reaction: Reaction,
+                    override?: string,
+                }
+                export class GeneV2 extends ParticleV2<GeneDataV2> {
+                    constructor(meta: { of: string, expireTime?: number }, data: { name: string, triggers: ParticleV2<GeneDataV2>, reaction: Reaction, override?: string }) {
+                        super(new MetaV2(constants.particles.Gene, meta.of, meta.expireTime), data);
                     }
                 }
                 export class GarbageCollector {
                     private timeout = 1000;
-                    private chromosome: Gene[] = [];
+                    private chromosome: GeneV1[] = [];
                     private particles: Particle[] = [];
                     constructor(chromosome: Gene[], particles: Particle[]) {
                         this.chromosome = chromosome;
@@ -529,15 +566,21 @@ export module euglena {
                         let particles = this.particles;
                         setInterval(() => {
                             //process genes
+                            let now = euglena.sys.type.StaticTools.Time.now();
+                            let nowDigit = new JavascriptDate().getTime();
+                            let doesExpire = (ai: Particle) =>
+                                (!ai.meta.version || ai.meta.version === StaticTools.Particle.Versions.v1) ?
+                                    (ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now, ai.meta.expiretime)) :
+                                    (ai.meta.version === StaticTools.Particle.Versions.v2 ?
+                                        (ai.meta.expireTime && ai.meta.expireTime <= nowDigit) : false);
                             euglena.sys.type.StaticTools.Array.removeAllMatched(
                                 this.chromosome,
-                                new Gene("", {}, null, null, euglena.sys.type.StaticTools.Time.now()),
-                                (ai: Gene, now: Gene) => ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
+                                null,
+                                doesExpire);
                             //process particles
                             euglena.sys.type.StaticTools.Array.removeAllMatched(
                                 this.particles,
-                                { meta: { expiretime: euglena.sys.type.StaticTools.Time.now() }, data: null },
-                                (ai: Particle, now: Particle) => ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime));
+                                null, doesExpire);
                         }, this.timeout)
                     }
                 }
@@ -577,9 +620,9 @@ export module euglena {
                 public static particles: Particle[];
                 public static garbageCollector: dna.GarbageCollector;
                 private static get chromosome(): dna.Gene[] {
-                    return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome }, data: null }).data;
+                    return Cytoplasm.getParticle({ name: alive.constants.particles.Chromosome }).data;
                 }
-                constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]) {
+                constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.GeneV1[]) {
                     if (Cytoplasm.instance) {
                         throw "There exists a cytoplasm instance already.";
                     }
@@ -600,7 +643,7 @@ export module euglena {
                     let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
                         let triggers: any = Cytoplasm.chromosome[i].data.triggers;
-                        if (Cytoplasm.doesMongoCover(particle, triggers)) {
+                        if (js.Class.doesMongoCover(particle, triggers)) {
                             var reaction = Cytoplasm.chromosome[i].data.reaction;
                             triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                         }
@@ -648,45 +691,40 @@ export module euglena {
                     } : callback);
                 }
                 public static saveParticle(particle: being.Particle) {
-                    let index = Cytoplasm.indexOfParticle(particle);
+                    let index = Cytoplasm._indexOfParticle(particle.meta);
                     if (index >= 0) {
                         Cytoplasm.particles[index] = particle;
                     } else {
                         Cytoplasm.particles.push(particle);
                     }
                 }
-                public static removeParticles(reference: Particle): Particle[] {
-                    return euglena.sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, reference,
-                        (ai, t) => euglena.js.Class.doesCover(ai, reference));
+                public static removeParticles(meta: any): Particle[] {
+                    return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, meta, (ai, t) => js.Class.doesMongoCover(ai.meta, meta));
                 }
-                public static getParticle(particleReference: dna.ParticleReference): being.Particle {
+                public static getParticle(meta: any): Particle {
                     for (let p of Cytoplasm.particles) {
-                        if (euglena.js.Class.doesCover(p, particleReference)) {
+                        if (js.Class.doesMongoCover(p, meta)) {
                             return p;
                         }
                     }
                     return null;
                 }
-                public static getParticles(particleReference: dna.ParticleReference): being.Particle[] {
+                public static getParticles(meta: any): Particle[] {
                     let returnList = Array<Particle>();
                     for (let p of Cytoplasm.particles) {
-                        if (euglena.js.Class.doesCover(p, particleReference)) {
+                        if (js.Class.doesMongoCover(p.meta, meta)) {
                             returnList.push(p);
                         }
                     }
                     return returnList;
                 }
-                private static indexOfParticle(particleReference: dna.ParticleReference): number {
+                private static _indexOfParticle(meta: any): number {
                     for (let i = 0; i < Cytoplasm.particles.length; i++) {
-                        if (dna.StaticTools.ParticleReference.equals(Cytoplasm.particles[i], particleReference)) {
+                        if (sys.type.StaticTools.Object.equals(Cytoplasm.particles[i].meta, meta)) {
                             return i;
                         }
                     }
                     return -1;
-                }
-                public static doesMongoCover(obj1: any, obj2: any): boolean {
-                    let array = sift(obj2, [obj1]);
-                    return array instanceof Array && array.length > 0;
                 }
             }
         }

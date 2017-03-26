@@ -197,7 +197,7 @@ describe("euglena", () => {
                             a: "done"
                         };
                         //when
-                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        let result = euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });
@@ -210,7 +210,7 @@ describe("euglena", () => {
                             a: "done"
                         };
                         //when
-                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        let result = euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.false;
                     });
@@ -227,7 +227,7 @@ describe("euglena", () => {
                             c: { d: "d" }
                         };
                         //when
-                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        let result = euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });
@@ -244,7 +244,7 @@ describe("euglena", () => {
                             c: { d: "d" }
                         };
                         //when
-                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        let result = euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.false;
                     });
@@ -261,7 +261,7 @@ describe("euglena", () => {
                             c: { d: "d" }
                         };
                         //when
-                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        let result = euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });
@@ -276,7 +276,7 @@ describe("euglena", () => {
                             c: { d: "d", e:"e" }
                         };
                         //when
-                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        let result = euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });
@@ -291,7 +291,7 @@ describe("euglena", () => {
                             c: { d: "d", e:"e" }
                         };
                         //when
-                        let result = euglena.being.alive.Cytoplasm.doesMongoCover(obj2, obj1);
+                        let result = euglena.js.Class.doesMongoCover(obj2, obj1);
                         //then
                         chai.expect(result).to.be.true;
                     });

@@ -33,7 +33,7 @@ var euglena;
                 //if the obj terminal then return itself
                 var ret_ = {};
                 for (var key in obj) {
-                    if (!Class.isPrimaryType(obj_[key])) {
+                    if (!Class.isPrimitiveType(obj_[key])) {
                         var r = Class.toDotNotation(obj_[key]);
                         for (var k in r) {
                             ret_[key + "." + k] = r[k];
@@ -92,8 +92,7 @@ var euglena;
                 }
                 return valueObj;
             };
-            ///TODO rename to isPrimitiveType
-            Class.isPrimaryType = function (obj) {
+            Class.isPrimitiveType = function (obj) {
                 return typeof obj === "string" ||
                     typeof obj === "number" ||
                     typeof obj === "boolean" ||
@@ -104,7 +103,7 @@ var euglena;
             Class.instanceOf = function (referenceObject, obj) {
                 if (obj === null || obj === undefined)
                     return false;
-                if (Class.isPrimaryType(referenceObject))
+                if (Class.isPrimitiveType(referenceObject))
                     return typeof referenceObject === typeof obj;
                 for (var prop in referenceObject) {
                     if (obj[prop] === undefined)
@@ -119,7 +118,7 @@ var euglena;
                         continue;
                     if (obj1[key] === undefined || obj1[key] === null)
                         return false;
-                    if (Class.isPrimaryType(obj2[key])) {
+                    if (Class.isPrimitiveType(obj2[key])) {
                         if (obj1[key] !== obj2[key])
                             return false;
                     }
@@ -129,6 +128,10 @@ var euglena;
                     }
                 }
                 return true;
+            };
+            Class.doesMongoCover = function (obj, query) {
+                var array = sift(query, [obj]);
+                return array instanceof Array && array.length > 0;
             };
             return Class;
         }());
@@ -488,14 +491,22 @@ var euglena;
                             return false;
                         if (array1.length !== array2.length)
                             return false;
-                        for (var i = 0; i < array1.length; i++) {
-                            if (array1[i] !== array2[i])
-                                return false;
+                        if (compare) {
+                            for (var i = 0; i < array1.length; i++) {
+                                if (!compare(array1[i], array2[i]))
+                                    return false;
+                            }
+                        }
+                        else {
+                            for (var i = 0; i < array1.length; i++) {
+                                if (array1[i] !== array2[i])
+                                    return false;
+                            }
                         }
                         return true;
                     };
-                    Array.contains = function (array, t, compare) {
-                        return Array.indexOf(array, t, compare) >= 0;
+                    Array.contains = function (array, k, compare) {
+                        return Array.indexOf(array, k, compare) >= 0;
                     };
                     Array.containsArray = function (master, slave, compare) {
                         for (var _i = 0, slave_1 = slave; _i < slave_1.length; _i++) {
@@ -505,17 +516,17 @@ var euglena;
                         }
                         return true;
                     };
-                    Array.indexOf = function (array, t, compare) {
+                    Array.indexOf = function (array, k, compare) {
                         if (compare) {
                             for (var i = 0; i < array.length; i++) {
-                                if (compare(array[i], t)) {
+                                if (compare(array[i], k)) {
                                     return i;
                                 }
                             }
                         }
                         else {
                             for (var i = 0; i < array.length; i++) {
-                                if (array[i] === t) {
+                                if (array[i] === k) {
                                     return i;
                                 }
                             }
@@ -525,27 +536,27 @@ var euglena;
                     Array.removeAt = function (array, index) {
                         return array.splice(index, 1)[0];
                     };
-                    Array.remove = function (array, t, compare) {
+                    Array.remove = function (array, k, compare) {
                         if (compare) {
                             for (var i = 0; i < array.length; i++) {
-                                if (compare(array[i], t)) {
+                                if (compare(array[i], k)) {
                                     return array.splice(i, 1)[0];
                                 }
                             }
                         }
                         else {
                             for (var i = 0; i < array.length; i++) {
-                                if (array[i] == t) {
+                                if (array[i] == k) {
                                     return array.splice(i, 1)[0];
                                 }
                             }
                         }
                     };
-                    Array.removeAllMatched = function (array, t, compare) {
+                    Array.removeAllMatched = function (array, k, compare) {
                         var returnValue = [];
                         if (compare) {
                             for (var i = 0; i < array.length; i++) {
-                                if (compare(array[i], t)) {
+                                if (compare(array[i], k)) {
                                     returnValue.push(array.splice(i, 1)[0]);
                                     i--;
                                 }
@@ -553,7 +564,7 @@ var euglena;
                         }
                         else {
                             for (var i = 0; i < array.length; i++) {
-                                if (array[i] == t) {
+                                if (array[i] == k) {
                                     returnValue.push(array.splice(i, 1)[0]);
                                     i--;
                                 }
@@ -569,23 +580,58 @@ var euglena;
     })(sys = euglena.sys || (euglena.sys = {}));
     var being;
     (function (being) {
-        var Particle = (function () {
-            function Particle(meta, data) {
+        var ParticleV1 = (function () {
+            function ParticleV1(meta, data) {
                 this.meta = meta;
                 this.data = data;
             }
-            return Particle;
+            return ParticleV1;
         }());
-        being.Particle = Particle;
-        var StaticTools = (function () {
-            function StaticTools() {
+        being.ParticleV1 = ParticleV1;
+        var ParticleV2 = (function () {
+            function ParticleV2(meta, data) {
+                this.meta = meta;
+                this.data = data;
             }
-            StaticTools.validateParticle = function (particle) {
-                return particle && particle.meta && particle.data;
-            };
-            return StaticTools;
+            return ParticleV2;
         }());
-        being.StaticTools = StaticTools;
+        being.ParticleV2 = ParticleV2;
+        var MetaV2 = (function () {
+            function MetaV2(name, of, expireTime) {
+                this.name = name;
+                this.of = of;
+                this.expireTime = expireTime;
+                this.version = StaticTools.Particle.Versions.v2;
+                this.createTime = new exports.JavascriptDate().getTime();
+            }
+            return MetaV2;
+        }());
+        being.MetaV2 = MetaV2;
+        var StaticTools;
+        (function (StaticTools) {
+            var Particle;
+            (function (Particle) {
+                var Versions;
+                (function (Versions) {
+                    Versions.v1 = "v1";
+                    Versions.v2 = "v2";
+                })(Versions = Particle.Versions || (Particle.Versions = {}));
+                function validate(particle) {
+                    if (!particle || !particle.meta)
+                        return false;
+                    switch (particle.meta.version) {
+                        case Versions.v2:
+                            particle = particle;
+                            return particle.meta.name && (typeof particle.meta.name === "string") && typeof particle.meta.of &&
+                                (typeof particle.meta.of === "string") && (particle.meta.version === Versions.v2) && (typeof particle.meta.createTime === "number");
+                        case Versions.v1:
+                        case "undefined":
+                            return particle.meta.name ? true : false;
+                    }
+                }
+                Particle.validate = validate;
+            })(Particle = StaticTools.Particle || (StaticTools.Particle = {}));
+        })(StaticTools = being.StaticTools || (being.StaticTools = {}));
         var interaction;
         (function (interaction) {
             var Impact = (function () {
@@ -604,37 +650,26 @@ var euglena;
         })(interaction = being.interaction || (being.interaction = {}));
         var alive;
         (function (alive) {
-            var Particle = euglena.being.Particle;
+            var ParticleV2 = euglena.being.ParticleV2;
             var dna;
             (function (dna) {
-                var ParticleReference = (function (_super) {
-                    __extends(ParticleReference, _super);
-                    function ParticleReference(meta) {
-                        return _super.call(this, meta, null) || this;
-                    }
-                    return ParticleReference;
-                }(Particle));
-                dna.ParticleReference = ParticleReference;
-                var StaticTools = (function () {
-                    function StaticTools() {
-                    }
-                    return StaticTools;
-                }());
-                StaticTools.ParticleReference = {
-                    equals: function (ref1, ref2) {
-                        return sys.type.StaticTools.Object.equals(ref1.meta, ref2.meta);
-                    }
-                };
-                dna.StaticTools = StaticTools;
-                var Gene = (function (_super) {
-                    __extends(Gene, _super);
-                    function Gene(name, triggers, // particle prop - value match
+                var GeneV1 = (function (_super) {
+                    __extends(GeneV1, _super);
+                    function GeneV1(name, triggers, // particle prop - value match
                         reaction, override, expiretime) {
                         return _super.call(this, { expiretime: expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override }) || this;
                     }
-                    return Gene;
-                }(Particle));
-                dna.Gene = Gene;
+                    return GeneV1;
+                }(ParticleV1));
+                dna.GeneV1 = GeneV1;
+                var GeneV2 = (function (_super) {
+                    __extends(GeneV2, _super);
+                    function GeneV2(meta, data) {
+                        return _super.call(this, new MetaV2(constants.particles.Gene, meta.of, meta.expireTime), data) || this;
+                    }
+                    return GeneV2;
+                }(ParticleV2));
+                dna.GeneV2 = GeneV2;
                 var GarbageCollector = (function () {
                     function GarbageCollector(chromosome, particles) {
                         this.timeout = 1000;
@@ -649,9 +684,17 @@ var euglena;
                         var particles = this.particles;
                         setInterval(function () {
                             //process genes
-                            euglena.sys.type.StaticTools.Array.removeAllMatched(_this.chromosome, new Gene("", {}, null, null, euglena.sys.type.StaticTools.Time.now()), function (ai, now) { return ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime); });
+                            var now = euglena.sys.type.StaticTools.Time.now();
+                            var nowDigit = new exports.JavascriptDate().getTime();
+                            var doesExpire = function (ai) {
+                                return (!ai.meta.version || ai.meta.version === StaticTools.Particle.Versions.v1) ?
+                                    (ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now, ai.meta.expiretime)) :
+                                    (ai.meta.version === StaticTools.Particle.Versions.v2 ?
+                                        (ai.meta.expireTime && ai.meta.expireTime <= nowDigit) : false);
+                            };
+                            euglena.sys.type.StaticTools.Array.removeAllMatched(_this.chromosome, null, doesExpire);
                             //process particles
-                            euglena.sys.type.StaticTools.Array.removeAllMatched(_this.particles, { meta: { expiretime: euglena.sys.type.StaticTools.Time.now() }, data: null }, function (ai, now) { return ai.meta.expiretime && euglena.sys.type.StaticTools.Time.biggerThan(now.meta.expiretime, ai.meta.expiretime); });
+                            euglena.sys.type.StaticTools.Array.removeAllMatched(_this.particles, null, doesExpire);
                         }, this.timeout);
                     };
                     return GarbageCollector;
@@ -706,7 +749,7 @@ var euglena;
                 }
                 Object.defineProperty(Cytoplasm, "chromosome", {
                     get: function () {
-                        return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome }, data: null }).data;
+                        return Cytoplasm.getParticle({ name: alive.constants.particles.Chromosome }).data;
                     },
                     enumerable: true,
                     configurable: true
@@ -717,7 +760,7 @@ var euglena;
                     var triggerableReactions = new Array();
                     for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
                         var triggers = Cytoplasm.chromosome[i].data.triggers;
-                        if (Cytoplasm.doesMongoCover(particle, triggers)) {
+                        if (js.Class.doesMongoCover(particle, triggers)) {
                             var reaction = Cytoplasm.chromosome[i].data.reaction;
                             triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                         }
@@ -765,7 +808,7 @@ var euglena;
                     } : callback);
                 };
                 Cytoplasm.saveParticle = function (particle) {
-                    var index = Cytoplasm.indexOfParticle(particle);
+                    var index = Cytoplasm._indexOfParticle(particle.meta);
                     if (index >= 0) {
                         Cytoplasm.particles[index] = particle;
                     }
@@ -773,39 +816,35 @@ var euglena;
                         Cytoplasm.particles.push(particle);
                     }
                 };
-                Cytoplasm.removeParticles = function (reference) {
-                    return euglena.sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, reference, function (ai, t) { return euglena.js.Class.doesCover(ai, reference); });
+                Cytoplasm.removeParticles = function (meta) {
+                    return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, meta, function (ai, t) { return js.Class.doesMongoCover(ai.meta, meta); });
                 };
-                Cytoplasm.getParticle = function (particleReference) {
+                Cytoplasm.getParticle = function (meta) {
                     for (var _i = 0, _a = Cytoplasm.particles; _i < _a.length; _i++) {
                         var p = _a[_i];
-                        if (euglena.js.Class.doesCover(p, particleReference)) {
+                        if (js.Class.doesMongoCover(p, meta)) {
                             return p;
                         }
                     }
                     return null;
                 };
-                Cytoplasm.getParticles = function (particleReference) {
+                Cytoplasm.getParticles = function (meta) {
                     var returnList = Array();
                     for (var _i = 0, _a = Cytoplasm.particles; _i < _a.length; _i++) {
                         var p = _a[_i];
-                        if (euglena.js.Class.doesCover(p, particleReference)) {
+                        if (js.Class.doesMongoCover(p.meta, meta)) {
                             returnList.push(p);
                         }
                     }
                     return returnList;
                 };
-                Cytoplasm.indexOfParticle = function (particleReference) {
+                Cytoplasm._indexOfParticle = function (meta) {
                     for (var i = 0; i < Cytoplasm.particles.length; i++) {
-                        if (dna.StaticTools.ParticleReference.equals(Cytoplasm.particles[i], particleReference)) {
+                        if (sys.type.StaticTools.Object.equals(Cytoplasm.particles[i].meta, meta)) {
                             return i;
                         }
                     }
                     return -1;
-                };
-                Cytoplasm.doesMongoCover = function (obj1, obj2) {
-                    var array = sift(obj2, [obj1]);
-                    return array instanceof Array && array.length > 0;
                 };
                 return Cytoplasm;
             }());

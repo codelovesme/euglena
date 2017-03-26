@@ -10,9 +10,10 @@ export declare module euglena {
             static merge(primaryInstance: any, secondaryInstance: any): any;
             static classify(emptyInstance: any, valueObj: any): any;
             static valuefy(instance: any): any;
-            static isPrimaryType(obj: any): boolean;
+            static isPrimitiveType(obj: any): boolean;
             static instanceOf<T>(referenceObject: T, obj: any | T): obj is T;
             static doesCover(obj1: any, obj2: any): boolean;
+            static doesMongoCover(obj: any, query: any): boolean;
         }
     }
     namespace injection {
@@ -137,26 +138,46 @@ export declare module euglena {
                     static orderBy<T>(array: T[], compare?: (t1: T, t2: T) => boolean): void;
                     static swap<T>(array: T[], index1: number, index2: number): void;
                     static combine<T>(array1: T[], array2: T[]): T[];
-                    static equals<T>(array1: T[], array2: T[], compare?: (t1: T, t2: T) => boolean): boolean;
-                    static contains<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): boolean;
-                    static containsArray<T>(master: T[], slave: T[], compare?: (t1: T, t2: T) => boolean): boolean;
-                    static indexOf<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): number;
+                    static equals<T, K>(array1: T[], array2: K[], compare?: (t: T, k: K) => boolean): boolean;
+                    static contains<T, K>(array: T[], k: K, compare?: (arrayItem: T, k: K) => boolean): boolean;
+                    static containsArray<T, K>(master: T[], slave: K[], compare?: (t: T, k: K) => boolean): boolean;
+                    static indexOf<T, K>(array: T[], k: K, compare?: (arrayItem: T, k: K) => boolean): number;
                     static removeAt<T>(array: T[], index: number): T;
-                    static remove<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T;
-                    static removeAllMatched<T>(array: T[], t: T, compare?: (arrayItem: T, t: T) => boolean): T[];
+                    static remove<T, K>(array: T[], k: K, compare?: (arrayItem: T, t: K) => boolean): T;
+                    static removeAllMatched<T, K>(array: T[], k: K, compare?: (arrayItem: T, t: K) => boolean): T[];
                 }
             }
         }
     }
     namespace being {
         import Named = euglena.sys.type.Named;
-        class Particle {
+        type Particle = ParticleV1 | ParticleV2<any>;
+        class ParticleV1 {
             meta: any;
             data: any;
-            constructor(meta: any, data: any);
+            constructor(meta: any, data?: any);
         }
-        class StaticTools {
-            static validateParticle(particle: Particle): boolean;
+        class ParticleV2<T> {
+            meta: MetaV2;
+            data: T;
+            constructor(meta: MetaV2, data?: T);
+        }
+        class MetaV2 {
+            name: string;
+            of: string;
+            expireTime: number;
+            version: string;
+            createTime: number;
+            constructor(name: string, of: string, expireTime?: number);
+        }
+        namespace StaticTools {
+            namespace Particle {
+                namespace Versions {
+                    const v1 = "v1";
+                    const v2 = "v2";
+                }
+                function validate(particle: Particle): boolean;
+            }
         }
         namespace interaction {
             interface CanReceiveParticle {
@@ -180,20 +201,31 @@ export declare module euglena {
         namespace alive {
             import Classifiable = euglena.sys.type.Classifiable;
             import Particle = euglena.being.Particle;
+            import ParticleV2 = euglena.being.ParticleV2;
             namespace dna {
-                class ParticleReference extends Particle {
-                    constructor(meta: any);
-                }
-                class StaticTools {
-                    static ParticleReference: {
-                        equals: (ref1: ParticleReference, ref2: ParticleReference) => boolean;
-                    };
-                }
                 interface Reaction {
                     (particle: Particle, sourceOrganelle: string, callback?: being.interaction.Callback): void;
                 }
-                class Gene extends Particle {
+                type Gene = GeneV1 | GeneV2;
+                class GeneV1 extends ParticleV1 {
                     constructor(name: string, triggers: Object, reaction: Reaction, override?: string, expiretime?: euglena.sys.type.Time);
+                }
+                interface GeneDataV2 {
+                    name: string;
+                    triggers: ParticleV2<GeneDataV2>;
+                    reaction: Reaction;
+                    override?: string;
+                }
+                class GeneV2 extends ParticleV2<GeneDataV2> {
+                    constructor(meta: {
+                        of: string;
+                        expireTime?: number;
+                    }, data: {
+                        name: string;
+                        triggers: ParticleV2<GeneDataV2>;
+                        reaction: Reaction;
+                        override?: string;
+                    });
                 }
                 class GarbageCollector {
                     private timeout;
@@ -230,15 +262,14 @@ export declare module euglena {
                 static particles: Particle[];
                 static garbageCollector: dna.GarbageCollector;
                 private static readonly chromosome;
-                constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
+                constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.GeneV1[]);
                 static receive(particle: Particle, source: string, callback?: being.interaction.Callback): void;
                 static transmit(organelleName: string, particle: Particle, callback?: interaction.Callback): void;
                 static saveParticle(particle: being.Particle): void;
-                static removeParticles(reference: Particle): Particle[];
-                static getParticle(particleReference: dna.ParticleReference): being.Particle;
-                static getParticles(particleReference: dna.ParticleReference): being.Particle[];
-                private static indexOfParticle(particleReference);
-                static doesMongoCover(obj1: any, obj2: any): boolean;
+                static removeParticles(meta: any): Particle[];
+                static getParticle(meta: any): Particle;
+                static getParticles(meta: any): Particle[];
+                private static _indexOfParticle(meta);
             }
         }
     }
