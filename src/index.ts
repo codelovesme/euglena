@@ -480,9 +480,8 @@ export module euglena {
             constructor(public meta: MetaV2, public data?: T) { }
         }
         export type Meta = MetaV1 | MetaV2;
-        export interface MetaV1 {
-            name: string;
-            of?: string;
+        export class MetaV1 {
+            constructor(public name: string, public of?: string) { }
         }
         export class MetaV2 {
             public version: string;
@@ -696,40 +695,32 @@ export module euglena {
                     } : callback);
                 }
                 public static saveParticle(particle: being.Particle) {
-                    let index = Cytoplasm._indexOfParticle(particle.meta);
+                    let index = sys.type.StaticTools.Array.indexOf(Cytoplasm.particles,particle.meta,(tt,m)=>sys.type.StaticTools.Object.equals(tt.meta, m));
                     if (index >= 0) {
                         Cytoplasm.particles[index] = particle;
                     } else {
                         Cytoplasm.particles.push(particle);
                     }
                 }
-                public static removeParticles(meta: any): Particle[] {
-                    return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, meta, (ai, t) => js.Class.doesMongoCover(ai.meta, meta));
+                public static removeParticles(query: any): Particle[] {
+                    return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, query, (ai, t) => js.Class.doesMongoCover(ai, query));
                 }
-                public static getParticle(meta: Meta): Particle {
+                public static getParticle(query: any): Particle {
                     for (let p of Cytoplasm.particles) {
-                        if (js.Class.doesMongoCover(p.meta, meta)) {
+                        if (js.Class.doesMongoCover(p, query)) {
                             return p;
                         }
                     }
                     return null;
                 }
-                public static getParticles(meta: any): Particle[] {
+                public static getParticles(query: any): Particle[] {
                     let returnList = Array<Particle>();
                     for (let p of Cytoplasm.particles) {
-                        if (js.Class.doesMongoCover(p.meta, meta)) {
+                        if (js.Class.doesMongoCover(p, query)) {
                             returnList.push(p);
                         }
                     }
                     return returnList;
-                }
-                private static _indexOfParticle(meta: any): number {
-                    for (let i = 0; i < Cytoplasm.particles.length; i++) {
-                        if (sys.type.StaticTools.Object.equals(Cytoplasm.particles[i].meta, meta)) {
-                            return i;
-                        }
-                    }
-                    return -1;
                 }
             }
         }

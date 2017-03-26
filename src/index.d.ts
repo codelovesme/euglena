@@ -163,9 +163,10 @@ export declare module euglena {
             constructor(meta: MetaV2, data?: T);
         }
         type Meta = MetaV1 | MetaV2;
-        interface MetaV1 {
+        class MetaV1 {
             name: string;
-            of?: string;
+            of: string;
+            constructor(name: string, of?: string);
         }
         class MetaV2 {
             name: string;
@@ -274,10 +275,9 @@ export declare module euglena {
                 static receive(particle: Particle, source: string, callback?: being.interaction.Callback): void;
                 static transmit(organelleName: string, particle: Particle, callback?: interaction.Callback): void;
                 static saveParticle(particle: being.Particle): void;
-                static removeParticles(meta: any): Particle[];
-                static getParticle(meta: Meta): Particle;
-                static getParticles(meta: any): Particle[];
-                private static _indexOfParticle(meta);
+                static removeParticles(query: any): Particle[];
+                static getParticle(query: any): Particle;
+                static getParticles(query: any): Particle[];
             }
         }
     }

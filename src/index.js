@@ -596,6 +596,14 @@ var euglena;
             return ParticleV2;
         }());
         being.ParticleV2 = ParticleV2;
+        var MetaV1 = (function () {
+            function MetaV1(name, of) {
+                this.name = name;
+                this.of = of;
+            }
+            return MetaV1;
+        }());
+        being.MetaV1 = MetaV1;
         var MetaV2 = (function () {
             function MetaV2(name, of, expireTime) {
                 this.name = name;
@@ -808,7 +816,7 @@ var euglena;
                     } : callback);
                 };
                 Cytoplasm.saveParticle = function (particle) {
-                    var index = Cytoplasm._indexOfParticle(particle.meta);
+                    var index = sys.type.StaticTools.Array.indexOf(Cytoplasm.particles, particle.meta, function (tt, m) { return sys.type.StaticTools.Object.equals(tt.meta, m); });
                     if (index >= 0) {
                         Cytoplasm.particles[index] = particle;
                     }
@@ -816,35 +824,27 @@ var euglena;
                         Cytoplasm.particles.push(particle);
                     }
                 };
-                Cytoplasm.removeParticles = function (meta) {
-                    return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, meta, function (ai, t) { return js.Class.doesMongoCover(ai.meta, meta); });
+                Cytoplasm.removeParticles = function (query) {
+                    return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, query, function (ai, t) { return js.Class.doesMongoCover(ai, query); });
                 };
-                Cytoplasm.getParticle = function (meta) {
+                Cytoplasm.getParticle = function (query) {
                     for (var _i = 0, _a = Cytoplasm.particles; _i < _a.length; _i++) {
                         var p = _a[_i];
-                        if (js.Class.doesMongoCover(p.meta, meta)) {
+                        if (js.Class.doesMongoCover(p, query)) {
                             return p;
                         }
                     }
                     return null;
                 };
-                Cytoplasm.getParticles = function (meta) {
+                Cytoplasm.getParticles = function (query) {
                     var returnList = Array();
                     for (var _i = 0, _a = Cytoplasm.particles; _i < _a.length; _i++) {
                         var p = _a[_i];
-                        if (js.Class.doesMongoCover(p.meta, meta)) {
+                        if (js.Class.doesMongoCover(p, query)) {
                             returnList.push(p);
                         }
                     }
                     return returnList;
-                };
-                Cytoplasm._indexOfParticle = function (meta) {
-                    for (var i = 0; i < Cytoplasm.particles.length; i++) {
-                        if (sys.type.StaticTools.Object.equals(Cytoplasm.particles[i].meta, meta)) {
-                            return i;
-                        }
-                    }
-                    return -1;
                 };
                 return Cytoplasm;
             }());
