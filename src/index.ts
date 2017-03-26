@@ -622,12 +622,12 @@ export module euglena {
                 private static get chromosome(): dna.Gene[] {
                     return Cytoplasm.getParticle({ name: alive.constants.particles.Chromosome }).data;
                 }
-                constructor(particles: Particle[], organelles: Organelle<any>[], chromosome: dna.GeneV1[]) {
+                constructor(euglenaName: string, particles: Particle[], organelles: Organelle<any>[], chromosome: dna.GeneV1[]) {
                     if (Cytoplasm.instance) {
                         throw "There exists a cytoplasm instance already.";
                     }
                     Cytoplasm.particles = particles;
-                    Cytoplasm.particles.push({ meta: { name: alive.constants.particles.Chromosome }, data: chromosome });
+                    Cytoplasm.particles.push(new being.ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
                     Cytoplasm.organelles = {};
                     for (let organelle of organelles) {
                         organelle.send = Cytoplasm.receive;

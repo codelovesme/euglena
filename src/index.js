@@ -731,12 +731,12 @@ var euglena;
             }());
             alive.Organelle = Organelle;
             var Cytoplasm = (function () {
-                function Cytoplasm(particles, organelles, chromosome) {
+                function Cytoplasm(euglenaName, particles, organelles, chromosome) {
                     if (Cytoplasm.instance) {
                         throw "There exists a cytoplasm instance already.";
                     }
                     Cytoplasm.particles = particles;
-                    Cytoplasm.particles.push({ meta: { name: alive.constants.particles.Chromosome }, data: chromosome });
+                    Cytoplasm.particles.push(new being.ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
                     Cytoplasm.organelles = {};
                     for (var _i = 0, organelles_1 = organelles; _i < organelles_1.length; _i++) {
                         var organelle = organelles_1[_i];
