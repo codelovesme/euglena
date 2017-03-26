@@ -625,7 +625,7 @@ export module euglena {
                 public static particles: Particle[];
                 public static garbageCollector: dna.GarbageCollector;
                 private static get chromosome(): dna.Gene[] {
-                    return Cytoplasm.getParticle({ name: alive.constants.particles.Chromosome }).data;
+                    return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome } }).data;
                 }
                 constructor(euglenaName: string, particles: Particle[], organelles: Organelle<any>[], chromosome: dna.GeneV1[]) {
                     if (Cytoplasm.instance) {

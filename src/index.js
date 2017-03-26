@@ -749,7 +749,7 @@ var euglena;
                 }
                 Object.defineProperty(Cytoplasm, "chromosome", {
                     get: function () {
-                        return Cytoplasm.getParticle({ name: alive.constants.particles.Chromosome }).data;
+                        return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome } }).data;
                     },
                     enumerable: true,
                     configurable: true
