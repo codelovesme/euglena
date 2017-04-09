@@ -2,6 +2,7 @@
  * Created by codelovesme on 6/19/2015.
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference path="..\typings\mocha\mocha.d.ts"/>
 ///<reference path="..\typings\chai\chai.d.ts"/>
 var index_1 = require("../src/index");

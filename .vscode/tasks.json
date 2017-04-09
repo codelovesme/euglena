@@ -1,18 +1,10 @@
 {
-    // ROOT WITHOUT COMMAND
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
     "version": "0.1.0",
-    "command": "bash",
+    "command": "tsc",
     "isShellCommand": true,
+    "args": ["-p", "."],
     "showOutput": "silent",
-    "args": ["-c"],
-    "tasks": [
-        {
-            "taskName": "Build Type Script",
-            "suppressTaskName": true,
-            "isBuildCommand": true,
-            "args": [
-                "tsc -p ."
-            ]
-        }
-    ]
+    "problemMatcher": "$tsc"
 }
