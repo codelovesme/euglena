@@ -640,14 +640,13 @@ var euglena;
         })(StaticTools = being.StaticTools || (being.StaticTools = {}));
         var interaction;
         (function (interaction) {
-            var Impact = (function () {
-                function Impact(particle, token, from) {
-                    this.particle = particle;
-                    this.token = token;
-                    this.from = from;
+            var Impact = (function (_super) {
+                __extends(Impact, _super);
+                function Impact(particle, token, of) {
+                    return _super.call(this, new MetaV2("Impact", of), { particle: particle, token: token }) || this;
                 }
                 return Impact;
-            }());
+            }(ParticleV2));
             interaction.Impact = Impact;
             var constants;
             (function (constants) {

@@ -193,11 +193,11 @@ export declare module euglena {
             }
             interface Callback extends euglena.sys.type.Callback<Particle> {
             }
-            class Impact {
-                particle: Particle;
+            class Impact extends ParticleV2<{
                 token: string;
-                from: string;
-                constructor(particle: Particle, token: string, from: string);
+                particle: Particle;
+            }> {
+                constructor(particle: Particle, token: string, of: string);
             }
             namespace constants {
                 const ReceivedParticleReference = "ReceivedParticleReference";

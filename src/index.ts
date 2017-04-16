@@ -520,8 +520,10 @@ export module euglena {
                 (particle: Particle, source: string, callback?: being.interaction.Callback): void;
             }
             export interface Callback extends euglena.sys.type.Callback<Particle> { }
-            export class Impact {
-                constructor(public particle: Particle, public token: string, public from: string) { }
+            export class Impact extends ParticleV2<{ token: string, particle: Particle }> {
+                constructor(particle: Particle, token: string, of: string) {
+                    super(new MetaV2("Impact", of), { particle, token });
+                }
             }
             export namespace constants {
                 export const ReceivedParticleReference = "ReceivedParticleReference";
@@ -531,7 +533,6 @@ export module euglena {
             import Classifiable = euglena.sys.type.Classifiable;
             import Particle = euglena.being.Particle;
             import ParticleV2 = euglena.being.ParticleV2;
-            import Impact = euglena.being.interaction.Impact;
             export namespace dna {
                 export interface Reaction {
                     (particle: Particle, sourceOrganelle: string, callback?: being.interaction.Callback): void;
