@@ -1,5 +1,5 @@
 {
-  "name": "euglena",
+  "name": "@euglena/core",
   "domain": "codeloves.me",
   "version": "0.0.9",
   "main": "src/index.js",
