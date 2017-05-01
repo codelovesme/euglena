@@ -225,7 +225,7 @@ export declare module euglena {
                     override?: string;
                 }
                 class GeneV2 extends ParticleV2<GeneDataV2> {
-                    constructor(name: string, triggers: ParticleV2<any>, reaction: Reaction, of: string, override?: string, expireTime?: number);
+                    constructor(name: string, triggers: any, reaction: Reaction, of: string, override?: string, expireTime?: number);
                 }
                 class GarbageCollector {
                     private timeout;

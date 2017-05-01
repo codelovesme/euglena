@@ -557,7 +557,7 @@ export module euglena {
                 export class GeneV2 extends ParticleV2<GeneDataV2> {
                     constructor(
                         name: string,
-                        triggers: ParticleV2<any>,
+                        triggers: any,
                         reaction: Reaction,
                         of: string,
                         override?: string,
