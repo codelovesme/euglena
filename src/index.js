@@ -669,8 +669,8 @@ var euglena;
                 dna.GeneV1 = GeneV1;
                 var GeneV2 = (function (_super) {
                     __extends(GeneV2, _super);
-                    function GeneV2(meta, data) {
-                        return _super.call(this, new MetaV2(constants.particles.Gene, meta.of, meta.expireTime), data) || this;
+                    function GeneV2(name, triggers, reaction, of, override, expireTime) {
+                        return _super.call(this, new MetaV2(constants.particles.Gene, of, expireTime), { name: name, triggers: triggers, reaction: reaction, override: override }) || this;
                     }
                     return GeneV2;
                 }(ParticleV2));

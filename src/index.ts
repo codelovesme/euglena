@@ -545,7 +545,7 @@ export module euglena {
                         reaction: Reaction,
                         override?: string,
                         expiretime?: euglena.sys.type.Time) {
-                        super({ expiretime, name: alive.constants.particles.Gene }, { name: name, triggers: triggers, reaction: reaction, override: override });
+                        super({ expiretime, name: alive.constants.particles.Gene }, { name, triggers, reaction, override });
                     }
                 }
                 export interface GeneDataV2 {
@@ -555,8 +555,14 @@ export module euglena {
                     override?: string,
                 }
                 export class GeneV2 extends ParticleV2<GeneDataV2> {
-                    constructor(meta: { of: string, expireTime?: number }, data: { name: string, triggers: ParticleV2<GeneDataV2>, reaction: Reaction, override?: string }) {
-                        super(new MetaV2(constants.particles.Gene, meta.of, meta.expireTime), data);
+                    constructor(
+                        name: string,
+                        triggers: ParticleV2<any>,
+                        reaction: Reaction,
+                        of: string,
+                        override?: string,
+                        expireTime?: number) {
+                        super(new MetaV2(constants.particles.Gene, of, expireTime), { name, triggers, reaction, override });
                     }
                 }
                 export class GarbageCollector {
