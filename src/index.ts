@@ -472,18 +472,15 @@ export module euglena {
     export namespace being {
         import Classifiable = euglena.sys.type.Classifiable;
         import Named = euglena.sys.type.Named;
-        export type Particle = ParticleV1<any> | ParticleV2<any>;
-        export class ParticleV1<M extends MetaV1> {
-            constructor(public meta: M, public data?: any) { }
+        export type Particle = ParticleV1 | ParticleV2<any>;
+        export class ParticleV1 {
+            constructor(public meta: any, public data?: any) { }
         }
         export class ParticleV2<T> {
             constructor(public meta: MetaV2, public data?: T) { }
         }
         export type Meta = MetaV1 | MetaV2;
-        export interface MetaV1 {
-            name: string;
-            of?: string;
-        }
+        export type MetaV1 = any;
         export class MetaV2 {
             public version: string;
             public createTime: number;
@@ -540,7 +537,7 @@ export module euglena {
                     (particle: Particle, sourceOrganelle: string, callback?: being.interaction.Callback): void;
                 }
                 export type Gene = GeneV1 | GeneV2;
-                export class GeneV1 extends ParticleV1<{ expiretime: euglena.sys.type.Time, name: string }> {
+                export class GeneV1 extends ParticleV1 {
                     constructor(
                         name: string,
                         triggers: Object, // particle prop - value match

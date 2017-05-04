@@ -606,9 +606,10 @@ var euglena;
             function MetaV2(name, of, expireTime) {
                 this.name = name;
                 this.of = of;
-                this.expireTime = expireTime;
                 this.version = StaticTools.Particle.Versions.v2;
                 this.createTime = new exports.JavascriptDate().getTime();
+                if (expireTime)
+                    this.expireTime = expireTime;
             }
             return MetaV2;
         }());

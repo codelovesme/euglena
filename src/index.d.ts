@@ -151,11 +151,11 @@ export declare module euglena {
     }
     namespace being {
         import Named = euglena.sys.type.Named;
-        type Particle = ParticleV1<any> | ParticleV2<any>;
-        class ParticleV1<M extends MetaV1> {
-            meta: M;
+        type Particle = ParticleV1 | ParticleV2<any>;
+        class ParticleV1 {
+            meta: any;
             data: any;
-            constructor(meta: M, data?: any);
+            constructor(meta: any, data?: any);
         }
         class ParticleV2<T> {
             meta: MetaV2;
@@ -163,16 +163,13 @@ export declare module euglena {
             constructor(meta: MetaV2, data?: T);
         }
         type Meta = MetaV1 | MetaV2;
-        interface MetaV1 {
-            name: string;
-            of?: string;
-        }
+        type MetaV1 = any;
         class MetaV2 {
             name: string;
             of: string;
-            expireTime: number;
             version: string;
             createTime: number;
+            expireTime?: number;
             constructor(name: string, of: string, expireTime?: number);
         }
         namespace StaticTools {
@@ -212,10 +209,7 @@ export declare module euglena {
                     (particle: Particle, sourceOrganelle: string, callback?: being.interaction.Callback): void;
                 }
                 type Gene = GeneV1 | GeneV2;
-                class GeneV1 extends ParticleV1<{
-                    expiretime: euglena.sys.type.Time;
-                    name: string;
-                }> {
+                class GeneV1 extends ParticleV1 {
                     constructor(name: string, triggers: Object, reaction: Reaction, override?: string, expiretime?: euglena.sys.type.Time);
                 }
                 interface GeneDataV2 {
