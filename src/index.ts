@@ -487,9 +487,11 @@ export module euglena {
         export class MetaV2 {
             public version: string;
             public createTime: number;
-            constructor(public name: string, public of: string, public expireTime?: number) {
+            public expireTime?: number;
+            constructor(public name: string, public of: string, expireTime?: number) {
                 this.version = StaticTools.Particle.Versions.v2;
                 this.createTime = new JavascriptDate().getTime();
+                if (expireTime) this.expireTime = expireTime;
             }
         }
         export namespace StaticTools {
