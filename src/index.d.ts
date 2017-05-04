@@ -262,7 +262,7 @@ export declare module euglena {
                 static particles: Particle[];
                 static garbageCollector: dna.GarbageCollector;
                 private static readonly chromosome;
-                constructor(euglenaName: string, particles: Particle[], organelles: Organelle<any>[], chromosome: dna.GeneV1[]);
+                constructor(euglenaName: string, particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
                 static receive(particle: Particle, source: string, callback?: being.interaction.Callback): void;
                 static transmit(organelleName: string, particle: Particle, callback?: interaction.Callback): void;
                 static saveParticle(particle: being.Particle): void;

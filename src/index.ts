@@ -634,7 +634,7 @@ export module euglena {
                 private static get chromosome(): dna.Gene[] {
                     return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome } }).data;
                 }
-                constructor(euglenaName: string, particles: Particle[], organelles: Organelle<any>[], chromosome: dna.GeneV1[]) {
+                constructor(euglenaName: string, particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]) {
                     if (Cytoplasm.instance) {
                         throw "There exists a cytoplasm instance already.";
                     }
