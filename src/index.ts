@@ -16,14 +16,14 @@ export const JavascriptDate = Date;
 export const JavascriptObject = Object;
 import Classifiable = sys.type.Classifiable;
 import Named = sys.type.Named;
-export type Particle = ParticleV1 | ParticleV2<any>;
+export type AnyParticle = ParticleV1 | ParticleV2<any>;
 export class ParticleV1 {
     constructor(public meta: any, public data?: any) { }
 }
 export class ParticleV2<T> {
     constructor(public meta: MetaV2, public data?: T) { }
 }
-export type Meta = MetaV1 | MetaV2;
+export type AnyMeta = MetaV1 | MetaV2;
 export type MetaV1 = any;
 export class MetaV2 {
     public version: string;
@@ -41,7 +41,7 @@ export namespace StaticTools {
             export const v1 = "v1";
             export const v2 = "v2";
         }
-        export function validate(particle: Particle): boolean {
+        export function validate(particle: AnyParticle): boolean {
             if (!particle || !particle.meta) return false;
             switch ((particle.meta as any).version) {
                 case Versions.v2:
@@ -60,11 +60,11 @@ export namespace interaction {
         receive: Receive;
     }
     export interface Receive {
-        (particle: Particle, source: string, callback?: interaction.Callback): void;
+        (particle: AnyParticle, source: string, callback?: interaction.Callback): void;
     }
-    export interface Callback extends sys.type.Callback<Particle> { }
-    export class Impact extends ParticleV2<{ token: string, particle: Particle }> {
-        constructor(particle: Particle, token: string, of: string) {
+    export interface Callback extends sys.type.Callback<AnyParticle> { }
+    export class Impact extends ParticleV2<{ token: string, particle: AnyParticle }> {
+        constructor(particle: AnyParticle, token: string, of: string) {
             super(new MetaV2("Impact", of), { particle, token });
         }
     }
@@ -76,9 +76,9 @@ export namespace alive {
     import Classifiable = sys.type.Classifiable;
     export namespace dna {
         export interface Reaction {
-            (particle: Particle, sourceOrganelle: string, callback?: interaction.Callback): void;
+            (particle: AnyParticle, sourceOrganelle: string, callback?: interaction.Callback): void;
         }
-        export type Gene = GeneV1 | GeneV2;
+        export type AnyGene = GeneV1 | GeneV2;
         export class GeneV1 extends ParticleV1 {
             constructor(
                 name: string,
@@ -108,9 +108,9 @@ export namespace alive {
         }
         export class GarbageCollector {
             private timeout = 1000;
-            private chromosome: Gene[] = [];
-            private particles: Particle[] = [];
-            constructor(chromosome: Gene[], particles: Particle[]) {
+            private chromosome: AnyGene[] = [];
+            private particles: AnyParticle[] = [];
+            constructor(chromosome: AnyGene[], particles: AnyParticle[]) {
                 this.chromosome = chromosome;
                 this.particles = particles;
             }
@@ -121,7 +121,7 @@ export namespace alive {
                     //process genes
                     let now = sys.type.StaticTools.Time.now();
                     let nowDigit = new JavascriptDate().getTime();
-                    let doesExpire = (ai: Particle) =>
+                    let doesExpire = (ai: AnyParticle) =>
                         (!ai.meta.version || ai.meta.version === StaticTools.Particle.Versions.v1) ?
                             (ai.meta.expiretime && sys.type.StaticTools.Time.biggerThan(now, ai.meta.expiretime)) :
                             (ai.meta.version === StaticTools.Particle.Versions.v2 ?
@@ -151,16 +151,16 @@ export namespace alive {
         }
     }
     export abstract class Organelle<SapContent> implements Named, Classifiable {
-        private actions: sys.type.Map<string, (particle: Particle, callback?: interaction.Callback) => void>;
+        private actions: sys.type.Map<string, (particle: AnyParticle, callback?: interaction.Callback) => void>;
         constructor(public name: string, public className: string, public send?: interaction.Receive) {
             let this_ = this;
-            this.actions = new sys.type.Map<string, (particle: Particle, callback?: interaction.Callback) => void>();
-            this.bindActions((particleName: string, action: (particle: Particle, callback?: interaction.Callback) => void) => {
+            this.actions = new sys.type.Map<string, (particle: AnyParticle, callback?: interaction.Callback) => void>();
+            this.bindActions((particleName: string, action: (particle: AnyParticle, callback?: interaction.Callback) => void) => {
                 this_.actions.add(particleName, action);
             });
         }
-        protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle, callback?: interaction.Callback) => void) => void): void;
-        public receive(particle: Particle, callback?: interaction.Callback): void {
+        protected abstract bindActions(addAction: (particleName: string, action: (particle: AnyParticle, callback?: interaction.Callback) => void) => void): void;
+        public receive(particle: AnyParticle, callback?: interaction.Callback): void {
             let action = this.actions.get(particle.meta.name);
             if (action) {
                 action(particle, callback);
@@ -170,12 +170,12 @@ export namespace alive {
     export class Cytoplasm {
         public static instance: Cytoplasm = null;
         private static organelles: any = null;
-        public static particles: Particle[];
+        public static particles: AnyParticle[];
         public static garbageCollector: dna.GarbageCollector;
-        private static get chromosome(): dna.Gene[] {
+        private static get chromosome(): dna.AnyGene[] {
             return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome } }).data;
         }
-        constructor(euglenaName: string, particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]) {
+        constructor(euglenaName: string, particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[]) {
             if (Cytoplasm.instance) {
                 throw "There exists a cytoplasm instance already.";
             }
@@ -190,7 +190,7 @@ export namespace alive {
             Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome, particles);
             Cytoplasm.garbageCollector.start();
         }
-        public static receive(particle: Particle, source: string, callback?: interaction.Callback) {
+        public static receive(particle: AnyParticle, source: string, callback?: interaction.Callback) {
             console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
             //find which genes are matched with properties of the particle 
             let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
@@ -225,7 +225,7 @@ export namespace alive {
                 let reaction = reactions[i];
                 //try {
                 console.log(`Cytoplasm says : triggering gene "${names[i]}"`);
-                reaction(particle, source, callback ? (particle: Particle) => {
+                reaction(particle, source, callback ? (particle: AnyParticle) => {
                     console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + source);
                     callback(particle);
                 } : callback);
@@ -235,15 +235,15 @@ export namespace alive {
                 //}
             }
         }
-        public static transmit(organelleName: string, particle: Particle, callback?: interaction.Callback) {
+        public static transmit(organelleName: string, particle: AnyParticle, callback?: interaction.Callback) {
             console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + organelleName);
             let organelle: Organelle<any> = Cytoplasm.organelles[organelleName] as Organelle<any>;
-            organelle.receive(particle, callback ? (particle: Particle) => {
+            organelle.receive(particle, callback ? (particle: AnyParticle) => {
                 console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
                 callback(particle);
             } : callback);
         }
-        public static saveParticle(particle: Particle) {
+        public static saveParticle(particle: AnyParticle) {
             let index = sys.type.StaticTools.Array.indexOf(Cytoplasm.particles, particle.meta, (tt, m) => sys.type.StaticTools.Object.equals(tt.meta, m));
             if (index >= 0) {
                 Cytoplasm.particles[index] = particle;
@@ -251,10 +251,10 @@ export namespace alive {
                 Cytoplasm.particles.push(particle);
             }
         }
-        public static removeParticles(query: any): Particle[] {
+        public static removeParticles(query: any): AnyParticle[] {
             return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, query, (ai, t) => js.Class.doesMongoCover(ai, query));
         }
-        public static getParticle(query: any): Particle {
+        public static getParticle(query: any): AnyParticle {
             for (let p of Cytoplasm.particles) {
                 if (js.Class.doesMongoCover(p, query)) {
                     return p;
@@ -262,8 +262,8 @@ export namespace alive {
             }
             return null;
         }
-        public static getParticles(query: any): Particle[] {
-            let returnList = Array<Particle>();
+        public static getParticles(query: any): AnyParticle[] {
+            let returnList = Array<AnyParticle>();
             for (let p of Cytoplasm.particles) {
                 if (js.Class.doesMongoCover(p, query)) {
                     returnList.push(p);

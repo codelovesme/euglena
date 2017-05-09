@@ -2,7 +2,7 @@ import { sys } from "cessnalib";
 export declare const JavascriptDate: DateConstructor;
 export declare const JavascriptObject: ObjectConstructor;
 import Named = sys.type.Named;
-export declare type Particle = ParticleV1 | ParticleV2<any>;
+export declare type AnyParticle = ParticleV1 | ParticleV2<any>;
 export declare class ParticleV1 {
     meta: any;
     data: any;
@@ -13,7 +13,7 @@ export declare class ParticleV2<T> {
     data: T;
     constructor(meta: MetaV2, data?: T);
 }
-export declare type Meta = MetaV1 | MetaV2;
+export declare type AnyMeta = MetaV1 | MetaV2;
 export declare type MetaV1 = any;
 export declare class MetaV2 {
     name: string;
@@ -29,7 +29,7 @@ export declare namespace StaticTools {
             const v1 = "v1";
             const v2 = "v2";
         }
-        function validate(particle: Particle): boolean;
+        function validate(particle: AnyParticle): boolean;
     }
 }
 export declare namespace interaction {
@@ -37,15 +37,15 @@ export declare namespace interaction {
         receive: Receive;
     }
     interface Receive {
-        (particle: Particle, source: string, callback?: interaction.Callback): void;
+        (particle: AnyParticle, source: string, callback?: interaction.Callback): void;
     }
-    interface Callback extends sys.type.Callback<Particle> {
+    interface Callback extends sys.type.Callback<AnyParticle> {
     }
     class Impact extends ParticleV2<{
         token: string;
-        particle: Particle;
+        particle: AnyParticle;
     }> {
-        constructor(particle: Particle, token: string, of: string);
+        constructor(particle: AnyParticle, token: string, of: string);
     }
     namespace constants {
         const ReceivedParticleReference = "ReceivedParticleReference";
@@ -55,9 +55,9 @@ export declare namespace alive {
     import Classifiable = sys.type.Classifiable;
     namespace dna {
         interface Reaction {
-            (particle: Particle, sourceOrganelle: string, callback?: interaction.Callback): void;
+            (particle: AnyParticle, sourceOrganelle: string, callback?: interaction.Callback): void;
         }
-        type Gene = GeneV1 | GeneV2;
+        type AnyGene = GeneV1 | GeneV2;
         class GeneV1 extends ParticleV1 {
             constructor(name: string, triggers: Object, reaction: Reaction, override?: string, expiretime?: sys.type.Time);
         }
@@ -74,7 +74,7 @@ export declare namespace alive {
             private timeout;
             private chromosome;
             private particles;
-            constructor(chromosome: Gene[], particles: Particle[]);
+            constructor(chromosome: AnyGene[], particles: AnyParticle[]);
             start(): void;
         }
     }
@@ -96,21 +96,21 @@ export declare namespace alive {
         send: interaction.Receive;
         private actions;
         constructor(name: string, className: string, send?: interaction.Receive);
-        protected abstract bindActions(addAction: (particleName: string, action: (particle: Particle, callback?: interaction.Callback) => void) => void): void;
-        receive(particle: Particle, callback?: interaction.Callback): void;
+        protected abstract bindActions(addAction: (particleName: string, action: (particle: AnyParticle, callback?: interaction.Callback) => void) => void): void;
+        receive(particle: AnyParticle, callback?: interaction.Callback): void;
     }
     class Cytoplasm {
         static instance: Cytoplasm;
         private static organelles;
-        static particles: Particle[];
+        static particles: AnyParticle[];
         static garbageCollector: dna.GarbageCollector;
         private static readonly chromosome;
-        constructor(euglenaName: string, particles: Particle[], organelles: Organelle<any>[], chromosome: dna.Gene[]);
-        static receive(particle: Particle, source: string, callback?: interaction.Callback): void;
-        static transmit(organelleName: string, particle: Particle, callback?: interaction.Callback): void;
-        static saveParticle(particle: Particle): void;
-        static removeParticles(query: any): Particle[];
-        static getParticle(query: any): Particle;
-        static getParticles(query: any): Particle[];
+        constructor(euglenaName: string, particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[]);
+        static receive(particle: AnyParticle, source: string, callback?: interaction.Callback): void;
+        static transmit(organelleName: string, particle: AnyParticle, callback?: interaction.Callback): void;
+        static saveParticle(particle: AnyParticle): void;
+        static removeParticles(query: any): AnyParticle[];
+        static getParticle(query: any): AnyParticle;
+        static getParticles(query: any): AnyParticle[];
     }
 }
