@@ -10,7 +10,6 @@
 * #Seperate particle, request, event
 *
 */
-import * as sift from "sift";
 import { sys, js } from "cessnalib";
 export const JavascriptDate = Date;
 export const JavascriptObject = Object;

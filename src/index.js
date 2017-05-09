@@ -10,6 +10,17 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Created by codelovesme on 6/19/2015.
+ */
+/*
+*TODO List
+*
+* #Generate impact for particle value change
+* #Seperate nucleus to a organelle
+* #Seperate particle, request, event
+*
+*/
 var cessnalib_1 = require("cessnalib");
 exports.JavascriptDate = Date;
 exports.JavascriptObject = Object;

@@ -1,3 +1,6 @@
+/**
+ * Created by codelovesme on 6/19/2015.
+ */
 import { sys } from "cessnalib";
 export declare const JavascriptDate: DateConstructor;
 export declare const JavascriptObject: ObjectConstructor;
