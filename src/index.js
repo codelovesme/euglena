@@ -154,9 +154,8 @@ var alive;
         })(particles = constants.particles || (constants.particles = {}));
     })(constants = alive.constants || (alive.constants = {}));
     var Organelle = (function () {
-        function Organelle(name, className, send) {
+        function Organelle(name, send) {
             this.name = name;
-            this.className = className;
             this.send = send;
             var this_ = this;
             this.actions = new cessnalib_1.sys.type.Map();

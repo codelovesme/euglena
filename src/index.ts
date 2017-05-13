@@ -149,9 +149,9 @@ export namespace alive {
             export const Chromosome = "Chromosome";
         }
     }
-    export abstract class Organelle<SapContent> implements Named, Classifiable {
+    export abstract class Organelle<SapContent> implements Named {
         private actions: sys.type.Map<string, (particle: AnyParticle, callback?: interaction.Callback) => void>;
-        constructor(public name: string, public className: string, public send?: interaction.Receive) {
+        constructor(public name: string, public send?: interaction.Receive) {
             let this_ = this;
             this.actions = new sys.type.Map<string, (particle: AnyParticle, callback?: interaction.Callback) => void>();
             this.bindActions((particleName: string, action: (particle: AnyParticle, callback?: interaction.Callback) => void) => {

@@ -55,7 +55,6 @@ export declare namespace interaction {
     }
 }
 export declare namespace alive {
-    import Classifiable = sys.type.Classifiable;
     namespace dna {
         interface Reaction {
             (particle: AnyParticle, sourceOrganelle: string, callback?: interaction.Callback): void;
@@ -93,12 +92,11 @@ export declare namespace alive {
             const Chromosome = "Chromosome";
         }
     }
-    abstract class Organelle<SapContent> implements Named, Classifiable {
+    abstract class Organelle<SapContent> implements Named {
         name: string;
-        className: string;
         send: interaction.Receive;
         private actions;
-        constructor(name: string, className: string, send?: interaction.Receive);
+        constructor(name: string, send?: interaction.Receive);
         protected abstract bindActions(addAction: (particleName: string, action: (particle: AnyParticle, callback?: interaction.Callback) => void) => void): void;
         receive(particle: AnyParticle, callback?: interaction.Callback): void;
     }
