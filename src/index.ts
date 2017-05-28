@@ -167,36 +167,65 @@ export namespace alive {
         }
     }
     export class Cytoplasm {
-        public static instance: Cytoplasm = null;
-        private static organelles: any = null;
-        public static particles: AnyParticle[];
-        public static garbageCollector: dna.GarbageCollector;
-        private static get chromosome(): dna.AnyGene[] {
+        private static _instance: Cytoplasm = null;
+        private static _organelles: any = null;
+        private static _particles: AnyParticle[];
+        private static _garbageCollector: dna.GarbageCollector;
+        private static get _chromosome(): dna.AnyGene[] {
             return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome } }).data;
         }
+        public static get euglenaName() {
+            /**
+             * Beacuse of there can only one particle of EuglenaName in the current Cytoplasm,
+             * We can fetch the EuglenaName by a code like below.
+             */
+            return this.getParticle({ meta: { name: "EuglenaName" } }).data;
+        }
+        public static set euglenaName(value: string) {
+            let particles;
+            let old = this.getParticle({ meta: { name: "EuglenaName" } });
+            if (old) {
+                particles = Cytoplasm.getParticles({ meta: { of: old.data } });
+            } else {
+                /**
+                 * If there is no EuglenaName exists, it has to be initial state of the euglena
+                 * so we have to change all particle owners to the given EuglenaName
+                 */
+                particles = Cytoplasm.getParticles({});
+            }
+            if (particles) {
+                for (let particle of particles) {
+                    particle.meta.of = value;
+                }
+            }
+            /**
+             * insert the given EuglenaName,too
+             */
+            Cytoplasm.saveParticle(new ParticleV2(new MetaV2("EuglenaName", value), value));
+        }
         constructor(euglenaName: string, particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[]) {
-            if (Cytoplasm.instance) {
+            if (Cytoplasm._instance) {
                 throw "There exists a cytoplasm instance already.";
             }
-            Cytoplasm.particles = particles;
-            Cytoplasm.particles.push(new ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
-            Cytoplasm.organelles = {};
+            Cytoplasm._particles = particles;
+            Cytoplasm._particles.push(new ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
+            Cytoplasm._organelles = {};
             for (let organelle of organelles) {
                 organelle.send = Cytoplasm.receive;
-                Cytoplasm.organelles[organelle.name] = organelle;
+                Cytoplasm._organelles[organelle.name] = organelle;
             }
-            Cytoplasm.instance = this;
-            Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome, particles);
-            Cytoplasm.garbageCollector.start();
+            Cytoplasm._instance = this;
+            Cytoplasm._garbageCollector = new dna.GarbageCollector(chromosome, particles);
+            Cytoplasm._garbageCollector.start();
         }
         public static receive(particle: AnyParticle, source: string, callback?: interaction.Callback) {
             console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
             //find which genes are matched with properties of the particle 
             let triggerableReactions = new Array<{ index: number, triggers: string[], reaction: dna.Reaction }>();
-            for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
-                let triggers: any = Cytoplasm.chromosome[i].data.triggers;
+            for (var i = 0; i < Cytoplasm._chromosome.length; i++) {
+                let triggers: any = Cytoplasm._chromosome[i].data.triggers;
                 if (js.Class.doesMongoCover(particle, triggers)) {
-                    var reaction = Cytoplasm.chromosome[i].data.reaction;
+                    var reaction = Cytoplasm._chromosome[i].data.reaction;
                     triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                 }
             }
@@ -212,11 +241,11 @@ export namespace alive {
                     //then if triggers of tr2 does not contain triggers of tr, do nothing
                     if (!sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers)) continue;
                     //then check if tr2 overrides tr
-                    doTrigger = !(Cytoplasm.chromosome[tr2.index].data.override === Cytoplasm.chromosome[tr.index].data.name);
+                    doTrigger = !(Cytoplasm._chromosome[tr2.index].data.override === Cytoplasm._chromosome[tr.index].data.name);
                 }
                 if (doTrigger) {
                     reactions.push(tr.reaction);
-                    names.push(Cytoplasm.chromosome[tr.index].data.name);
+                    names.push(Cytoplasm._chromosome[tr.index].data.name);
                 }
             }
             //trigger collected reactions
@@ -236,25 +265,34 @@ export namespace alive {
         }
         public static transmit(organelleName: string, particle: AnyParticle, callback?: interaction.Callback) {
             console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + organelleName);
-            let organelle: Organelle<any> = Cytoplasm.organelles[organelleName] as Organelle<any>;
+            let organelle: Organelle<any> = Cytoplasm._organelles[organelleName] as Organelle<any>;
             organelle.receive(particle, callback ? (particle: AnyParticle) => {
                 console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
                 callback(particle);
             } : callback);
         }
-        public static saveParticle(particle: AnyParticle) {
-            let index = sys.type.StaticTools.Array.indexOf(Cytoplasm.particles, particle.meta, (tt, m) => sys.type.StaticTools.Object.equals(tt.meta, m));
-            if (index >= 0) {
-                Cytoplasm.particles[index] = particle;
-            } else {
-                Cytoplasm.particles.push(particle);
+        public static saveParticle(particle: AnyParticle, query?: any) {
+            if (query) {
+                let index = Cytoplasm._getParticleIndex(query);
+                if (index >= 0) {
+                    Cytoplasm._particles[index] = particle;
+                }
             }
+            Cytoplasm._particles.push(particle);
         }
         public static removeParticles(query: any): AnyParticle[] {
-            return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, query, (ai, t) => js.Class.doesMongoCover(ai, query));
+            return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm._particles, query, (ai, t) => js.Class.doesMongoCover(ai, query));
+        }
+        private static _getParticleIndex(query: any) {
+            for (let i = 0; i < Cytoplasm._particles.length; i++) {
+                if (js.Class.doesMongoCover(Cytoplasm._particles[i], query)) {
+                    return i;
+                }
+            }
+            return -1;
         }
         public static getParticle(query: any): AnyParticle {
-            for (let p of Cytoplasm.particles) {
+            for (let p of Cytoplasm._particles) {
                 if (js.Class.doesMongoCover(p, query)) {
                     return p;
                 }
@@ -263,7 +301,7 @@ export namespace alive {
         }
         public static getParticles(query: any): AnyParticle[] {
             let returnList = Array<AnyParticle>();
-            for (let p of Cytoplasm.particles) {
+            for (let p of Cytoplasm._particles) {
                 if (js.Class.doesMongoCover(p, query)) {
                     returnList.push(p);
                 }

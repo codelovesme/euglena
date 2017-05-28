@@ -174,24 +174,59 @@ var alive;
     alive.Organelle = Organelle;
     var Cytoplasm = (function () {
         function Cytoplasm(euglenaName, particles, organelles, chromosome) {
-            if (Cytoplasm.instance) {
+            if (Cytoplasm._instance) {
                 throw "There exists a cytoplasm instance already.";
             }
-            Cytoplasm.particles = particles;
-            Cytoplasm.particles.push(new ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
-            Cytoplasm.organelles = {};
+            Cytoplasm._particles = particles;
+            Cytoplasm._particles.push(new ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
+            Cytoplasm._organelles = {};
             for (var _i = 0, organelles_1 = organelles; _i < organelles_1.length; _i++) {
                 var organelle = organelles_1[_i];
                 organelle.send = Cytoplasm.receive;
-                Cytoplasm.organelles[organelle.name] = organelle;
+                Cytoplasm._organelles[organelle.name] = organelle;
             }
-            Cytoplasm.instance = this;
-            Cytoplasm.garbageCollector = new dna.GarbageCollector(chromosome, particles);
-            Cytoplasm.garbageCollector.start();
+            Cytoplasm._instance = this;
+            Cytoplasm._garbageCollector = new dna.GarbageCollector(chromosome, particles);
+            Cytoplasm._garbageCollector.start();
         }
-        Object.defineProperty(Cytoplasm, "chromosome", {
+        Object.defineProperty(Cytoplasm, "_chromosome", {
             get: function () {
                 return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome } }).data;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Cytoplasm, "euglenaName", {
+            get: function () {
+                /**
+                 * Beacuse of there can only one particle of EuglenaName in the current Cytoplasm,
+                 * We can fetch the EuglenaName by a code like below.
+                 */
+                return this.getParticle({ meta: { name: "EuglenaName" } }).data;
+            },
+            set: function (value) {
+                var particles;
+                var old = this.getParticle({ meta: { name: "EuglenaName" } });
+                if (old) {
+                    particles = Cytoplasm.getParticles({ meta: { of: old.data } });
+                }
+                else {
+                    /**
+                     * If there is no EuglenaName exists, it has to be initial state of the euglena
+                     * so we have to change all particle owners to the given EuglenaName
+                     */
+                    particles = Cytoplasm.getParticles({});
+                }
+                if (particles) {
+                    for (var _i = 0, particles_1 = particles; _i < particles_1.length; _i++) {
+                        var particle = particles_1[_i];
+                        particle.meta.of = value;
+                    }
+                }
+                /**
+                 * insert the given EuglenaName,too
+                 */
+                Cytoplasm.saveParticle(new ParticleV2(new MetaV2("EuglenaName", value), value));
             },
             enumerable: true,
             configurable: true
@@ -200,10 +235,10 @@ var alive;
             console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
             //find which genes are matched with properties of the particle 
             var triggerableReactions = new Array();
-            for (var i = 0; i < Cytoplasm.chromosome.length; i++) {
-                var triggers = Cytoplasm.chromosome[i].data.triggers;
+            for (var i = 0; i < Cytoplasm._chromosome.length; i++) {
+                var triggers = Cytoplasm._chromosome[i].data.triggers;
                 if (cessnalib_1.js.Class.doesMongoCover(particle, triggers)) {
-                    var reaction = Cytoplasm.chromosome[i].data.reaction;
+                    var reaction = Cytoplasm._chromosome[i].data.reaction;
                     triggerableReactions.push({ index: i, triggers: Object.keys(triggers), reaction: reaction });
                 }
             }
@@ -223,11 +258,11 @@ var alive;
                     if (!cessnalib_1.sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers))
                         continue;
                     //then check if tr2 overrides tr
-                    doTrigger = !(Cytoplasm.chromosome[tr2.index].data.override === Cytoplasm.chromosome[tr.index].data.name);
+                    doTrigger = !(Cytoplasm._chromosome[tr2.index].data.override === Cytoplasm._chromosome[tr.index].data.name);
                 }
                 if (doTrigger) {
                     reactions.push(tr.reaction);
-                    names.push(Cytoplasm.chromosome[tr.index].data.name);
+                    names.push(Cytoplasm._chromosome[tr.index].data.name);
                 }
             }
             //trigger collected reactions
@@ -247,26 +282,34 @@ var alive;
         };
         Cytoplasm.transmit = function (organelleName, particle, callback) {
             console.log("Cytoplasm says : transmitting " + JSON.stringify(particle.meta) + " to " + organelleName);
-            var organelle = Cytoplasm.organelles[organelleName];
+            var organelle = Cytoplasm._organelles[organelleName];
             organelle.receive(particle, callback ? function (particle) {
                 console.log("Cytoplasm says : received " + JSON.stringify(particle.meta));
                 callback(particle);
             } : callback);
         };
-        Cytoplasm.saveParticle = function (particle) {
-            var index = cessnalib_1.sys.type.StaticTools.Array.indexOf(Cytoplasm.particles, particle.meta, function (tt, m) { return cessnalib_1.sys.type.StaticTools.Object.equals(tt.meta, m); });
-            if (index >= 0) {
-                Cytoplasm.particles[index] = particle;
+        Cytoplasm.saveParticle = function (particle, query) {
+            if (query) {
+                var index = Cytoplasm._getParticleIndex(query);
+                if (index >= 0) {
+                    Cytoplasm._particles[index] = particle;
+                }
             }
-            else {
-                Cytoplasm.particles.push(particle);
-            }
+            Cytoplasm._particles.push(particle);
         };
         Cytoplasm.removeParticles = function (query) {
-            return cessnalib_1.sys.type.StaticTools.Array.removeAllMatched(Cytoplasm.particles, query, function (ai, t) { return cessnalib_1.js.Class.doesMongoCover(ai, query); });
+            return cessnalib_1.sys.type.StaticTools.Array.removeAllMatched(Cytoplasm._particles, query, function (ai, t) { return cessnalib_1.js.Class.doesMongoCover(ai, query); });
+        };
+        Cytoplasm._getParticleIndex = function (query) {
+            for (var i = 0; i < Cytoplasm._particles.length; i++) {
+                if (cessnalib_1.js.Class.doesMongoCover(Cytoplasm._particles[i], query)) {
+                    return i;
+                }
+            }
+            return -1;
         };
         Cytoplasm.getParticle = function (query) {
-            for (var _i = 0, _a = Cytoplasm.particles; _i < _a.length; _i++) {
+            for (var _i = 0, _a = Cytoplasm._particles; _i < _a.length; _i++) {
                 var p = _a[_i];
                 if (cessnalib_1.js.Class.doesMongoCover(p, query)) {
                     return p;
@@ -276,7 +319,7 @@ var alive;
         };
         Cytoplasm.getParticles = function (query) {
             var returnList = Array();
-            for (var _i = 0, _a = Cytoplasm.particles; _i < _a.length; _i++) {
+            for (var _i = 0, _a = Cytoplasm._particles; _i < _a.length; _i++) {
                 var p = _a[_i];
                 if (cessnalib_1.js.Class.doesMongoCover(p, query)) {
                     returnList.push(p);
@@ -286,8 +329,8 @@ var alive;
         };
         return Cytoplasm;
     }());
-    Cytoplasm.instance = null;
-    Cytoplasm.organelles = null;
+    Cytoplasm._instance = null;
+    Cytoplasm._organelles = null;
     alive.Cytoplasm = Cytoplasm;
 })(alive = exports.alive || (exports.alive = {}));
 //# sourceMappingURL=index.js.map

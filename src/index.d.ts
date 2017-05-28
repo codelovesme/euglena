@@ -101,16 +101,18 @@ export declare namespace alive {
         receive(particle: AnyParticle, callback?: interaction.Callback): void;
     }
     class Cytoplasm {
-        static instance: Cytoplasm;
-        private static organelles;
-        static particles: AnyParticle[];
-        static garbageCollector: dna.GarbageCollector;
-        private static readonly chromosome;
+        private static _instance;
+        private static _organelles;
+        private static _particles;
+        private static _garbageCollector;
+        private static readonly _chromosome;
+        static euglenaName: string;
         constructor(euglenaName: string, particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[]);
         static receive(particle: AnyParticle, source: string, callback?: interaction.Callback): void;
         static transmit(organelleName: string, particle: AnyParticle, callback?: interaction.Callback): void;
-        static saveParticle(particle: AnyParticle): void;
+        static saveParticle(particle: AnyParticle, query?: any): void;
         static removeParticles(query: any): AnyParticle[];
+        private static _getParticleIndex(query);
         static getParticle(query: any): AnyParticle;
         static getParticles(query: any): AnyParticle[];
     }
