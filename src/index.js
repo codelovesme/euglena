@@ -21,6 +21,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 * #Seperate particle, request, event
 *
 */
+/**
+ * Next major version api changes
+ * class Cytoplasm {
+ *      constructor(particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[], euglenaName?: string) {
+ * //Get the euglenaName from particles if it is not set
+ *
+ */
 var cessnalib_1 = require("cessnalib");
 exports.JavascriptDate = Date;
 exports.JavascriptObject = Object;
@@ -173,11 +180,14 @@ var alive;
     }());
     alive.Organelle = Organelle;
     var Cytoplasm = (function () {
-        function Cytoplasm(euglenaName, particles, organelles, chromosome) {
+        function Cytoplasm(particles, organelles, chromosome, euglenaName) {
             if (Cytoplasm._instance) {
                 throw "There exists a cytoplasm instance already.";
             }
             Cytoplasm._particles = particles;
+            if (euglenaName) {
+                Cytoplasm._euglenaName = euglenaName;
+            }
             Cytoplasm._particles.push(new ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
             Cytoplasm._organelles = {};
             for (var _i = 0, organelles_1 = organelles; _i < organelles_1.length; _i++) {
@@ -196,7 +206,7 @@ var alive;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Cytoplasm, "euglenaName", {
+        Object.defineProperty(Cytoplasm, "_euglenaName", {
             get: function () {
                 /**
                  * Beacuse of there can only one particle of EuglenaName in the current Cytoplasm,

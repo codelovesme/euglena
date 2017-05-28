@@ -1,6 +1,13 @@
 /**
  * Created by codelovesme on 6/19/2015.
  */
+/**
+ * Next major version api changes
+ * class Cytoplasm {
+ *      constructor(particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[], euglenaName?: string) {
+ * //Get the euglenaName from particles if it is not set
+ *
+ */
 import { sys } from "cessnalib";
 export declare const JavascriptDate: DateConstructor;
 export declare const JavascriptObject: ObjectConstructor;
@@ -106,8 +113,8 @@ export declare namespace alive {
         private static _particles;
         private static _garbageCollector;
         private static readonly _chromosome;
-        static euglenaName: string;
-        constructor(euglenaName: string, particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[]);
+        private static _euglenaName;
+        constructor(particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[], euglenaName?: string);
         static receive(particle: AnyParticle, source: string, callback?: interaction.Callback): void;
         static transmit(organelleName: string, particle: AnyParticle, callback?: interaction.Callback): void;
         static saveParticle(particle: AnyParticle, query?: any): void;

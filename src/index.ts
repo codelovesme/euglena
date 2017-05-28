@@ -10,6 +10,13 @@
 * #Seperate particle, request, event
 *
 */
+/**
+ * Next major version api changes
+ * class Cytoplasm {
+ *      constructor(particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[], euglenaName?: string) {
+ * //Get the euglenaName from particles if it is not set
+ * 
+ */
 import { sys, js } from "cessnalib";
 export const JavascriptDate = Date;
 export const JavascriptObject = Object;
@@ -174,14 +181,14 @@ export namespace alive {
         private static get _chromosome(): dna.AnyGene[] {
             return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome } }).data;
         }
-        public static get euglenaName() {
+        private static get _euglenaName() {
             /**
              * Beacuse of there can only one particle of EuglenaName in the current Cytoplasm,
              * We can fetch the EuglenaName by a code like below.
              */
             return this.getParticle({ meta: { name: "EuglenaName" } }).data;
         }
-        public static set euglenaName(value: string) {
+        private static set _euglenaName(value: string) {
             let particles;
             let old = this.getParticle({ meta: { name: "EuglenaName" } });
             if (old) {
@@ -203,11 +210,14 @@ export namespace alive {
              */
             Cytoplasm.saveParticle(new ParticleV2(new MetaV2("EuglenaName", value), value));
         }
-        constructor(euglenaName: string, particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[]) {
+        constructor(particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[], euglenaName?: string) {
             if (Cytoplasm._instance) {
                 throw "There exists a cytoplasm instance already.";
             }
             Cytoplasm._particles = particles;
+            if(euglenaName){
+                Cytoplasm._euglenaName = euglenaName;
+            }
             Cytoplasm._particles.push(new ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
             Cytoplasm._organelles = {};
             for (let organelle of organelles) {
