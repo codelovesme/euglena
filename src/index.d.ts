@@ -113,6 +113,7 @@ export declare namespace alive {
         private static _particles;
         private static _garbageCollector;
         private static readonly _chromosome;
+        static readonly euglenaName: any;
         private static _euglenaName;
         constructor(particles: AnyParticle[], organelles: Organelle<any>[], chromosome: dna.AnyGene[], euglenaName?: string);
         static receive(particle: AnyParticle, source: string, callback?: interaction.Callback): void;

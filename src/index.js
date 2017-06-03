@@ -206,7 +206,7 @@ var alive;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Cytoplasm, "_euglenaName", {
+        Object.defineProperty(Cytoplasm, "euglenaName", {
             get: function () {
                 /**
                  * Beacuse of there can only one particle of EuglenaName in the current Cytoplasm,
@@ -214,6 +214,10 @@ var alive;
                  */
                 return this.getParticle({ meta: { name: "EuglenaName" } }).data;
             },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Cytoplasm, "_euglenaName", {
             set: function (value) {
                 var particles;
                 var old = this.getParticle({ meta: { name: "EuglenaName" } });

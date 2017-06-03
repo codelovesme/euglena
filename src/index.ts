@@ -181,7 +181,7 @@ export namespace alive {
         private static get _chromosome(): dna.AnyGene[] {
             return Cytoplasm.getParticle({ meta: { name: alive.constants.particles.Chromosome } }).data;
         }
-        private static get _euglenaName() {
+        public static get euglenaName() {
             /**
              * Beacuse of there can only one particle of EuglenaName in the current Cytoplasm,
              * We can fetch the EuglenaName by a code like below.
