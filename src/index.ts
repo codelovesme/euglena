@@ -158,8 +158,12 @@ export namespace alive {
     }
     export abstract class Organelle<SapContent> implements Named {
         private actions: sys.type.Map<string, (particle: AnyParticle, callback?: interaction.Callback) => void>;
-        constructor(public name: string, public send?: interaction.Receive) {
+        public send: (particle: AnyParticle, callback?: interaction.Callback) => void;
+        constructor(public name: string, send?: interaction.Receive) {
             let this_ = this;
+            this.send = (particle, callback) => {
+                send(particle, name, callback);
+            }
             this.actions = new sys.type.Map<string, (particle: AnyParticle, callback?: interaction.Callback) => void>();
             this.bindActions((particleName: string, action: (particle: AnyParticle, callback?: interaction.Callback) => void) => {
                 this_.actions.add(particleName, action);
@@ -215,7 +219,7 @@ export namespace alive {
                 throw "There exists a cytoplasm instance already.";
             }
             Cytoplasm._particles = particles;
-            if(euglenaName){
+            if (euglenaName) {
                 Cytoplasm._euglenaName = euglenaName;
             }
             Cytoplasm._particles.push(new ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));

@@ -163,8 +163,10 @@ var alive;
     var Organelle = (function () {
         function Organelle(name, send) {
             this.name = name;
-            this.send = send;
             var this_ = this;
+            this.send = function (particle, callback) {
+                send(particle, name, callback);
+            };
             this.actions = new cessnalib_1.sys.type.Map();
             this.bindActions(function (particleName, action) {
                 this_.actions.add(particleName, action);

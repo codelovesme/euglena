@@ -101,8 +101,8 @@ export declare namespace alive {
     }
     abstract class Organelle<SapContent> implements Named {
         name: string;
-        send: interaction.Receive;
         private actions;
+        send: (particle: AnyParticle, callback?: interaction.Callback) => void;
         constructor(name: string, send?: interaction.Receive);
         protected abstract bindActions(addAction: (particleName: string, action: (particle: AnyParticle, callback?: interaction.Callback) => void) => void): void;
         receive(particle: AnyParticle, callback?: interaction.Callback): void;
