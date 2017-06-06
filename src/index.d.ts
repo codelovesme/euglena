@@ -103,7 +103,7 @@ export declare namespace alive {
         name: string;
         private actions;
         send: (particle: AnyParticle, callback?: interaction.Callback) => void;
-        constructor(name: string, send?: interaction.Receive);
+        constructor(name: string);
         protected abstract bindActions(addAction: (particleName: string, action: (particle: AnyParticle, callback?: interaction.Callback) => void) => void): void;
         receive(particle: AnyParticle, callback?: interaction.Callback): void;
     }

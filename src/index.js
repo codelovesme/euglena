@@ -161,12 +161,9 @@ var alive;
         })(particles = constants.particles || (constants.particles = {}));
     })(constants = alive.constants || (alive.constants = {}));
     var Organelle = (function () {
-        function Organelle(name, send) {
+        function Organelle(name) {
             this.name = name;
             var this_ = this;
-            this.send = function (particle, callback) {
-                send(particle, name, callback);
-            };
             this.actions = new cessnalib_1.sys.type.Map();
             this.bindActions(function (particleName, action) {
                 this_.actions.add(particleName, action);
@@ -192,10 +189,15 @@ var alive;
             }
             Cytoplasm._particles.push(new ParticleV2(new MetaV2(alive.constants.particles.Chromosome, euglenaName), chromosome));
             Cytoplasm._organelles = {};
+            var _loop_1 = function (organelle) {
+                organelle.send = function (particle, callback) {
+                    Cytoplasm.receive(particle, organelle.name, callback);
+                };
+                Cytoplasm._organelles[organelle.name] = organelle;
+            };
             for (var _i = 0, organelles_1 = organelles; _i < organelles_1.length; _i++) {
                 var organelle = organelles_1[_i];
-                organelle.send = Cytoplasm.receive;
-                Cytoplasm._organelles[organelle.name] = organelle;
+                _loop_1(organelle);
             }
             Cytoplasm._instance = this;
             Cytoplasm._garbageCollector = new dna.GarbageCollector(chromosome, particles);
