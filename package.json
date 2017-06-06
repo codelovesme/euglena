@@ -10,11 +10,6 @@
     "email": "codelovesme@gmail.com"
   },
   "typings": "./src/index.d.ts",
-  "devDependencies": {
-    "@types/chai": "^3.5.2",
-    "@types/mocha": "^2.2.41",
-    "chai": "^3.5.0"
-  },
   "scripts": {
     "test": "mocha test"
   },
@@ -28,5 +23,11 @@
   "homepage": "https://github.com/codelovesme/euglena#readme",
   "dependencies": {
     "cessnalib": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^3.5.2",
+    "@types/mocha": "^2.2.41",
+    "chai": "^3.5.0",
+    "mocha": "^3.4.2"
   }
 }
