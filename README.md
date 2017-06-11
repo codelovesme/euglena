@@ -1,4 +1,4 @@
-# euglena
+# euglena ![build status](https://travis-ci.org/codelovesme/euglena.svg?branch=master)
 
 This framework was writen to cover these issues and pursue to be confitable while programming. 
 The issues which framework covers : 
