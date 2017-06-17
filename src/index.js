@@ -142,9 +142,17 @@ var alive;
                             (ai.meta.version === StaticTools.Particle.Versions.v2 ?
                                 (ai.meta.expireTime && ai.meta.expireTime <= nowDigit) : false);
                     };
-                    cessnalib_1.sys.type.StaticTools.Array.removeAllMatched(_this.chromosome, null, doesExpire);
+                    var removedChromosome = cessnalib_1.sys.type.StaticTools.Array.removeAllMatched(_this.chromosome, null, doesExpire);
+                    for (var _i = 0, removedChromosome_1 = removedChromosome; _i < removedChromosome_1.length; _i++) {
+                        var gene = removedChromosome_1[_i];
+                        console.log("Cytoplasm says : destroyed gene " + JSON.stringify(gene.meta) + " as a result of the time expiration.");
+                    }
                     //process particles
-                    cessnalib_1.sys.type.StaticTools.Array.removeAllMatched(_this.particles, null, doesExpire);
+                    var removedParticles = cessnalib_1.sys.type.StaticTools.Array.removeAllMatched(_this.particles, null, doesExpire);
+                    for (var _a = 0, removedParticles_1 = removedParticles; _a < removedParticles_1.length; _a++) {
+                        var gene = removedParticles_1[_a];
+                        console.log("Cytoplasm says : destroyed particle " + JSON.stringify(gene.meta) + " as a result of the time expiration.");
+                    }
                 }, this.timeout);
             };
             return GarbageCollector;
@@ -318,14 +326,6 @@ var alive;
         Cytoplasm.removeParticles = function (query) {
             return cessnalib_1.sys.type.StaticTools.Array.removeAllMatched(Cytoplasm._particles, query, function (ai, t) { return cessnalib_1.js.Class.doesMongoCover(ai, query); });
         };
-        Cytoplasm._getParticleIndex = function (query) {
-            for (var i = 0; i < Cytoplasm._particles.length; i++) {
-                if (cessnalib_1.js.Class.doesMongoCover(Cytoplasm._particles[i], query)) {
-                    return i;
-                }
-            }
-            return -1;
-        };
         Cytoplasm.getParticle = function (query) {
             for (var _i = 0, _a = Cytoplasm._particles; _i < _a.length; _i++) {
                 var p = _a[_i];
@@ -344,6 +344,14 @@ var alive;
                 }
             }
             return returnList;
+        };
+        Cytoplasm._getParticleIndex = function (query) {
+            for (var i = 0; i < Cytoplasm._particles.length; i++) {
+                if (cessnalib_1.js.Class.doesMongoCover(Cytoplasm._particles[i], query)) {
+                    return i;
+                }
+            }
+            return -1;
         };
         return Cytoplasm;
     }());

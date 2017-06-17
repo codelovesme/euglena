@@ -132,14 +132,20 @@ export namespace alive {
                             (ai.meta.expiretime && sys.type.StaticTools.Time.biggerThan(now, ai.meta.expiretime)) :
                             (ai.meta.version === StaticTools.Particle.Versions.v2 ?
                                 (ai.meta.expireTime && ai.meta.expireTime <= nowDigit) : false);
-                    sys.type.StaticTools.Array.removeAllMatched(
+                    let removedChromosome = sys.type.StaticTools.Array.removeAllMatched(
                         this.chromosome,
                         null,
                         doesExpire);
+                    for (let gene of removedChromosome) {
+                        console.log("Cytoplasm says : destroyed gene " + JSON.stringify(gene.meta) + " as a result of the time expiration.");
+                    }
                     //process particles
-                    sys.type.StaticTools.Array.removeAllMatched(
+                    let removedParticles = sys.type.StaticTools.Array.removeAllMatched(
                         this.particles,
                         null, doesExpire);
+                    for (let gene of removedParticles) {
+                        console.log("Cytoplasm says : destroyed particle " + JSON.stringify(gene.meta) + " as a result of the time expiration.");
+                    }
                 }, this.timeout)
             }
         }
@@ -296,14 +302,6 @@ export namespace alive {
         public static removeParticles(query: any): AnyParticle[] {
             return sys.type.StaticTools.Array.removeAllMatched(Cytoplasm._particles, query, (ai, t) => js.Class.doesMongoCover(ai, query));
         }
-        private static _getParticleIndex(query: any) {
-            for (let i = 0; i < Cytoplasm._particles.length; i++) {
-                if (js.Class.doesMongoCover(Cytoplasm._particles[i], query)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
         public static getParticle(query: any): AnyParticle {
             for (let p of Cytoplasm._particles) {
                 if (js.Class.doesMongoCover(p, query)) {
@@ -320,6 +318,14 @@ export namespace alive {
                 }
             }
             return returnList;
+        }
+        private static _getParticleIndex(query: any) {
+            for (let i = 0; i < Cytoplasm._particles.length; i++) {
+                if (js.Class.doesMongoCover(Cytoplasm._particles[i], query)) {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

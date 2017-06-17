@@ -120,8 +120,8 @@ export declare namespace alive {
         static transmit(organelleName: string, particle: AnyParticle, callback?: interaction.Callback): void;
         static saveParticle(particle: AnyParticle, query?: any): void;
         static removeParticles(query: any): AnyParticle[];
-        private static _getParticleIndex(query);
         static getParticle(query: any): AnyParticle;
         static getParticles(query: any): AnyParticle[];
+        private static _getParticleIndex(query);
     }
 }
