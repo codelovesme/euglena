@@ -63,10 +63,7 @@ export namespace StaticTools {
 }
 export namespace interaction {
     export interface CanReceiveParticle {
-        receive: Receive;
-    }
-    export interface Receive {
-        (particle: AnyParticle, source: string, callback?: interaction.Callback): void;
+        receive: (particle: AnyParticle, source: string, callback?: interaction.Callback) => void;
     }
     export interface Callback extends sys.type.Callback<AnyParticle> { }
     export class Impact extends ParticleV2<{ token: string, particle: AnyParticle }> {
