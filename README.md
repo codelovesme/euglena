@@ -7,3 +7,5 @@ The issues which framework covers :
 * Application logic update at runtime
 * Build same structured applications
 
+for more info : http://www.codeloves.me/Euglena
+
