@@ -31,7 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cessnalib_1 = require("cessnalib");
 exports.JavascriptDate = Date;
 exports.JavascriptObject = Object;
-var ParticleV1 = (function () {
+var ParticleV1 = /** @class */ (function () {
     function ParticleV1(meta, data) {
         this.meta = meta;
         this.data = data;
@@ -39,7 +39,7 @@ var ParticleV1 = (function () {
     return ParticleV1;
 }());
 exports.ParticleV1 = ParticleV1;
-var ParticleV2 = (function () {
+var ParticleV2 = /** @class */ (function () {
     function ParticleV2(meta, data) {
         this.meta = meta;
         this.data = data;
@@ -47,7 +47,7 @@ var ParticleV2 = (function () {
     return ParticleV2;
 }());
 exports.ParticleV2 = ParticleV2;
-var MetaV2 = (function () {
+var MetaV2 = /** @class */ (function () {
     function MetaV2(name, of, expireTime) {
         this.name = name;
         this.of = of;
@@ -86,7 +86,7 @@ var StaticTools;
 })(StaticTools = exports.StaticTools || (exports.StaticTools = {}));
 var interaction;
 (function (interaction) {
-    var Impact = (function (_super) {
+    var Impact = /** @class */ (function (_super) {
         __extends(Impact, _super);
         function Impact(particle, token, of) {
             return _super.call(this, new MetaV2("Impact", of), { particle: particle, token: token }) || this;
@@ -103,7 +103,7 @@ var alive;
 (function (alive) {
     var dna;
     (function (dna) {
-        var GeneV1 = (function (_super) {
+        var GeneV1 = /** @class */ (function (_super) {
             __extends(GeneV1, _super);
             function GeneV1(name, triggers, // particle prop - value match
                 reaction, override, expiretime) {
@@ -112,7 +112,7 @@ var alive;
             return GeneV1;
         }(ParticleV1));
         dna.GeneV1 = GeneV1;
-        var GeneV2 = (function (_super) {
+        var GeneV2 = /** @class */ (function (_super) {
             __extends(GeneV2, _super);
             function GeneV2(name, triggers, reaction, of, override, expireTime) {
                 return _super.call(this, new MetaV2(constants.particles.Gene, of, expireTime), { name: name, triggers: triggers, reaction: reaction, override: override }) || this;
@@ -120,7 +120,7 @@ var alive;
             return GeneV2;
         }(ParticleV2));
         dna.GeneV2 = GeneV2;
-        var GarbageCollector = (function () {
+        var GarbageCollector = /** @class */ (function () {
             function GarbageCollector(chromosome, particles) {
                 this.timeout = 1000;
                 this.chromosome = [];
@@ -168,7 +168,7 @@ var alive;
             particles.Chromosome = "Chromosome";
         })(particles = constants.particles || (constants.particles = {}));
     })(constants = alive.constants || (alive.constants = {}));
-    var Organelle = (function () {
+    var Organelle = /** @class */ (function () {
         function Organelle(name) {
             this.name = name;
             var this_ = this;
@@ -186,7 +186,7 @@ var alive;
         return Organelle;
     }());
     alive.Organelle = Organelle;
-    var Cytoplasm = (function () {
+    var Cytoplasm = /** @class */ (function () {
         function Cytoplasm(particles, organelles, chromosome, euglenaName) {
             if (Cytoplasm._instance) {
                 throw "There exists a cytoplasm instance already.";
@@ -353,10 +353,11 @@ var alive;
             }
             return -1;
         };
+        Cytoplasm._instance = null;
+        Cytoplasm._organelles = null;
         return Cytoplasm;
     }());
-    Cytoplasm._instance = null;
-    Cytoplasm._organelles = null;
     alive.Cytoplasm = Cytoplasm;
 })(alive = exports.alive || (exports.alive = {}));
+
 //# sourceMappingURL=index.js.map
