@@ -1,7 +1,7 @@
 {
   "name": "@euglena/core",
   "domain": "codeloves.me",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": ".dist/src/index.js",
   "private": false,
   "license": "GPL v2",
@@ -13,7 +13,7 @@
   "scripts": {
     "test": "gulp test",
     "build": "gulp build",
-    "start":"gulp watch"
+    "start": "gulp watch"
   },
   "repository": {
     "type": "git",
