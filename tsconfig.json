@@ -1,12 +1,15 @@
 ﻿{
-    "compileOnSave":true,
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es5",
-        "noImplicitAny": true,
-        "removeComments": false,
-        "sourceMap": true,
-        "declaration":true
-    },
-    "files": [ "src/index.ts","test/index.ts"]
+  "version": "3.4.1",
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": ["es2018"],
+    "target": "es5",
+    "noImplicitAny": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "declaration": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }
