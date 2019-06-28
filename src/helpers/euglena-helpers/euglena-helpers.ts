@@ -22,12 +22,12 @@ import timer, { TimerDefaultExport } from "./organelles/timer";
 import { sys, js } from "cessnalib";
 import { OrganelleReceive, CreateOrganelle } from "../../organelle";
 import { Particle } from "../../particle";
-import { CreateGeneCluster, Chromosome } from "../../gene";
-import { Reaction, Transmit } from "../../cytoplasm";
-import { createCommonParticle, commonParticles } from "../particle-helpers";
+import { Chromosome, GeneReaction, GeneCluster } from "../../gene";
+import { Transmit } from "../../cytoplasm";
+import { createCommonParticle, commonParticles } from "../common-particles";
 
-const [vacuoleOrganelleName, vacuoleCreateOrganelle, vacuoleCrateParticle, vacuoleParticles]: VacuoleDefaultExport = vacuole;
-const [timerOrganelleName, timerCreateOrganelle, timerCrateParticle, timerParticles]: TimerDefaultExport = timer;
+const [vacuoleOrganelleName, vacuoleCreateOrganelle]: VacuoleDefaultExport = vacuole;
+const [timerOrganelleName, timerCreateOrganelle]: TimerDefaultExport = timer;
 
 export interface Cytoplasm {
   organelles: { [organelleName: string]: OrganelleReceive };
@@ -36,11 +36,7 @@ export interface Cytoplasm {
 
 let cytoplasm: Cytoplasm;
 
-export function createEuglena(
-  createOrganelles: { [organelleName: string]: CreateOrganelle },
-  createGeneClusterArr: CreateGeneCluster[] | CreateGeneCluster,
-  particles: Particle[]
-) {
+export function createEuglena(createOrganelles: { [organelleName: string]: CreateOrganelle }, geneCluster: GeneCluster, particles: Particle[]) {
   if (cytoplasm) {
     throw "There exists a cytoplasm instance already.";
   }
@@ -55,7 +51,7 @@ export function createEuglena(
       let triggerableReactions = new Array<{
         index: number;
         triggers: string[];
-        reaction: Reaction;
+        reaction: GeneReaction;
       }>();
       for (var i = 0; i < chromosome.length; i++) {
         let triggers: any = chromosome[i].data.triggers;
@@ -69,7 +65,7 @@ export function createEuglena(
         }
       }
       //get rid of overrided reactions
-      let reactions = Array<Reaction>();
+      let reactions = Array<GeneReaction>();
       let names = Array<string>();
       for (let tr of triggerableReactions) {
         let doTrigger = true;
@@ -89,10 +85,13 @@ export function createEuglena(
       }
       //trigger collected reactions
       for (let i = 0; i < reactions.length; i++) {
-        let reaction = reactions[i];
+        let reaction: GeneReaction = reactions[i];
         console.log("triggering gene");
         //@ts-ignore
-        reaction(particle).then(response => {
+        reaction(particle, {
+          receive: receive,
+          transmit: transmit
+        }).then((response: Particle) => {
           //response will be undefined after resolving of Promise<void>
           if (response) publish(response);
         });
@@ -112,10 +111,7 @@ export function createEuglena(
   /**
    * fill chromosome
    */
-  createGeneClusterArr = createGeneClusterArr instanceof Array ? createGeneClusterArr : [createGeneClusterArr];
-  for (const createGeneCluster of createGeneClusterArr) {
-    chromosome = [...chromosome, ...createGeneCluster(transmit, receive)];
-  }
+  chromosome = [...chromosome, ...geneCluster];
 
   let organelles: { [organelleName: string]: OrganelleReceive } = {};
 

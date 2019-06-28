@@ -25,7 +25,7 @@ export declare namespace vacuoleParticles {
 declare function createVacuoleParticle(name: typeof vacuoleParticles.SaveParticle, createdBy: string, particle: Particle, query?: Partial<Particle>, count?: Count, optionals?: MetaV3Optionals): vacuoleParticles.SaveParticle;
 declare function createVacuoleParticle(name: typeof vacuoleParticles.ReadParticle, createdBy: string, query: Partial<Particle>, count?: Count, optionals?: MetaV3Optionals): vacuoleParticles.ReadParticle;
 declare function createVacuoleParticle(name: typeof vacuoleParticles.RemoveParticle, createdBy: string, query: Partial<Particle>, count: Count, optionals?: MetaV3Optionals): vacuoleParticles.RemoveParticle;
-declare const createOrganelle: CreateOrganelle;
 declare const organelleName: "vacuole";
+declare const createOrganelle: CreateOrganelle;
 declare const defaultExport: VacuoleDefaultExport;
 export default defaultExport;

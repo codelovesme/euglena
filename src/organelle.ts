@@ -1,5 +1,5 @@
 import { Particle } from "./particle";
-import { CytoplasmReceive, Reaction } from "./cytoplasm";
+import { CytoplasmReceive } from "./cytoplasm";
 
 export interface OrganelleReceive {
   (particle: Particle): Promise<Particle | void>;

@@ -1,9 +1,10 @@
 import { OrganelleDefaultExport, CreateOrganelle } from "../../../organelle";
 import { ParticleV3, Particle, MetaV3Optionals, Meta } from "../../../particle";
-import { createParticle, commonParticles, createCommonParticle } from "../../particle-helpers";
+import { createParticle } from "../../particle-helpers";
 import { createMetaV3 } from "../../particle-helpers";
 import { js } from "cessnalib";
 import { defO } from "../../organelle-helpers";
+import { createCommonParticle, commonParticles } from "../../common-particles";
 
 export type VacuoleDefaultExport = OrganelleDefaultExport<typeof organelleName, typeof createOrganelle, typeof createVacuoleParticle, typeof vacuoleParticles>;
 export type Count = number | "all";
@@ -78,7 +79,9 @@ function createVacuoleParticle(
   }
 }
 
-const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
+const organelleName: "vacuole" = "vacuole";
+
+const createOrganelle: CreateOrganelle = defO(organelleName, addReaction => {
   let _particles: Particle[] = [];
 
   addReaction(vacuoleParticles.Sap, async (sap: vacuoleParticles.Sap) => {
@@ -131,6 +134,5 @@ const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
   });
 });
 
-const organelleName: "vacuole" = "vacuole";
 const defaultExport: VacuoleDefaultExport = [organelleName, createOrganelle, createVacuoleParticle, vacuoleParticles];
 export default defaultExport;

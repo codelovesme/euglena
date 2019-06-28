@@ -12,7 +12,7 @@
   "typings": ".dist/src/index.d.ts",
   "scripts": {
     "test": "gulp test",
-    "build": "gulp build",
+    "compile": "gulp compile",
     "start": "gulp watch"
   },
   "repository": {

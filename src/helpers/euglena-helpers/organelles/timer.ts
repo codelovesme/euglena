@@ -1,8 +1,9 @@
 import { sys } from "cessnalib";
 import { OrganelleDefaultExport, CreateOrganelle } from "../../../organelle";
 import { ParticleV3, MetaV3Optionals } from "../../../particle";
-import { createMetaV3, createParticle, createCommonParticle, commonParticles } from "../../particle-helpers";
+import { createMetaV3, createParticle } from "../../particle-helpers";
 import { defO } from "../../organelle-helpers";
+import { createCommonParticle, commonParticles } from "../../common-particles";
 
 export type TimerDefaultExport = OrganelleDefaultExport<typeof organelleName, typeof createOrganelle, typeof createTimerParticle, typeof timerParticles>;
 namespace timerParticles {
@@ -46,8 +47,8 @@ function createTimerParticle(
 
 declare function setInterval(callback: Function, timeout: number): void;
 const organelleName: "timer" = "timer";
-const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
-  addReaction(timerParticles.Sap, async (sap: timerParticles.Sap) => {
+const createOrganelle: CreateOrganelle = defO(organelleName, addReaction => {
+  addReaction(timerParticles.Sap, async (sap: timerParticles.Sap, { receive }) => {
     let time: sys.type.Time = sap.data;
     setInterval(() => {
       //let newDate = new Date(this.time.date.year, this.time.date.month - 1, this.time.date.day,

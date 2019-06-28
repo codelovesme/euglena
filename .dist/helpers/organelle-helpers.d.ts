@@ -1,12 +1,12 @@
-import { Reaction, CytoplasmReceive } from "../cytoplasm";
+import { OrganelleReaction } from "../cytoplasm";
 import { CreateOrganelle } from "../organelle";
 export interface AddReaction {
-    (particleName: string, reaction: Reaction): void;
+    (particleName: string, reaction: OrganelleReaction): void;
 }
 export interface BindReactions {
-    (addReaction: AddReaction, receive: CytoplasmReceive): void;
+    (addReaction: AddReaction): void;
 }
-export declare function defineCreateOrganelle(bindReactions: BindReactions): CreateOrganelle;
+export declare function defineCreateOrganelle(organelleName: string, bindReactions: BindReactions): CreateOrganelle;
 /**
  * Aliases
  */

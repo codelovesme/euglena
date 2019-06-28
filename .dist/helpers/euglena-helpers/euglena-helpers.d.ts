@@ -1,6 +1,6 @@
 import { OrganelleReceive, CreateOrganelle } from "../../organelle";
 import { Particle } from "../../particle";
-import { CreateGeneCluster, Chromosome } from "../../gene";
+import { Chromosome, GeneCluster } from "../../gene";
 export interface Cytoplasm {
     organelles: {
         [organelleName: string]: OrganelleReceive;
@@ -9,4 +9,4 @@ export interface Cytoplasm {
 }
 export declare function createEuglena(createOrganelles: {
     [organelleName: string]: CreateOrganelle;
-}, createGeneClusterArr: CreateGeneCluster[], particles: Particle[]): void;
+}, geneCluster: GeneCluster, particles: Particle[]): void;
