@@ -22,10 +22,10 @@ export declare namespace vacuoleParticles {
     const Sap: "vacuole.Sap";
     type Sap = ParticleV3<typeof Sap, Particle[]>;
 }
-declare function createVacuoleParticle(name: typeof vacuoleParticles.SaveParticle, createdBy: string, particle: Particle, query?: Partial<Particle>, count?: Count, optionals?: MetaV3Optionals): vacuoleParticles.SaveParticle;
-declare function createVacuoleParticle(name: typeof vacuoleParticles.ReadParticle, createdBy: string, query: Partial<Particle>, count?: Count, optionals?: MetaV3Optionals): vacuoleParticles.ReadParticle;
-declare function createVacuoleParticle(name: typeof vacuoleParticles.RemoveParticle, createdBy: string, query: Partial<Particle>, count: Count, optionals?: MetaV3Optionals): vacuoleParticles.RemoveParticle;
-declare const createOrganelle: CreateOrganelle;
+declare function createVacuoleParticle(name: typeof vacuoleParticles.SaveParticle, particle: Particle, query?: Partial<Particle>, count?: Count, optionals?: MetaV3Optionals): vacuoleParticles.SaveParticle;
+declare function createVacuoleParticle(name: typeof vacuoleParticles.ReadParticle, query: Partial<Particle>, count?: Count, optionals?: MetaV3Optionals): vacuoleParticles.ReadParticle;
+declare function createVacuoleParticle(name: typeof vacuoleParticles.RemoveParticle, query: Partial<Particle>, count: Count, optionals?: MetaV3Optionals): vacuoleParticles.RemoveParticle;
 declare const organelleName: "vacuole";
+declare const createOrganelle: CreateOrganelle;
 declare const defaultExport: VacuoleDefaultExport;
 export default defaultExport;

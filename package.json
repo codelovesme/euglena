@@ -12,7 +12,7 @@
   "typings": ".dist/src/index.d.ts",
   "scripts": {
     "test": "gulp test",
-    "build": "gulp build",
+    "compile": "gulp compile",
     "start": "gulp watch"
   },
   "repository": {
@@ -25,18 +25,18 @@
   "homepage": "https://github.com/codelovesme/euglena#readme",
   "dependencies": {
     "cessnalib": "git+https://github.com/codelovesme/cessnalib#semver:0.8.0",
-    "gulp": "^3.9.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",
-    "@types/uuid": "^3.4.4",
+    "@types/uuid": "^3.4.5",
+    "mocha": "^3.4.2",
     "chai": "^3.5.0",
+    "gulp": "^4.0.2",
     "gulp-mocha": "^4.3.1",
     "gulp-typescript": "^3.2.2",
     "merge2": "^1.2.0",
-    "mocha": "^3.4.2",
     "typescript": "^3.4.1"
   },
   "prettier": {

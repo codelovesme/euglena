@@ -1,9 +1,10 @@
 import { OrganelleDefaultExport, CreateOrganelle } from "../../../organelle";
 import { ParticleV3, Particle, MetaV3Optionals, Meta } from "../../../particle";
-import { createParticle, commonParticles, createCommonParticle } from "../../particle-helpers";
+import { createParticle } from "../../particle-helpers";
 import { createMetaV3 } from "../../particle-helpers";
 import { js } from "cessnalib";
 import { defO } from "../../organelle-helpers";
+import { createCommonParticle, commonParticles } from "../../common-particles";
 
 export type VacuoleDefaultExport = OrganelleDefaultExport<typeof organelleName, typeof createOrganelle, typeof createVacuoleParticle, typeof vacuoleParticles>;
 export type Count = number | "all";
@@ -24,66 +25,51 @@ export namespace vacuoleParticles {
 
 function createVacuoleParticle(
   name: typeof vacuoleParticles.SaveParticle,
-  createdBy: string,
   particle: Particle,
   query?: Partial<Particle>,
   count?: Count,
   optionals?: MetaV3Optionals
 ): vacuoleParticles.SaveParticle;
-function createVacuoleParticle(
-  name: typeof vacuoleParticles.ReadParticle,
-  createdBy: string,
-  query: Partial<Particle>,
-  count?: Count,
-  optionals?: MetaV3Optionals
-): vacuoleParticles.ReadParticle;
-function createVacuoleParticle(
-  name: typeof vacuoleParticles.RemoveParticle,
-  createdBy: string,
-  query: Partial<Particle>,
-  count: Count,
-  optionals?: MetaV3Optionals
-): vacuoleParticles.RemoveParticle;
+function createVacuoleParticle(name: typeof vacuoleParticles.ReadParticle, query: Partial<Particle>, count?: Count, optionals?: MetaV3Optionals): vacuoleParticles.ReadParticle;
+function createVacuoleParticle(name: typeof vacuoleParticles.RemoveParticle, query: Partial<Particle>, count: Count, optionals?: MetaV3Optionals): vacuoleParticles.RemoveParticle;
 function createVacuoleParticle(
   name: typeof vacuoleParticles[keyof typeof vacuoleParticles],
-  createdBy: string,
   ...remains: any[]
 ): ParticleV3<typeof vacuoleParticles[keyof typeof vacuoleParticles], unknown> {
   switch (name) {
     case vacuoleParticles.SaveParticle:
       const [particle1, query1, count1, optionals1] = remains as [Particle, Partial<Particle>, Count, MetaV3Optionals];
-      return createParticle(createMetaV3(name, createdBy, optionals1), {
+      return createParticle(createMetaV3(name, optionals1), {
         particle: particle1,
-        createdBy,
         query: query1,
         count: count1
       });
     case vacuoleParticles.ReadParticle:
       const [query2, count2, optionals2] = remains as [Partial<Particle>, Count, MetaV3Optionals];
-      return createParticle(createMetaV3(name, createdBy, optionals2), {
-        createdBy,
+      return createParticle(createMetaV3(name, optionals2), {
         query: query2,
         count: count2
       });
     case vacuoleParticles.RemoveParticle:
       const [query3, count3, optionals3] = remains as [Partial<Particle>, Count, MetaV3Optionals];
-      return createParticle(createMetaV3(name, createdBy, optionals3), {
-        createdBy,
+      return createParticle(createMetaV3(name, optionals3), {
         query: query3,
         count: count3
       });
     case vacuoleParticles.Sap:
       const [particles, optionals4] = remains as [Particle[], MetaV3Optionals];
-      return createParticle(createMetaV3(name, createdBy, optionals4), particles);
+      return createParticle(createMetaV3(name, optionals4), particles);
   }
 }
 
-const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
+const organelleName: "vacuole" = "vacuole";
+
+const createOrganelle: CreateOrganelle = defO(organelleName, addReaction => {
   let _particles: Particle[] = [];
 
   addReaction(vacuoleParticles.Sap, async (sap: vacuoleParticles.Sap) => {
     _particles = sap.data;
-    return createCommonParticle(commonParticles.ACK, organelleName);
+    return createCommonParticle(commonParticles.ACK);
   });
 
   addReaction(vacuoleParticles.ReadParticle, async (particle: vacuoleParticles.ReadParticle) => {
@@ -95,7 +81,7 @@ const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
         len++;
       }
     }
-    return createCommonParticle(commonParticles.Particles, organelleName, retVal);
+    return createCommonParticle(commonParticles.Particles, retVal);
   });
   addReaction(vacuoleParticles.SaveParticle, async (particle: vacuoleParticles.SaveParticle) => {
     const { query, count } = particle.data;
@@ -112,7 +98,7 @@ const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
     } else {
       _particles.push(particle);
     }
-    return createCommonParticle(commonParticles.Metas, organelleName, overridedParticles);
+    return createCommonParticle(commonParticles.Metas, overridedParticles);
   });
   addReaction(vacuoleParticles.RemoveParticle, async (particle: vacuoleParticles.RemoveParticle) => {
     const { query, count } = particle.data;
@@ -127,10 +113,9 @@ const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
         }
       }
     }
-    return createCommonParticle(commonParticles.Metas, organelleName, removedParticles);
+    return createCommonParticle(commonParticles.Metas, removedParticles);
   });
 });
 
-const organelleName: "vacuole" = "vacuole";
 const defaultExport: VacuoleDefaultExport = [organelleName, createOrganelle, createVacuoleParticle, vacuoleParticles];
 export default defaultExport;

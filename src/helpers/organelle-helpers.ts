@@ -1,25 +1,49 @@
 import { Particle } from "../particle";
 import { sys } from "cessnalib";
-import { Reaction, CytoplasmReceive } from "../cytoplasm";
+import { OrganelleReaction, CytoplasmReceive } from "../cytoplasm";
 import { CreateOrganelle, OrganelleReceive } from "../organelle";
+import { isParticleV1, isParticleV2, isParticleV3, assertNotParticle } from "./particle-helpers";
 
 export interface AddReaction {
-  (particleName: string, reaction: Reaction): void;
+  (particleName: string, reaction: OrganelleReaction): void;
 }
 
 export interface BindReactions {
-  (addReaction: AddReaction, receive: CytoplasmReceive): void;
+  (addReaction: AddReaction): void;
 }
 
-export function defineCreateOrganelle(bindReactions: BindReactions): CreateOrganelle {
-  return (cytoplasmReceive: CytoplasmReceive): OrganelleReceive => {
-    const reactions = new sys.type.Map<string, Reaction>();
-    bindReactions((particleName: string, action: Reaction) => {
+export function defineCreateOrganelle(organelleName: string, bindReactions: BindReactions): CreateOrganelle {
+  return (receive: CytoplasmReceive): OrganelleReceive => {
+    const reactions = new sys.type.Map<string, OrganelleReaction>();
+    bindReactions((particleName: string, action: OrganelleReaction) => {
       reactions.add(particleName, action);
-    }, cytoplasmReceive);
+    });
     return (particle: Particle): Promise<Particle | void> => {
       let reaction = reactions.get(particle.meta.name);
-      if (reaction) return reaction(particle);
+      if (reaction)
+        return reaction(particle, {
+          receive: (particle: Particle) => {
+            if (isParticleV3(particle)) {
+              return receive(
+                {
+                  ...particle,
+                  meta: { ...particle.meta }
+                },
+                organelleName
+              );
+            } else if (isParticleV2(particle) || isParticleV1(particle)) {
+              return receive(
+                {
+                  ...particle,
+                  meta: { ...particle.meta }
+                },
+                organelleName
+              );
+            } else {
+              assertNotParticle(particle, `Unknown Particle Version - While creating ${organelleName} particle`);
+            }
+          }
+        });
     };
   };
 }

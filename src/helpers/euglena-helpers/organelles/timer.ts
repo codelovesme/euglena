@@ -1,8 +1,9 @@
 import { sys } from "cessnalib";
 import { OrganelleDefaultExport, CreateOrganelle } from "../../../organelle";
 import { ParticleV3, MetaV3Optionals } from "../../../particle";
-import { createMetaV3, createParticle, createCommonParticle, commonParticles } from "../../particle-helpers";
+import { createMetaV3, createParticle } from "../../particle-helpers";
 import { defO } from "../../organelle-helpers";
+import { createCommonParticle, commonParticles } from "../../common-particles";
 
 export type TimerDefaultExport = OrganelleDefaultExport<typeof organelleName, typeof createOrganelle, typeof createTimerParticle, typeof timerParticles>;
 namespace timerParticles {
@@ -19,35 +20,31 @@ namespace timerParticles {
   export type Sap = ParticleV3<typeof Sap, sys.type.Time>;
 }
 
-function createTimerParticle(name: typeof timerParticles.SetTime, createdBy: string, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.SetTime;
-function createTimerParticle(name: typeof timerParticles.ReadTime, createdBy: string, optionals?: MetaV3Optionals): timerParticles.ReadTime;
-function createTimerParticle(name: typeof timerParticles.Time, createdBy: string, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.Time;
-function createTimerParticle(name: typeof timerParticles.Sap, createdBy: string, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.Sap;
-function createTimerParticle(
-  name: typeof timerParticles[keyof typeof timerParticles],
-  createdBy: string,
-  ...remains: any
-): ParticleV3<typeof timerParticles[keyof typeof timerParticles], unknown> {
+function createTimerParticle(name: typeof timerParticles.SetTime, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.SetTime;
+function createTimerParticle(name: typeof timerParticles.ReadTime, optionals?: MetaV3Optionals): timerParticles.ReadTime;
+function createTimerParticle(name: typeof timerParticles.Time, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.Time;
+function createTimerParticle(name: typeof timerParticles.Sap, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.Sap;
+function createTimerParticle(name: typeof timerParticles[keyof typeof timerParticles], ...remains: any): ParticleV3<typeof timerParticles[keyof typeof timerParticles], unknown> {
   switch (name) {
     case timerParticles.Time:
       const [time1, optionals1]: [sys.type.Time, MetaV3Optionals] = remains;
-      return createParticle(createMetaV3(name, createdBy, optionals1), time1);
+      return createParticle(createMetaV3(name, optionals1), time1);
     case timerParticles.SetTime:
       const [time2, optionals2]: [sys.type.Time, MetaV3Optionals] = remains;
-      return createParticle(createMetaV3(name, createdBy, optionals2), time2);
+      return createParticle(createMetaV3(name, optionals2), time2);
     case timerParticles.Sap:
       const [time3, optionals3]: [sys.type.Time, MetaV3Optionals] = remains;
-      return createParticle(createMetaV3(name, createdBy, optionals3), time3);
+      return createParticle(createMetaV3(name, optionals3), time3);
     case timerParticles.ReadTime:
       const [optionals4]: [MetaV3Optionals] = remains;
-      return createParticle(createMetaV3(name, createdBy, optionals4));
+      return createParticle(createMetaV3(name, optionals4));
   }
 }
 
 declare function setInterval(callback: Function, timeout: number): void;
 const organelleName: "timer" = "timer";
-const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
-  addReaction(timerParticles.Sap, async (sap: timerParticles.Sap) => {
+const createOrganelle: CreateOrganelle = defO(organelleName, addReaction => {
+  addReaction(timerParticles.Sap, async (sap: timerParticles.Sap, { receive }) => {
     let time: sys.type.Time = sap.data;
     setInterval(() => {
       //let newDate = new Date(this.time.date.year, this.time.date.month - 1, this.time.date.day,
@@ -77,9 +74,9 @@ const createOrganelle: CreateOrganelle = defO((addReaction, receive) => {
           }
         }
       }
-      receive(createTimerParticle(timerParticles.Time, organelleName, time));
+      receive(createTimerParticle(timerParticles.Time, time));
     }, 1000);
-    return createCommonParticle(commonParticles.ACK, organelleName);
+    return createCommonParticle(commonParticles.ACK);
   });
 });
 

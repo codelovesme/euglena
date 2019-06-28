@@ -19,15 +19,17 @@
  */
 import vacuole, { VacuoleDefaultExport } from "./organelles/vacuole";
 import timer, { TimerDefaultExport } from "./organelles/timer";
+import logger, { LoggerDefaultExport } from "./organelles/logger";
 import { sys, js } from "cessnalib";
 import { OrganelleReceive, CreateOrganelle } from "../../organelle";
 import { Particle } from "../../particle";
-import { CreateGeneCluster, Chromosome } from "../../gene";
-import { Reaction, Transmit } from "../../cytoplasm";
-import { createCommonParticle, commonParticles } from "../particle-helpers";
+import { Chromosome, GeneReaction, GeneCluster } from "../../gene";
+import { Transmit, CytoplasmReceive } from "../../cytoplasm";
+import { createCommonParticle, commonParticles } from "../common-particles";
 
-const [vacuoleOrganelleName, vacuoleCreateOrganelle, vacuoleCrateParticle, vacuoleParticles]: VacuoleDefaultExport = vacuole;
-const [timerOrganelleName, timerCreateOrganelle, timerCrateParticle, timerParticles]: TimerDefaultExport = timer;
+const [vacuoleOrganelleName, vacuoleCreateOrganelle]: VacuoleDefaultExport = vacuole;
+const [timerOrganelleName, timerCreateOrganelle]: TimerDefaultExport = timer;
+const [loggerOrganelleName, loggerCreateOrganelle, createLoggerParticle]: LoggerDefaultExport = logger;
 
 export interface Cytoplasm {
   organelles: { [organelleName: string]: OrganelleReceive };
@@ -36,31 +38,28 @@ export interface Cytoplasm {
 
 let cytoplasm: Cytoplasm;
 
-export function createEuglena(
-  createOrganelles: { [organelleName: string]: CreateOrganelle },
-  createGeneClusterArr: CreateGeneCluster[] | CreateGeneCluster,
-  particles: Particle[]
-) {
+export function createEuglena(createOrganelles: { [organelleName: string]: CreateOrganelle }, geneCluster: GeneCluster, particles: Particle[]) {
   if (cytoplasm) {
     throw "There exists a cytoplasm instance already.";
   }
   let chromosome: Chromosome = [];
+  let organelles: { [organelleName: string]: OrganelleReceive } = {};
   /**
    * define receive
    */
-  const receive = (particle: Particle): sys.type.Observable<Particle> => {
+  const receive: CytoplasmReceive = (particle: Particle, sender: string): sys.type.Observable<Particle> => {
+    organelles[loggerOrganelleName](createLoggerParticle("Log", `Receiving Particle ${JSON.stringify(particle.meta)}`));
     return new sys.type.Observable(publish => {
-      console.log("inside observable");
       //find which genes are matched with properties of the particle
-      let triggerableReactions = new Array<{
+      const triggerableReactions = new Array<{
         index: number;
         triggers: string[];
-        reaction: Reaction;
+        reaction: GeneReaction;
       }>();
-      for (var i = 0; i < chromosome.length; i++) {
+      for (let i = 0; i < chromosome.length; i++) {
         let triggers: any = chromosome[i].data.triggers;
         if (js.Class.doesMongoCover(particle, triggers)) {
-          var reaction = chromosome[i].data.reaction;
+          const reaction = chromosome[i].data.reaction;
           triggerableReactions.push({
             index: i,
             triggers: Object.keys(triggers),
@@ -69,8 +68,8 @@ export function createEuglena(
         }
       }
       //get rid of overrided reactions
-      let reactions = Array<Reaction>();
-      let names = Array<string>();
+      const reactions = Array<GeneReaction>();
+      const names = Array<string>();
       for (let tr of triggerableReactions) {
         let doTrigger = true;
         //Check if the tr is contained by others, if true
@@ -89,10 +88,13 @@ export function createEuglena(
       }
       //trigger collected reactions
       for (let i = 0; i < reactions.length; i++) {
-        let reaction = reactions[i];
-        console.log("triggering gene");
-        //@ts-ignore
-        reaction(particle).then(response => {
+        let reaction: GeneReaction = reactions[i];
+        const geneName: string = names[i];
+        organelles[loggerOrganelleName](createLoggerParticle("Log", `Triggering Gene: ${geneName} Particle: ${JSON.stringify(particle.meta)}`));
+        reaction(particle, sender, {
+          receive: receive,
+          transmit: transmit
+        }).then((response: Particle) => {
           //response will be undefined after resolving of Promise<void>
           if (response) publish(response);
         });
@@ -104,26 +106,28 @@ export function createEuglena(
    * define transmit
    */
   const transmit: Transmit = (organelleName, particle) => {
-    console.log("transmitting");
+    organelles[loggerOrganelleName](createLoggerParticle("Log", `Transmitting To ${organelleName} Particle: ${JSON.stringify(particle.meta)}`));
     const receive: OrganelleReceive = organelles[organelleName];
-    if (!receive) throw "Not Implemented";
+    if (!receive) {
+      organelles[loggerOrganelleName](createLoggerParticle("Log", `${organelleName} receive function is not implemeted!`));
+      throw "Not Implemented";
+    }
     return receive(particle);
   };
   /**
    * fill chromosome
    */
-  createGeneClusterArr = createGeneClusterArr instanceof Array ? createGeneClusterArr : [createGeneClusterArr];
-  for (const createGeneCluster of createGeneClusterArr) {
-    chromosome = [...chromosome, ...createGeneCluster(transmit, receive)];
-  }
+  chromosome = [...chromosome, ...geneCluster];
 
-  let organelles: { [organelleName: string]: OrganelleReceive } = {};
+  /**
+   * create organelle logger
+   */
+  organelles[loggerOrganelleName] = loggerCreateOrganelle(receive);
 
   /**
    * create organelle vacuole
    */
-  const vocuoleReceive: OrganelleReceive = vacuoleCreateOrganelle(receive);
-  organelles[vacuoleOrganelleName] = vocuoleReceive;
+  organelles[vacuoleOrganelleName] = vacuoleCreateOrganelle(receive);
 
   /**
    * create organelle timer
@@ -142,7 +146,6 @@ export function createEuglena(
     organelles,
     chromosome
   };
-  //throw a particle tells the euglena has been born
-  console.log("throwing particle EuglenaHasBeenborn");
-  receive(createCommonParticle(commonParticles.EuglenaHasBeenBorn, "cytoplasm"));
+
+  receive(createCommonParticle(commonParticles.EuglenaHasBeenBorn), "cytoplasm");
 }

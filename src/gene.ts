@@ -1,11 +1,21 @@
 import { ParticleV1, ParticleV2, Particle, ParticleV3, Tags } from "./particle";
 import { sys } from "cessnalib";
-import { CytoplasmReceive, Reaction, Transmit } from "./cytoplasm";
+import { CytoplasmReceive, Transmit } from "./cytoplasm";
 
+export interface GeneReaction {
+  (
+    particle: Particle,
+    sender: string,
+    tools: {
+      receive: CytoplasmReceive;
+      transmit: Transmit;
+    }
+  ): Promise<Particle | void>;
+}
 export interface GeneV1Data {
   name: string;
   triggers: object;
-  reaction: Reaction;
+  reaction: GeneReaction;
   override?: string;
 }
 export interface GeneV1 extends ParticleV1 {
@@ -15,7 +25,7 @@ export interface GeneV1 extends ParticleV1 {
 export interface GeneV2Data {
   name: string;
   triggers: Partial<Particle>;
-  reaction: Reaction;
+  reaction: GeneReaction;
   override?: string;
 }
 export interface GeneV2 extends ParticleV2<GeneV2Data> {
@@ -25,18 +35,16 @@ export interface GeneV2 extends ParticleV2<GeneV2Data> {
 export interface GeneV3Data {
   name: string;
   triggers: Partial<Particle>;
-  reaction: Reaction;
+  reaction: GeneReaction;
   override?: string;
 }
+
+export type GeneData = GeneV1Data | GeneV2Data | GeneV3Data;
+
 export interface GeneV3 extends ParticleV3<"Gene", GeneV3Data> {
   data: GeneV3Data;
 }
-export interface GeneOptionals {
-  override?: string;
-  createdBy?: string;
-  expireAt?: number;
-  tags?: Tags;
-}
+
 export type Gene = GeneV1 | GeneV2 | GeneV3;
 
 export interface GeneCluster extends Array<Gene> {}
