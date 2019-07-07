@@ -34,14 +34,14 @@ export declare namespace commonParticles {
     type EuglenaHasBeenBorn = ParticleV3<typeof EuglenaHasBeenBorn>;
 }
 export declare type CommonParticles = commonParticles.ACK | commonParticles.EuglenaName | commonParticles.Exception | commonParticles.Particles | commonParticles.Metas | commonParticles.NoReaction | commonParticles.OrganelleInfo;
-export declare function createCommonParticle(name: typeof commonParticles.EuglenaName, createdBy: string, optionals?: MetaV3Optionals): commonParticles.EuglenaName;
-export declare function createCommonParticle(name: typeof commonParticles.ACK, createdBy: string, optionals?: MetaV3Optionals): commonParticles.ACK;
-export declare function createCommonParticle(name: typeof commonParticles.Exception, createdBy: string, message: string, innerException?: sys.type.Exception, optionals?: MetaV3Optionals): commonParticles.Exception;
-export declare function createCommonParticle(name: typeof commonParticles.Particles, createdBy: string, particlesArray: Particle[], optionals?: MetaV3Optionals): commonParticles.Particles;
-export declare function createCommonParticle(name: typeof commonParticles.Metas, createdBy: string, metas: Meta[], optionals?: MetaV3Optionals): commonParticles.Metas;
-export declare function createCommonParticle(name: typeof commonParticles.NoReaction, createdBy: string, optionals?: MetaV3Optionals): commonParticles.NoReaction;
-export declare function createCommonParticle(name: typeof commonParticles.OrganelleInfo, createdBy: string, organelleName: string, location: OrganelleInfoLocation, optionals?: MetaV3Optionals): commonParticles.OrganelleInfo;
-export declare function createCommonParticle(name: typeof commonParticles.EuglenaHasBeenBorn, createdBy: string, optionals?: MetaV3Optionals): commonParticles.EuglenaHasBeenBorn;
+export declare function createCommonParticle(name: typeof commonParticles.EuglenaName, optionals?: MetaV3Optionals): commonParticles.EuglenaName;
+export declare function createCommonParticle(name: typeof commonParticles.ACK, optionals?: MetaV3Optionals): commonParticles.ACK;
+export declare function createCommonParticle(name: typeof commonParticles.Exception, message: string, innerException?: sys.type.Exception, optionals?: MetaV3Optionals): commonParticles.Exception;
+export declare function createCommonParticle(name: typeof commonParticles.Particles, particlesArray: Particle[], optionals?: MetaV3Optionals): commonParticles.Particles;
+export declare function createCommonParticle(name: typeof commonParticles.Metas, metas: Meta[], optionals?: MetaV3Optionals): commonParticles.Metas;
+export declare function createCommonParticle(name: typeof commonParticles.NoReaction, optionals?: MetaV3Optionals): commonParticles.NoReaction;
+export declare function createCommonParticle(name: typeof commonParticles.OrganelleInfo, organelleName: string, location: OrganelleInfoLocation, optionals?: MetaV3Optionals): commonParticles.OrganelleInfo;
+export declare function createCommonParticle(name: typeof commonParticles.EuglenaHasBeenBorn, optionals?: MetaV3Optionals): commonParticles.EuglenaHasBeenBorn;
 /**
  * Aliases
  */

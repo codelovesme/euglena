@@ -1,7 +1,7 @@
 import { sys } from "cessnalib";
 import { Particle } from "./particle";
 export interface CytoplasmReceive {
-    (particle: Particle): sys.type.Observable<Particle>;
+    (particle: Particle, sender: string): sys.type.Observable<Particle>;
 }
 export interface OrganelleReaction {
     (particle: Particle, tools: {

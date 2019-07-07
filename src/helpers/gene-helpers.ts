@@ -1,8 +1,8 @@
 import { Transmit, CytoplasmReceive } from "../cytoplasm";
 import { sys } from "cessnalib";
 import { createMetaV2, createMetaV3 } from ".";
-import { Gene, CreateGeneCluster, GeneCluster, GeneV1, GeneV2, GeneOptionals, GeneV3, GeneReaction } from "../gene";
-import { Particle } from "..";
+import { Gene, CreateGeneCluster, GeneCluster, GeneV1, GeneV2, GeneV3, GeneReaction } from "../gene";
+import { Particle, Tags } from "..";
 
 export function createGeneV1(name: string, triggers: object, reaction: GeneReaction, override?: string, expiretime?: sys.type.Time): GeneV1 {
   return {
@@ -30,15 +30,16 @@ export function createGeneV2(name: string, triggers: Partial<Particle>, reaction
   };
 }
 
-export function createGeneV3(name: string, triggers: Partial<Particle>, reaction: GeneReaction, { createdBy, expireAt, tags, override }: GeneOptionals = {}): GeneV3 {
+export interface GeneOptionals {
+  override?: string;
+  expireTime?: number;
+  tags?: Tags;
+}
+
+export function createGeneV3(name: string, triggers: Partial<Particle>, reaction: GeneReaction, { expireTime, tags, override }: GeneOptionals = {}): GeneV3 {
   return {
-    meta: createMetaV3("Gene", createdBy, { expireAt, tags }),
-    data: {
-      name,
-      triggers,
-      reaction,
-      override
-    }
+    meta: createMetaV3("Gene", { expireTime, tags }),
+    data: { name, triggers, reaction, override }
   };
 }
 

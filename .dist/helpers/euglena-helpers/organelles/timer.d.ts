@@ -12,10 +12,10 @@ declare namespace timerParticles {
     const Sap: "timer.Sap";
     type Sap = ParticleV3<typeof Sap, sys.type.Time>;
 }
-declare function createTimerParticle(name: typeof timerParticles.SetTime, createdBy: string, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.SetTime;
-declare function createTimerParticle(name: typeof timerParticles.ReadTime, createdBy: string, optionals?: MetaV3Optionals): timerParticles.ReadTime;
-declare function createTimerParticle(name: typeof timerParticles.Time, createdBy: string, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.Time;
-declare function createTimerParticle(name: typeof timerParticles.Sap, createdBy: string, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.Sap;
+declare function createTimerParticle(name: typeof timerParticles.SetTime, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.SetTime;
+declare function createTimerParticle(name: typeof timerParticles.ReadTime, optionals?: MetaV3Optionals): timerParticles.ReadTime;
+declare function createTimerParticle(name: typeof timerParticles.Time, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.Time;
+declare function createTimerParticle(name: typeof timerParticles.Sap, time: sys.type.Time, optionals?: MetaV3Optionals): timerParticles.Sap;
 declare const organelleName: "timer";
 declare const createOrganelle: CreateOrganelle;
 declare const defaultExport: TimerDefaultExport;

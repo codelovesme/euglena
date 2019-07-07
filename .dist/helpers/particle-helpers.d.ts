@@ -1,7 +1,7 @@
 import { MetaV2, MetaV3Optionals, MetaV3, MetaV1, ParticleV1, ParticleV2, ParticleV3, Particle } from "../particle";
 export declare function createMetaV1(params: object): object;
 export declare function createMetaV2(name: string, of: string, expireTime?: number): MetaV2;
-export declare function createMetaV3<NameType>(name: NameType, createdBy: string, optionals?: MetaV3Optionals): MetaV3<NameType>;
+export declare function createMetaV3<NameType>(name: NameType, optionals?: MetaV3Optionals): MetaV3<NameType>;
 export declare function createParticle(meta: MetaV1, data?: any): ParticleV1;
 export declare function createParticle<DataType>(meta: MetaV2, data?: DataType): ParticleV2<DataType>;
 export declare function createParticle<NameType, DataType>(meta: MetaV3<NameType>, labels?: {

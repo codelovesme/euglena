@@ -13,13 +13,12 @@ export function createMetaV2(name: string, of: string, expireTime?: number): Met
     expireTime
   };
 }
-export function createMetaV3<NameType>(name: NameType, createdBy: string, optionals?: MetaV3Optionals): MetaV3<NameType> {
+export function createMetaV3<NameType>(name: NameType, optionals?: MetaV3Optionals): MetaV3<NameType> {
   return {
     id: uuid(),
-    name,
+    name: name,
     version: "v3",
-    createdAt: new Date().getTime(),
-    createdBy,
+    createTime: new Date().getTime(),
     ...optionals
   };
 }
@@ -36,7 +35,7 @@ export function validateParticle(particle: Particle): boolean {
   switch ((particle.meta as any).version) {
     case "v3":
       const metaV3 = particle.meta as MetaV3<string>;
-      return typeof metaV3.name === "string" && typeof metaV3.createdAt === "number" && typeof metaV3.id === "string";
+      return typeof metaV3.name === "string" && typeof metaV3.createTime === "number" && typeof metaV3.id === "string";
     case "v2":
       let meta = particle.meta as MetaV2;
       return typeof meta.name === "string" && typeof meta.of === "string" && typeof meta.createTime === "number";

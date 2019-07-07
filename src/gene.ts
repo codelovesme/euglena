@@ -5,8 +5,8 @@ import { CytoplasmReceive, Transmit } from "./cytoplasm";
 export interface GeneReaction {
   (
     particle: Particle,
+    sender: string,
     tools: {
-      createParticle: () => Particle;
       receive: CytoplasmReceive;
       transmit: Transmit;
     }
@@ -38,15 +38,13 @@ export interface GeneV3Data {
   reaction: GeneReaction;
   override?: string;
 }
+
+export type GeneData = GeneV1Data | GeneV2Data | GeneV3Data;
+
 export interface GeneV3 extends ParticleV3<"Gene", GeneV3Data> {
   data: GeneV3Data;
 }
-export interface GeneOptionals {
-  override?: string;
-  createdBy?: string;
-  expireAt?: number;
-  tags?: Tags;
-}
+
 export type Gene = GeneV1 | GeneV2 | GeneV3;
 
 export interface GeneCluster extends Array<Gene> {}

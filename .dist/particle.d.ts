@@ -13,12 +13,11 @@ export interface MetaV3<NameType = string> {
     id: string;
     name: NameType;
     version: "v3";
-    createdAt: number;
-    createdBy: string;
-    expireAt?: number;
+    createTime: number;
+    expireTime?: number;
     tags?: Tags;
 }
-export declare type Meta = MetaV1 | MetaV2 | MetaV3<string>;
+export declare type Meta = MetaV1 | MetaV2 | MetaV3;
 export interface ParticleV1 {
     meta: any;
     data?: any;
@@ -36,6 +35,6 @@ export interface ParticleV3<NameType = string, DataType = unknown> {
 }
 export declare type Particle = ParticleV1 | ParticleV2 | ParticleV3;
 export interface MetaV3Optionals {
-    expireAt?: number;
+    expireTime?: number;
     tags?: Tags;
 }

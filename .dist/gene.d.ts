@@ -1,9 +1,8 @@
-import { ParticleV1, ParticleV2, Particle, ParticleV3, Tags } from "./particle";
+import { ParticleV1, ParticleV2, Particle, ParticleV3 } from "./particle";
 import { sys } from "cessnalib";
 import { CytoplasmReceive, Transmit } from "./cytoplasm";
 export interface GeneReaction {
-    (particle: Particle, tools: {
-        createParticle: () => Particle;
+    (particle: Particle, sender: string, tools: {
         receive: CytoplasmReceive;
         transmit: Transmit;
     }): Promise<Particle | void>;
@@ -36,14 +35,9 @@ export interface GeneV3Data {
     reaction: GeneReaction;
     override?: string;
 }
+export declare type GeneData = GeneV1Data | GeneV2Data | GeneV3Data;
 export interface GeneV3 extends ParticleV3<"Gene", GeneV3Data> {
     data: GeneV3Data;
-}
-export interface GeneOptionals {
-    override?: string;
-    createdBy?: string;
-    expireAt?: number;
-    tags?: Tags;
 }
 export declare type Gene = GeneV1 | GeneV2 | GeneV3;
 export interface GeneCluster extends Array<Gene> {

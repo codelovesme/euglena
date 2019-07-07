@@ -24,21 +24,21 @@ export function defineCreateOrganelle(organelleName: string, bindReactions: Bind
         return reaction(particle, {
           receive: (particle: Particle) => {
             if (isParticleV3(particle)) {
-              return receive({
-                ...particle,
-                meta: {
-                  ...particle.meta,
-                  createdBy: organelleName
-                }
-              });
+              return receive(
+                {
+                  ...particle,
+                  meta: { ...particle.meta }
+                },
+                organelleName
+              );
             } else if (isParticleV2(particle) || isParticleV1(particle)) {
-              return receive({
-                ...particle,
-                meta: {
-                  ...particle.meta,
-                  of: organelleName
-                }
-              });
+              return receive(
+                {
+                  ...particle,
+                  meta: { ...particle.meta }
+                },
+                organelleName
+              );
             } else {
               assertNotParticle(particle, `Unknown Particle Version - While creating ${organelleName} particle`);
             }
