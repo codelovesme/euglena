@@ -1,15 +1,23 @@
 ﻿{
   "version": "3.4.1",
-  "compileOnSave": true,
   "compilerOptions": {
     "module": "commonjs",
-    "lib": ["es2018"],
+    "lib": ["es2017"],
     "target": "es5",
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "noImplicitThis": true,
     "noImplicitAny": true,
-    "removeComments": false,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
     "sourceMap": true,
-    "declaration": true
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "outDir": "dist"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["**/node_modules"]
 }

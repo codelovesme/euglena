@@ -1,19 +1,19 @@
 {
   "name": "@euglena/core",
   "domain": "codeloves.me",
-  "version": "0.1.7",
-  "main": ".dist/src/index.js",
+  "version": "1.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
   "private": false,
   "license": "GPL v2",
   "author": {
     "name": "Fedai Kaya",
     "email": "codelovesme@gmail.com"
   },
-  "typings": ".dist/src/index.d.ts",
   "scripts": {
-    "test": "gulp test",
-    "compile": "gulp compile",
-    "start": "gulp watch"
+    "compile": "tsc -p .",
+    "test": "npm run compile && jest --testPathPattern=dist"
   },
   "repository": {
     "type": "git",
@@ -24,22 +24,16 @@
   },
   "homepage": "https://github.com/codelovesme/euglena#readme",
   "dependencies": {
-    "cessnalib": "git+https://github.com/codelovesme/cessnalib#semver:0.8.0",
+    "cessnalib": "^0.9.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@types/chai": "^3.5.2",
-    "@types/mocha": "^2.2.41",
+    "@types/jest": "^24.0.18",
     "@types/uuid": "^3.4.5",
-    "mocha": "^3.4.2",
-    "chai": "^3.5.0",
-    "gulp": "^4.0.2",
-    "gulp-mocha": "^4.3.1",
-    "gulp-typescript": "^3.2.2",
-    "merge2": "^1.2.0",
+    "jest": "^24.9.0",
     "typescript": "^3.4.1"
   },
   "prettier": {
-    "printWidth": 180
+    "printWidth": 120
   }
 }
