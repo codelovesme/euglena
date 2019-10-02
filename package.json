@@ -18,6 +18,8 @@
         "c-otj": "yarn workspace @euglena/organelle.timer.js compile",
         "c-on": "yarn workspace @euglena/organelle.nucleus compile",
         "c-onj": "yarn workspace @euglena/organelle.nucleus.js compile",
+        "c-og": "yarn workspace @euglena/organelle.gps compile",
+        "c-ogs": "yarn workspace @euglena/organelle.gps.serial-port compile",
         "c-b": "yarn workspace @euglena/boot compile",
         "c": "yarn c-p && yarn c-c && yarn c-o  && ((yarn c-ol && yarn c-olc) & (yarn c-ov && yarn c-ovj) & (yarn c-ot && yarn c-otj) & (yarn c-on && (yarn c-onj & (yarn c-oer && yarn c-oerj)))) && yarn c-b"
     },

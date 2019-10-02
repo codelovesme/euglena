@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle",
+    "name": "@euglena/organelle.gps",
     "domain": "codeloves.me",
     "version": "0.0.3",
     "main": "dist/index.js",
@@ -13,7 +13,7 @@
     "scripts": {
         "compile": "tsc -p .",
         "watch": "tsc -w -p .",
-        "test": "npm run compile && jest --testPathPattern=dist"
+        "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "repository": {
         "type": "git",
@@ -24,14 +24,11 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "peerDependencies": {
+        "@euglena/common": "0.x",
+        "@euglena/organelle": "0.x",
         "@euglena/particle": "0.x"
     },
     "dependencies": {
-        "cessnalib": "^0.9.0",
-        "uuid": "3.3.2"
-    },
-    "devDependencies": {
-        "@types/uuid": "^3.4.5",
-        "typescript": "^3.6.3"
+        "cessnalib": "^0.9.0"
     }
 }
