@@ -1,39 +1,40 @@
 {
-  "name": "@euglena/core",
-  "domain": "codeloves.me",
-  "version": "1.0.1",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "typings": "dist/index.d.ts",
-  "private": false,
-  "license": "GPL v2",
-  "author": {
-    "name": "Fedai Kaya",
-    "email": "codelovesme@gmail.com"
-  },
-  "scripts": {
-    "compile": "tsc -p .",
-    "test": "npm run compile && jest --testPathPattern=dist"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/codelovesme/euglena.git"
-  },
-  "bugs": {
-    "url": "https://github.com/codelovesme/euglena/issues"
-  },
-  "homepage": "https://github.com/codelovesme/euglena#readme",
-  "dependencies": {
-    "cessnalib": "^0.9.0",
-    "uuid": "^3.3.2"
-  },
-  "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/uuid": "^3.4.5",
-    "jest": "^24.9.0",
-    "typescript": "^3.4.1"
-  },
-  "prettier": {
-    "printWidth": 120
-  }
+    "name": "euglena",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "c-p": "yarn workspace @euglena/particle compile",
+        "c-c": "yarn workspace @euglena/common compile",
+        "c-o": "yarn workspace @euglena/organelle compile",
+        "c-ol": "yarn workspace @euglena/organelle.logger compile",
+        "c-olc": "yarn workspace @euglena/organelle.logger.console compile",
+        "c-ov": "yarn workspace @euglena/organelle.vacuole compile",
+        "c-ovj": "yarn workspace @euglena/organelle.vacuole.js compile",
+        "c-oer": "yarn workspace @euglena/organelle.endoplasmic-reticulum compile",
+        "c-oerj": "yarn workspace @euglena/organelle.endoplasmic-reticulum.js compile",
+        "c-ot": "yarn workspace @euglena/organelle.timer compile",
+        "c-otj": "yarn workspace @euglena/organelle.timer.js compile",
+        "c-on": "yarn workspace @euglena/organelle.nucleus compile",
+        "c-onj": "yarn workspace @euglena/organelle.nucleus.js compile",
+        "c-b": "yarn workspace @euglena/boot compile",
+        "c": "yarn c-p && yarn c-c && yarn c-o  && ((yarn c-ol && yarn c-olc) & (yarn c-ov && yarn c-ovj) & (yarn c-ot && yarn c-otj) & (yarn c-on && (yarn c-onj & (yarn c-oer && yarn c-oerj)))) && yarn c-b"
+    },
+    "prettier": {
+        "printWidth": 120,
+        "tabWidth": 4,
+        "useTabs": false,
+        "semi": true,
+        "singleQuote": false,
+        "jsxSingleQuote": false,
+        "trailingComma": "none",
+        "bracketSpacing": true,
+        "jsxBracketSameLine": false,
+        "arrowParens": "always",
+        "requirePragma": false,
+        "insertPragma": false,
+        "proseWrap": "always",
+        "endOfLine": "lf"
+    }
 }

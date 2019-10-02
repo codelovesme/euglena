@@ -1,0 +1,32 @@
+{
+    "name": "@euglena/common",
+    "domain": "codeloves.me",
+    "version": "0.0.3",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "private": false,
+    "license": "GPL v2",
+    "author": {
+        "name": "Fedai Kaya",
+        "email": "codelovesme@gmail.com"
+    },
+    "scripts": {
+        "compile": "tsc -p .",
+        "watch": "tsc -w -p .",
+        "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/codelovesme/euglena.git"
+    },
+    "bugs": {
+        "url": "https://github.com/codelovesme/euglena/issues"
+    },
+    "homepage": "https://github.com/codelovesme/euglena#readme",
+    "peerDependencies": {
+        "@euglena/particle": "0.x"
+    },
+    "devDependencies": {
+        "typescript": "^3.6.3"
+    }
+}
