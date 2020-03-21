@@ -1,8 +1,8 @@
 {
     "name": "@euglena/script",
     "domain": "codeloves.me",
-    "version": "1.0.14",
-    "private": false,
+    "version": "1.0.15",
+    "private": true,
     "license": "GPL v2",
     "main": "dist/index.js",
     "author": {
