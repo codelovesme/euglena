@@ -32,5 +32,6 @@
     },
     "devDependencies": {
         "@types/serialport": "^7.0.4"
-    }
+    },
+    "gitHead": "ca97f859d4a2bb1c1e4dd04f0e072893b9888c29"
 }

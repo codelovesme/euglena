@@ -34,5 +34,6 @@
     },
     "devDependencies": {
         "@types/mongodb": "~3.3.6"
-    }
+    },
+    "gitHead": "ca97f859d4a2bb1c1e4dd04f0e072893b9888c29"
 }
