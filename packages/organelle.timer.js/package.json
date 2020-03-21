@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.timer.js",
     "domain": "codeloves.me",
-    "version": "1.0.16",
+    "version": "1.0.17",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -28,7 +28,7 @@
         "@euglena/core": "^1.0.15"
     },
     "dependencies": {
-        "@euglena/organelle.timer": "^1.0.16",
+        "@euglena/organelle.timer": "^1.0.17",
         "cessnalib": "^0.9.0"
     },
     "files": [
