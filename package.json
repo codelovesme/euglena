@@ -25,15 +25,8 @@
         "c-ou": "yarn workspace @euglena/organelle.ui compile",
         "c-our": "yarn workspace @euglena/organelle.ui.react compile",
         "c-cl": "yarn workspace @euglena/cli compile",
-        "c-b": "yarn workspace @mike/brain compile",
-        "c-a": "yarn workspace @mike/auto c",
-        "c-cp": "yarn workspace @mike/cpanel compile",
-        "c-m": "yarn workspace @mike/model compile",
-        "c": "yarn c-c  && ((yarn c-onc && yarn c-oncn && yarn c-oncb) & (yarn c-ons && yarn c-onsn) & (yarn c-ol && yarn c-olc) & (yarn c-ov && (yarn c-ovj & yarn c-ovm)) & (yarn c-ot && yarn c-otj) & (yarn c-og && yarn c-ogs) ) & (yarn c-ou && yarn c-our) & (yarn c-m)",
+        "c": "yarn c-c  && ((yarn c-onc && yarn c-oncn && yarn c-oncb) & (yarn c-ons && yarn c-onsn) & (yarn c-ol && yarn c-olc) & (yarn c-ov && (yarn c-ovj & yarn c-ovm)) & (yarn c-ot && yarn c-otj) & (yarn c-og && yarn c-ogs) ) & (yarn c-ou && yarn c-our)",
         "cl": "lerna run clean && rm -r node_modules",
-        "r-cp": "yarn workspace @mike/cpanel start",
-        "r-b": "yarn workspace @mike/brain start",
-        "p-a": "yarn workspace @mike/auto p",
         "p-e": "(cp -r packages ../euglena-dist)&(cp package.json ../euglena-dist/)"
     },
     "prettier": {
