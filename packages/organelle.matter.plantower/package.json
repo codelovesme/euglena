@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.matter.plantower",
     "domain": "codeloves.me",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -25,7 +25,7 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "dependencies": {
-        "@euglena/organelle.matter": "^1.0.14",
+        "@euglena/organelle.matter": "^1.0.15",
         "cessnalib": "^0.9.0",
         "plantower": "perfectworks/node-plantower#ee10bca8159766a8b34408cae786ed066c59cb7a"
     },
