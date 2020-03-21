@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.temperature.i2c",
     "domain": "codeloves.me",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -25,7 +25,7 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "dependencies": {
-        "@euglena/organelle.temperature": "^1.0.12",
+        "@euglena/organelle.temperature": "^1.0.13",
         "cessnalib": "^0.9.0",
         "i2c-bus": "^5.1.0"
     },
@@ -35,5 +35,5 @@
         "LICENSE.txt",
         "pacakge.json"
     ],
-    "gitHead": "6bad555dbf49a74277b432d5b8e12f14b0ea3071"
+    "gitHead": "d2af4a1b528dcfa361c9bb3a7b2ce459902ba9b5"
 }
