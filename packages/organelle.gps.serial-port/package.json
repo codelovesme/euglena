@@ -33,5 +33,11 @@
     "devDependencies": {
         "@types/serialport": "^7.0.4"
     },
+    "files": [
+        "dist/*",
+        "README.md",
+        "LICENSE.txt",
+        "pacakge.json"
+    ],
     "gitHead": "a0f69ba65e6cd031fadcd37e62939d2a73dc5d2d"
 }
