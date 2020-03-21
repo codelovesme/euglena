@@ -31,5 +31,8 @@
     "devDependencies": {
         "typescript": "^3.6.3"
     },
-    "gitHead": "295a6def705d8a7b00019b687ee9436bbd3d629c"
+    "files": [
+        "dist/*","bin/*","README.md","LICENSE.txt","pacakge.json"
+    ],
+    "gitHead": "a0f69ba65e6cd031fadcd37e62939d2a73dc5d2d"
 }
