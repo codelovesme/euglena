@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.ui",
     "domain": "codeloves.me",
-    "version": "1.0.13",
+    "version": "1.0.14",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
