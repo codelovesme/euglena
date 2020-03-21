@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/cli",
+    "name":  "@euglena/cli",
     "domain": "codeloves.me",
     "version": "1.0.4",
     "private": false,

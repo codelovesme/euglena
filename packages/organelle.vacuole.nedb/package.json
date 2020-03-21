@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle.vacuole.nedb",
+    "name":  "@euglena/organelle.vacuole.nedb",
     "domain": "codeloves.me",
     "version": "1.0.4",
     "main": "dist/index.js",

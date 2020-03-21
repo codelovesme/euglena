@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle.ui.react",
+    "name":  "@euglena/organelle.ui.react",
     "domain": "codeloves.me",
     "version": "1.0.4",
     "main": "dist/index.js",

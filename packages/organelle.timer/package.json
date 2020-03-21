@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle.timer",
+    "name":  "@euglena/organelle.timer",
     "domain": "codeloves.me",
     "version": "1.0.4",
     "main": "dist/index.js",

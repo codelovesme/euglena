@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle.matter.plantower",
+    "name":  "@euglena/organelle.matter.plantower",
     "domain": "codeloves.me",
     "version": "1.0.4",
     "main": "dist/index.js",

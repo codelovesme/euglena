@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle.net-client.node",
+    "name":  "@euglena/organelle.net-client.node",
     "domain": "codeloves.me",
     "version": "1.0.4",
     "main": "dist/index.js",

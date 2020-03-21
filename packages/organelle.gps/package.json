@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle.gps",
+    "name":  "@euglena/organelle.gps",
     "domain": "codeloves.me",
     "version": "1.0.4",
     "main": "dist/index.js",
