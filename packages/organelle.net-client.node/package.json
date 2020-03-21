@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.net-client.node",
     "domain": "codeloves.me",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -25,7 +25,7 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "dependencies": {
-        "@euglena/organelle.net-client": "^1.0.11",
+        "@euglena/organelle.net-client": "^1.0.12",
         "cessnalib": "^0.9.0"
     },
     "files": [
