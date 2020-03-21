@@ -1,13 +1,13 @@
-import { MetaAdditions } from "@euglena/particle";
+import { P } from "@euglena/core";
 import { sys } from "cessnalib";
-declare const _default: import("@euglena/organelle").CreateOrganelleModuleInterface<"Timer", {
+declare const _default: import("@euglena/core").CreateOrganelleModuleInterface<"Timer", {
     incoming: {
-        ReadTime: (adds?: MetaAdditions | undefined) => import("@euglena/particle").Particle<"ReadTime", undefined, MetaAdditions>;
-        SetTime: (time: sys.type.Time, adds?: MetaAdditions | undefined) => import("@euglena/particle").Particle<"SetTime", sys.type.Time, MetaAdditions>;
+        ReadTime: P<any, {}>;
+        SetTime: P<sys.type.Time, {}>;
     };
     outgoing: {
-        Time: (time: sys.type.Time, adds?: MetaAdditions | undefined) => import("@euglena/particle").Particle<"Time", sys.type.Time, MetaAdditions>;
-        ACK: (adds?: MetaAdditions | undefined) => import("@euglena/particle").Particle<"ACK", undefined, MetaAdditions>;
+        ACK: P<undefined, {}>;
+        Time: P<sys.type.Time, {}>;
     };
 }>;
 export default _default;

@@ -1,16 +1,25 @@
-declare const _default: import("@euglena/organelle").OrganelleModule<"GPS", import("@euglena/organelle").InsertSapIntoParticles<{
-    incoming: {};
+declare const _default: import("@euglena/core").OrganelleModule<"GPS", import("@euglena/core").InsertSapIntoParticles<{
+    incoming: {
+        Listen: import("@euglena/core").P<undefined, {}>;
+    };
     outgoing: {
-        Coordinate: (lat: number, lng: number, adds?: import("@euglena/particle").MetaAdditions | undefined) => import("@euglena/particle").Particle<"Coordinate", {
+        Coordinate: import("@euglena/core").P<{
             lat: number;
             lng: number;
-        }, import("@euglena/particle").MetaAdditions>;
-        Log: (message: string, level: "Info" | "Error" | "Warning", adds?: import("@euglena/particle").MetaAdditions | undefined) => import("@euglena/particle").Particle<"Log", {
+        }, {}>;
+        Log: import("@euglena/core").P<{
             message: string;
             level: "Info" | "Error" | "Warning";
-        }, import("@euglena/particle").MetaAdditions>;
+        }, {}>;
+        Exception: import("@euglena/core").P<import("cessnalib").sys.type.Exception, {}>;
     };
-}, {
+}, import("@euglena/core").P<{
     path: string;
-}>>;
+    interval: number;
+}, {
+    organelle: {
+        name: string;
+        nick?: string | undefined;
+    };
+}>>>;
 export default _default;

@@ -1,9 +1,11 @@
 import vacuole from "@euglena/organelle.vacuole";
-import { Particle, Meta } from "@euglena/particle";
+import { Sap, Particle, Meta } from "@euglena/core";
 import { js } from "cessnalib";
 
 let particles: Particle[] = [];
-export default vacuole.com<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" }>({
+export default vacuole.com<
+    Sap<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }>
+>({
     Sap: async (particle, { cp }) => {
         try {
             switch (particle.data.type) {
@@ -11,14 +13,20 @@ export default vacuole.com<{ path: string; type: "FileSystemPath" | "NodeModules
                 case "NodeModules":
                 case "Url":
                     particles = require(particle.data.path).default;
+                    break;
+                case "InMemory":
+                    particles = particle.data.particles;
+                    break;
             }
             return cp.ACK();
         } catch (error) {
             return cp.Exception(error.message);
         }
     },
-    ReadParticle: async (particle, { cp }) => {
-        const { query, count } = particle.data;
+    GetAlive: async () => {},
+    Hibernate: async () => {},
+    ReadParticle: async (p, { cp }) => {
+        const { query, count } = p.data;
         const retVal: Particle[] = [];
         for (let i = 0, len = 0; i < particles.length && (count === "all" || len < count); i++) {
             if (js.Class.doesMongoCover(particles[i], query)) {
@@ -28,25 +36,30 @@ export default vacuole.com<{ path: string; type: "FileSystemPath" | "NodeModules
         }
         return cp.Particles(retVal);
     },
-    SaveParticle: async (particle, { cp }) => {
-        const { query, count } = particle.data;
-        const overridedParticles: Meta[] = [];
-        if (query) {
-            let overrideCount = 0;
-            for (let i = 0; i < particles.length && (count === "all" || overrideCount < count); i++) {
-                if (js.Class.doesMongoCover(particles[i], query)) {
-                    overridedParticles.push(particles[i].meta);
-                    particles[i] = particle;
-                    overrideCount++;
-                }
-            }
+    SaveParticle: async (p, { cp }) => {
+        if (p.data instanceof Array) {
+            particles = [...particles, ...p.data];
+            return cp.Metas([]);
         } else {
-            particles.push(particle);
+            const overridedParticles: Meta[] = [];
+            const { query, count, particle } = p.data;
+            if (query) {
+                let overrideCount = 0;
+                for (let i = 0; i < particles.length && (count === "all" || overrideCount < count); i++) {
+                    if (js.Class.doesMongoCover(particles[i], query)) {
+                        overridedParticles.push(particles[i].meta);
+                        particles[i] = particle;
+                        overrideCount++;
+                    }
+                }
+            } else {
+                particles = [...particles, particle];
+            }
+            return cp.Metas(overridedParticles);
         }
-        return cp.Metas(overridedParticles);
     },
-    RemoveParticle: async (particle, { cp }) => {
-        const { query, count } = particle.data;
+    RemoveParticle: async (p, { cp }) => {
+        const { query, count } = p.data;
         const removedParticles: Meta[] = [];
         if (query) {
             let removeCount = 0;

@@ -1,0 +1,9 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "lib": ["es2018", "dom"],
+        "outDir": "dist",
+        "jsx": "react"
+    },
+    "exclude": ["node_modules", "dist"]
+}

@@ -1,13 +1,20 @@
-declare const _default: import("@euglena/organelle").OrganelleModule<"Logger", import("@euglena/organelle").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<"Logger", import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
-        Log: (message: string, level: "Error" | "Warning" | "Info") => import("@euglena/particle").Particle<"Log", {
+        Log: import("@euglena/core").P<{
             message: string;
-            level: "Error" | "Warning" | "Info";
+            level: "Error" | "Info" | "Warning";
         }, {}>;
     };
     outgoing: {
-        ACK: (adds?: import("@euglena/particle").MetaAdditions | undefined) => import("@euglena/particle").Particle<"ACK", undefined, import("@euglena/particle").MetaAdditions>;
-        Exception: (message: string, innerException?: import("cessnalib").sys.type.Exception | undefined, adds?: import("@euglena/particle").MetaAdditions | undefined) => import("@euglena/particle").Particle<"Exception", import("cessnalib").sys.type.Exception, import("@euglena/particle").MetaAdditions>;
+        ACK: import("@euglena/core").P<undefined, {}>;
+        Exception: import("@euglena/core").P<import("cessnalib").sys.type.Exception, {}>;
     };
-}, unknown>>;
+}, import("@euglena/core").P<{
+    test: boolean;
+}, {
+    organelle: {
+        name: string;
+        nick?: string | undefined;
+    };
+}>>>;
 export default _default;

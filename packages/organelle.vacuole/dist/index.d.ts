@@ -1,37 +1,47 @@
-import { Particle, MetaAdditions } from "@euglena/particle";
-import { sys } from "cessnalib";
 export declare type Count = "all" | number;
-declare const _default: import("@euglena/organelle").CreateOrganelleModuleInterface<"Vacuole", {
+declare const _default: import("@euglena/core").CreateOrganelleModuleInterface<"Vacuole", {
     incoming: {
-        SaveParticle: (particle: Particle<string, unknown, {}>, query?: sys.type.RecursivePartial<Particle<string, unknown, {}>> | undefined, count?: Count, adds?: MetaAdditions | undefined) => Particle<"SaveParticle", {
-            particle: Particle<string, unknown, {}>;
-            query: sys.type.RecursivePartial<Particle<string, unknown, {}>> | undefined;
-            count: Count;
-        }, MetaAdditions>;
-        ReadParticle: (query: sys.type.RecursivePartial<Particle<string, unknown, {}>>, count?: Count, adds?: MetaAdditions | undefined) => Particle<"ReadParticle", {
-            query: sys.type.RecursivePartial<Particle<string, unknown, {}>>;
-            count: Count;
-        }, MetaAdditions>;
-        RemoveParticle: (query: sys.type.RecursivePartial<Particle<string, unknown, {}>>, count?: Count, adds?: MetaAdditions | undefined) => Particle<"RemoveParticle", {
-            query: sys.type.RecursivePartial<Particle<string, unknown, {}>>;
-            count: Count;
-        }, MetaAdditions>;
+        SaveParticle: import("@euglena/core").P<{
+            particle: import("@euglena/core").Particle<string, any, {
+                [x: string]: any;
+            }>;
+            query?: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
+                [x: string]: any;
+            }>> | undefined;
+            count: import("@euglena/core").Count;
+        } | import("@euglena/core").Particle<string, any, {
+            [x: string]: any;
+        }>[], {}>;
+        ReadParticle: import("@euglena/core").P<{
+            query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
+                [x: string]: any;
+            }>>;
+            count: import("@euglena/core").Count;
+        }, {}>;
+        RemoveParticle: import("@euglena/core").P<{
+            query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
+                [x: string]: any;
+            }>>;
+            count: import("@euglena/core").Count;
+        }, {}>;
+        GetAlive: import("@euglena/core").P<undefined, {}>;
+        Hibernate: import("@euglena/core").P<undefined, {}>;
     };
     outgoing: {
-        ACK: (adds?: MetaAdditions | undefined) => Particle<"ACK", undefined, MetaAdditions>;
-        Exception: (message: string, innerException?: sys.type.Exception | undefined, adds?: MetaAdditions | undefined) => Particle<"Exception", sys.type.Exception, MetaAdditions>;
-        Particles: (particlesArray: Particle<string, unknown, {}>[], adds?: MetaAdditions | undefined) => Particle<"Particles", Particle<string, unknown, {}>[], MetaAdditions>;
-        Metas: (metas: {
-            id: string;
-            name: string;
-            createTime: number;
-            expireTime?: number | undefined;
-        }[], adds?: MetaAdditions | undefined) => Particle<"Metas", {
-            id: string;
-            name: string;
-            createTime: number;
-            expireTime?: number | undefined;
-        }[], MetaAdditions>;
+        ACK: import("@euglena/core").P<undefined, {}>;
+        Exception: import("@euglena/core").P<import("cessnalib").sys.type.Exception, {}>;
+        Particles: import("@euglena/core").P<import("@euglena/core").Particle<string, any, {
+            [x: string]: any;
+        }>[], {}>;
+        Metas: import("@euglena/core").P<{
+            class: string;
+            createdAt: number;
+            expireAt?: number | undefined;
+        }[], {}>;
+        Log: import("@euglena/core").P<{
+            message: string;
+            level: "Error" | "Info" | "Warning";
+        }, {}>;
     };
 }>;
 export default _default;

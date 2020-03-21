@@ -1,9 +1,10 @@
 import timer from "@euglena/organelle.timer";
 import { sys } from "cessnalib";
+import { Sap } from "@euglena/core";
 
 let time: sys.type.Time;
 
-export default timer.com<sys.type.Time>({
+export default timer.com<Sap<sys.type.Time>>({
     Sap: async (sap, { t, cp }) => {
         time = sap.data;
         setInterval(() => {

@@ -1,11 +1,19 @@
-import { cp, MetaAdditions } from "@euglena/particle";
-import { domc } from "@euglena/organelle";
-import { ccp } from "@euglena/common";
+import { domc, P, FromP, PLog, PException } from "@euglena/core";
 
-export default domc("GPS", {
-    incoming: {},
+export type PCoordinate = P<{
+    lat: number;
+    lng: number;
+}>;
+
+export type Coordinate = FromP<"Coordinate", PCoordinate>;
+
+export default domc("GPS")<{
+    incoming: {
+        Listen: P<undefined>;
+    };
     outgoing: {
-        Coordinate: (lat: number, lng: number, adds?: MetaAdditions) => cp("Coordinate", { lat, lng }, adds),
-        Log: ccp.Log
-    }
-});
+        Coordinate: PCoordinate;
+        Log: PLog;
+        Exception: PException;
+    };
+}>(["Listen"], ["Coordinate", "Log", "Exception"]);

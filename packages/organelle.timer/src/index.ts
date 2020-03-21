@@ -1,15 +1,13 @@
-import { cp, MetaAdditions } from "@euglena/particle";
-import { domc } from "@euglena/organelle";
-import { ccp } from "@euglena/common";
+import { CommonParticles, domc, P } from "@euglena/core";
 import { sys } from "cessnalib";
 
-export default domc("Timer", {
+export default domc("Timer")<{
     incoming: {
-        ReadTime: (adds?: MetaAdditions) => cp("ReadTime", undefined, adds),
-        SetTime: (time: sys.type.Time, adds?: MetaAdditions) => cp("SetTime", time, adds)
-    },
+        ReadTime: P;
+        SetTime: P<sys.type.Time>;
+    };
     outgoing: {
-        Time: (time: sys.type.Time, adds?: MetaAdditions) => cp("Time", time, adds),
-        ACK: ccp["ACK"]
-    }
-});
+        ACK: CommonParticles["ACK"];
+        Time: P<sys.type.Time>;
+    };
+}>(["ReadTime", "SetTime"], ["ACK", "Time"]);

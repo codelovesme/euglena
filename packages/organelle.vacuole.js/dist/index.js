@@ -35,6 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -53,6 +60,10 @@ exports.default = organelle_vacuole_1.default.com({
                         case "NodeModules":
                         case "Url":
                             particles = require(particle.data.path).default;
+                            break;
+                        case "InMemory":
+                            particles = particle.data.particles;
+                            break;
                     }
                     return [2 /*return*/, cp.ACK()];
                 }
@@ -63,12 +74,18 @@ exports.default = organelle_vacuole_1.default.com({
             });
         });
     },
-    ReadParticle: function (particle, _a) {
+    GetAlive: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+        return [2 /*return*/];
+    }); }); },
+    Hibernate: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+        return [2 /*return*/];
+    }); }); },
+    ReadParticle: function (p, _a) {
         var cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {
             var _b, query, count, retVal, i, len;
             return __generator(this, function (_c) {
-                _b = particle.data, query = _b.query, count = _b.count;
+                _b = p.data, query = _b.query, count = _b.count;
                 retVal = [];
                 for (i = 0, len = 0; i < particles.length && (count === "all" || len < count); i++) {
                     if (cessnalib_1.js.Class.doesMongoCover(particles[i], query)) {
@@ -80,36 +97,43 @@ exports.default = organelle_vacuole_1.default.com({
             });
         });
     },
-    SaveParticle: function (particle, _a) {
+    SaveParticle: function (p, _a) {
         var cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {
-            var _b, query, count, overridedParticles, overrideCount, i;
+            var overridedParticles, _b, query, count, particle, overrideCount, i;
             return __generator(this, function (_c) {
-                _b = particle.data, query = _b.query, count = _b.count;
-                overridedParticles = [];
-                if (query) {
-                    overrideCount = 0;
-                    for (i = 0; i < particles.length && (count === "all" || overrideCount < count); i++) {
-                        if (cessnalib_1.js.Class.doesMongoCover(particles[i], query)) {
-                            overridedParticles.push(particles[i].meta);
-                            particles[i] = particle;
-                            overrideCount++;
-                        }
-                    }
+                if (p.data instanceof Array) {
+                    particles = __spreadArrays(particles, p.data);
+                    return [2 /*return*/, cp.Metas([])];
                 }
                 else {
-                    particles.push(particle);
+                    overridedParticles = [];
+                    _b = p.data, query = _b.query, count = _b.count, particle = _b.particle;
+                    if (query) {
+                        overrideCount = 0;
+                        for (i = 0; i < particles.length && (count === "all" || overrideCount < count); i++) {
+                            if (cessnalib_1.js.Class.doesMongoCover(particles[i], query)) {
+                                overridedParticles.push(particles[i].meta);
+                                particles[i] = particle;
+                                overrideCount++;
+                            }
+                        }
+                    }
+                    else {
+                        particles = __spreadArrays(particles, [particle]);
+                    }
+                    return [2 /*return*/, cp.Metas(overridedParticles)];
                 }
-                return [2 /*return*/, cp.Metas(overridedParticles)];
+                return [2 /*return*/];
             });
         });
     },
-    RemoveParticle: function (particle, _a) {
+    RemoveParticle: function (p, _a) {
         var cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {
             var _b, query, count, removedParticles, removeCount, i, removed;
             return __generator(this, function (_c) {
-                _b = particle.data, query = _b.query, count = _b.count;
+                _b = p.data, query = _b.query, count = _b.count;
                 removedParticles = [];
                 if (query) {
                     removeCount = 0;

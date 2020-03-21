@@ -35,45 +35,78 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var serialport_1 = __importDefault(require("serialport"));
-var GPS = __importStar(require("gps"));
+var gps_1 = __importDefault(require("gps"));
 var organelle_gps_1 = __importDefault(require("@euglena/organelle.gps"));
 var gps;
+var sap;
+var buffer = [];
 exports.default = organelle_gps_1.default.com({
-    Sap: function (particle, _a) {
+    Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            sap = p.data;
+            return [2 /*return*/];
+        });
+    }); },
+    Listen: function (p, _a) {
         var t = _a.t, cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {
-            var path, port;
+            var path, interval, port, avg_1;
             return __generator(this, function (_b) {
-                gps = new GPS();
-                path = particle.data.path;
-                console.log("connection via serialport");
-                port = new serialport_1.default(path, {
-                    baudRate: 4800
-                });
-                console.log("listening");
-                port.on("data", function (data) {
-                    console.log("gps update");
-                    gps.updatePartial(data);
-                });
-                gps.on("data", function () {
-                    console.log("on gps data");
-                    if (gps.state.lat && gps.state.lon) {
-                        console.log("on gps data inner");
-                        t(cp.Coordinate(Number(gps.state.lat), Number(gps.state.lon)));
-                    }
-                });
+                try {
+                    gps = new gps_1.default();
+                    path = sap.path, interval = sap.interval;
+                    console.log("connection via serialport");
+                    port = new serialport_1.default(path, {
+                        baudRate: 4800
+                    });
+                    console.log("listening");
+                    port.on("data", function (data) {
+                        // console.log("gps update");
+                        gps.updatePartial(data);
+                    });
+                    gps.on("data", function () {
+                        // console.log("on gps data");
+                        if (typeof gps.state.lat !== undefined && typeof gps.state.lon !== undefined) {
+                            // console.log("on gps data inner");
+                            buffer = __spreadArrays(buffer, [{ lat: Number(gps.state.lat), lng: Number(gps.state.lon) }]);
+                        }
+                    });
+                    avg_1 = function (coordinates) {
+                        if (coordinates instanceof Array && coordinates.length <= 0)
+                            return undefined;
+                        var sum = coordinates.reduce(function (acc, curr) { return ({ lat: acc.lat + curr.lat, lng: acc.lng + curr.lng }); }, {
+                            lat: 0,
+                            lng: 0
+                        });
+                        return {
+                            lat: sum.lat / coordinates.length,
+                            lng: sum.lng / coordinates.length
+                        };
+                    };
+                    setInterval(function () {
+                        var result = avg_1(buffer);
+                        if (result) {
+                            t(cp.Coordinate(result));
+                            buffer = [];
+                        }
+                    }, interval);
+                    return [2 /*return*/, cp.Log({ message: "Listening GPS", level: "Info" })];
+                }
+                catch (e) {
+                    return [2 /*return*/, cp.Exception({ message: JSON.stringify(e) })];
+                }
                 return [2 /*return*/];
             });
         });

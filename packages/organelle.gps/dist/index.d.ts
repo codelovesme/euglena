@@ -1,15 +1,23 @@
-import { MetaAdditions } from "@euglena/particle";
-declare const _default: import("@euglena/organelle").CreateOrganelleModuleInterface<"GPS", {
-    incoming: {};
+import { P, FromP } from "@euglena/core";
+export declare type PCoordinate = P<{
+    lat: number;
+    lng: number;
+}>;
+export declare type Coordinate = FromP<"Coordinate", PCoordinate>;
+declare const _default: import("@euglena/core").CreateOrganelleModuleInterface<"GPS", {
+    incoming: {
+        Listen: P<undefined, {}>;
+    };
     outgoing: {
-        Coordinate: (lat: number, lng: number, adds?: MetaAdditions | undefined) => import("@euglena/particle").Particle<"Coordinate", {
+        Coordinate: P<{
             lat: number;
             lng: number;
-        }, MetaAdditions>;
-        Log: (message: string, level: "Info" | "Error" | "Warning", adds?: MetaAdditions | undefined) => import("@euglena/particle").Particle<"Log", {
+        }, {}>;
+        Log: P<{
             message: string;
-            level: "Info" | "Error" | "Warning";
-        }, MetaAdditions>;
+            level: "Error" | "Info" | "Warning";
+        }, {}>;
+        Exception: P<import("cessnalib").sys.type.Exception, {}>;
     };
 }>;
 export default _default;
