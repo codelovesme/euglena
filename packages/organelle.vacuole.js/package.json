@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.vacuole.js",
     "domain": "codeloves.me",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -28,7 +28,7 @@
         "@euglena/core": "^1.0.15"
     },
     "dependencies": {
-        "@euglena/organelle.vacuole": "^1.0.15",
+        "@euglena/organelle.vacuole": "^1.0.16",
         "cessnalib": "^0.9.0"
     },
     "files": [
