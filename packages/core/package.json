@@ -1,7 +1,7 @@
 {
     "name": "@euglena/core",
     "domain": "codeloves.me",
-    "version": "1.0.13",
+    "version": "1.0.14",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -36,5 +36,5 @@
         "LICENSE.txt",
         "pacakge.json"
     ],
-    "gitHead": "d2af4a1b528dcfa361c9bb3a7b2ce459902ba9b5"
+    "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
 }
