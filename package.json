@@ -1,5 +1,6 @@
 {
     "name": "euglena",
+    "private": true,
     "workspaces": [
         "packages/*"
     ],

@@ -1,8 +1,4 @@
-import React from "react";
-export declare const ToolsContext: React.Context<{
-    t: any;
-    cp: any;
-}>;
+export declare const ToolsContext: any;
 declare const _default: import("@euglena/core").OrganelleModule<"UI", import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         Render: import("@euglena/core").P<any, {}>;
@@ -17,7 +13,7 @@ declare const _default: import("@euglena/core").OrganelleModule<"UI", import("@e
         Event: import("@euglena/core").P<any, {}>;
     };
 }, import("@euglena/core").P<{
-    rootComponent: React.FunctionComponent<any>;
+    rootComponent: any;
     serviceWorker: boolean;
 }, {
     organelle: {

@@ -10,8 +10,7 @@
         "email": "codelovesme@gmail.com"
     },
     "scripts": {
-        "compile": "tsc -p . && cp -r src/node dist/node",
-        "watch": "tsc -w -p .",
+        "compile": "tsc -p .",
         "clean": "rm -r dist",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },

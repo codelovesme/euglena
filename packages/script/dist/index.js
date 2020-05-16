@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+"use strict";
 /**
  *  Sample code block
  * ------------------
@@ -70,3 +70,4 @@
  *
  */
 console.log();
+//# sourceMappingURL=index.js.map

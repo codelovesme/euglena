@@ -25,7 +25,9 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "peerDependencies": {
-        "@euglena/core": "^1.0.15"
+        "@euglena/core": "^1.0.15",
+        "react": "^16.9.0",
+        "react-dom": "^16.9.0"
     },
     "dependencies": {
         "@euglena/organelle.ui": "^1.0.17",

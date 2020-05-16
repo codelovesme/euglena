@@ -6,13 +6,9 @@ export declare type Meta<ClassType extends string = string, Additions extends Me
     createdAt: number;
     expireAt?: number;
 };
-export interface Particle<
-    ClassType extends string = string,
-    DataType = any,
-    Additions extends MetaAdditions = {
-        [x: string]: any;
-    }
-> {
+export interface Particle<ClassType extends string = string, DataType = any, Additions extends MetaAdditions = {
+    [x: string]: any;
+}> {
     meta: Meta<ClassType, Additions>;
     data: DataType;
 }
@@ -20,19 +16,13 @@ export interface CreateMeta {
     <ClassType extends string, M extends MetaAdditions>(_class: ClassType, adds?: M): Meta<ClassType, M>;
 }
 export interface CreateParticle {
-    <ClassType extends string, DataType, M extends MetaAdditions>(
-        _class: ClassType,
-        data: DataType,
-        adds?: M
-    ): Particle<ClassType, DataType, M>;
+    <ClassType extends string, DataType, M extends MetaAdditions>(_class: ClassType, data: DataType, adds?: M): Particle<ClassType, DataType, M>;
 }
-export declare type ParticleClass<
-    T extends {
-        [x: string]: string;
-    } = {
-        [x: string]: string;
-    }
-> = {
+export declare type ParticleClass<T extends {
+    [x: string]: string;
+} = {
+    [x: string]: string;
+}> = {
     [P in keyof T]: T[P];
 };
 export interface CreateSpecificParticle<P extends string = string, T extends Particle<P> = Particle<P>> {
