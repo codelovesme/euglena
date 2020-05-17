@@ -1,7 +1,7 @@
 {
     "name": "@euglena/core",
     "domain": "codeloves.me",
-    "version": "1.0.18",
+    "version": "1.0.20",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
