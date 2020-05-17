@@ -24,6 +24,7 @@ let typelist =
 function npm_install(name: string) {
     console.log("installing dependencies...");
     let child = spawn(isWin ? "npm.cmd" : "npm", ["install"], { cwd: name });
+    child.on("error", console.error);
     child.on("exit", () => console.log("done."));
 }
 

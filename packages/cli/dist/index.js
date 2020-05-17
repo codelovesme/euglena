@@ -28,6 +28,7 @@ var typelist = "Here is the supported types : \n\n" +
 function npm_install(name) {
     console.log("installing dependencies...");
     var child = child_process_1.spawn(isWin ? "npm.cmd" : "npm", ["install"], { cwd: name });
+    child.on("error", console.error);
     child.on("exit", function () { return console.log("done."); });
 }
 commander_1.default

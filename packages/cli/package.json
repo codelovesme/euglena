@@ -10,7 +10,7 @@
         "email": "codelovesme@gmail.com"
     },
     "scripts": {
-        "compile": "tsc -p . && mkdir dist/templates && cp -r templates/node dist/templates/node",
+        "compile": "tsc -p . && rm -r dist/templates && mkdir dist/templates && cp -r templates/node dist/templates/node",
         "watch": "tsc -w -p .",
         "clean": "rm -r dist",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
@@ -38,5 +38,8 @@
         "LICENSE.txt",
         "pacakge.json"
     ],
+    "bin": {
+        "euglena": "bin/euglena"
+    },
     "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
 }
