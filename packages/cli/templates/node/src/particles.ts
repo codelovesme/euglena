@@ -3,7 +3,7 @@ import { endoplasmicReticulumJs as reticulum, nucleusJs as nucleus } from "@eugl
 import vacuole from "@euglena/organelle.vacuole.js";
 
 export default [
-    cp("EuglenaName", ""),
+    cp("EuglenaName", "must_be_replaced"),
     nucleus.cp.incoming.Sap(
         {
             path: __dirname + "/chromosome.js",

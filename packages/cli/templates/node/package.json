@@ -24,5 +24,8 @@
     "devDependencies": {
         "typescript": "^3.9.2",
         "@types/node": "^13.11.0"
+    },
+    "bin": {
+        "must_be_replaced": "dist/src/index.js"
     }
 }

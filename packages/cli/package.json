@@ -39,7 +39,7 @@
         "pacakge.json"
     ],
     "bin": {
-        "euglena": "bin/euglena"
+        "euglena": "dist/index.js"
     },
     "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
 }

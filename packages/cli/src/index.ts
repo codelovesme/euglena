@@ -3,8 +3,7 @@
 import * as path from "path";
 import program from "commander";
 import { mkdirSync, readFile, writeFile, exists } from "fs";
-import { exec, spawn } from "child_process";
-import beautify from "json-beautify";
+import { exec } from "child_process";
 
 const packageJson = require("../package.json");
 
@@ -21,12 +20,12 @@ let typelist =
     "\t react     generates a Reactjs Application\n" +
     "\t organelle  generates an Euglena Organelle\n";
 
-function npm_install(name: string) {
-    console.log("installing dependencies...");
-    let child = spawn(isWin ? "npm.cmd" : "npm", ["install"], { cwd: name });
-    child.on("error", console.error);
-    child.on("exit", () => console.log("done."));
-}
+// function npm_install(name: string) {
+//     console.log("installing dependencies...");
+//     let child = spawn(isWin ? "npm.cmd" : "npm", ["install"], { cwd: name });
+//     child.on("error", console.error);
+//     child.on("exit", () => console.log("done."));
+// }
 
 program
     .command("new <name>")
@@ -69,47 +68,13 @@ program
                     waitForPathToBeCreated(packageFile).then(() => {
                         //Inserting dependencies into pacakge.json
                         readFile(name + "/package.json", "utf-8", (err, text) => {
-                            let json = JSON.parse(text);
-                            json.scripts.test = "gulp test";
-                            json.scripts.build = "gulp build";
-                            json.scripts.start = "gulp buildAndTest && gulp watch";
-                            json.main = ".dist/src/index.js";
-                            json.typings = ".dist/src/index.d.ts";
-                            json.dependencies = {
-                                cessnalib: "^0.7.0",
-                                "@euglena/core": "^0.1.7",
-                                "@euglena/template": "^2.0.0",
-                                "@euglena/organelle.time.js": "^0.1.0",
-                                jsonminify: "^0.4.1"
-                            };
-                            json.devDependencies = {
-                                "@types/chai": "^4.0.10",
-                                "@types/node": "^7.0.14",
-                                "@types/mocha": "^2.2.40",
-                                gulp: "github:gulpjs/gulp#4.0",
-                                "gulp-mocha": "^4.3.1",
-                                "gulp-typescript": "^3.0.1",
-                                typescript: "^2.3.3",
-                                "gulp-sourcemaps": "^2.6.1",
-                                merge2: "^1.2.0",
-                                chai: "^4.1.2"
-                            };
-                            json.files = [".dist/src/*"];
-                            text = beautify(json, [], 2, 10);
+                            text = text.replace("must_be_replaced", name);
                             writeFile(packageFile, text, { encoding: "utf-8" }, (err) => {
                                 err_back(err, packageFile + " has been updated.");
-                                /**
-                                 *  install dependencies
-                                 *  run npm install
-                                 */
-                                npm_install(name);
+                                // npm_install(name);
                             });
                         });
                     });
-                    /**
-                     * Generate package.json
-                     */
-                    spawn(isWin ? "npm.cmd" : "npm", ["init", "--force"], { cwd: name });
                 }
                 break;
             case "node":
@@ -127,18 +92,11 @@ program
                      *  Wait for the package.json
                      */
                     waitForPathToBeCreated(packageFile).then(() => {
-                        //Inserting dependencies into pacakge.json
                         readFile(packageFile, "utf-8", (err, text) => {
-                            let json = JSON.parse(text);
-                            json.name = name;
-                            text = beautify(json, null as any, 2, 10);
+                            text = text.replace("must_be_replaced", name);
                             writeFile(packageFile, text, { encoding: "utf-8" }, (err) => {
                                 err_back(err, packageFile + " has been updated.");
-                                /**
-                                 *  install dependencies
-                                 *  run npm install
-                                 */
-                                npm_install(name);
+                                // npm_install(name);
                             });
                         });
                     });

@@ -15,7 +15,6 @@ var path = __importStar(require("path"));
 var commander_1 = __importDefault(require("commander"));
 var fs_1 = require("fs");
 var child_process_1 = require("child_process");
-var json_beautify_1 = __importDefault(require("json-beautify"));
 var packageJson = require("../package.json");
 process.title = "@euglena/cli";
 var isWin = /^win/.test(process.platform);
@@ -25,12 +24,12 @@ var typelist = "Here is the supported types : \n\n" +
     "\t node     generates a Nodejs Application\n" +
     "\t react     generates a Reactjs Application\n" +
     "\t organelle  generates an Euglena Organelle\n";
-function npm_install(name) {
-    console.log("installing dependencies...");
-    var child = child_process_1.spawn(isWin ? "npm.cmd" : "npm", ["install"], { cwd: name });
-    child.on("error", console.error);
-    child.on("exit", function () { return console.log("done."); });
-}
+// function npm_install(name: string) {
+//     console.log("installing dependencies...");
+//     let child = spawn(isWin ? "npm.cmd" : "npm", ["install"], { cwd: name });
+//     child.on("error", console.error);
+//     child.on("exit", () => console.log("done."));
+// }
 commander_1.default
     .command("new <name>")
     .alias("n")
@@ -66,47 +65,13 @@ commander_1.default
                 waitForPathToBeCreated(packageFile).then(function () {
                     //Inserting dependencies into pacakge.json
                     fs_1.readFile(name + "/package.json", "utf-8", function (err, text) {
-                        var json = JSON.parse(text);
-                        json.scripts.test = "gulp test";
-                        json.scripts.build = "gulp build";
-                        json.scripts.start = "gulp buildAndTest && gulp watch";
-                        json.main = ".dist/src/index.js";
-                        json.typings = ".dist/src/index.d.ts";
-                        json.dependencies = {
-                            cessnalib: "^0.7.0",
-                            "@euglena/core": "^0.1.7",
-                            "@euglena/template": "^2.0.0",
-                            "@euglena/organelle.time.js": "^0.1.0",
-                            jsonminify: "^0.4.1"
-                        };
-                        json.devDependencies = {
-                            "@types/chai": "^4.0.10",
-                            "@types/node": "^7.0.14",
-                            "@types/mocha": "^2.2.40",
-                            gulp: "github:gulpjs/gulp#4.0",
-                            "gulp-mocha": "^4.3.1",
-                            "gulp-typescript": "^3.0.1",
-                            typescript: "^2.3.3",
-                            "gulp-sourcemaps": "^2.6.1",
-                            merge2: "^1.2.0",
-                            chai: "^4.1.2"
-                        };
-                        json.files = [".dist/src/*"];
-                        text = json_beautify_1.default(json, [], 2, 10);
+                        text = text.replace("must_be_replaced", name);
                         fs_1.writeFile(packageFile, text, { encoding: "utf-8" }, function (err) {
                             err_back(err, packageFile + " has been updated.");
-                            /**
-                             *  install dependencies
-                             *  run npm install
-                             */
-                            npm_install(name);
+                            // npm_install(name);
                         });
                     });
                 });
-                /**
-                 * Generate package.json
-                 */
-                child_process_1.spawn(isWin ? "npm.cmd" : "npm", ["init", "--force"], { cwd: name });
             }
             break;
         case "node":
@@ -122,18 +87,11 @@ commander_1.default
                  *  Wait for the package.json
                  */
                 waitForPathToBeCreated(packageFile).then(function () {
-                    //Inserting dependencies into pacakge.json
                     fs_1.readFile(packageFile, "utf-8", function (err, text) {
-                        var json = JSON.parse(text);
-                        json.name = name;
-                        text = json_beautify_1.default(json, null, 2, 10);
+                        text = text.replace("must_be_replaced", name);
                         fs_1.writeFile(packageFile, text, { encoding: "utf-8" }, function (err) {
                             err_back(err, packageFile + " has been updated.");
-                            /**
-                             *  install dependencies
-                             *  run npm install
-                             */
-                            npm_install(name);
+                            // npm_install(name);
                         });
                     });
                 });

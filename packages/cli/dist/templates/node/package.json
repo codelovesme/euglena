@@ -17,8 +17,15 @@
     },
     "dependencies": {
         "cessnalib": "^0.9.0",
-        "@euglena/core": "^1.0.18",
-        "@euglena/organelle.vacuole.js": "^1.0.18",
-        "@euglena/organelle.logger": "^1.0.18"
+        "@euglena/core": "^1.0.21",
+        "@euglena/organelle.vacuole.js": "^1.0.21",
+        "@euglena/organelle.logger": "^1.0.21"
+    },
+    "devDependencies": {
+        "typescript": "^3.9.2",
+        "@types/node": "^13.11.0"
+    },
+    "bin": {
+        "must_be_replaced": "dist/src/index.js"
     }
 }
