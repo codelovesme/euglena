@@ -1,42 +1,10 @@
-import { OrganelleReceive } from "./organelle";
-export declare const createEuglena: (createSap: (reticulumReceive: OrganelleReceive<import("./particle").Particle<string, any, {
+import { Particle } from "./particle";
+export declare const createEuglena: (particles: Particle<string, any, {
     [x: string]: any;
-}>, import("./particle").Particle<string, any, {
-    [x: string]: any;
-}>>) => import("./particle").Particle<"Sap", {
-    particles: import("./particle").Particle<string, any, {
-        [x: string]: any;
-    }>[];
-    reticulumReceive: OrganelleReceive<import("./particle").Particle<string, any, {
-        [x: string]: any;
-    }>, import("./particle").Particle<string, any, {
-        [x: string]: any;
-    }>>;
-}, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
-}>) => void;
+}>[]) => void;
 /**
  * Alias for createEuglena
  */
-export declare const ce: (createSap: (reticulumReceive: OrganelleReceive<import("./particle").Particle<string, any, {
+export declare const ce: (particles: Particle<string, any, {
     [x: string]: any;
-}>, import("./particle").Particle<string, any, {
-    [x: string]: any;
-}>>) => import("./particle").Particle<"Sap", {
-    particles: import("./particle").Particle<string, any, {
-        [x: string]: any;
-    }>[];
-    reticulumReceive: OrganelleReceive<import("./particle").Particle<string, any, {
-        [x: string]: any;
-    }>, import("./particle").Particle<string, any, {
-        [x: string]: any;
-    }>>;
-}, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
-}>) => void;
+}>[]) => void;

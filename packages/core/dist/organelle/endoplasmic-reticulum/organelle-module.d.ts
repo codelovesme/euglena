@@ -1,14 +1,14 @@
-import { OrganelleReceive, OrganelleModule, P } from "..";
+import { OrganelleReceive, OrganelleModule } from "..";
 import { Particle } from "../../particle";
-declare const _default: OrganelleModule<"EndoplasmicReticulum", import("..").InsertSapIntoParticles<{
+declare const endoplasmicReticulumJs: OrganelleModule<"EndoplasmicReticulum", import("..").InsertSapIntoParticles<{
     incoming: {
-        TransmitParticle: P<{
+        TransmitParticle: import("..").P<{
             target: string;
             particle: Particle<string, any, {
                 [x: string]: any;
             }>;
         }, {}>;
-        OrganelleInfo: P<{
+        OrganelleInfo: import("..").P<{
             name: string;
             location: {
                 type: "FileSystemPath" | "NodeModules" | "Url";
@@ -16,25 +16,25 @@ declare const _default: OrganelleModule<"EndoplasmicReticulum", import("..").Ins
             } | {
                 type: "InMemory";
                 organelle: OrganelleModule<string, import("..").AllOrganelleParticles<{
-                    [x: string]: P<any, {}>;
+                    [x: string]: import("..").P<any, {}>;
                 }, {
-                    [x: string]: P<any, {}>;
+                    [x: string]: import("..").P<any, {}>;
                 }>>;
             };
             nick?: string | undefined;
         }, {}>;
     };
     outgoing: {
-        Log: P<{
+        Log: import("..").P<{
             message: string;
             level: "Error" | "Info" | "Warning";
         }, {}>;
-        TransmitResponse: P<void | Particle<string, any, {
+        TransmitResponse: import("..").P<void | Particle<string, any, {
             [x: string]: any;
         }>, {}>;
-        EuglenaHasBeenBorn: P<any, {}>;
+        EuglenaHasBeenBorn: import("..").P<any, {}>;
     };
-}, P<{
+}, import("..").P<{
     particles: Particle<string, any, {
         [x: string]: any;
     }>[];
@@ -49,4 +49,4 @@ declare const _default: OrganelleModule<"EndoplasmicReticulum", import("..").Ins
         nick?: string | undefined;
     };
 }>>>;
-export default _default;
+export { endoplasmicReticulumJs };

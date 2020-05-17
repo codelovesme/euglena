@@ -1,6 +1,6 @@
-import { nucleus, OrganelleReceive, OrganelleModule, OrganelleTransmit, P, Sap } from "..";
+import { nucleus, OrganelleReceive, OrganelleModule, OrganelleTransmit, Sap } from "..";
 import { Particle } from "../../particle";
-import reticulum from "./create-organelle-module";
+import { endoplasmicReticulum as reticulum } from "./create-organelle-module";
 import { nucleusJs } from "../nucleus";
 
 let organelles: { [organelleName: string]: OrganelleReceive };
@@ -49,9 +49,7 @@ const attachOrganelle = async (
     }
 };
 
-export default reticulum.com<
-    P<{ particles: Particle[]; reticulumReceive: OrganelleReceive }, { organelle: { name: string; nick?: string } }>
->({
+const endoplasmicReticulumJs = reticulum.com<Sap<{ particles: Particle[]; reticulumReceive: OrganelleReceive }>>({
     Sap: async (particle, { cp }) => {
         /**
          * Attach organelles
@@ -104,3 +102,5 @@ export default reticulum.com<
         return cp.TransmitResponse(resp);
     }
 });
+
+export { endoplasmicReticulumJs };

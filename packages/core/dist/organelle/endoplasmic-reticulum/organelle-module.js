@@ -46,9 +46,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -58,7 +55,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var __1 = require("..");
-var create_organelle_module_1 = __importDefault(require("./create-organelle-module"));
+var create_organelle_module_1 = require("./create-organelle-module");
 var nucleus_1 = require("../nucleus");
 var organelles;
 var transmit = function (source, particle, target) { return __awaiter(void 0, void 0, void 0, function () {
@@ -70,14 +67,14 @@ var transmit = function (source, particle, target) { return __awaiter(void 0, vo
                     target = __1.nucleus.n;
                     particle = __1.nucleus.cp.incoming.ReceiveParticle({ particle: particle, source: source });
                 }
-                return [4 /*yield*/, organelles[create_organelle_module_1.default.n](create_organelle_module_1.default.cp.incoming.TransmitParticle({ particle: particle, target: target }))];
+                return [4 /*yield*/, organelles[create_organelle_module_1.endoplasmicReticulum.n](create_organelle_module_1.endoplasmicReticulum.cp.incoming.TransmitParticle({ particle: particle, target: target }))];
             case 1:
                 resp = (_a.sent());
                 return [2 /*return*/, resp ? resp.data : undefined];
         }
     });
 }); };
-var t = function (particle) { return transmit(create_organelle_module_1.default.n, particle); };
+var t = function (particle) { return transmit(create_organelle_module_1.endoplasmicReticulum.n, particle); };
 var attachOrganelle = function (organelleInfoData) { return __awaiter(void 0, void 0, void 0, function () {
     var organelle, _a, e_1;
     var _b;
@@ -115,7 +112,7 @@ var attachOrganelle = function (organelleInfoData) { return __awaiter(void 0, vo
         }
     });
 }); };
-exports.default = create_organelle_module_1.default.com({
+var endoplasmicReticulumJs = create_organelle_module_1.endoplasmicReticulum.com({
     Sap: function (particle, _a) {
         var cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {
@@ -127,7 +124,7 @@ exports.default = create_organelle_module_1.default.com({
                         _b = particle.data, particles = _b.particles, reticulumReceive = _b.reticulumReceive;
                         organelleInfos = particles.filter(function (x) { return x.meta.class === "OrganelleInfo"; });
                         organelles = (_f = {},
-                            _f[create_organelle_module_1.default.n] = reticulumReceive,
+                            _f[create_organelle_module_1.endoplasmicReticulum.n] = reticulumReceive,
                             _f[__1.nucleus.n] = nucleus_1.nucleusJs.createOrganelle(transmit),
                             _f);
                         _i = 0, organelleInfos_1 = organelleInfos;
@@ -177,7 +174,7 @@ exports.default = create_organelle_module_1.default.com({
                     case 0:
                         _b = p.data, target = _b.target, particle = _b.particle;
                         if (!organelles)
-                            return [2 /*return*/, cp.Log({ message: "Organelle " + create_organelle_module_1.default.n + " has not been initialized.", level: "Error" })];
+                            return [2 /*return*/, cp.Log({ message: "Organelle " + create_organelle_module_1.endoplasmicReticulum.n + " has not been initialized.", level: "Error" })];
                         organelleReceive = organelles[target];
                         if (!organelleReceive)
                             return [2 /*return*/, cp.Log({ message: "Organelle " + target + " has not been connected yet!", level: "Error" })];
@@ -190,4 +187,5 @@ exports.default = create_organelle_module_1.default.com({
         });
     }
 });
+exports.endoplasmicReticulumJs = endoplasmicReticulumJs;
 //# sourceMappingURL=organelle-module.js.map

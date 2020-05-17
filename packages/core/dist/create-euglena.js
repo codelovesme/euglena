@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var organelle_1 = require("./organelle");
-exports.createEuglena = function (createSap) {
+exports.createEuglena = function (particles) {
     var reticulumReceive = organelle_1.endoplasmicReticulumJs.createOrganelle();
-    var reticulumSap = createSap(reticulumReceive);
-    reticulumReceive(reticulumSap);
+    reticulumReceive(organelle_1.endoplasmicReticulumJs.cp.incoming.Sap({
+        reticulumReceive: reticulumReceive,
+        particles: particles
+    }, { organelle: { name: organelle_1.endoplasmicReticulumJs.n } }));
 };
 /**
  * Alias for createEuglena
