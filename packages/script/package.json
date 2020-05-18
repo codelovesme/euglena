@@ -34,7 +34,7 @@
         "dist/*",
         "README.md",
         "LICENSE.txt",
-        "pacakge.json"
+        "package.json"
     ],
     "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
 }

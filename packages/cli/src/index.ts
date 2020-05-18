@@ -66,7 +66,7 @@ program
                     );
                     child_process.on("error", (err: any) => console.log(err));
                     waitForPathToBeCreated(packageFile).then(() => {
-                        //Inserting dependencies into pacakge.json
+                        //Inserting dependencies into package.json
                         readFile(name + "/package.json", "utf-8", (err, text) => {
                             text = text.replace("must_be_replaced", name);
                             writeFile(packageFile, text, { encoding: "utf-8" }, (err) => {

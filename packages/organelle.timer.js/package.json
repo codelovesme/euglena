@@ -13,7 +13,6 @@
     "scripts": {
         "compile": "tsc -p .",
         "clean": "rm -r dist",
-        "watch": "tsc -w -p .",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "repository": {
@@ -35,7 +34,7 @@
         "dist/*",
         "README.md",
         "LICENSE.txt",
-        "pacakge.json"
+        "package.json"
     ],
     "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
 }

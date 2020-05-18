@@ -13,7 +13,6 @@
     "scripts": {
         "compile": "tsc -p .",
         "clean": "rm -r dist",
-        "watch": "tsc -w -p .",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "repository": {
@@ -25,15 +24,17 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "dependencies": {
-        "@euglena/organelle.net-client": "^1.0.21",
         "axios": "^0.19.0",
         "cessnalib": "^0.9.0"
+    },
+    "peerDependencies": {
+        "@euglena/organelle.net-client": "~1.0.21"
     },
     "files": [
         "dist/*",
         "README.md",
         "LICENSE.txt",
-        "pacakge.json"
+        "package.json"
     ],
     "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
 }

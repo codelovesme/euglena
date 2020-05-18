@@ -11,7 +11,6 @@
     },
     "scripts": {
         "compile": "tsc -p . && rm -r dist/templates && mkdir dist/templates && cp -r templates/node dist/templates/node",
-        "watch": "tsc -w -p .",
         "clean": "rm -r dist",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
@@ -36,7 +35,7 @@
         "bin/*",
         "README.md",
         "LICENSE.txt",
-        "pacakge.json"
+        "package.json"
     ],
     "bin": {
         "euglena": "dist/index.js"
