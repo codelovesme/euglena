@@ -25,14 +25,16 @@
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "peerDependencies": {
         "@euglena/core": "^1.0.21",
-        "@euglena/organelle.vacuole": "~1.0.21"
+        "@euglena/organelle": "~1.0.21"
     },
     "dependencies": {
         "cessnalib": "^0.9.0",
         "mongodb": "^3.3.2"
     },
     "devDependencies": {
-        "@types/mongodb": "~3.3.6"
+        "@types/mongodb": "~3.3.6",
+        "@euglena/core": "^1.0.21",
+        "@euglena/organelle": "~1.0.21"
     },
     "files": [
         "dist/*",

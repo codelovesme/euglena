@@ -1,4 +1,4 @@
-import vacuole from "@euglena/organelle.vacuole";
+import { vacuole } from "@euglena/organelle";
 import { Sap } from "@euglena/core";
 import { js } from "cessnalib";
 import Datastore from "nedb";

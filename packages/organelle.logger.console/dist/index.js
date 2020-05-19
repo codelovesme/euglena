@@ -39,9 +39,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_logger_1 = __importDefault(require("@euglena/organelle.logger"));
+var organelle_1 = require("@euglena/organelle");
 var moment_1 = __importDefault(require("moment"));
-exports.default = organelle_logger_1.default.com({
+exports.default = organelle_1.logger.com({
     Log: function (particle, _a) {
         var cp = _a.cp, t = _a.t;
         return __awaiter(void 0, void 0, void 0, function () {

@@ -42,14 +42,11 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_vacuole_1 = __importDefault(require("@euglena/organelle.vacuole"));
+var organelle_1 = require("@euglena/organelle");
 var cessnalib_1 = require("cessnalib");
 var particles = [];
-exports.default = organelle_vacuole_1.default.com({
+exports.default = organelle_1.vacuole.com({
     Sap: function (particle, _a) {
         var cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {

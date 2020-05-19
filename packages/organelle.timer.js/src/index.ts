@@ -1,4 +1,4 @@
-import timer from "@euglena/organelle.timer";
+import { timer } from "@euglena/organelle";
 import { sys } from "cessnalib";
 import { Sap } from "@euglena/core";
 

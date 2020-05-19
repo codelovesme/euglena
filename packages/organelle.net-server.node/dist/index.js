@@ -35,9 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -46,12 +43,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_net_server_1 = __importDefault(require("@euglena/organelle.net-server"));
+var organelle_1 = require("@euglena/organelle");
 var http = __importStar(require("http"));
 var core_1 = require("@euglena/core");
 var server;
 var sap;
-exports.default = organelle_net_server_1.default.com({
+exports.default = organelle_1.netServer.com({
     Sap: function (_a, _b) {
         var data = _a.data;
         var cp = _b.cp, t = _b.t;
@@ -84,7 +81,7 @@ exports.default = organelle_net_server_1.default.com({
                             }
                             catch (e) {
                                 t(cp.Log({
-                                    message: "In " + organelle_net_server_1.default.n + " error occurred while receiving impulse Err: " + e.message,
+                                    message: "In " + organelle_1.netServer.n + " error occurred while receiving impulse Err: " + e.message,
                                     level: "Error"
                                 }));
                                 return res.end("Inccorect particle format!");

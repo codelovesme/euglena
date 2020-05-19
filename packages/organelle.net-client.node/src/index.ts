@@ -1,8 +1,8 @@
-import client from "@euglena/organelle.net-client";
+import { netClient } from "@euglena/organelle";
 import { Sap } from "@euglena/core";
 import http from "axios";
 
-export default client.com<Sap<undefined>>({
+export default netClient.com<Sap<undefined>>({
     Sap: async () => {},
     TransmitParticle: async (
         {

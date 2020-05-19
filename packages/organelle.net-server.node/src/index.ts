@@ -1,4 +1,4 @@
-import netServer from "@euglena/organelle.net-server";
+import { netServer } from "@euglena/organelle";
 import * as http from "http";
 import { Sap, isParticle } from "@euglena/core";
 

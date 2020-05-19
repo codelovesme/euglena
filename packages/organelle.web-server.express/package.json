@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle.net-server.node",
+    "name": "@euglena/organelle.web-server.node",
     "domain": "codeloves.me",
     "version": "1.0.21",
     "main": "dist/index.js",
@@ -28,7 +28,11 @@
     },
     "peerDependencies": {
         "euglena/core": "^1.0.21",
-        "@euglena/organelle.net-server": "~1.0.21"
+        "@euglena/organelle": "~1.0.21"
+    },
+    "devDependencies": {
+        "@euglena/core": "^1.0.21",
+        "@euglena/organelle": "~1.0.21"
     },
     "files": [
         "dist/*",

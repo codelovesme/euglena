@@ -1,4 +1,4 @@
-import logger from "@euglena/organelle.logger";
+import { logger } from "@euglena/organelle";
 import moment from "moment";
 import { Sap } from "@euglena/core";
 

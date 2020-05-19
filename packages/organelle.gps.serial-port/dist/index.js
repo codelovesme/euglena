@@ -48,11 +48,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var serialport_1 = __importDefault(require("serialport"));
 var gps_1 = __importDefault(require("gps"));
-var organelle_gps_1 = __importDefault(require("@euglena/organelle.gps"));
+var organelle_1 = require("@euglena/organelle");
 var gps;
 var sap;
 var buffer = [];
-exports.default = organelle_gps_1.default.com({
+exports.default = organelle_1.gps.com({
     Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             sap = p.data;

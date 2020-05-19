@@ -39,10 +39,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_temperature_1 = __importDefault(require("@euglena/organelle.temperature"));
+var organelle_1 = require("@euglena/organelle");
 var i2c_bus_1 = __importDefault(require("i2c-bus"));
 var sap;
-exports.default = organelle_temperature_1.default.com({
+exports.default = organelle_1.temperature.com({
     Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             sap = p.data;

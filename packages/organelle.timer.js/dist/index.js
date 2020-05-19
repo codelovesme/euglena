@@ -35,13 +35,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_timer_1 = __importDefault(require("@euglena/organelle.timer"));
+var organelle_1 = require("@euglena/organelle");
 var time;
-exports.default = organelle_timer_1.default.com({
+exports.default = organelle_1.timer.com({
     Sap: function (sap, _a) {
         var t = _a.t, cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {

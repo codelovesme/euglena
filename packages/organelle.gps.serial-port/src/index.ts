@@ -1,13 +1,13 @@
 import SerialPort from "serialport";
 import GPS from "gps";
-import gpsTracker from "@euglena/organelle.gps";
+import { gps as gpsOrganelle } from "@euglena/organelle";
 import { Sap } from "@euglena/core";
 
 let gps: any;
 let sap: { path: string; interval: number };
 let buffer: Array<{ lat: number; lng: number }> = [];
 
-export default gpsTracker.com<Sap<typeof sap>>({
+export default gpsOrganelle.v1.com<Sap<typeof sap>>({
     Sap: async (p) => {
         sap = p.data;
     },

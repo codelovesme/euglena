@@ -29,10 +29,13 @@
         "serialport": "^9.0.0"
     },
     "peerDependencies": {
-        "@euglena/organelle.gps": "~1.0.21"
+        "@euglena/core": "^1.0.21",
+        "@euglena/organelle": "~1.0.21"
     },
     "devDependencies": {
-        "@types/serialport": "^8.0.1"
+        "@types/serialport": "^8.0.1",
+        "@euglena/core": "^1.0.21",
+        "@euglena/organelle": "~1.0.21"
     },
     "files": [
         "dist/*",

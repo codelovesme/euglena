@@ -1,4 +1,4 @@
-import temperature from "@euglena/organelle.temperature";
+import { temperature } from "@euglena/organelle";
 import { Sap } from "@euglena/core";
 import i2c from "i2c-bus";
 
