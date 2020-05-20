@@ -6,7 +6,7 @@ let server: http.Server;
 let sap: {
     port: number;
 };
-export default netServer.com<
+export default netServer.v1.com<
     Sap<{
         port: number;
     }>
@@ -38,7 +38,7 @@ export default netServer.com<
                     } catch (e) {
                         t(
                             cp.Log({
-                                message: `In ${netServer.n} error occurred while receiving impulse Err: ${e.message}`,
+                                message: `In ${"Net Server"} error occurred while receiving impulse Err: ${e.message}`,
                                 level: "Error"
                             })
                         );

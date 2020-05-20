@@ -1,7 +1,7 @@
 import { sys } from "cessnalib";
 import { Particle } from "../..";
 import { Gene } from "./gene.h";
-declare const _default: import("..").OrganelleModule<"Nucleus", import("..").InsertSapIntoParticles<{
+declare const _default: import("..").OrganelleModule<import("..").InsertSapIntoParticles<{
     incoming: {
         ReceiveParticle: import("..").P<{
             particle: Particle<string, any, {
@@ -27,9 +27,6 @@ declare const _default: import("..").OrganelleModule<"Nucleus", import("..").Ins
     }>>[];
     type: "InMemory";
 }, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
+    organelleName: string;
 }>>>;
 export default _default;

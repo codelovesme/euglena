@@ -1,7 +1,7 @@
 import { CommonParticles, domc, P } from "@euglena/core";
 
 const temperature = {
-    v1: domc("Temperature")<{
+    v1: domc<{
         incoming: {
             Listen: P<undefined>;
         };

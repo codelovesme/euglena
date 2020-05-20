@@ -48,7 +48,7 @@ var http = __importStar(require("http"));
 var core_1 = require("@euglena/core");
 var server;
 var sap;
-exports.default = organelle_1.netServer.com({
+exports.default = organelle_1.netServer.v1.com({
     Sap: function (_a, _b) {
         var data = _a.data;
         var cp = _b.cp, t = _b.t;
@@ -81,7 +81,7 @@ exports.default = organelle_1.netServer.com({
                             }
                             catch (e) {
                                 t(cp.Log({
-                                    message: "In " + organelle_1.netServer.n + " error occurred while receiving impulse Err: " + e.message,
+                                    message: "In " + "Net Server" + " error occurred while receiving impulse Err: " + e.message,
                                     level: "Error"
                                 }));
                                 return res.end("Inccorect particle format!");

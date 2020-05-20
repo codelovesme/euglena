@@ -8,7 +8,7 @@ export type PCoordinate = P<{
 export type Coordinate = FromP<"Coordinate", PCoordinate>;
 
 const gps = {
-    v1: domc("GPS")<{
+    v1: domc<{
         incoming: {
             Listen: P<undefined>;
         };

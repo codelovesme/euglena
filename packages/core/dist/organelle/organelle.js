@@ -48,8 +48,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var particle_1 = require("../particle");
-exports.createOrganelleModule = function (name, createParticles, bindReactions) {
-    var createOrganelle = function (transmit) { return function (particle) { return __awaiter(void 0, void 0, void 0, function () {
+exports.createOrganelleModule = function (createParticles, bindReactions) {
+    var createOrganelle = function (name, transmit) { return function (particle) { return __awaiter(void 0, void 0, void 0, function () {
         var reaction, t;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -76,11 +76,6 @@ exports.createOrganelleModule = function (name, createParticles, bindReactions) 
         });
     }); }; };
     return {
-        name: name,
-        /**
-         * Alias for name
-         */
-        n: name,
         createParticles: createParticles,
         /**
          * Alias for createParticles
@@ -93,7 +88,7 @@ exports.createOrganelleModule = function (name, createParticles, bindReactions) 
         co: createOrganelle
     };
 };
-exports.defineOrganelleModuleCreate = function (name) { return function (incomingParticleNames, outgoingParticleNames) {
+exports.defineOrganelleModuleCreate = function (incomingParticleNames, outgoingParticleNames) {
     var _a;
     var createParticles = {
         incoming: incomingParticleNames.reduce(function (acc, curr) {
@@ -106,18 +101,16 @@ exports.defineOrganelleModuleCreate = function (name) { return function (incomin
         }, {})
     };
     return {
-        n: name,
-        name: name,
         createOrganelleModule: function (bindReactions) {
-            return exports.createOrganelleModule(name, createParticles, bindReactions);
+            return exports.createOrganelleModule(createParticles, bindReactions);
         },
         com: function (bindReactions) {
-            return exports.createOrganelleModule(name, createParticles, bindReactions);
+            return exports.createOrganelleModule(createParticles, bindReactions);
         },
         createParticles: createParticles,
         cp: createParticles
     };
-}; };
+};
 /**
  * Alias for createOranelleModule
  */

@@ -2,7 +2,7 @@ import { logger } from "@euglena/organelle";
 import moment from "moment";
 import { Sap } from "@euglena/core";
 
-export default logger.com<
+export default logger.v1.com<
     Sap<{
         test: boolean;
     }>

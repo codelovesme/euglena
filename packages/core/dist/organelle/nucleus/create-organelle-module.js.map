@@ -1,1 +1,1 @@
-{"version":3,"file":"create-organelle-module.js","sourceRoot":"","sources":["../../../src/organelle/nucleus/create-organelle-module.ts"],"names":[],"mappings":";;AACA,wBAA6B;AAE7B,kBAAe,QAAI,CAAC,SAAS,CAAC,CAS3B,CAAC,iBAAiB,CAAC,EAAE,CAAC,KAAK,EAAE,WAAW,EAAE,KAAK,CAAC,CAAC,CAAC"}
+{"version":3,"file":"create-organelle-module.js","sourceRoot":"","sources":["../../../src/organelle/nucleus/create-organelle-module.ts"],"names":[],"mappings":";;AACA,wBAA6B;AAE7B,kBAAe,QAAI,CAShB,CAAC,iBAAiB,CAAC,EAAE,CAAC,KAAK,EAAE,WAAW,EAAE,KAAK,CAAC,CAAC,CAAC"}

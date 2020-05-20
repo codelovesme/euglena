@@ -3,7 +3,7 @@ import { Sap, Particle, Meta } from "@euglena/core";
 import { js } from "cessnalib";
 
 let particles: Particle[] = [];
-export default vacuole.com<
+export default vacuole.v1.com<
     Sap<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }>
 >({
     Sap: async (particle, { cp }) => {

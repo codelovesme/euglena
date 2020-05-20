@@ -18,9 +18,9 @@
     "dependencies": {
         "cessnalib": "^0.9.0",
         "@euglena/core": "^1.0.21",
-        "@euglena/organelle.vacuole": "~1.0.21",
+        "@euglena/organelle.vacuole": "^1.0.21",
         "@euglena/organelle.vacuole.js": "^1.0.21",
-        "@euglena/organelle.logger": "~1.0.21",
+        "@euglena/organelle.logger": "^1.0.21",
         "@euglena/organelle.logger.console": "^1.0.21"
     },
     "devDependencies": {

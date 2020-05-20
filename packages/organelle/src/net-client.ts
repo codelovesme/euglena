@@ -1,7 +1,7 @@
 import { CommonParticles, domc, P, Particle } from "@euglena/core";
 
 const netClient = {
-    v1: domc("NetClient")<{
+    v1: domc<{
         incoming: {
             TransmitParticle: P<{
                 particle: Particle;

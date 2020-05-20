@@ -43,7 +43,7 @@ var organelle_1 = require("@euglena/organelle");
 var plantower_1 = __importDefault(require("plantower"));
 var sap;
 var plantower;
-exports.default = organelle_1.matter.com({
+exports.default = organelle_1.matter.v1.com({
     Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             sap = p.data;

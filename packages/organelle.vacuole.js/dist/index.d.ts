@@ -1,5 +1,5 @@
 import { Particle } from "@euglena/core";
-declare const _default: import("@euglena/core").OrganelleModule<"Vacuole", import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         SaveParticle: import("@euglena/core").P<{
             particle: Particle<string, any, {
@@ -52,9 +52,6 @@ declare const _default: import("@euglena/core").OrganelleModule<"Vacuole", impor
     }>[];
     type: "InMemory";
 }, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
+    organelleName: string;
 }>>>;
 export default _default;

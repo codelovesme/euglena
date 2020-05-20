@@ -1,4 +1,4 @@
-declare const _default: import("@euglena/core").OrganelleModule<"Logger", import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         Log: import("@euglena/core").P<{
             message: string;
@@ -12,9 +12,6 @@ declare const _default: import("@euglena/core").OrganelleModule<"Logger", import
 }, import("@euglena/core").P<{
     test: boolean;
 }, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
+    organelleName: string;
 }>>>;
 export default _default;

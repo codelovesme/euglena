@@ -46,7 +46,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var organelle_1 = require("@euglena/organelle");
 var cessnalib_1 = require("cessnalib");
 var particles = [];
-exports.default = organelle_1.vacuole.com({
+exports.default = organelle_1.vacuole.v1.com({
     Sap: function (particle, _a) {
         var cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {

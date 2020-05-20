@@ -3,7 +3,7 @@ export declare const ToolsContext: React.Context<{
     t: any;
     cp: any;
 }>;
-declare const _default: import("@euglena/core").OrganelleModule<"UI", import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         Render: import("@euglena/core").P<any, {}>;
     };
@@ -20,9 +20,6 @@ declare const _default: import("@euglena/core").OrganelleModule<"UI", import("@e
     rootComponent: React.FC<any>;
     serviceWorker: boolean;
 }, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
+    organelleName: string;
 }>>>;
 export default _default;

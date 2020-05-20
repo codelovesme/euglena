@@ -2,7 +2,7 @@ import { CommonParticles, domc, P } from "@euglena/core";
 import { sys } from "cessnalib";
 
 const timer = {
-    v1: domc("Timer")<{
+    v1: domc<{
         incoming: {
             ReadTime: P;
             SetTime: P<sys.type.Time>;

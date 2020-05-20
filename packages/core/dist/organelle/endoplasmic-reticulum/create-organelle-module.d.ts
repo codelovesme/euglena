@@ -1,4 +1,4 @@
-declare const endoplasmicReticulum: import("..").CreateOrganelleModuleInterface<"EndoplasmicReticulum", {
+declare const endoplasmicReticulum: import("..").CreateOrganelleModuleInterface<{
     incoming: {
         TransmitParticle: import("..").P<{
             target: string;
@@ -13,13 +13,12 @@ declare const endoplasmicReticulum: import("..").CreateOrganelleModuleInterface<
                 path: string;
             } | {
                 type: "InMemory";
-                organelle: import("..").OrganelleModule<string, import("..").AllOrganelleParticles<{
+                organelle: import("..").OrganelleModule<import("..").AllOrganelleParticles<{
                     [x: string]: import("..").P<any, {}>;
                 }, {
                     [x: string]: import("..").P<any, {}>;
                 }>>;
             };
-            nick?: string | undefined;
         }, {}>;
     };
     outgoing: {

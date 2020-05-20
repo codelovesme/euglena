@@ -57,24 +57,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var __1 = require("..");
 var create_organelle_module_1 = require("./create-organelle-module");
 var nucleus_1 = require("../nucleus");
+var endoplasmicReticulumName = "EndoplasmicReticulum";
 var organelles;
+var nucleusJsName = "Nucleus";
 var transmit = function (source, particle, target) { return __awaiter(void 0, void 0, void 0, function () {
     var resp;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!target) {
-                    target = __1.nucleus.n;
+                    target = nucleusJsName;
                     particle = __1.nucleus.cp.incoming.ReceiveParticle({ particle: particle, source: source });
                 }
-                return [4 /*yield*/, organelles[create_organelle_module_1.endoplasmicReticulum.n](create_organelle_module_1.endoplasmicReticulum.cp.incoming.TransmitParticle({ particle: particle, target: target }))];
+                return [4 /*yield*/, organelles[endoplasmicReticulumName](create_organelle_module_1.endoplasmicReticulum.cp.incoming.TransmitParticle({ particle: particle, target: target }))];
             case 1:
                 resp = (_a.sent());
                 return [2 /*return*/, resp ? resp.data : undefined];
         }
     });
 }); };
-var t = function (particle) { return transmit(create_organelle_module_1.endoplasmicReticulum.n, particle); };
+var t = function (particle) { return transmit(endoplasmicReticulumName, particle); };
 var attachOrganelle = function (organelleInfoData) { return __awaiter(void 0, void 0, void 0, function () {
     var organelle, _a, e_1;
     var _b;
@@ -105,8 +107,8 @@ var attachOrganelle = function (organelleInfoData) { return __awaiter(void 0, vo
                 return [3 /*break*/, 6];
             case 6:
                 if (organelle) {
-                    organelles = __assign(__assign({}, organelles), (_b = {}, _b[organelleInfoData.nick || organelleInfoData.name] = organelle.co(transmit), _b));
-                    console.log("Info - " + (organelleInfoData.nick || organelleInfoData.name) + " attached to the body.");
+                    organelles = __assign(__assign({}, organelles), (_b = {}, _b[organelleInfoData.name] = organelle.co(organelleInfoData.name, transmit), _b));
+                    console.log("Info - " + organelleInfoData.name + " attached to the body.");
                 }
                 return [2 /*return*/];
         }
@@ -124,8 +126,8 @@ var endoplasmicReticulumJs = create_organelle_module_1.endoplasmicReticulum.com(
                         _b = particle.data, particles = _b.particles, reticulumReceive = _b.reticulumReceive;
                         organelleInfos = particles.filter(function (x) { return x.meta.class === "OrganelleInfo"; });
                         organelles = (_f = {},
-                            _f[create_organelle_module_1.endoplasmicReticulum.n] = reticulumReceive,
-                            _f[__1.nucleus.n] = nucleus_1.nucleusJs.createOrganelle(transmit),
+                            _f[endoplasmicReticulumName] = reticulumReceive,
+                            _f[nucleusJsName] = nucleus_1.nucleusJs.createOrganelle(nucleusJsName, transmit),
                             _f);
                         _i = 0, organelleInfos_1 = organelleInfos;
                         _g.label = 1;
@@ -142,7 +144,7 @@ var endoplasmicReticulumJs = create_organelle_module_1.endoplasmicReticulum.com(
                     case 4:
                         organelleSaps = particles.filter(function (x) { return x.meta.class === "Sap"; });
                         _loop_1 = function (organelleName, organelleReceive) {
-                            var relatedSap = organelleSaps.find(function (x) { return (x.meta.organelle.nick || x.meta.organelle.name) === organelleName; });
+                            var relatedSap = organelleSaps.find(function (x) { return x.meta.organelleName === organelleName; });
                             if (relatedSap)
                                 organelleReceive(relatedSap);
                         };
@@ -174,7 +176,10 @@ var endoplasmicReticulumJs = create_organelle_module_1.endoplasmicReticulum.com(
                     case 0:
                         _b = p.data, target = _b.target, particle = _b.particle;
                         if (!organelles)
-                            return [2 /*return*/, cp.Log({ message: "Organelle " + create_organelle_module_1.endoplasmicReticulum.n + " has not been initialized.", level: "Error" })];
+                            return [2 /*return*/, cp.Log({
+                                    message: "Organelle " + endoplasmicReticulumName + " has not been initialized.",
+                                    level: "Error"
+                                })];
                         organelleReceive = organelles[target];
                         if (!organelleReceive)
                             return [2 /*return*/, cp.Log({ message: "Organelle " + target + " has not been connected yet!", level: "Error" })];

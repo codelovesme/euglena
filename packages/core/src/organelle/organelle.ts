@@ -19,14 +19,16 @@ import {
 import { cp, Particle } from "../particle";
 
 export const createOrganelleModule: CreateOrganelleModule = <
-    OrganelleName extends string,
-    COP extends AllOrganelleParticles
+    COP extends AllOrganelleParticles,
+    OrganelleType extends string
 >(
-    name: OrganelleName,
     createParticles: CreateAllOrganelleParticles<COP>,
-    bindReactions: BindReactions<COP, OrganelleName>
-): OrganelleModule<OrganelleName, COP> => {
-    const createOrganelle: CreateOrganelle<InComingParticle<COP>, OutGoingParticle<COP>> = (
+    bindReactions: BindReactions<COP, OrganelleType>
+): OrganelleModule<COP> => {
+    const createOrganelle: CreateOrganelle<InComingParticle<COP>, OutGoingParticle<COP>> = <
+        OrganelleName extends string
+    >(
+        name: OrganelleName,
         transmit?: (sourceOrganelle: string, particle: Particle, targetOrganelle?: string) => Promise<Particle | void>
     ): OrganelleReceive<InComingParticle<COP>, OutGoingParticle<COP>> => async (particle) => {
         let reaction = bindReactions[particle.meta.class];
@@ -48,11 +50,6 @@ export const createOrganelleModule: CreateOrganelleModule = <
     };
 
     return {
-        name,
-        /**
-         * Alias for name
-         */
-        n: name,
         createParticles: createParticles,
         /**
          * Alias for createParticles
@@ -66,12 +63,10 @@ export const createOrganelleModule: CreateOrganelleModule = <
     };
 };
 
-export const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <OrganelleName extends string>(
-    name: OrganelleName
-) => <COP extends AllOrganelleParticles>(
+export const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <COP extends AllOrganelleParticles>(
     incomingParticleNames: InComingParticleNameUnion<COP>[],
     outgoingParticleNames: OutGoingParticleNameUnion<COP>[]
-): CreateOrganelleModuleInterface<OrganelleName, COP> => {
+): CreateOrganelleModuleInterface<COP> => {
     const createParticles: CreateAllOrganelleParticles<COP> = {
         incoming: ((incomingParticleNames as any) as string[]).reduce(
             (acc, curr: InComingParticleNameUnion<COP>) => ({
@@ -89,21 +84,20 @@ export const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <Organel
         )
     };
     return {
-        n: name,
-        name: name,
-        createOrganelleModule: <S extends Sap = Sap>(
-            bindReactions: BindReactions<InsertSapIntoParticles<COP, S>, OrganelleName>
-        ): OrganelleModule<OrganelleName, InsertSapIntoParticles<COP, S>> =>
+        createOrganelleModule: <
+            S extends Sap,
+            OrganelleType extends "EndoplasmicReticulum" | "Nucleus" | "Other" = "Other"
+        >(
+            bindReactions: BindReactions<InsertSapIntoParticles<COP, S>, OrganelleType>
+        ): any =>
             createOrganelleModule(
-                name,
                 createParticles as CreateAllOrganelleParticles<InsertSapIntoParticles<COP, S>>,
                 bindReactions
             ),
-        com: <S extends Sap = Sap>(
-            bindReactions: BindReactions<InsertSapIntoParticles<COP, S>, OrganelleName>
-        ): OrganelleModule<OrganelleName, InsertSapIntoParticles<COP, S>> =>
+        com: <S extends Sap, OrganelleType extends "EndoplasmicReticulum" | "Nucleus" | "Other" = "Other">(
+            bindReactions: BindReactions<InsertSapIntoParticles<COP, S>, OrganelleType>
+        ): any =>
             createOrganelleModule(
-                name,
                 createParticles as CreateAllOrganelleParticles<InsertSapIntoParticles<COP, S>>,
                 bindReactions
             ),

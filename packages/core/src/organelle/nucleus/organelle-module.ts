@@ -65,7 +65,8 @@ const createReceive = (t: NucleusTransmit, cp: typeof nucleus.cp.outgoing) => (
 };
 
 export default nucleus.com<
-    Sap<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }>
+    Sap<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }>,
+    "Nucleus"
 >({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;

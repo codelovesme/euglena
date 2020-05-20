@@ -1,6 +1,6 @@
 import { OrganelleReceive, OrganelleModule } from "..";
 import { Particle } from "../../particle";
-declare const endoplasmicReticulumJs: OrganelleModule<"EndoplasmicReticulum", import("..").InsertSapIntoParticles<{
+declare const endoplasmicReticulumJs: OrganelleModule<import("..").InsertSapIntoParticles<{
     incoming: {
         TransmitParticle: import("..").P<{
             target: string;
@@ -15,13 +15,12 @@ declare const endoplasmicReticulumJs: OrganelleModule<"EndoplasmicReticulum", im
                 path: string;
             } | {
                 type: "InMemory";
-                organelle: OrganelleModule<string, import("..").AllOrganelleParticles<{
+                organelle: OrganelleModule<import("..").AllOrganelleParticles<{
                     [x: string]: import("..").P<any, {}>;
                 }, {
                     [x: string]: import("..").P<any, {}>;
                 }>>;
             };
-            nick?: string | undefined;
         }, {}>;
     };
     outgoing: {
@@ -44,9 +43,6 @@ declare const endoplasmicReticulumJs: OrganelleModule<"EndoplasmicReticulum", im
         [x: string]: any;
     }>>;
 }, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
+    organelleName: string;
 }>>>;
 export { endoplasmicReticulumJs };

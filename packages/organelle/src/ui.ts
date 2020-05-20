@@ -6,7 +6,7 @@ type PRender = P;
 export type Event = FromP<"Event", PEvent>;
 
 const ui = {
-    v1: domc("UI")<{
+    v1: domc<{
         incoming: {
             Render: PRender;
         };

@@ -15,7 +15,6 @@ export declare type POrganelleInfo = P<{
         type: "InMemory";
         organelle: OrganelleModule;
     };
-    nick?: string;
 }>;
 export declare type PTransmitResponse = P<Particle | void>;
 export declare type TransmitParticle = FromP<"TransmitParticle", PTransmitParticle>;

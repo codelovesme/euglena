@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var organelle_1 = require("@euglena/organelle");
 var axios_1 = __importDefault(require("axios"));
-exports.default = organelle_1.netClient.com({
+exports.default = organelle_1.netClient.v1.com({
     Sap: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/];
     }); }); },

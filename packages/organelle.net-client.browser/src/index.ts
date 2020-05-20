@@ -1,7 +1,7 @@
 import { netClient } from "@euglena/organelle";
 import { Sap } from "@euglena/core";
 
-export default netClient.com<Sap<undefined>>({
+export default netClient.v1.com<Sap<undefined>>({
     Sap: async () => {},
     TransmitParticle: async (
         {

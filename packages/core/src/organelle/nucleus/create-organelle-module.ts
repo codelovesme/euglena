@@ -1,7 +1,7 @@
 import { Particle, PLog, PException, PACK } from "../..";
 import { domc, P } from "..";
 
-export default domc("Nucleus")<{
+export default domc<{
     incoming: {
         ReceiveParticle: P<{ particle: Particle; source: string }>;
     };

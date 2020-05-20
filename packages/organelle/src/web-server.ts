@@ -1,6 +1,6 @@
-import { CommonParticles, domc } from "@euglena/core";
+import { CommonParticles, domc, P } from "@euglena/core";
 
-const netServer = {
+const webServer = {
     v1: domc<{
         incoming: {
             GetAlive: CommonParticles["GetAlive"];
@@ -8,10 +8,16 @@ const netServer = {
         outgoing: {
             ACK: CommonParticles["ACK"];
             Exception: CommonParticles["Exception"];
-            Impulse: CommonParticles["Impulse"];
+            Impulse: P<{
+                route: string;
+                user?: {
+                    id: string;
+                    roles: string;
+                };
+            }>;
             Log: CommonParticles["Log"];
         };
     }>(["GetAlive"], ["ACK", "Exception", "Impulse", "Log"])
 };
 
-export { netServer };
+export { webServer as netServer };

@@ -46,7 +46,7 @@ let sap: {
 };
 let plantower: any;
 
-export default matter.com<Sap<typeof sap>>({
+export default matter.v1.com<Sap<typeof sap>>({
     Sap: async (p) => {
         sap = p.data;
         plantower = new Plantower(sap.model, sap.path);

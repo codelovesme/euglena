@@ -1,4 +1,4 @@
-declare const _default: import("@euglena/core").OrganelleModule<"Matter", import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         Read: import("@euglena/core").P<undefined, {}>;
     };
@@ -18,9 +18,6 @@ declare const _default: import("@euglena/core").OrganelleModule<"Matter", import
     path: string;
     model: "DS_CO2_20" | "PMS1003" | "PMS3003" | "PMS5003" | "PMS5003I" | "PMS5003P" | "PMS5003S" | "PMS5003ST" | "PMS5003T" | "PMS6003" | "PMS7003" | "PMS7003M" | "PMS7003P" | "PMSA003" | "PTQS1005";
 }, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
+    organelleName: string;
 }>>>;
 export default _default;

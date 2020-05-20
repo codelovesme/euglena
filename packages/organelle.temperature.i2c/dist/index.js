@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var organelle_1 = require("@euglena/organelle");
 var i2c_bus_1 = __importDefault(require("i2c-bus"));
 var sap;
-exports.default = organelle_1.temperature.com({
+exports.default = organelle_1.temperature.v1.com({
     Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             sap = p.data;

@@ -1,4 +1,4 @@
-declare const _default: import("@euglena/core").OrganelleModule<"Temperature", import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         Listen: import("@euglena/core").P<undefined, {}>;
     };
@@ -16,9 +16,6 @@ declare const _default: import("@euglena/core").OrganelleModule<"Temperature", i
     deviceAddress: number;
     interval: number;
 }, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
+    organelleName: string;
 }>>>;
 export default _default;

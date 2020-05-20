@@ -1,1 +1,1 @@
-{"version":3,"file":"temperature.js","sourceRoot":"","sources":["../src/temperature.ts"],"names":[],"mappings":";;AAAA,sCAAyD;AAEzD,IAAM,WAAW,GAAG,WAAI,CAAC,aAAa,CAAC,CAUpC,CAAC,QAAQ,CAAC,EAAE,CAAC,aAAa,EAAE,KAAK,EAAE,WAAW,EAAE,KAAK,CAAC,CAAC,CAAC;AAElD,kCAAW"}
+{"version":3,"file":"temperature.js","sourceRoot":"","sources":["../src/temperature.ts"],"names":[],"mappings":";;AAAA,sCAAyD;AAEzD,IAAM,WAAW,GAAG;IAChB,EAAE,EAAE,WAAI,CAUL,CAAC,QAAQ,CAAC,EAAE,CAAC,aAAa,EAAE,KAAK,EAAE,WAAW,EAAE,KAAK,CAAC,CAAC;CAC7D,CAAC;AAEO,kCAAW"}

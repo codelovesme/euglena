@@ -11,7 +11,7 @@ export type PMatter = P<
 export type Matter = FromP<"Matter", PMatter>;
 
 const matter = {
-    v1: domc("Matter")<{
+    v1: domc<{
         incoming: {
             Read: P<undefined>;
         };

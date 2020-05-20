@@ -1,4 +1,4 @@
-declare const _default: import("@euglena/core").OrganelleModule<"NetServer", import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         GetAlive: import("@euglena/core").P<undefined, {}>;
     };
@@ -19,9 +19,6 @@ declare const _default: import("@euglena/core").OrganelleModule<"NetServer", imp
 }, import("@euglena/core").P<{
     port: number;
 }, {
-    organelle: {
-        name: string;
-        nick?: string | undefined;
-    };
+    organelleName: string;
 }>>>;
 export default _default;

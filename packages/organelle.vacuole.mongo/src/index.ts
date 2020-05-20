@@ -5,7 +5,7 @@ import { MongoClient, Db } from "mongodb";
 
 let db: Db;
 let sap: { host: string; port: number; database: string };
-export default vacuole.com<Sap<{ host: string; port: number; database: string }>>({
+export default vacuole.v1.com<Sap<{ host: string; port: number; database: string }>>({
     Sap: async (p) => {
         sap = p.data;
     },

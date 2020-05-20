@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var organelle_1 = require("@euglena/organelle");
 var time;
-exports.default = organelle_1.timer.com({
+exports.default = organelle_1.timer.v1.com({
     Sap: function (sap, _a) {
         var t = _a.t, cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {

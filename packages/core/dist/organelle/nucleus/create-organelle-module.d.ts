@@ -1,6 +1,6 @@
 import { Particle } from "../..";
 import { P } from "..";
-declare const _default: import("..").CreateOrganelleModuleInterface<"Nucleus", {
+declare const _default: import("..").CreateOrganelleModuleInterface<{
     incoming: {
         ReceiveParticle: P<{
             particle: Particle<string, any, {

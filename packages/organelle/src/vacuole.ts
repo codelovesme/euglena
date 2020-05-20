@@ -3,7 +3,7 @@ import { CommonParticles, domc } from "@euglena/core";
 export type Count = "all" | number;
 
 const vacuole = {
-    v1: domc("Vacuole")<{
+    v1: domc<{
         incoming: {
             SaveParticle: CommonParticles["SaveParticle"];
             ReadParticle: CommonParticles["ReadParticle"];

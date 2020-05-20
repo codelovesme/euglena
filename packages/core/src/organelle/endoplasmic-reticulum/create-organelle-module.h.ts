@@ -15,7 +15,6 @@ export type POrganelleInfo = P<{
               type: "InMemory";
               organelle: OrganelleModule;
           };
-    nick?: string;
 }>;
 export type PTransmitResponse = P<Particle | void>;
 

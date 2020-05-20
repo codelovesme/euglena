@@ -2,7 +2,7 @@ import { domc } from "..";
 import { PLog } from "../..";
 import { PTransmitParticle, POrganelleInfo, PTransmitResponse, PEuglenaHasBeenBorn } from "./create-organelle-module.h";
 
-const endoplasmicReticulum = domc("EndoplasmicReticulum")<{
+const endoplasmicReticulum = domc<{
     incoming: {
         TransmitParticle: PTransmitParticle;
         OrganelleInfo: POrganelleInfo;

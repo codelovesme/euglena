@@ -5,7 +5,7 @@ import Datastore from "nedb";
 
 let db: Datastore;
 let sap: { filename: string };
-export default vacuole.com<Sap<{ filename: string }>>({
+export default vacuole.v1.com<Sap<{ filename: string }>>({
     Sap: async (p) => {
         sap = p.data;
     },

@@ -8,7 +8,7 @@ import { register, unregister } from "./serviceWorker";
 let App: React.FC<any>;
 export const ToolsContext = createContext({ t: {} as any, cp: {} as any });
 
-export default ui.com<Sap<{ rootComponent: typeof App; serviceWorker: boolean }>>({
+export default ui.v1.com<Sap<{ rootComponent: typeof App; serviceWorker: boolean }>>({
     Sap: async (p) => {
         const { rootComponent, serviceWorker } = p.data;
         App = rootComponent;

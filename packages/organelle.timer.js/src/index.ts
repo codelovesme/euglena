@@ -4,7 +4,7 @@ import { Sap } from "@euglena/core";
 
 let time: sys.type.Time;
 
-export default timer.com<Sap<sys.type.Time>>({
+export default timer.v1.com<Sap<sys.type.Time>>({
     Sap: async (sap, { t, cp }) => {
         time = sap.data;
         setInterval(() => {

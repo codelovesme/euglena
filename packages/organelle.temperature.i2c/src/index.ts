@@ -4,7 +4,7 @@ import i2c from "i2c-bus";
 
 let sap: { ic2Address: number; deviceAddress: number; interval: number };
 
-export default temperature.com<Sap<typeof sap>>({
+export default temperature.v1.com<Sap<typeof sap>>({
     Sap: async (p) => {
         sap = p.data;
     },

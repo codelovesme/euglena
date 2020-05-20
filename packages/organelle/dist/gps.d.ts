@@ -5,7 +5,7 @@ export declare type PCoordinate = P<{
 }>;
 export declare type Coordinate = FromP<"Coordinate", PCoordinate>;
 declare const gps: {
-    v1: import("@euglena/core").CreateOrganelleModuleInterface<"GPS", {
+    v1: import("@euglena/core").CreateOrganelleModuleInterface<{
         incoming: {
             Listen: P<undefined, {}>;
         };
