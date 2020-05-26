@@ -1,5 +1,4 @@
-import { matter } from "@euglena/organelle";
-import { Sap } from "@euglena/core";
+import { matter, Sap } from "@euglena/core";
 import Plantower from "plantower";
 
 interface Value {

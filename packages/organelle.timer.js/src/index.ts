@@ -1,6 +1,5 @@
-import { timer } from "@euglena/organelle";
 import { sys } from "cessnalib";
-import { Sap } from "@euglena/core";
+import { timer, Sap } from "@euglena/core";
 
 let time: sys.type.Time;
 

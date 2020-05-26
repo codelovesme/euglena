@@ -1,6 +1,5 @@
-import { netServer } from "@euglena/organelle";
 import * as http from "http";
-import { Sap, isParticle } from "@euglena/core";
+import { netServer, Sap, isParticle } from "@euglena/core";
 
 let server: http.Server;
 let sap: {

@@ -1,5 +1,4 @@
-import { ui } from "@euglena/organelle";
-import { Sap } from "@euglena/core";
+import { ui, Sap } from "@euglena/core";
 
 import React, { createContext } from "react";
 import ReactDOM from "react-dom";

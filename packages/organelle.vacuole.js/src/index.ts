@@ -1,5 +1,4 @@
-import { vacuole } from "@euglena/organelle";
-import { Sap, Particle, Meta } from "@euglena/core";
+import { vacuole, Sap, Particle, Meta } from "@euglena/core";
 import { js } from "cessnalib";
 
 let particles: Particle[] = [];

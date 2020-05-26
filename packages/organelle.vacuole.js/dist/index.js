@@ -43,10 +43,10 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_1 = require("@euglena/organelle");
+var core_1 = require("@euglena/core");
 var cessnalib_1 = require("cessnalib");
 var particles = [];
-exports.default = organelle_1.vacuole.v1.com({
+exports.default = core_1.vacuole.v1.com({
     Sap: function (particle, _a) {
         var cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {

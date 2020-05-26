@@ -28,12 +28,10 @@
         "moment": "^2.24.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.0.21",
-        "@euglena/organelle": "^1.0.21"
+        "@euglena/core": "^1.0.21"
     },
     "devDependencies": {
-        "@euglena/core": "^1.0.21",
-        "@euglena/organelle": "^1.0.21"
+        "@euglena/core": "^1.0.21"
     },
     "files": [
         "dist/*",

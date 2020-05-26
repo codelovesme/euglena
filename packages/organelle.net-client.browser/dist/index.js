@@ -36,8 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_1 = require("@euglena/organelle");
-exports.default = organelle_1.netClient.v1.com({
+var core_1 = require("@euglena/core");
+exports.default = core_1.netClient.v1.com({
     Sap: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/];
     }); }); },

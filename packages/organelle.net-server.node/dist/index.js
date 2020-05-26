@@ -43,12 +43,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_1 = require("@euglena/organelle");
 var http = __importStar(require("http"));
 var core_1 = require("@euglena/core");
 var server;
 var sap;
-exports.default = organelle_1.netServer.v1.com({
+exports.default = core_1.netServer.v1.com({
     Sap: function (_a, _b) {
         var data = _a.data;
         var cp = _b.cp, t = _b.t;

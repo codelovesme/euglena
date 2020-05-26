@@ -1,5 +1,4 @@
-import { netClient } from "@euglena/organelle";
-import { Sap } from "@euglena/core";
+import { netClient, Sap } from "@euglena/core";
 
 export default netClient.v1.com<Sap<undefined>>({
     Sap: async () => {},

@@ -1,6 +1,6 @@
 import SerialPort from "serialport";
 import GPS from "gps";
-import { gps as gpsOrganelle } from "@euglena/organelle";
+import { gps as gpsOrganelle } from "@euglena/core";
 import { Sap } from "@euglena/core";
 
 let gps: any;

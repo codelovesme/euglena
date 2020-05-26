@@ -4,5 +4,6 @@
         "lib": ["dom"],
         "outDir": "dist"
     },
-    "exclude": ["node_modules", "dist"]
+    "files": ["src/index.ts"],
+    "exclude": ["node_modules"]
 }

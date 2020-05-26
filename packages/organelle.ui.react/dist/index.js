@@ -57,13 +57,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_1 = require("@euglena/organelle");
+var core_1 = require("@euglena/core");
 var react_1 = __importStar(require("react"));
 var react_dom_1 = __importDefault(require("react-dom"));
 var serviceWorker_1 = require("./serviceWorker");
 var App;
 exports.ToolsContext = react_1.createContext({ t: {}, cp: {} });
-exports.default = organelle_1.ui.v1.com({
+exports.default = core_1.ui.v1.com({
     Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
         var _a, rootComponent, serviceWorker;
         return __generator(this, function (_b) {

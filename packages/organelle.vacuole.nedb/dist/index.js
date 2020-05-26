@@ -39,12 +39,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var organelle_1 = require("@euglena/organelle");
+var core_1 = require("@euglena/core");
 var cessnalib_1 = require("cessnalib");
 var nedb_1 = __importDefault(require("nedb"));
 var db;
 var sap;
-exports.default = organelle_1.vacuole.v1.com({
+exports.default = core_1.vacuole.v1.com({
     Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             sap = p.data;

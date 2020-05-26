@@ -1,5 +1,4 @@
-import { temperature } from "@euglena/organelle";
-import { Sap } from "@euglena/core";
+import { temperature, Sap } from "@euglena/core";
 import i2c from "i2c-bus";
 
 let sap: { ic2Address: number; deviceAddress: number; interval: number };
