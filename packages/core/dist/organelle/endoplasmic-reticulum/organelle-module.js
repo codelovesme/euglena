@@ -107,7 +107,7 @@ var attachOrganelle = function (organelleInfoData) { return __awaiter(void 0, vo
                 return [3 /*break*/, 6];
             case 6:
                 if (organelle) {
-                    organelles = __assign(__assign({}, organelles), (_b = {}, _b[organelleInfoData.name] = organelle.co(organelleInfoData.name, transmit), _b));
+                    organelles = __assign(__assign({}, organelles), (_b = {}, _b[organelleInfoData.name] = organelle.co({ name: organelleInfoData.name, transmit: transmit }), _b));
                     console.log("Info - " + organelleInfoData.name + " attached to the body.");
                 }
                 return [2 /*return*/];
@@ -127,7 +127,7 @@ var endoplasmicReticulumJs = create_organelle_module_1.endoplasmicReticulum.com(
                         organelleInfos = particles.filter(function (x) { return x.meta.class === "OrganelleInfo"; });
                         organelles = (_f = {},
                             _f[endoplasmicReticulumName] = reticulumReceive,
-                            _f[nucleusJsName] = nucleus_1.nucleusJs.createOrganelle(nucleusJsName, transmit),
+                            _f[nucleusJsName] = nucleus_1.nucleusJs.co({ transmit: transmit }),
                             _f);
                         _i = 0, organelleInfos_1 = organelleInfos;
                         _g.label = 1;

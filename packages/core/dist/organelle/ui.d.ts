@@ -15,6 +15,6 @@ declare const ui: {
             }, {}>;
             Event: P<any, {}>;
         };
-    }>;
+    }, undefined>;
 };
 export { ui };

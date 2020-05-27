@@ -2,6 +2,7 @@ import { nucleus, OrganelleReceive, OrganelleModule, OrganelleTransmit, Sap } fr
 import { Particle } from "../../particle";
 import { endoplasmicReticulum as reticulum } from "./create-organelle-module";
 import { nucleusJs } from "../nucleus";
+import { P } from "../organelle.h";
 
 const endoplasmicReticulumName: "EndoplasmicReticulum" = "EndoplasmicReticulum";
 
@@ -47,16 +48,13 @@ const attachOrganelle = async (
     if (organelle) {
         organelles = {
             ...organelles,
-            [organelleInfoData.name]: organelle.co(organelleInfoData.name, transmit)
+            [organelleInfoData.name]: organelle.co({ name: organelleInfoData.name, transmit })
         };
         console.log(`Info - ${organelleInfoData.name} attached to the body.`);
     }
 };
 
-const endoplasmicReticulumJs = reticulum.com<
-    Sap<{ particles: Particle[]; reticulumReceive: OrganelleReceive }>,
-    typeof endoplasmicReticulumName
->({
+const endoplasmicReticulumJs = reticulum.com<P<{ particles: Particle[]; reticulumReceive: OrganelleReceive }>>({
     Sap: async (particle, { cp }) => {
         /**
          * Attach organelles
@@ -67,7 +65,7 @@ const endoplasmicReticulumJs = reticulum.com<
         >[];
         organelles = {
             [endoplasmicReticulumName]: reticulumReceive,
-            [nucleusJsName]: nucleusJs.createOrganelle(nucleusJsName, transmit)
+            [nucleusJsName]: nucleusJs.co({ transmit })
         };
         for (let { data } of organelleInfos) {
             await attachOrganelle(data);

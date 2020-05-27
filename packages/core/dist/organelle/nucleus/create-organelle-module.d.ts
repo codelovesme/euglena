@@ -17,5 +17,5 @@ declare const _default: import("..").CreateOrganelleModuleInterface<{
         Exception: P<import("cessnalib").sys.type.Exception, {}>;
         ACK: P<undefined, {}>;
     };
-}>;
+}, "Nucleus">;
 export default _default;

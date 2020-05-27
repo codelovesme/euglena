@@ -9,7 +9,7 @@ export default [
             path: __dirname + "/chromosome.js",
             type: "FileSystemPath"
         },
-        { organelle: { name: nucleus.n } }
+        { organelleName: "Nucleus" }
     ),
     reticulum.cp.incoming.OrganelleInfo({
         name: "Vacuole",
@@ -23,7 +23,7 @@ export default [
             path: __dirname + "/particles.js",
             type: "FileSystemPath"
         },
-        { organelle: { name: vacuole.n } }
+        { organelleName: "Vacuole" }
     ),
     reticulum.cp.incoming.OrganelleInfo({
         name: "Logger",

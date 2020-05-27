@@ -13,6 +13,6 @@ declare const temperature: {
             }, {}>;
             Exception: P<import("cessnalib").sys.type.Exception, {}>;
         };
-    }>;
+    }, undefined>;
 };
 export { temperature };

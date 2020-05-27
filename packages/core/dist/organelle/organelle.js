@@ -48,47 +48,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var particle_1 = require("../particle");
-exports.createOrganelleModule = function (createParticles, bindReactions) {
-    var createOrganelle = function (name, transmit) { return function (particle) { return __awaiter(void 0, void 0, void 0, function () {
-        var reaction, t;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+var createOrganelleModule = function (createParticles, bindReactions, organelleName) {
+    var createOrganelle = function (params) { return function (particle) { return __awaiter(void 0, void 0, void 0, function () {
+        var name, reaction, t;
+        var _a, _b, _c;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
+                    name = organelleName || ((_a = params) === null || _a === void 0 ? void 0 : _a.name);
                     reaction = bindReactions[particle.meta.class];
                     if (!reaction) return [3 /*break*/, 2];
-                    t = transmit ? transmit.bind(undefined, name) : undefined;
+                    t = ((_b = params) === null || _b === void 0 ? void 0 : _b.transmit) ? (_c = params) === null || _c === void 0 ? void 0 : _c.transmit.bind(undefined, name) : undefined;
                     return [4 /*yield*/, reaction(particle, {
-                            transmit: t,
                             t: t,
-                            createParticle: createParticles["outgoing"],
                             cp: createParticles["outgoing"]
                         })];
-                case 1: return [2 /*return*/, _a.sent()];
+                case 1: return [2 /*return*/, _d.sent()];
                 case 2:
                     // return cps.Log(
                     //     `There is no reaction of ${name} for given particle ${JSON.stringify(particle.meta)}`,
                     //     "Error"
                     // );
                     console.error("There is no reaction of " + name + " for given particle " + JSON.stringify(particle.meta));
-                    _a.label = 3;
+                    _d.label = 3;
                 case 3: return [2 /*return*/];
             }
         });
     }); }; };
     return {
-        createParticles: createParticles,
         /**
-         * Alias for createParticles
+         * createParticles
          */
         cp: createParticles,
-        createOrganelle: createOrganelle,
         /**
-         * Alias for createOrganelle
+         * createOrganelle
          */
         co: createOrganelle
     };
 };
-exports.defineOrganelleModuleCreate = function (incomingParticleNames, outgoingParticleNames) {
+var defineOrganelleModuleCreate = function (incomingParticleNames, outgoingParticleNames, organelleName) {
     var _a;
     var createParticles = {
         incoming: incomingParticleNames.reduce(function (acc, curr) {
@@ -101,22 +99,22 @@ exports.defineOrganelleModuleCreate = function (incomingParticleNames, outgoingP
         }, {})
     };
     return {
-        createOrganelleModule: function (bindReactions) {
-            return exports.createOrganelleModule(createParticles, bindReactions);
-        },
-        com: function (bindReactions) {
-            return exports.createOrganelleModule(createParticles, bindReactions);
-        },
-        createParticles: createParticles,
+        com: organelleName
+            ? function (bindReactions) {
+                return createOrganelleModule(createParticles, bindReactions, organelleName);
+            }
+            : function (bindReactions) {
+                return createOrganelleModule(createParticles, bindReactions);
+            },
         cp: createParticles
     };
 };
 /**
- * Alias for createOranelleModule
+ * createOranelleModule
  */
-exports.com = exports.createOrganelleModule;
+exports.com = createOrganelleModule;
 /**
- * Alias for defineOrganelleModuleCreate
+ * defineOrganelleModuleCreate
  */
-exports.domc = exports.defineOrganelleModuleCreate;
+exports.domc = defineOrganelleModuleCreate;
 //# sourceMappingURL=organelle.js.map

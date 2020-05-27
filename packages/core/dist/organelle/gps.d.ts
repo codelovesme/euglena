@@ -20,6 +20,6 @@ declare const gps: {
             }, {}>;
             Exception: P<import("cessnalib").sys.type.Exception, {}>;
         };
-    }>;
+    }, undefined>;
 };
 export { gps };

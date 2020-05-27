@@ -10,6 +10,6 @@ declare const timer: {
             ACK: P<undefined, {}>;
             Time: P<sys.type.Time, {}>;
         };
-    }>;
+    }, undefined>;
 };
 export { timer };

@@ -1,9 +1,10 @@
 import { sys } from "cessnalib";
 import { Particle } from "../..";
 import { Gene } from "./gene.h";
-declare const _default: import("..").OrganelleModule<import("..").InsertSapIntoParticles<{
+import { P } from "../organelle.h";
+declare const _default: import("..").SingletonOrganelleModule<import("..").InsertSingletonSapIntoParticles<{
     incoming: {
-        ReceiveParticle: import("..").P<{
+        ReceiveParticle: P<{
             particle: Particle<string, any, {
                 [x: string]: any;
             }>;
@@ -11,14 +12,14 @@ declare const _default: import("..").OrganelleModule<import("..").InsertSapIntoP
         }, {}>;
     };
     outgoing: {
-        Log: import("..").P<{
+        Log: P<{
             message: string;
             level: "Error" | "Info" | "Warning";
         }, {}>;
-        Exception: import("..").P<sys.type.Exception, {}>;
-        ACK: import("..").P<undefined, {}>;
+        Exception: P<sys.type.Exception, {}>;
+        ACK: P<undefined, {}>;
     };
-}, import("..").P<{
+}, P<{
     path: string;
     type: "FileSystemPath" | "NodeModules" | "Url";
 } | {
@@ -26,7 +27,5 @@ declare const _default: import("..").OrganelleModule<import("..").InsertSapIntoP
         [x: string]: any;
     }>>[];
     type: "InMemory";
-}, {
-    organelleName: string;
-}>>>;
+}, {}>>>;
 export default _default;

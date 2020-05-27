@@ -47,21 +47,48 @@ export declare type OutGoingParticle<COP extends AllOrganelleParticles, N extend
 export interface OrganelleReceive<InComingParticle extends Particle = Particle, OutGoingParticle extends Particle = Particle> {
     (particle: InComingParticle): Promise<OutGoingParticle | void>;
 }
-export declare type CreateOrganelle<InComingParticle extends Particle = Particle, OutGoingParticle extends Particle = Particle> = <OrganelleName extends string>(name: OrganelleName, transmit?: (sourceOrganelle: string, particle: Particle, targetOrganelle?: string) => Promise<Particle | void>) => OrganelleReceive<InComingParticle, OutGoingParticle>;
+export declare type CreateOrganelle<InComingParticle extends Particle = Particle, OutGoingParticle extends Particle = Particle> = <OrganelleName extends string>(params: {
+    name: OrganelleName;
+    transmit: (sourceOrganelle: string, particle: Particle, targetOrganelle?: string) => Promise<Particle | void>;
+}) => OrganelleReceive<InComingParticle, OutGoingParticle>;
+export declare type CreateSingletonOrganelle<InComingParticle extends Particle = Particle, OutGoingParticle extends Particle = Particle> = (params: {
+    transmit: (sourceOrganelle: string, particle: Particle, targetOrganelle?: string) => Promise<Particle | void>;
+}) => OrganelleReceive<InComingParticle, OutGoingParticle>;
+export declare type CreateEndoplasmicReticulum<InComingParticle extends Particle = Particle, OutGoingParticle extends Particle = Particle> = () => OrganelleReceive<InComingParticle, OutGoingParticle>;
 export interface OrganelleModule<COP extends AllOrganelleParticles = AllOrganelleParticles> {
-    createOrganelle: CreateOrganelle<InComingParticle<COP>, OutGoingParticle<COP>>;
     /**
-     * Alias for CreateOrganelle
+     * createOrganelle
      */
     co: CreateOrganelle<InComingParticle<COP>, OutGoingParticle<COP>>;
-    createParticles: CreateAllOrganelleParticles<COP>;
     /**
-     * Alias for CreateParticles
+     * createParticles
+     */
+    cp: CreateAllOrganelleParticles<COP>;
+}
+export interface SingletonOrganelleModule<COP extends AllOrganelleParticles = AllOrganelleParticles> {
+    /**
+     * createOrganelle
+     */
+    co: CreateSingletonOrganelle<InComingParticle<COP>, OutGoingParticle<COP>>;
+    /**
+     * createParticles
+     */
+    cp: CreateAllOrganelleParticles<COP>;
+}
+export interface EndoplasmicReticulumModule<COP extends AllOrganelleParticles = AllOrganelleParticles> {
+    /**
+     * createOrganelle
+     */
+    co: CreateEndoplasmicReticulum<InComingParticle<COP>, OutGoingParticle<COP>>;
+    /**
+     * createParticles
      */
     cp: CreateAllOrganelleParticles<COP>;
 }
 export interface CreateOrganelleModule {
-    <COP extends AllOrganelleParticles, OrganelleType extends string>(createParticles: CreateAllOrganelleParticles<COP>, bindReactions: BindReactions<COP, OrganelleType>): OrganelleModule<COP>;
+    <COP extends AllOrganelleParticles>(createParticles: CreateAllOrganelleParticles<COP>, bindReactions: BindOrganelleReactions<COP>): OrganelleModule<COP>;
+    <COP extends AllOrganelleParticles>(createParticles: CreateAllOrganelleParticles<COP>, bindReactions: BindOrganelleReactions<COP>, organelleName: "EndoplasmicReticulum"): EndoplasmicReticulumModule<COP>;
+    <OrganelleName extends string, COP extends AllOrganelleParticles>(createParticles: CreateAllOrganelleParticles<COP>, bindReactions: BindOrganelleReactions<COP>, organelleName: OrganelleName): SingletonOrganelleModule<COP>;
 }
 export declare type InsertSapIntoParticles<COP extends AllOrganelleParticles, S extends Sap> = {
     incoming: COP["incoming"] & {
@@ -69,24 +96,34 @@ export declare type InsertSapIntoParticles<COP extends AllOrganelleParticles, S 
     };
     outgoing: COP["outgoing"];
 };
-export declare type IBindReactions<OrganelleType extends string, COP extends AllOrganelleParticles, S extends Sap> = OrganelleType extends "EndoplasmicReticulum" ? BindReactionsER<InsertSapIntoParticles<COP, S>> : BindReactions<InsertSapIntoParticles<COP, S>, OrganelleType>;
-export interface CreateOrganelleModuleInterface<COP extends AllOrganelleParticles> {
-    createOrganelleModule: <S extends Sap, OrganelleType extends "EndoplasmicReticulum" | "Nucleus" | "Other" = "Other">(bindReactions: IBindReactions<OrganelleType, COP, S>) => OrganelleModule<InsertSapIntoParticles<COP, S>>;
+export declare type InsertSingletonSapIntoParticles<COP extends AllOrganelleParticles, S extends P> = {
+    incoming: COP["incoming"] & {
+        ["Sap"]: S;
+    };
+    outgoing: COP["outgoing"];
+};
+export declare type BindSingletonOrganelleReactions<OrganelleName extends "EndoplasmicReticulum" | "Nucleus", COP extends AllOrganelleParticles, S extends P> = OrganelleName extends "EndoplasmicReticulum" ? BindReticulumReactions<InsertSingletonSapIntoParticles<COP, S>> : BindNucleusReactions<InsertSingletonSapIntoParticles<COP, S>>;
+export interface CreateOrganelleModuleInterface<COP extends AllOrganelleParticles, OrganelleName extends "EndoplasmicReticulum" | "Nucleus" | undefined = undefined> {
     /**
-     * Alias for createOrganelleModule
+     * createOrganelleModule
      */
-    com: <S extends Sap, OrganelleType extends "EndoplasmicReticulum" | "Nucleus" | "Other" = "Other">(bindReactions: IBindReactions<OrganelleType, COP, S>) => OrganelleModule<InsertSapIntoParticles<COP, S>>;
-    createParticles: CreateAllOrganelleParticles<COP>;
+    com: OrganelleName extends "Nucleus" | "EndoplasmicReticulum" ? OrganelleName extends "EndoplasmicReticulum" ? <S extends P>(bindReactions: BindSingletonOrganelleReactions<OrganelleName, COP, S>) => EndoplasmicReticulumModule<InsertSingletonSapIntoParticles<COP, S>> : <S extends P>(bindReactions: BindSingletonOrganelleReactions<OrganelleName, COP, S>) => SingletonOrganelleModule<InsertSingletonSapIntoParticles<COP, S>> : <S extends Sap>(bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, S>>) => OrganelleModule<InsertSapIntoParticles<COP, S>>;
     /**
-     * Alias for createParticles
+     * createParticles
      */
     cp: CreateAllOrganelleParticles<COP>;
 }
-export declare type DefineOrganelleModuleCreate = <COP extends AllOrganelleParticles>(incomingParticleNames: InComingParticleNameUnion<COP>[], outgoingParticleNames: OutGoingParticleNameUnion<COP>[]) => CreateOrganelleModuleInterface<COP>;
-export declare type BindReactions<COP extends AllOrganelleParticles, OrganelleName extends string> = {
-    [P in InComingParticleNameUnion<COP>]: OrganelleReaction<COP, P, OrganelleName>;
+export interface DefineOrganelleModuleCreate {
+    <COP extends AllOrganelleParticles>(incomingParticleNames: InComingParticleNameUnion<COP>[], outgoingParticleNames: OutGoingParticleNameUnion<COP>[]): CreateOrganelleModuleInterface<COP>;
+    <COP extends AllOrganelleParticles, OrganelleName extends "EndoplasmicReticulum" | "Nucleus">(incomingParticleNames: InComingParticleNameUnion<COP>[], outgoingParticleNames: OutGoingParticleNameUnion<COP>[], organelleName: OrganelleName): CreateOrganelleModuleInterface<COP, OrganelleName>;
+}
+export declare type BindOrganelleReactions<COP extends AllOrganelleParticles> = {
+    [P in InComingParticleNameUnion<COP>]: OrganelleReaction<COP, P>;
 };
-export declare type BindReactionsER<COP extends AllOrganelleParticles> = {
+export declare type BindNucleusReactions<COP extends AllOrganelleParticles> = {
+    [P in InComingParticleNameUnion<COP>]: NucleusReaction<COP, P>;
+};
+export declare type BindReticulumReactions<COP extends AllOrganelleParticles> = {
     [P in InComingParticleNameUnion<COP>]: EndoplasmicReticulumReaction<COP, P>;
 };
 export interface OrganelleTransmit<P extends Particle = Particle, Resp extends Particle | void = Particle | void> {
@@ -95,25 +132,34 @@ export interface OrganelleTransmit<P extends Particle = Particle, Resp extends P
 export interface NucleusTransmit<P extends Particle = Particle, Resp extends Particle | void = Particle | void> {
     (particle: P, targetOrganelle: string): Promise<Resp>;
 }
-export interface OrganelleReaction<COP extends AllOrganelleParticles, IPNU extends InComingParticleNameUnion<COP>, OrganelleName extends string> {
+export interface OrganelleReaction<COP extends AllOrganelleParticles, IPNU extends InComingParticleNameUnion<COP>> {
     (particle: InComingParticle<COP, IPNU>, tools: {
-        transmit: OrganelleName extends "Nucleus" ? NucleusTransmit<OutGoingParticle<COP>> : OrganelleTransmit<OutGoingParticle<COP>>;
         /**
-         * Alias for receive
+         * transmit
          */
-        t: OrganelleName extends "Nucleus" ? NucleusTransmit<OutGoingParticle<COP>> : OrganelleTransmit<OutGoingParticle<COP>>;
-        createParticle: CreateOrganelleParticles<COP["outgoing"]>;
+        t: OrganelleTransmit<OutGoingParticle<COP>>;
         /**
-         * Alias for createParticle
+         * createParticle
+         */
+        cp: CreateOrganelleParticles<COP["outgoing"]>;
+    }): Promise<OutGoingParticle<COP> | void>;
+}
+export interface NucleusReaction<COP extends AllOrganelleParticles, IPNU extends InComingParticleNameUnion<COP>> {
+    (particle: InComingParticle<COP, IPNU>, tools: {
+        /**
+         * transmit
+         */
+        t: NucleusTransmit<OutGoingParticle<COP>>;
+        /**
+         * createParticle
          */
         cp: CreateOrganelleParticles<COP["outgoing"]>;
     }): Promise<OutGoingParticle<COP> | void>;
 }
 export interface EndoplasmicReticulumReaction<COP extends AllOrganelleParticles, IPNU extends InComingParticleNameUnion<COP>> {
     (particle: InComingParticle<COP, IPNU>, tools: {
-        createParticle: CreateOrganelleParticles<COP["outgoing"]>;
         /**
-         * Alias for createParticle
+         * createParticle
          */
         cp: CreateOrganelleParticles<COP["outgoing"]>;
     }): Promise<OutGoingParticle<COP> | void>;

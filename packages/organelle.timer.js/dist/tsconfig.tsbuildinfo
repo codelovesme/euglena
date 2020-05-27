@@ -126,40 +126,40 @@
         "signature": "d1228feb80d98656e342b6509e43107fa40155a2714a7ea2546d82c8aaa32f5a"
       },
       "../../core/dist/organelle/organelle.h.d.ts": {
-        "version": "f1569690effe04be2095a200f8061a6ef84d26acad57654cbec8786b93215722",
-        "signature": "f1569690effe04be2095a200f8061a6ef84d26acad57654cbec8786b93215722"
+        "version": "d1705f51cbe37dfdbb1375cec87b8ea9310ee7c69c6b2004a293ca12975fc20f",
+        "signature": "d1705f51cbe37dfdbb1375cec87b8ea9310ee7c69c6b2004a293ca12975fc20f"
       },
       "../../core/dist/organelle/organelle.d.ts": {
-        "version": "a03a6330a2417b640070f4127be8a4f1517944b99596ad4a4923722ca07455bc",
-        "signature": "a03a6330a2417b640070f4127be8a4f1517944b99596ad4a4923722ca07455bc"
+        "version": "5413722937776e32a406bad537e006abd797fb63f0c127e57217551e6c68e71e",
+        "signature": "5413722937776e32a406bad537e006abd797fb63f0c127e57217551e6c68e71e"
       },
       "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.d.ts": {
-        "version": "d282b5e0485bb6ee75a5d9a6e3c227098d71807129363f0d757ad90e88db5b85",
-        "signature": "d282b5e0485bb6ee75a5d9a6e3c227098d71807129363f0d757ad90e88db5b85"
+        "version": "812d95436941b592a037ca701c6fa17246ac7ea0bd4e75016e13653fb100ecdb",
+        "signature": "812d95436941b592a037ca701c6fa17246ac7ea0bd4e75016e13653fb100ecdb"
       },
       "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts": {
         "version": "af72d80ecd3904ef5fb9a5f7a6f50a52a34c73449d1467d161d59e477adb5a4b",
         "signature": "af72d80ecd3904ef5fb9a5f7a6f50a52a34c73449d1467d161d59e477adb5a4b"
       },
       "../../core/dist/organelle/endoplasmic-reticulum/organelle-module.d.ts": {
-        "version": "cce4d282dd11d95fb1de0c109a6b6c0a115630c4b692ed61cf0f7220d04aaeca",
-        "signature": "cce4d282dd11d95fb1de0c109a6b6c0a115630c4b692ed61cf0f7220d04aaeca"
+        "version": "8c442721775eab52bacab58aee9defa79980b04287832127429b22c7d45f70f9",
+        "signature": "8c442721775eab52bacab58aee9defa79980b04287832127429b22c7d45f70f9"
       },
       "../../core/dist/organelle/endoplasmic-reticulum/index.d.ts": {
         "version": "6d02ef1d65faede6dde147309b2340ccfb133953be1b6076f9bb125b9591d839",
         "signature": "6d02ef1d65faede6dde147309b2340ccfb133953be1b6076f9bb125b9591d839"
       },
       "../../core/dist/organelle/nucleus/create-organelle-module.d.ts": {
-        "version": "4162e38408eb3217c5dc3fc11b388450eddfd8b23d3a7a0f2b55cad5ad7ce8ef",
-        "signature": "4162e38408eb3217c5dc3fc11b388450eddfd8b23d3a7a0f2b55cad5ad7ce8ef"
+        "version": "7caf005adfdc8331cfeb8c2d69033126e888456a41e23608056c637603574025",
+        "signature": "7caf005adfdc8331cfeb8c2d69033126e888456a41e23608056c637603574025"
       },
       "../../core/dist/organelle/nucleus/gene.h.d.ts": {
         "version": "a83d7b8d32c9168e505632133eb9b6126d33c296f8adf7e67289319fa38efae7",
         "signature": "a83d7b8d32c9168e505632133eb9b6126d33c296f8adf7e67289319fa38efae7"
       },
       "../../core/dist/organelle/nucleus/organelle-module.d.ts": {
-        "version": "665a2a8b9d9ce11eb809c58a8f930549d42f59eea87a85a20ed25739fc30a7f5",
-        "signature": "665a2a8b9d9ce11eb809c58a8f930549d42f59eea87a85a20ed25739fc30a7f5"
+        "version": "809eeebf44c7f68550c3d481deacf6fec2d06e1f5d1afef3121cfa6aac3fd4be",
+        "signature": "809eeebf44c7f68550c3d481deacf6fec2d06e1f5d1afef3121cfa6aac3fd4be"
       },
       "../../core/dist/organelle/nucleus/gene.d.ts": {
         "version": "2a778afb09d8ae52ea5ca4441a615b9bd31be5796534ba2bf4da24b1dfb69234",
@@ -170,40 +170,40 @@
         "signature": "6b43af8b505920be1df5fc77522cfb9c4a9619eb8ab9864d774be3d5db7143e9"
       },
       "../../core/dist/organelle/logger.d.ts": {
-        "version": "93c5408561d8d62bab7b818b6c880004c0c102d30110d5c85a8b98882700751a",
-        "signature": "93c5408561d8d62bab7b818b6c880004c0c102d30110d5c85a8b98882700751a"
+        "version": "bf19c4b9b87a9942e683382811c63a8e03c3788a23e9d2d838d5afddadbc4fcd",
+        "signature": "bf19c4b9b87a9942e683382811c63a8e03c3788a23e9d2d838d5afddadbc4fcd"
       },
       "../../core/dist/organelle/gps.d.ts": {
-        "version": "8711d0a2c19c02fd61fea4dd4fd9f01af3183caa9ced50027db173e14464294b",
-        "signature": "8711d0a2c19c02fd61fea4dd4fd9f01af3183caa9ced50027db173e14464294b"
+        "version": "4d30af226e8ecd0c292aa054570523c75f3f94b6dfd78a36811e283292fb9dae",
+        "signature": "4d30af226e8ecd0c292aa054570523c75f3f94b6dfd78a36811e283292fb9dae"
       },
       "../../core/dist/organelle/matter.d.ts": {
-        "version": "41d50260e090381f5b697fed9a9349c679ba746fc198982b2dfb5049de829f52",
-        "signature": "41d50260e090381f5b697fed9a9349c679ba746fc198982b2dfb5049de829f52"
+        "version": "8f77f4ec7029d2c424c671567b157136c80cb32195c8cd3a4d31164ea3153a55",
+        "signature": "8f77f4ec7029d2c424c671567b157136c80cb32195c8cd3a4d31164ea3153a55"
       },
       "../../core/dist/organelle/net-client.d.ts": {
-        "version": "1f186369e1ca3ab03a058e679801e576c557aacfb587acd4ff1b58eef5e238c3",
-        "signature": "1f186369e1ca3ab03a058e679801e576c557aacfb587acd4ff1b58eef5e238c3"
+        "version": "55250a6c8a8d9a7167b820a2cb453991dddf6ef51d34ef0cf48dc3df5330a896",
+        "signature": "55250a6c8a8d9a7167b820a2cb453991dddf6ef51d34ef0cf48dc3df5330a896"
       },
       "../../core/dist/organelle/net-server.d.ts": {
-        "version": "0b270d45cf848abcc29f67c00866153c8fde29c15aa4ae962f5513d37aed9b60",
-        "signature": "0b270d45cf848abcc29f67c00866153c8fde29c15aa4ae962f5513d37aed9b60"
+        "version": "7f5d1a63468d89a6dfa41b8a5ac096f1f2e0be2a1aafd119f15ea195afc4d6f2",
+        "signature": "7f5d1a63468d89a6dfa41b8a5ac096f1f2e0be2a1aafd119f15ea195afc4d6f2"
       },
       "../../core/dist/organelle/temperature.d.ts": {
-        "version": "ab6917ff5f48e7d4c0af108170eb525094b12c54707b7e05a2b08d4cb4def756",
-        "signature": "ab6917ff5f48e7d4c0af108170eb525094b12c54707b7e05a2b08d4cb4def756"
+        "version": "68e365fd7afa65be514f7e4fcbcd78f13a2a200f110a1f93d7c2a5b7c91a482f",
+        "signature": "68e365fd7afa65be514f7e4fcbcd78f13a2a200f110a1f93d7c2a5b7c91a482f"
       },
       "../../core/dist/organelle/timer.d.ts": {
-        "version": "e714c11ebac071d3699b177e8f44b00b87823ff975a5a8ab38c511ba497eaf25",
-        "signature": "e714c11ebac071d3699b177e8f44b00b87823ff975a5a8ab38c511ba497eaf25"
+        "version": "3fca052de3aef223ee98f71caa6fa1c2299aeba3f2d4c83af62fb71a73512676",
+        "signature": "3fca052de3aef223ee98f71caa6fa1c2299aeba3f2d4c83af62fb71a73512676"
       },
       "../../core/dist/organelle/ui.d.ts": {
-        "version": "705214f4058fa84a23656d794dad40e5306bfa60b34a1f0b1d2c2c3235efc86e",
-        "signature": "705214f4058fa84a23656d794dad40e5306bfa60b34a1f0b1d2c2c3235efc86e"
+        "version": "17419c74842a858ee101732883e7fbc17ac43470ed43824411c386f01a166f14",
+        "signature": "17419c74842a858ee101732883e7fbc17ac43470ed43824411c386f01a166f14"
       },
       "../../core/dist/organelle/vacuole.d.ts": {
-        "version": "6a86281f6261f2b2bc14b90bde732c65b2d8da16042acfd14bd8d8545af1edc6",
-        "signature": "6a86281f6261f2b2bc14b90bde732c65b2d8da16042acfd14bd8d8545af1edc6"
+        "version": "22630d0f8d498e3b1cd7ea6bed76708851b84a4e04187d16c347296732b20cbd",
+        "signature": "22630d0f8d498e3b1cd7ea6bed76708851b84a4e04187d16c347296732b20cbd"
       },
       "../../core/dist/organelle/index.d.ts": {
         "version": "3bf32aed912318255ffde73058941df1301cc555ddaaba0aa397c6f711e5e9e1",
@@ -665,6 +665,7 @@
       "../../core/dist/organelle/endoplasmic-reticulum/organelle-module.d.ts": [
         "../../core/dist/organelle/index.d.ts",
         "../../core/dist/particle/index.d.ts",
+        "../../core/dist/organelle/organelle.h.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
@@ -701,6 +702,7 @@
         "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/index.d.ts",
         "../../core/dist/organelle/nucleus/gene.h.d.ts",
+        "../../core/dist/organelle/organelle.h.d.ts",
         "../../core/dist/organelle/index.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
@@ -1396,32 +1398,183 @@
         "../../../node_modules/@types/node/util.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../src/index.ts": [
-        "../../core/dist/index.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts"
+      "../../core/dist/particle/particle.h.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../../core/dist/common/common-particles.d.ts": [
+      "../../core/dist/particle/particle.d.ts": [
+        "../../core/dist/particle/particle.h.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/particle/index.d.ts": [
+        "../../core/dist/particle/particle.h.d.ts",
+        "../../core/dist/particle/particle.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/organelle.h.d.ts": [
+        "../../core/dist/particle/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/organelle.d.ts": [
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.d.ts": [
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts": [
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/endoplasmic-reticulum/organelle-module.d.ts": [
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/endoplasmic-reticulum/index.d.ts": [
+        "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.d.ts",
+        "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts",
+        "../../core/dist/organelle/endoplasmic-reticulum/organelle-module.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/nucleus/create-organelle-module.d.ts": [
+        "../../core/dist/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
         "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/particle/index.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../../core/dist/common/index.d.ts": [
-        "../../core/dist/common/common-particles.h.d.ts",
-        "../../core/dist/common/common-particles.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/index.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/create-euglena.d.ts",
+      "../../core/dist/organelle/nucleus/gene.h.d.ts": [
+        "../../core/dist/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/nucleus/organelle-module.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/nucleus/gene.h.d.ts",
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/nucleus/gene.d.ts": [
+        "../../core/dist/organelle/nucleus/gene.h.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/nucleus/index.d.ts": [
+        "../../core/dist/organelle/nucleus/create-organelle-module.d.ts",
+        "../../core/dist/organelle/nucleus/organelle-module.d.ts",
+        "../../core/dist/organelle/nucleus/gene.h.d.ts",
+        "../../core/dist/organelle/nucleus/gene.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/logger.d.ts": [
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/gps.d.ts": [
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/matter.d.ts": [
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/net-client.d.ts": [
         "../../core/dist/particle/index.d.ts",
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/net-server.d.ts": [
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/temperature.d.ts": [
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/timer.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../core/dist/organelle/ui.d.ts": [
+        "../../core/dist/organelle/organelle.h.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
@@ -1464,160 +1617,18 @@
         "../../../node_modules/@types/node/util.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../../core/dist/organelle/nucleus/organelle-module.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/index.d.ts",
-        "../../core/dist/organelle/nucleus/gene.h.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/nucleus/index.d.ts": [
-        "../../core/dist/organelle/nucleus/create-organelle-module.d.ts",
-        "../../core/dist/organelle/nucleus/organelle-module.d.ts",
-        "../../core/dist/organelle/nucleus/gene.h.d.ts",
-        "../../core/dist/organelle/nucleus/gene.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/nucleus/gene.h.d.ts": [
-        "../../core/dist/index.d.ts",
+      "../../core/dist/common/common-particles.d.ts": [
         "../../core/dist/organelle/index.d.ts",
         "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/nucleus/gene.d.ts": [
-        "../../core/dist/organelle/nucleus/gene.h.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/nucleus/create-organelle-module.d.ts": [
-        "../../core/dist/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/endoplasmic-reticulum/organelle-module.d.ts": [
-        "../../core/dist/organelle/index.d.ts",
         "../../core/dist/particle/index.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../../core/dist/organelle/endoplasmic-reticulum/index.d.ts": [
-        "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.d.ts",
-        "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts",
-        "../../core/dist/organelle/endoplasmic-reticulum/organelle-module.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts": [
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/index.d.ts",
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.d.ts": [
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/net-server.d.ts": [
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/ui.d.ts": [
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/timer.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/temperature.d.ts": [
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/net-client.d.ts": [
-        "../../core/dist/particle/index.d.ts",
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/matter.d.ts": [
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/gps.d.ts": [
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/organelle/logger.d.ts": [
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/particle/particle.h.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/particle/index.d.ts": [
-        "../../core/dist/particle/particle.h.d.ts",
-        "../../core/dist/particle/particle.d.ts",
+      "../../core/dist/common/index.d.ts": [
+        "../../core/dist/common/common-particles.h.d.ts",
+        "../../core/dist/common/common-particles.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
@@ -1630,26 +1641,19 @@
         "../../../node_modules/@types/node/util.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../../core/dist/organelle/organelle.h.d.ts": [
+      "../../core/dist/index.d.ts": [
+        "../../core/dist/common/index.d.ts",
+        "../../core/dist/create-euglena.d.ts",
+        "../../core/dist/organelle/index.d.ts",
         "../../core/dist/particle/index.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../../core/dist/organelle/organelle.d.ts": [
-        "../../core/dist/organelle/organelle.h.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../core/dist/particle/particle.d.ts": [
-        "../../core/dist/particle/particle.h.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      "../src/index.ts": [
+        "../../core/dist/index.d.ts",
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts"
       ],
       "../../../node_modules/@types/node/globals.d.ts": [
         "../../../node_modules/@types/node/fs.d.ts",
@@ -1658,6 +1662,282 @@
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
       "../../../node_modules/@types/node/assert.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/async_hooks.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/buffer.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/child_process.d.ts": [
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/net.d.ts",
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/cluster.d.ts": [
+        "../../../node_modules/@types/node/child_process.d.ts",
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/net.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/console.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/constants.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/crypto.d.ts": [
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/dgram.d.ts": [
+        "../../../node_modules/@types/node/net.d.ts",
+        "../../../node_modules/@types/node/dns.d.ts",
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/dns.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/domain.d.ts": [
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/events.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/fs.d.ts": [
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/url.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/http.d.ts": [
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/url.d.ts",
+        "../../../node_modules/@types/node/net.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/http2.d.ts": [
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/net.d.ts",
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/tls.d.ts",
+        "../../../node_modules/@types/node/url.d.ts",
+        "../../../node_modules/@types/node/http.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/https.d.ts": [
+        "../../../node_modules/@types/node/tls.d.ts",
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/http.d.ts",
+        "../../../node_modules/@types/node/url.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/inspector.d.ts": [
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/module.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/net.d.ts": [
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/dns.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/os.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/path.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/perf_hooks.d.ts": [
+        "../../../node_modules/@types/node/async_hooks.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/process.d.ts": [
+        "../../../node_modules/@types/node/tty.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/punycode.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/querystring.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/readline.d.ts": [
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/repl.d.ts": [
+        "../../../node_modules/@types/node/readline.d.ts",
+        "../../../node_modules/@types/node/vm.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/stream.d.ts": [
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/string_decoder.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/timers.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/tls.d.ts": [
+        "../../../node_modules/@types/node/crypto.d.ts",
+        "../../../node_modules/@types/node/dns.d.ts",
+        "../../../node_modules/@types/node/net.d.ts",
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/trace_events.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/tty.d.ts": [
+        "../../../node_modules/@types/node/net.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/url.d.ts": [
+        "../../../node_modules/@types/node/querystring.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/util.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/v8.d.ts": [
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/vm.d.ts": [
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/worker_threads.d.ts": [
+        "../../../node_modules/@types/node/vm.d.ts",
+        "../../../node_modules/@types/node/events.d.ts",
+        "../../../node_modules/@types/node/stream.d.ts",
+        "../../../node_modules/@types/node/fs.d.ts",
+        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../../../node_modules/@types/node/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../../../node_modules/@types/node/zlib.d.ts": [
+        "../../../node_modules/@types/node/stream.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
@@ -1707,221 +1987,8 @@
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../../../node_modules/@types/node/ts3.2/index.d.ts": [
-        "../../../node_modules/@types/node/base.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/globals.d.ts",
+      "../../../node_modules/@types/node/ts3.2/fs.d.ts": [
         "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/async_hooks.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/perf_hooks.d.ts": [
-        "../../../node_modules/@types/node/async_hooks.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/buffer.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/child_process.d.ts": [
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/net.d.ts",
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/cluster.d.ts": [
-        "../../../node_modules/@types/node/child_process.d.ts",
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/net.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/console.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/constants.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/crypto.d.ts": [
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/tls.d.ts": [
-        "../../../node_modules/@types/node/crypto.d.ts",
-        "../../../node_modules/@types/node/dns.d.ts",
-        "../../../node_modules/@types/node/net.d.ts",
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/https.d.ts": [
-        "../../../node_modules/@types/node/tls.d.ts",
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/http.d.ts",
-        "../../../node_modules/@types/node/url.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/http2.d.ts": [
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/net.d.ts",
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/tls.d.ts",
-        "../../../node_modules/@types/node/url.d.ts",
-        "../../../node_modules/@types/node/http.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/dgram.d.ts": [
-        "../../../node_modules/@types/node/net.d.ts",
-        "../../../node_modules/@types/node/dns.d.ts",
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/dns.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/net.d.ts": [
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/dns.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/tty.d.ts": [
-        "../../../node_modules/@types/node/net.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/process.d.ts": [
-        "../../../node_modules/@types/node/tty.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/http.d.ts": [
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/url.d.ts",
-        "../../../node_modules/@types/node/net.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/domain.d.ts": [
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/events.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/worker_threads.d.ts": [
-        "../../../node_modules/@types/node/vm.d.ts",
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/stream.d.ts": [
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/zlib.d.ts": [
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/v8.d.ts": [
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/readline.d.ts": [
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/repl.d.ts": [
-        "../../../node_modules/@types/node/readline.d.ts",
-        "../../../node_modules/@types/node/vm.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/fs.d.ts": [
-        "../../../node_modules/@types/node/stream.d.ts",
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/url.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/ts3.2/globals.d.ts": [
-        "../../../node_modules/@types/node/globals.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
@@ -1930,117 +1997,55 @@
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts"
       ],
-      "../../../node_modules/@types/node/ts3.2/fs.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/vm.d.ts": [
+      "../../../node_modules/@types/node/ts3.2/globals.d.ts": [
+        "../../../node_modules/@types/node/globals.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
         "../../../node_modules/@types/node/util.d.ts",
         "../../../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../../../node_modules/@types/node/util.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
+      "../../../node_modules/@types/node/ts3.2/index.d.ts": [
+        "../../../node_modules/@types/node/base.d.ts",
         "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/url.d.ts": [
-        "../../../node_modules/@types/node/querystring.d.ts",
+        "../../../node_modules/@types/node/ts3.2/util.d.ts",
+        "../../../node_modules/@types/node/ts3.2/globals.d.ts",
         "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/trace_events.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/timers.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/string_decoder.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/querystring.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/punycode.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/path.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/os.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/module.d.ts": [
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../../../node_modules/@types/node/inspector.d.ts": [
-        "../../../node_modules/@types/node/events.d.ts",
-        "../../../node_modules/@types/node/fs.d.ts",
-        "../../../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../../../node_modules/@types/node/util.d.ts",
-        "../../../node_modules/@types/node/ts3.2/util.d.ts"
+        "../../../node_modules/@types/node/util.d.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
+      "../../../node_modules/typescript/lib/lib.es5.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2016.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2017.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2018.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.core.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.collection.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.generator.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.iterable.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.promise.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.proxy.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.reflect.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.symbol.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2016.array.include.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2017.object.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2017.string.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2017.intl.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2017.typedarrays.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2018.asyncgenerator.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2018.asynciterable.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2018.intl.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2018.promise.d.ts",
+      "../../../node_modules/typescript/lib/lib.es2018.regexp.d.ts",
+      "../../../node_modules/typescript/lib/lib.esnext.intl.d.ts",
+      "../../../node_modules/typescript/lib/lib.esnext.bigint.d.ts",
       "../../../node_modules/cessnalib/.dist/src/index.d.ts",
       "../../core/dist/particle/particle.h.d.ts",
       "../../core/dist/particle/particle.d.ts",
       "../../core/dist/particle/index.d.ts",
-      "../../core/dist/organelle/organelle.h.d.ts",
-      "../../core/dist/organelle/organelle.d.ts",
-      "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.d.ts",
-      "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts",
-      "../../core/dist/organelle/endoplasmic-reticulum/organelle-module.d.ts",
-      "../../core/dist/organelle/endoplasmic-reticulum/index.d.ts",
-      "../../core/dist/organelle/nucleus/create-organelle-module.d.ts",
-      "../../core/dist/organelle/nucleus/gene.h.d.ts",
-      "../../core/dist/organelle/nucleus/organelle-module.d.ts",
-      "../../core/dist/organelle/nucleus/gene.d.ts",
-      "../../core/dist/organelle/nucleus/index.d.ts",
-      "../../core/dist/organelle/logger.d.ts",
-      "../../core/dist/organelle/gps.d.ts",
-      "../../core/dist/organelle/matter.d.ts",
-      "../../core/dist/organelle/net-client.d.ts",
-      "../../core/dist/organelle/net-server.d.ts",
-      "../../core/dist/organelle/temperature.d.ts",
-      "../../core/dist/organelle/timer.d.ts",
-      "../../core/dist/organelle/ui.d.ts",
-      "../../core/dist/organelle/vacuole.d.ts",
-      "../../core/dist/organelle/index.d.ts",
-      "../../core/dist/common/common-particles.h.d.ts",
-      "../../core/dist/common/common-particles.d.ts",
-      "../../core/dist/common/index.d.ts",
       "../../core/dist/create-euglena.d.ts",
-      "../../core/dist/index.d.ts",
-      "../src/index.ts",
       "../../../node_modules/@types/node/globals.d.ts",
       "../../../node_modules/@types/node/assert.d.ts",
       "../../../node_modules/@types/node/async_hooks.d.ts",
@@ -2086,33 +2091,32 @@
       "../../../node_modules/@types/node/ts3.2/util.d.ts",
       "../../../node_modules/@types/node/ts3.2/globals.d.ts",
       "../../../node_modules/@types/node/ts3.2/index.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2016.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2017.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2018.d.ts",
-      "../../../node_modules/typescript/lib/lib.esnext.bigint.d.ts",
-      "../../../node_modules/typescript/lib/lib.esnext.intl.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2018.regexp.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2018.promise.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2018.intl.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2018.asynciterable.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2018.asyncgenerator.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2017.typedarrays.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2017.intl.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2017.string.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2017.object.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2016.array.include.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.symbol.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.reflect.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.proxy.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.promise.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.iterable.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.generator.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.collection.d.ts",
-      "../../../node_modules/typescript/lib/lib.es2015.core.d.ts",
-      "../../../node_modules/typescript/lib/lib.es5.d.ts"
+      "../../core/dist/organelle/organelle.h.d.ts",
+      "../../core/dist/organelle/ui.d.ts",
+      "../../core/dist/organelle/timer.d.ts",
+      "../../core/dist/organelle/temperature.d.ts",
+      "../../core/dist/organelle/net-client.d.ts",
+      "../../core/dist/organelle/matter.d.ts",
+      "../../core/dist/organelle/gps.d.ts",
+      "../../core/dist/organelle/logger.d.ts",
+      "../../core/dist/organelle/organelle.d.ts",
+      "../../core/dist/organelle/nucleus/create-organelle-module.d.ts",
+      "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.d.ts",
+      "../../core/dist/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts",
+      "../../core/dist/organelle/endoplasmic-reticulum/organelle-module.d.ts",
+      "../../core/dist/organelle/endoplasmic-reticulum/index.d.ts",
+      "../../core/dist/organelle/nucleus/gene.h.d.ts",
+      "../../core/dist/organelle/nucleus/organelle-module.d.ts",
+      "../../core/dist/organelle/nucleus/gene.d.ts",
+      "../../core/dist/organelle/nucleus/index.d.ts",
+      "../../core/dist/organelle/net-server.d.ts",
+      "../../core/dist/organelle/vacuole.d.ts",
+      "../../core/dist/organelle/index.d.ts",
+      "../../core/dist/common/common-particles.h.d.ts",
+      "../../core/dist/common/common-particles.d.ts",
+      "../../core/dist/common/index.d.ts",
+      "../../core/dist/index.d.ts",
+      "../src/index.ts"
     ]
   },
   "version": "3.7.2"

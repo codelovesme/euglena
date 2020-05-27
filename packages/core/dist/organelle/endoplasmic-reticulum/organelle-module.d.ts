@@ -1,14 +1,15 @@
 import { OrganelleReceive, OrganelleModule } from "..";
 import { Particle } from "../../particle";
-declare const endoplasmicReticulumJs: OrganelleModule<import("..").InsertSapIntoParticles<{
+import { P } from "../organelle.h";
+declare const endoplasmicReticulumJs: import("..").EndoplasmicReticulumModule<import("..").InsertSingletonSapIntoParticles<{
     incoming: {
-        TransmitParticle: import("..").P<{
+        TransmitParticle: P<{
             target: string;
             particle: Particle<string, any, {
                 [x: string]: any;
             }>;
         }, {}>;
-        OrganelleInfo: import("..").P<{
+        OrganelleInfo: P<{
             name: string;
             location: {
                 type: "FileSystemPath" | "NodeModules" | "Url";
@@ -16,24 +17,24 @@ declare const endoplasmicReticulumJs: OrganelleModule<import("..").InsertSapInto
             } | {
                 type: "InMemory";
                 organelle: OrganelleModule<import("..").AllOrganelleParticles<{
-                    [x: string]: import("..").P<any, {}>;
+                    [x: string]: P<any, {}>;
                 }, {
-                    [x: string]: import("..").P<any, {}>;
+                    [x: string]: P<any, {}>;
                 }>>;
             };
         }, {}>;
     };
     outgoing: {
-        Log: import("..").P<{
+        Log: P<{
             message: string;
             level: "Error" | "Info" | "Warning";
         }, {}>;
-        TransmitResponse: import("..").P<void | Particle<string, any, {
+        TransmitResponse: P<void | Particle<string, any, {
             [x: string]: any;
         }>, {}>;
-        EuglenaHasBeenBorn: import("..").P<any, {}>;
+        EuglenaHasBeenBorn: P<any, {}>;
     };
-}, import("..").P<{
+}, P<{
     particles: Particle<string, any, {
         [x: string]: any;
     }>[];
@@ -42,7 +43,5 @@ declare const endoplasmicReticulumJs: OrganelleModule<import("..").InsertSapInto
     }>, Particle<string, any, {
         [x: string]: any;
     }>>;
-}, {
-    organelleName: string;
-}>>>;
+}, {}>>>;
 export { endoplasmicReticulumJs };

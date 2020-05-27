@@ -43,6 +43,6 @@ declare const vacuole: {
                 level: "Error" | "Info" | "Warning";
             }, {}>;
         };
-    }>;
+    }, undefined>;
 };
 export { vacuole };

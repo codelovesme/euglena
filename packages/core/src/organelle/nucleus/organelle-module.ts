@@ -2,7 +2,8 @@ import { js, sys } from "cessnalib";
 import nucleus from "./create-organelle-module";
 import { Particle } from "../..";
 import { Gene, GeneReaction } from "./gene.h";
-import { NucleusTransmit, Sap } from "..";
+import { NucleusTransmit } from "..";
+import { P } from "../organelle.h";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle, sourceOrganelle: string) => Promise<Particle | void>[];
@@ -65,8 +66,7 @@ const createReceive = (t: NucleusTransmit, cp: typeof nucleus.cp.outgoing) => (
 };
 
 export default nucleus.com<
-    Sap<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }>,
-    "Nucleus"
+    P<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }>
 >({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;

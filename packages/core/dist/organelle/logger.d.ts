@@ -10,6 +10,6 @@ declare const logger: {
             ACK: import("./organelle.h").P<undefined, {}>;
             Exception: import("./organelle.h").P<import("cessnalib").sys.type.Exception, {}>;
         };
-    }>;
+    }, undefined>;
 };
 export { logger };

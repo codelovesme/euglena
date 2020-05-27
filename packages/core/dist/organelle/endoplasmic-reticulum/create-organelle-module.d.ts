@@ -31,5 +31,5 @@ declare const endoplasmicReticulum: import("..").CreateOrganelleModuleInterface<
         }>, {}>;
         EuglenaHasBeenBorn: import("..").P<any, {}>;
     };
-}>;
+}, "EndoplasmicReticulum">;
 export { endoplasmicReticulum };

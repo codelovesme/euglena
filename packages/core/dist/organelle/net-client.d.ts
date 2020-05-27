@@ -21,6 +21,6 @@ declare const netClient: {
                 level: "Error" | "Info" | "Warning";
             }, {}>;
         };
-    }>;
+    }, undefined>;
 };
 export { netClient };

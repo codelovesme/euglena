@@ -17,6 +17,6 @@ declare const netServer: {
                 level: "Error" | "Info" | "Warning";
             }, {}>;
         };
-    }>;
+    }, undefined>;
 };
 export { netServer };
