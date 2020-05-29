@@ -4,13 +4,10 @@ import vacuole from "@euglena/organelle.vacuole.js";
 
 export default [
     cp("EuglenaName", "must_be_replaced"),
-    nucleus.cp.incoming.Sap(
-        {
-            path: __dirname + "/chromosome.js",
-            type: "FileSystemPath"
-        },
-        { organelleName: "Nucleus" }
-    ),
+    nucleus.cp.incoming.Sap({
+        path: __dirname + "/chromosome.js",
+        type: "FileSystemPath"
+    }),
     reticulum.cp.incoming.OrganelleInfo({
         name: "Vacuole",
         location: {

@@ -1,6 +1,7 @@
 import { P } from "..";
 import { Particle } from "../..";
-import { OrganelleModule, FromP } from "../organelle.h";
+import { FromP } from "../particles.h";
+import { OrganelleModule } from "../organelle-module.h";
 export declare type PEuglenaHasBeenBorn = P;
 export declare type PTransmitParticle = P<{
     target: string;

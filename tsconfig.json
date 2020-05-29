@@ -7,6 +7,7 @@
         "target": "es5",
         "skipLibCheck": true,
         "strictNullChecks": true,
+        "strict": true,
         "alwaysStrict": true,
         "noImplicitThis": true,
         "noImplicitAny": true,

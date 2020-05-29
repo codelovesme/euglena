@@ -1,11 +1,10 @@
 import { Particle } from "../..";
-import { NucleusTransmit } from "..";
 import { sys } from "cessnalib";
+import { NucleusTransmit } from "../organelle-receive.h";
 export interface GeneReaction<TriggerParticle extends Particle = Particle> {
     (particle: TriggerParticle, source: string, tools: {
-        transmit: NucleusTransmit;
         /**
-         * Alias for OrganelleTransmit
+         * OrganelleTransmit
          */
         t: NucleusTransmit;
     }): Promise<Particle | void>;

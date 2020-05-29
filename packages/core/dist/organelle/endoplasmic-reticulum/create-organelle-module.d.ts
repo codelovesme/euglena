@@ -13,11 +13,7 @@ declare const endoplasmicReticulum: import("..").CreateOrganelleModuleInterface<
                 path: string;
             } | {
                 type: "InMemory";
-                organelle: import("..").OrganelleModule<import("..").AllOrganelleParticles<{
-                    [x: string]: import("..").P<any, {}>;
-                }, {
-                    [x: string]: import("..").P<any, {}>;
-                }>>;
+                organelle: import("..").OrganelleModule<any>;
             };
         }, {}>;
     };

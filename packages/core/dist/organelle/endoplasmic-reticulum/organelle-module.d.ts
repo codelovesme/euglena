@@ -1,6 +1,6 @@
-import { OrganelleReceive, OrganelleModule } from "..";
+import { OrganelleModule } from "..";
 import { Particle } from "../../particle";
-import { P } from "../organelle.h";
+import { P } from "../particles.h";
 declare const endoplasmicReticulumJs: import("..").EndoplasmicReticulumModule<import("..").InsertSingletonSapIntoParticles<{
     incoming: {
         TransmitParticle: P<{
@@ -16,11 +16,7 @@ declare const endoplasmicReticulumJs: import("..").EndoplasmicReticulumModule<im
                 path: string;
             } | {
                 type: "InMemory";
-                organelle: OrganelleModule<import("..").AllOrganelleParticles<{
-                    [x: string]: P<any, {}>;
-                }, {
-                    [x: string]: P<any, {}>;
-                }>>;
+                organelle: OrganelleModule<any>;
             };
         }, {}>;
     };
@@ -38,10 +34,6 @@ declare const endoplasmicReticulumJs: import("..").EndoplasmicReticulumModule<im
     particles: Particle<string, any, {
         [x: string]: any;
     }>[];
-    reticulumReceive: OrganelleReceive<Particle<string, any, {
-        [x: string]: any;
-    }>, Particle<string, any, {
-        [x: string]: any;
-    }>>;
+    reticulumReceive: any;
 }, {}>>>;
 export { endoplasmicReticulumJs };

@@ -1,7 +1,7 @@
 import { sys } from "cessnalib";
 import { Particle } from "../..";
 import { Gene } from "./gene.h";
-import { P } from "../organelle.h";
+import { P } from "../particles.h";
 declare const _default: import("..").SingletonOrganelleModule<import("..").InsertSingletonSapIntoParticles<{
     incoming: {
         ReceiveParticle: P<{

@@ -95,7 +95,6 @@ var createReceive = function (t, cp) { return function (particle, source) {
         console.log("Triggering Gene: " + geneName + " Particle: " + JSON.stringify(particle.meta));
         promises = __spreadArrays(promises, [
             reaction(particle, source, {
-                transmit: t,
                 t: t
             })
         ]);

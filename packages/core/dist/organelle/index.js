@@ -3,16 +3,6 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./organelle"));
-__export(require("./endoplasmic-reticulum"));
-__export(require("./nucleus"));
-__export(require("./logger"));
-__export(require("./gps"));
-__export(require("./matter"));
-__export(require("./net-client"));
-__export(require("./net-server"));
-__export(require("./temperature"));
-__export(require("./timer"));
-__export(require("./ui"));
-__export(require("./vacuole"));
+__export(require("./define-organelle-module-create"));
+__export(require("./kind"));
 //# sourceMappingURL=index.js.map
