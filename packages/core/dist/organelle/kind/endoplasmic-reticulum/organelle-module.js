@@ -66,9 +66,9 @@ var transmit = function (source, particle, target) { return __awaiter(void 0, vo
             case 0:
                 if (!target) {
                     target = nucleusJsName;
-                    particle = nucleus_1.nucleus.cp.incoming.ReceiveParticle({ particle: particle, source: source });
+                    particle = nucleus_1.nucleus.cp.ReceiveParticle({ particle: particle, source: source });
                 }
-                return [4 /*yield*/, organelles[endoplasmicReticulumName](create_organelle_module_1.endoplasmicReticulum.cp.incoming.TransmitParticle({ particle: particle, target: target }))];
+                return [4 /*yield*/, organelles[endoplasmicReticulumName](create_organelle_module_1.endoplasmicReticulum.cp.TransmitParticle({ particle: particle, target: target }))];
             case 1:
                 resp = (_a.sent());
                 return [2 /*return*/, resp ? resp.data : undefined];

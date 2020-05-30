@@ -11,7 +11,7 @@ declare const endoplasmicReticulumJs: import("../../organelle-module.h").Endopla
     }>, Particle<string, any, {
         [x: string]: any;
     }>>;
-}, {}>, import("../../particles.h").InsertSingletonSapIntoParticles<{
+}, {}>, import("../../particles.h").InsertSapIntoParticles<{
     incoming: {
         TransmitParticle: P<{
             target: string;

@@ -10,7 +10,7 @@ declare const nucleusJs: import("../..").SingletonOrganelleModule<P<{
         [x: string]: any;
     }>>[];
     type: "InMemory";
-}, {}>, import("../../particles.h").InsertSingletonSapIntoParticles<{
+}, {}>, import("../../particles.h").InsertSapIntoParticles<{
     incoming: {
         ReceiveParticle: P<{
             particle: Particle<string, any, {

@@ -1,4 +1,4 @@
-import { InComingParticleNameUnion, AllOrganelleParticles, P, InsertSingletonSapIntoParticles } from "./particles.h";
+import { InComingParticleNameUnion, AllOrganelleParticles, P, InsertSapIntoParticles } from "./particles.h";
 import { OrganelleReaction, NucleusReaction, EndoplasmicReticulumReaction } from "./reaction.h";
 import { SingletonOrganelleName } from "./singleton-organelle.h";
 
@@ -18,5 +18,5 @@ export type BindSingletonOrganelleReactions<
     COP extends AllOrganelleParticles,
     S extends P
 > = OrganelleName extends "EndoplasmicReticulum"
-    ? BindReticulumReactions<InsertSingletonSapIntoParticles<COP, S>>
-    : BindNucleusReactions<InsertSingletonSapIntoParticles<COP, S>>;
+    ? BindReticulumReactions<InsertSapIntoParticles<COP, S>>
+    : BindNucleusReactions<InsertSapIntoParticles<COP, S>>;

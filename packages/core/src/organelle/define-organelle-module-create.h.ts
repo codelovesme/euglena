@@ -5,7 +5,6 @@ import {
     OutGoingParticleNameUnion,
     CreateAllOrganelleParticles,
     InsertSapIntoParticles,
-    InsertSingletonSapIntoParticles,
     Sap,
     P
 } from "./particles.h";
@@ -27,18 +26,18 @@ export interface CreateOrganelleModuleInterface<
         : OrganelleName extends "EndoplasmicReticulum"
         ? <S extends P>(
               bindReactions: BindSingletonOrganelleReactions<OrganelleName, COP, S>
-          ) => EndoplasmicReticulumModule<S, InsertSingletonSapIntoParticles<COP, S>>
+          ) => EndoplasmicReticulumModule<S, InsertSapIntoParticles<COP, S>>
         : <S extends P>(
               bindReactions: BindSingletonOrganelleReactions<
                   Exclude<OrganelleName, undefined | "EndoplasmicReticulum">,
                   COP,
                   S
               >
-          ) => SingletonOrganelleModule<S, InsertSingletonSapIntoParticles<COP, S>>;
+          ) => SingletonOrganelleModule<S, InsertSapIntoParticles<COP, S>>;
     /**
      * createParticles
      */
-    cp: CreateAllOrganelleParticles<COP>;
+    cp: CreateAllOrganelleParticles<COP>["incoming"];
 }
 
 export interface DefineOrganelleModuleCreate {

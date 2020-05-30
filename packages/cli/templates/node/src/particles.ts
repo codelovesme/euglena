@@ -20,11 +20,11 @@ export default [
             path: "@euglena/organelle.logger.console"
         }
     }),
-    nucleus.cp.incoming.Sap({
+    nucleus.cs({
         path: __dirname + "/chromosome.js",
         type: "FileSystemPath"
     }),
-    vacuoleJs.cp.incoming.Sap(
+    vacuoleJs.cs(
         {
             path: __dirname + "/particles.js",
             type: "FileSystemPath"

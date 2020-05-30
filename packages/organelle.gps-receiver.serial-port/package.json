@@ -29,11 +29,11 @@
         "serialport": "^9.0.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.0.21"
+        "@euglena/core": "^1.1.0"
     },
     "devDependencies": {
         "@types/serialport": "^8.0.1",
-        "@euglena/core": "^1.0.21"
+        "@euglena/core": "^1.1.0"
     },
     "files": [
         "dist/*",

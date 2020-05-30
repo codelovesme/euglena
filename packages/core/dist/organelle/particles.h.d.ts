@@ -44,13 +44,7 @@ export declare type InComingParticle<COP extends AllOrganelleParticles, N extend
 export declare type OutGoingParticle<COP extends AllOrganelleParticles, N extends OutGoingParticleNameUnion<COP> = OutGoingParticleNameUnion<COP>> = {
     [P in N]: Particle<P, COP["outgoing"][P]["data"], COP["outgoing"][P]["adds"]>;
 }[N];
-export declare type InsertSapIntoParticles<COP extends AllOrganelleParticles, S extends Sap> = {
-    incoming: COP["incoming"] & {
-        ["Sap"]: S;
-    };
-    outgoing: COP["outgoing"];
-};
-export declare type InsertSingletonSapIntoParticles<COP extends AllOrganelleParticles, S extends P> = {
+export declare type InsertSapIntoParticles<COP extends AllOrganelleParticles, S extends P> = {
     incoming: COP["incoming"] & {
         ["Sap"]: S;
     };

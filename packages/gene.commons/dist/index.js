@@ -42,7 +42,7 @@ exports.default = core_1.createChromosome(function (addGene) {
         var t = _a.t;
         return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_b) {
-                t(core_1.logger.v1.cp.incoming.Log(particle.data), "Logger");
+                t(core_1.logger.v1.cp.Log(particle.data), "Logger");
                 return [2 /*return*/];
             });
         });

@@ -14,10 +14,10 @@ const nucleusJsName: string = "Nucleus";
 const transmit = async (source: string, particle: Particle, target?: string) => {
     if (!target) {
         target = nucleusJsName;
-        particle = nucleus.cp.incoming.ReceiveParticle({ particle, source });
+        particle = nucleus.cp.ReceiveParticle({ particle, source });
     }
     const resp = (await organelles[endoplasmicReticulumName](
-        reticulum.cp.incoming.TransmitParticle({ particle, target: target! })
+        reticulum.cp.TransmitParticle({ particle, target: target! })
     )) as Particle<string, Particle> | void;
     return resp ? resp.data : undefined;
 };
@@ -25,7 +25,7 @@ const transmit = async (source: string, particle: Particle, target?: string) => 
 const t: OrganelleTransmit = (particle: Particle) => transmit(endoplasmicReticulumName, particle);
 
 const attachOrganelle = async (
-    organelleInfoData: ReturnType<typeof reticulum.cp.incoming.OrganelleInfo>["data"]
+    organelleInfoData: ReturnType<typeof reticulum.cp.OrganelleInfo>["data"]
 ): Promise<void> => {
     let organelle: OrganelleModule<Sap> | undefined;
     switch (organelleInfoData.location.type) {
@@ -62,7 +62,7 @@ const endoplasmicReticulumJs = reticulum.com<P<{ particles: Particle[]; reticulu
          */
         const { particles, reticulumReceive } = particle.data;
         const organelleInfos = particles.filter((x) => x.meta.class === "OrganelleInfo") as ReturnType<
-            typeof reticulum.cp.incoming.OrganelleInfo
+            typeof reticulum.cp.OrganelleInfo
         >[];
         organelles = {
             [endoplasmicReticulumName]: reticulumReceive as any,
