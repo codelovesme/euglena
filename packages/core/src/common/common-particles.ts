@@ -32,6 +32,6 @@ export const createCommonParticles = defineCommonParticles([
 ]);
 
 /**
- * Alias for createCommonParticle
+ * createCommonParticle
  */
 export const ccp = createCommonParticles;

@@ -1,4 +1,8 @@
-declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").P<{
+    test: boolean;
+}, {
+    organelleName: string;
+}>, import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         Log: import("@euglena/core").P<{
             message: string;

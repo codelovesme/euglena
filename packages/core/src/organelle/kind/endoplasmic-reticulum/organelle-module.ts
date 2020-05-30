@@ -27,7 +27,7 @@ const t: OrganelleTransmit = (particle: Particle) => transmit(endoplasmicReticul
 const attachOrganelle = async (
     organelleInfoData: ReturnType<typeof reticulum.cp.incoming.OrganelleInfo>["data"]
 ): Promise<void> => {
-    let organelle: OrganelleModule | undefined;
+    let organelle: OrganelleModule<Sap> | undefined;
     switch (organelleInfoData.location.type) {
         case "FileSystemPath":
         case "NodeModules":

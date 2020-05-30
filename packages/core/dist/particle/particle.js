@@ -29,11 +29,11 @@ function isParticle(x) {
 }
 exports.isParticle = isParticle;
 /**
- * Alias for createParticle
+ * createParticle
  */
 exports.cp = exports.createParticle;
 /**
- * Alias for createMeta
+ * createMeta
  */
 exports.cm = exports.createMeta;
 //# sourceMappingURL=particle.js.map

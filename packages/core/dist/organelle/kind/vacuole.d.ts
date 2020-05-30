@@ -8,7 +8,7 @@ declare const vacuole: {
                 query?: import("cessnalib").sys.type.RecursivePartial<import("../..").Particle<string, any, {
                     [x: string]: any;
                 }>> | undefined;
-                count: number | "all";
+                count: import("../../common").Count;
             } | import("../..").Particle<string, any, {
                 [x: string]: any;
             }>[], {}>;
@@ -16,13 +16,13 @@ declare const vacuole: {
                 query: import("cessnalib").sys.type.RecursivePartial<import("../..").Particle<string, any, {
                     [x: string]: any;
                 }>>;
-                count: number | "all";
+                count: import("../../common").Count;
             }, {}>;
             RemoveParticle: import("..").P<{
                 query: import("cessnalib").sys.type.RecursivePartial<import("../..").Particle<string, any, {
                     [x: string]: any;
                 }>>;
-                count: number | "all";
+                count: import("../../common").Count;
             }, {}>;
             GetAlive: import("..").P<undefined, {}>;
             Hibernate: import("..").P<undefined, {}>;

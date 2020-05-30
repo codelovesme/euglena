@@ -1,17 +1,17 @@
 import { SingletonOrganelleName } from "./singleton-organelle.h";
 import {
     AllOrganelleParticles,
-    InsertSapIntoParticles,
     InComingParticleNameUnion,
     OutGoingParticleNameUnion,
-    InsertSingletonSapIntoParticles,
     CreateAllOrganelleParticles,
-    P,
-    Sap
+    InsertSapIntoParticles,
+    InsertSingletonSapIntoParticles,
+    Sap,
+    P
 } from "./particles.h";
-import { BindSingletonOrganelleReactions } from "./bind-reaction.h";
-import { EndoplasmicReticulumModule, SingletonOrganelleModule, OrganelleModule } from "./organelle-module.h";
 import { BindOrganelleReactions } from "./bind-reaction.h";
+import { EndoplasmicReticulumModule, OrganelleModule, SingletonOrganelleModule } from "./organelle-module.h";
+import { BindSingletonOrganelleReactions } from "./bind-reaction.h";
 
 export interface CreateOrganelleModuleInterface<
     COP extends AllOrganelleParticles,
@@ -23,18 +23,18 @@ export interface CreateOrganelleModuleInterface<
     com: OrganelleName extends undefined
         ? <S extends Sap>(
               bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, S>>
-          ) => OrganelleModule<InsertSapIntoParticles<COP, S>>
+          ) => OrganelleModule<S, InsertSapIntoParticles<COP, S>>
         : OrganelleName extends "EndoplasmicReticulum"
         ? <S extends P>(
               bindReactions: BindSingletonOrganelleReactions<OrganelleName, COP, S>
-          ) => EndoplasmicReticulumModule<InsertSingletonSapIntoParticles<COP, S>>
+          ) => EndoplasmicReticulumModule<S, InsertSingletonSapIntoParticles<COP, S>>
         : <S extends P>(
               bindReactions: BindSingletonOrganelleReactions<
                   Exclude<OrganelleName, undefined | "EndoplasmicReticulum">,
                   COP,
                   S
               >
-          ) => SingletonOrganelleModule<InsertSingletonSapIntoParticles<COP, S>>;
+          ) => SingletonOrganelleModule<S, InsertSingletonSapIntoParticles<COP, S>>;
     /**
      * createParticles
      */
@@ -46,7 +46,7 @@ export interface DefineOrganelleModuleCreate {
         incomingParticleNames: InComingParticleNameUnion<COP>[],
         outgoingParticleNames: OutGoingParticleNameUnion<COP>[]
     ): CreateOrganelleModuleInterface<COP>;
-    <COP extends AllOrganelleParticles, OrganelleName extends "EndoplasmicReticulum" | "Nucleus">(
+    <COP extends AllOrganelleParticles, OrganelleName extends SingletonOrganelleName>(
         incomingParticleNames: InComingParticleNameUnion<COP>[],
         outgoingParticleNames: OutGoingParticleNameUnion<COP>[],
         organelleName: OrganelleName

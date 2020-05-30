@@ -36,7 +36,7 @@ exports.createCommonParticles = defineCommonParticles([
     "Impulse"
 ]);
 /**
- * Alias for createCommonParticle
+ * createCommonParticle
  */
 exports.ccp = exports.createCommonParticles;
 //# sourceMappingURL=common-particles.js.map

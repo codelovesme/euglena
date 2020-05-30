@@ -1,4 +1,8 @@
-declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").P<{
+    filename: string;
+}, {
+    organelleName: string;
+}>, import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         SaveParticle: import("@euglena/core").P<{
             particle: import("@euglena/core").Particle<string, any, {
@@ -7,7 +11,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             query?: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
                 [x: string]: any;
             }>> | undefined;
-            count: number | "all";
+            count: import("@euglena/core").Count;
         } | import("@euglena/core").Particle<string, any, {
             [x: string]: any;
         }>[], {}>;
@@ -15,13 +19,13 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
                 [x: string]: any;
             }>>;
-            count: number | "all";
+            count: import("@euglena/core").Count;
         }, {}>;
         RemoveParticle: import("@euglena/core").P<{
             query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
                 [x: string]: any;
             }>>;
-            count: number | "all";
+            count: import("@euglena/core").Count;
         }, {}>;
         GetAlive: import("@euglena/core").P<undefined, {}>;
         Hibernate: import("@euglena/core").P<undefined, {}>;

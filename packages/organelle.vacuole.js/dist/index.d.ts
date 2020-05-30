@@ -1,5 +1,15 @@
 import { Particle } from "@euglena/core";
-declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").P<{
+    path: string;
+    type: "FileSystemPath" | "NodeModules" | "Url";
+} | {
+    particles: Particle<string, any, {
+        [x: string]: any;
+    }>[];
+    type: "InMemory";
+}, {
+    organelleName: string;
+}>, import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         SaveParticle: import("@euglena/core").P<{
             particle: Particle<string, any, {
@@ -8,7 +18,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             query?: import("cessnalib").sys.type.RecursivePartial<Particle<string, any, {
                 [x: string]: any;
             }>> | undefined;
-            count: number | "all";
+            count: import("@euglena/core").Count;
         } | Particle<string, any, {
             [x: string]: any;
         }>[], {}>;
@@ -16,13 +26,13 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             query: import("cessnalib").sys.type.RecursivePartial<Particle<string, any, {
                 [x: string]: any;
             }>>;
-            count: number | "all";
+            count: import("@euglena/core").Count;
         }, {}>;
         RemoveParticle: import("@euglena/core").P<{
             query: import("cessnalib").sys.type.RecursivePartial<Particle<string, any, {
                 [x: string]: any;
             }>>;
-            count: number | "all";
+            count: import("@euglena/core").Count;
         }, {}>;
         GetAlive: import("@euglena/core").P<undefined, {}>;
         Hibernate: import("@euglena/core").P<undefined, {}>;

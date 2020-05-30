@@ -8,10 +8,7 @@ import { P } from "../../particles.h";
 let genes: Gene[] = [];
 let receive: (particle: Particle, sourceOrganelle: string) => Promise<Particle | void>[];
 
-const createReceive = (t: NucleusTransmit, cp: typeof nucleus.cp.outgoing) => (
-    particle: Particle,
-    source: string
-): Promise<Particle | void>[] => {
+const createReceive = (t: NucleusTransmit) => (particle: Particle, source: string): Promise<Particle | void>[] => {
     //find which genes are matched with properties of the particle
     const triggerableReactions = new Array<{
         index: number;
@@ -72,7 +69,7 @@ const nucleusJs = nucleus.com<
         return receive(particle, source) as any;
     },
     Sap: async (particle, { t, cp }) => {
-        receive = createReceive(t as any, cp);
+        receive = createReceive(t as any);
         try {
             switch (particle.data.type) {
                 case "FileSystemPath":

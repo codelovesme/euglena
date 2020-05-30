@@ -47,7 +47,7 @@ var cessnalib_1 = require("cessnalib");
 var create_organelle_module_1 = require("./create-organelle-module");
 var genes = [];
 var receive;
-var createReceive = function (t, cp) { return function (particle, source) {
+var createReceive = function (t) { return function (particle, source) {
     //find which genes are matched with properties of the particle
     var triggerableReactions = new Array();
     for (var i = 0; i < genes.length; i++) {
@@ -110,7 +110,7 @@ var nucleusJs = create_organelle_module_1.nucleus.com({
         var t = _a.t, cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_b) {
-                receive = createReceive(t, cp);
+                receive = createReceive(t);
                 try {
                     switch (particle.data.type) {
                         case "FileSystemPath":

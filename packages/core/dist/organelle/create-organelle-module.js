@@ -67,7 +67,7 @@ var createOrganelleModule = function (createParticles, bindReactions, organelleN
         /**
          * createParticles
          */
-        cp: createParticles,
+        cs: createParticles.incoming["Sap"],
         /**
          * createOrganelle
          */

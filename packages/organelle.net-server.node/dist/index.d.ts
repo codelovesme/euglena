@@ -1,4 +1,8 @@
-declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").P<{
+    port: number;
+}, {
+    organelleName: string;
+}>, import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         GetAlive: import("@euglena/core").P<undefined, {}>;
     };

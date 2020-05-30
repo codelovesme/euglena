@@ -5,7 +5,7 @@ import { Particle } from "./particle";
 export const createEuglena = (particles: Particle[]) => {
     const reticulumReceive: OrganelleReceive = reticulum.co() as any;
     reticulumReceive(
-        reticulum.cp.incoming.Sap({
+        reticulum.cs({
             reticulumReceive: reticulumReceive,
             particles: particles
         })
@@ -13,6 +13,6 @@ export const createEuglena = (particles: Particle[]) => {
 };
 
 /**
- * Alias for createEuglena
+ * createEuglena
  */
 export const ce = createEuglena;

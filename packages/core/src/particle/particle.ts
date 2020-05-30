@@ -31,10 +31,10 @@ export function isParticle(x: any): x is Particle {
 }
 
 /**
- * Alias for createParticle
+ * createParticle
  */
 export const cp = createParticle;
 /**
- * Alias for createMeta
+ * createMeta
  */
 export const cm = createMeta;

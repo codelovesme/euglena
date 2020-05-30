@@ -1,6 +1,6 @@
-import { CommonParticles } from "../common";
-import { domc } from "./organelle";
-import { P } from "./organelle.h";
+import { CommonParticles } from "../../common";
+import { domc } from "../define-organelle-module-create";
+import { P } from "../particles.h";
 
 const webServer = {
     v1: domc<{

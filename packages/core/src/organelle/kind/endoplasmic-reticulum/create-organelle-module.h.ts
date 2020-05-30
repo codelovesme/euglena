@@ -1,6 +1,6 @@
 import { P } from "../..";
 import { Particle } from "../../..";
-import { FromP } from "../../particles.h";
+import { FromP, Sap } from "../../particles.h";
 import { OrganelleModule } from "../../organelle-module.h";
 
 export type PEuglenaHasBeenBorn = P;
@@ -14,7 +14,7 @@ export type POrganelleInfo = P<{
           }
         | {
               type: "InMemory";
-              organelle: OrganelleModule;
+              organelle: OrganelleModule<Sap>;
           };
 }>;
 export type PTransmitResponse = P<Particle | void>;

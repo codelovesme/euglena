@@ -3,7 +3,12 @@ export declare const ToolsContext: React.Context<{
     t: any;
     cp: any;
 }>;
-declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").InsertSapIntoParticles<{
+declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").P<{
+    rootComponent: React.FC<any>;
+    serviceWorker: boolean;
+}, {
+    organelleName: string;
+}>, import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         Render: import("@euglena/core").P<any, {}>;
     };

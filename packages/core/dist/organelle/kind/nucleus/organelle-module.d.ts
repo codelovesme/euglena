@@ -2,7 +2,15 @@ import { sys } from "cessnalib";
 import { Particle } from "../../../particle";
 import { Gene } from "./gene.h";
 import { P } from "../../particles.h";
-declare const nucleusJs: import("../..").SingletonOrganelleModule<import("../../particles.h").InsertSingletonSapIntoParticles<{
+declare const nucleusJs: import("../..").SingletonOrganelleModule<P<{
+    path: string;
+    type: "FileSystemPath" | "NodeModules" | "Url";
+} | {
+    genes: Gene<Particle<string, any, {
+        [x: string]: any;
+    }>>[];
+    type: "InMemory";
+}, {}>, import("../../particles.h").InsertSingletonSapIntoParticles<{
     incoming: {
         ReceiveParticle: P<{
             particle: Particle<string, any, {

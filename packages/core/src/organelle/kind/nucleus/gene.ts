@@ -21,6 +21,6 @@ export const createChromosome: CreateChromosome = (bind: (addGene: AddGene<Parti
 };
 
 /**
- * Alias for createChromosome
+ * createChromosome
  */
 export const cc = createChromosome;

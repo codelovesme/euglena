@@ -12,7 +12,7 @@ exports.createChromosome = function (bind) {
     return geneCluster;
 };
 /**
- * Alias for createChromosome
+ * createChromosome
  */
 exports.cc = exports.createChromosome;
 //# sourceMappingURL=gene.js.map
