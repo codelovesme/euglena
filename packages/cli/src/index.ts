@@ -33,7 +33,7 @@ program
     .description("generate a new Euglena structed application")
     .option("-t, --type <type>", "Which environment Euglena work within\n\n" + typelist)
     .action((name: string, options: { type: string }) => {
-        let templateFolder = path.join(__dirname, "../templates", options.type);
+        let templateFolder = path.join(__dirname, "../dist/templates", options.type);
         let packageFile = path.join(`${name}`, "package.json");
 
         console.log("Generating directory structure.");

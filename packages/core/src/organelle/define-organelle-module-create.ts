@@ -8,7 +8,8 @@ import {
     OutGoingParticleNameUnion,
     AllOrganelleParticles,
     CreateOrganelleParticles,
-    InsertSapIntoParticles
+    InsertSapIntoParticles,
+    FromP
 } from "./particles.h";
 import { OrganelleModule } from "./organelle-module.h";
 import { CreateOrganelleModuleInterface } from "./define-organelle-module-create.h";
@@ -83,7 +84,16 @@ const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <
             /**
              * createParticles
              */
-            cs: createParticles.incoming["Sap"],
+            cs: (data: any, adds: any) => {
+                const sap = createParticles.incoming["Sap"](data, adds) as FromP<string, Sap>;
+                return {
+                    ...sap,
+                    meta: {
+                        ...sap.meta,
+                        organelleName
+                    }
+                };
+            },
             /**
              * createOrganelle
              */
@@ -108,7 +118,7 @@ const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <
                       createParticles as CreateAllOrganelleParticles<InsertSapIntoParticles<COP, S>>,
                       bindReactions
                   ),
-        cp: createParticles
+        cp: createParticles.incoming
     } as any;
 };
 

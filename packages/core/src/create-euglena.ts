@@ -1,4 +1,4 @@
-import { endoplasmicReticulumJs as reticulum } from "./organelle/kind";
+import { endoplasmicReticulumJs as reticulum } from "./organelle/sort";
 import { OrganelleReceive } from "./organelle/organelle-receive.h";
 import { Particle } from "./particle";
 

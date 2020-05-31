@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var kind_1 = require("./organelle/kind");
+exports.ce = exports.createEuglena = void 0;
+var sort_1 = require("./organelle/sort");
 exports.createEuglena = function (particles) {
-    var reticulumReceive = kind_1.endoplasmicReticulumJs.co();
-    reticulumReceive(kind_1.endoplasmicReticulumJs.cs({
+    var reticulumReceive = sort_1.endoplasmicReticulumJs.co();
+    reticulumReceive(sort_1.endoplasmicReticulumJs.cs({
         reticulumReceive: reticulumReceive,
         particles: particles
     }));

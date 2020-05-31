@@ -28,7 +28,7 @@ export declare const createCommonParticles: CreateOrganelleParticles<{
         query: import("cessnalib").sys.type.RecursivePartial<import("../particle").Particle<string, any, {
             [x: string]: any;
         }>>;
-        count: import("./common-particles.h").Count;
+        count: number | "all";
     }, {}>;
     SaveParticle: import("../organelle").P<{
         particle: import("../particle").Particle<string, any, {
@@ -37,7 +37,7 @@ export declare const createCommonParticles: CreateOrganelleParticles<{
         query?: import("cessnalib").sys.type.RecursivePartial<import("../particle").Particle<string, any, {
             [x: string]: any;
         }>> | undefined;
-        count: import("./common-particles.h").Count;
+        count: number | "all";
     } | import("../particle").Particle<string, any, {
         [x: string]: any;
     }>[], {}>;
@@ -45,7 +45,7 @@ export declare const createCommonParticles: CreateOrganelleParticles<{
         query: import("cessnalib").sys.type.RecursivePartial<import("../particle").Particle<string, any, {
             [x: string]: any;
         }>>;
-        count: import("./common-particles.h").Count;
+        count: number | "all";
     }, {}>;
     Impulse: import("../organelle").P<{
         particle: import("../particle").Particle<string, any, {
@@ -86,7 +86,7 @@ export declare const ccp: CreateOrganelleParticles<{
         query: import("cessnalib").sys.type.RecursivePartial<import("../particle").Particle<string, any, {
             [x: string]: any;
         }>>;
-        count: import("./common-particles.h").Count;
+        count: number | "all";
     }, {}>;
     SaveParticle: import("../organelle").P<{
         particle: import("../particle").Particle<string, any, {
@@ -95,7 +95,7 @@ export declare const ccp: CreateOrganelleParticles<{
         query?: import("cessnalib").sys.type.RecursivePartial<import("../particle").Particle<string, any, {
             [x: string]: any;
         }>> | undefined;
-        count: import("./common-particles.h").Count;
+        count: number | "all";
     } | import("../particle").Particle<string, any, {
         [x: string]: any;
     }>[], {}>;
@@ -103,7 +103,7 @@ export declare const ccp: CreateOrganelleParticles<{
         query: import("cessnalib").sys.type.RecursivePartial<import("../particle").Particle<string, any, {
             [x: string]: any;
         }>>;
-        count: import("./common-particles.h").Count;
+        count: number | "all";
     }, {}>;
     Impulse: import("../organelle").P<{
         particle: import("../particle").Particle<string, any, {

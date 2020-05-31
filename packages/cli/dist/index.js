@@ -36,7 +36,7 @@ commander_1.default
     .description("generate a new Euglena structed application")
     .option("-t, --type <type>", "Which environment Euglena work within\n\n" + typelist)
     .action(function (name, options) {
-    var templateFolder = path.join(__dirname, "../templates", options.type);
+    var templateFolder = path.join(__dirname, "../dist/templates", options.type);
     var packageFile = path.join("" + name, "package.json");
     console.log("Generating directory structure.");
     fs_1.mkdirSync(name);
