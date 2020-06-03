@@ -24,13 +24,14 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "dependencies": {
-        "cessnalib": "^0.9.0"
+        "cessnalib": "^0.9.0",
+        "axios": "~0.19.2"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.1.0"
+        "@euglena/core": "^1.1.2"
     },
     "devDependencies": {
-        "@euglena/core": "^1.1.1"
+        "@euglena/core": "^1.1.2"
     },
     "files": [
         "dist/*",

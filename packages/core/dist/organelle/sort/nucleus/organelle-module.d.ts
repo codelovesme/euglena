@@ -6,7 +6,9 @@ declare const nucleusJs: import("../..").SingletonOrganelleModule<P<{
     path: string;
     type: "FileSystemPath" | "NodeModules" | "Url";
 } | {
-    genes: Gene[];
+    genes: Gene<Particle<string, any, {
+        [x: string]: any;
+    }>>[];
     type: "InMemory";
 }, {}>, import("../../particles.h").InsertSapIntoParticles<{
     incoming: {
@@ -29,7 +31,9 @@ declare const nucleusJs: import("../..").SingletonOrganelleModule<P<{
     path: string;
     type: "FileSystemPath" | "NodeModules" | "Url";
 } | {
-    genes: Gene[];
+    genes: Gene<Particle<string, any, {
+        [x: string]: any;
+    }>>[];
     type: "InMemory";
 }, {}>>>;
 export { nucleusJs };

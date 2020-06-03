@@ -1,21 +1,23 @@
-import { CommonParticles } from "../../common";
 import { P } from "../particles.h";
 declare const webServer: {
     v1: import("..").CreateOrganelleModuleInterface<{
         incoming: {
-            GetAlive: CommonParticles["GetAlive"];
+            GetAlive: P<undefined, {}>;
         };
         outgoing: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
+            ACK: P<undefined, {}>;
+            Exception: P<import("cessnalib").sys.type.Exception, {}>;
             Impulse: P<{
                 route: string;
                 user?: {
                     id: string;
                     roles: string;
-                };
-            }>;
-            Log: CommonParticles["Log"];
+                } | undefined;
+            }, {}>;
+            Log: P<{
+                message: string;
+                level: "Error" | "Info" | "Warning";
+            }, {}>;
         };
     }, undefined>;
 };

@@ -1,0 +1,42 @@
+{
+    "name": "@euglena/organelle.http-client.axios",
+    "domain": "codeloves.me",
+    "version": "1.1.1",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "private": false,
+    "license": "GPL v2",
+    "author": {
+        "name": "Fedai Kaya",
+        "email": "codelovesme@gmail.com"
+    },
+    "scripts": {
+        "compile": "tsc -p .",
+        "clean": "rm -r dist",
+        "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/codelovesme/euglena.git"
+    },
+    "bugs": {
+        "url": "https://github.com/codelovesme/euglena/issues"
+    },
+    "homepage": "https://github.com/codelovesme/euglena#readme",
+    "dependencies": {
+        "cessnalib": "^0.9.0"
+    },
+    "peerDependencies": {
+        "@euglena/core": "^1.1.2"
+    },
+    "devDependencies": {
+        "@euglena/core": "^1.1.2"
+    },
+    "files": [
+        "dist/*",
+        "README.md",
+        "LICENSE.txt",
+        "package.json"
+    ],
+    "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
+}

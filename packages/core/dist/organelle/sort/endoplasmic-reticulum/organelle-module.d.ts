@@ -3,8 +3,14 @@ import { OrganelleReceive } from "../../organelle-receive.h";
 import { Particle } from "../../../particle";
 import { OrganelleModule } from "../../organelle-module.h";
 declare const endoplasmicReticulumJs: import("../../organelle-module.h").EndoplasmicReticulumModule<P<{
-    particles: Particle[];
-    reticulumReceive: OrganelleReceive;
+    particles: Particle<string, any, {
+        [x: string]: any;
+    }>[];
+    reticulumReceive: OrganelleReceive<Particle<string, any, {
+        [x: string]: any;
+    }>, Particle<string, any, {
+        [x: string]: any;
+    }>>;
 }, {}>, import("../../particles.h").InsertSapIntoParticles<{
     incoming: {
         TransmitParticle: P<{
@@ -41,7 +47,13 @@ declare const endoplasmicReticulumJs: import("../../organelle-module.h").Endopla
         EuglenaHasBeenBorn: P<any, {}>;
     };
 }, P<{
-    particles: Particle[];
-    reticulumReceive: OrganelleReceive;
+    particles: Particle<string, any, {
+        [x: string]: any;
+    }>[];
+    reticulumReceive: OrganelleReceive<Particle<string, any, {
+        [x: string]: any;
+    }>, Particle<string, any, {
+        [x: string]: any;
+    }>>;
 }, {}>>>;
 export { endoplasmicReticulumJs };

@@ -47,7 +47,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.domc = void 0;
 var particle_1 = require("../particle");
 var defineOrganelleModuleCreate = function (incomingParticleNames, outgoingParticleNames, organelleName) {
     var _a;
@@ -61,54 +60,49 @@ var defineOrganelleModuleCreate = function (incomingParticleNames, outgoingParti
             return (__assign(__assign({}, acc), (_a = {}, _a[curr] = particle_1.cp.bind(undefined, curr), _a)));
         }, {})
     };
-    var createOrganelleModule = function (createParticles, bindReactions, organelleName) {
-        var createOrganelle = function (params) { return function (particle) { return __awaiter(void 0, void 0, void 0, function () {
-            var name, reaction, t;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        name = organelleName || (params === null || params === void 0 ? void 0 : params.name);
-                        reaction = bindReactions[particle.meta.class];
-                        if (!reaction) return [3 /*break*/, 2];
-                        t = (params === null || params === void 0 ? void 0 : params.transmit) ? params === null || params === void 0 ? void 0 : params.transmit.bind(undefined, name) : undefined;
-                        return [4 /*yield*/, reaction(particle, {
-                                t: t,
-                                cp: createParticles["outgoing"]
-                            })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        // return cps.Log(
-                        //     `There is no reaction of ${name} for given particle ${JSON.stringify(particle.meta)}`,
-                        //     "Error"
-                        // );
-                        console.error("There is no reaction of " + name + " for given particle " + JSON.stringify(particle.meta));
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); }; };
-        return {
-            /**
-             * createParticles
-             */
-            cs: function (data, adds) {
-                var sap = createParticles.incoming["Sap"](data, adds);
-                return __assign(__assign({}, sap), { meta: __assign(__assign({}, sap.meta), { organelleName: organelleName }) });
-            },
-            /**
-             * createOrganelle
-             */
-            co: createOrganelle
-        };
-    };
     return {
-        com: organelleName
-            ? function (bindReactions) {
-                return createOrganelleModule(createParticles, bindReactions, organelleName);
-            }
-            : function (bindReactions) {
-                return createOrganelleModule(createParticles, bindReactions);
-            },
+        com: function (bindReactions) {
+            var createOrganelle = function (params) { return function (particle) { return __awaiter(void 0, void 0, void 0, function () {
+                var name, reaction, t;
+                var _a, _b, _c;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            name = organelleName || ((_a = params) === null || _a === void 0 ? void 0 : _a.name);
+                            reaction = bindReactions[particle.meta.class];
+                            if (!reaction) return [3 /*break*/, 2];
+                            t = ((_b = params) === null || _b === void 0 ? void 0 : _b.transmit) ? (_c = params) === null || _c === void 0 ? void 0 : _c.transmit.bind(undefined, name) : undefined;
+                            return [4 /*yield*/, reaction(particle, {
+                                    t: t,
+                                    cp: createParticles["outgoing"]
+                                })];
+                        case 1: return [2 /*return*/, _d.sent()];
+                        case 2:
+                            // return cps.Log(
+                            //     `There is no reaction of ${name} for given particle ${JSON.stringify(particle.meta)}`,
+                            //     "Error"
+                            // );
+                            console.error("There is no reaction of " + name + " for given particle " + JSON.stringify(particle.meta));
+                            _d.label = 3;
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); }; };
+            return {
+                /**
+                 * createParticles
+                 */
+                cs: function (data, adds) {
+                    var sap = createParticles.incoming["Sap"](data, adds);
+                    return organelleName
+                        ? __assign(__assign({}, sap), { meta: __assign(__assign({}, sap.meta), { organelleName: organelleName }) }) : sap;
+                },
+                /**
+                 * createOrganelle
+                 */
+                co: createOrganelle
+            };
+        },
         cp: createParticles.incoming
     };
 };

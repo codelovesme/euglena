@@ -1,5 +1,5 @@
 import { cp } from "../particle";
-import { BindSingletonOrganelleReactions, BindOrganelleReactions } from "./bind-reaction.h";
+import { BindOrganelleReactions } from "./bind-reaction.h";
 import { DefineOrganelleModuleCreate } from "./define-organelle-module-create.h";
 import {
     Sap,
@@ -45,79 +45,61 @@ const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <
         )
     };
 
-    const createOrganelleModule = <
-        COP extends AllOrganelleParticles,
-        OrganelleName extends SingletonOrganelleName | undefined = undefined
-    >(
-        createParticles: CreateAllOrganelleParticles<COP>,
-        bindReactions: BindOrganelleReactions<COP>,
-        organelleName?: OrganelleName
-    ) => {
-        const createOrganelle: CreateOrganelle<InComingParticle<COP>, OutGoingParticle<COP>> = <
-            OrganelleName extends string
-        >(params?: {
-            name?: OrganelleName;
-            transmit?: (
-                sourceOrganelle: string,
-                particle: Particle,
-                targetOrganelle?: string
-            ) => Promise<Particle | void>;
-        }): OrganelleReceive<InComingParticle<COP>, OutGoingParticle<COP>> => async (particle) => {
-            const name = organelleName || params?.name;
-            let reaction: any = bindReactions[particle.meta.class] as any;
-            if (reaction) {
-                const t = params?.transmit ? params?.transmit.bind(undefined, name as string) : undefined;
-                return await reaction(particle, {
-                    t: t,
-                    cp: createParticles["outgoing"]
-                });
-            } else {
-                // return cps.Log(
-                //     `There is no reaction of ${name} for given particle ${JSON.stringify(particle.meta)}`,
-                //     "Error"
-                // );
-                console.error(`There is no reaction of ${name} for given particle ${JSON.stringify(particle.meta)}`);
-            }
-        };
-
-        return {
-            /**
-             * createParticles
-             */
-            cs: (data: any, adds: any) => {
-                const sap = createParticles.incoming["Sap"](data, adds) as FromP<string, Sap>;
-                return {
-                    ...sap,
-                    meta: {
-                        ...sap.meta,
-                        organelleName
-                    }
-                };
-            },
-            /**
-             * createOrganelle
-             */
-            co: createOrganelle
-        } as any;
-    };
-
     return {
-        com: organelleName
-            ? <S extends Sap>(
-                  bindReactions: BindSingletonOrganelleReactions<NonNullable<OrganelleName>, COP, S>
-              ): OrganelleModule<S, InsertSapIntoParticles<COP, S>> =>
-                  createOrganelleModule(
-                      createParticles as CreateAllOrganelleParticles<InsertSapIntoParticles<COP, S>>,
-                      bindReactions,
-                      organelleName!
-                  ) as any
-            : <S extends Sap>(
-                  bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, S>>
-              ): OrganelleModule<S, InsertSapIntoParticles<COP, S>> =>
-                  createOrganelleModule(
-                      createParticles as CreateAllOrganelleParticles<InsertSapIntoParticles<COP, S>>,
-                      bindReactions
-                  ),
+        com: <S extends Sap>(
+            bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, S>>
+        ): OrganelleModule<S, InsertSapIntoParticles<COP, S>> => {
+            const createOrganelle: CreateOrganelle<InComingParticle<COP>, OutGoingParticle<COP>> = <
+                OrganelleName extends string
+            >(params?: {
+                name?: OrganelleName;
+                transmit?: (
+                    sourceOrganelle: string,
+                    particle: Particle,
+                    targetOrganelle?: string
+                ) => Promise<Particle | void>;
+            }): OrganelleReceive<InComingParticle<COP>, OutGoingParticle<COP>> => async (particle) => {
+                const name = organelleName || params?.name;
+                let reaction: any = bindReactions[particle.meta.class] as any;
+                if (reaction) {
+                    const t = params?.transmit ? params?.transmit.bind(undefined, name as string) : undefined;
+                    return await reaction(particle, {
+                        t: t,
+                        cp: createParticles["outgoing"]
+                    });
+                } else {
+                    // return cps.Log(
+                    //     `There is no reaction of ${name} for given particle ${JSON.stringify(particle.meta)}`,
+                    //     "Error"
+                    // );
+                    console.error(
+                        `There is no reaction of ${name} for given particle ${JSON.stringify(particle.meta)}`
+                    );
+                }
+            };
+
+            return {
+                /**
+                 * createParticles
+                 */
+                cs: (data: any, adds: any) => {
+                    const sap = createParticles.incoming["Sap"](data, adds) as FromP<string, Sap>;
+                    return organelleName
+                        ? {
+                              ...sap,
+                              meta: {
+                                  ...sap.meta,
+                                  organelleName
+                              }
+                          }
+                        : sap;
+                },
+                /**
+                 * createOrganelle
+                 */
+                co: createOrganelle
+            } as any;
+        },
         cp: createParticles.incoming
     } as any;
 };

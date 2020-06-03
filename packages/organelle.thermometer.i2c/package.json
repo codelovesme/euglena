@@ -28,10 +28,10 @@
         "i2c-bus": "^5.1.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.1.0"
+        "@euglena/core": "^1.1.2"
     },
     "devDependencies": {
-        "@euglena/core": "^1.1.1"
+        "@euglena/core": "^1.1.2"
     },
     "files": [
         "dist/*",
