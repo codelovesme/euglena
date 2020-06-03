@@ -28,11 +28,7 @@ declare const endoplasmicReticulumJs: import("../../organelle-module.h").Endopla
                 type: "InMemory";
                 organelle: OrganelleModule<P<any, {
                     organelleName: string;
-                }>, import("../../particles.h").AllOrganelleParticles<{
-                    [x: string]: P<any, {}>;
-                }, {
-                    [x: string]: P<any, {}>;
-                }>>;
+                }>, any>;
             };
         }, {}>;
     };

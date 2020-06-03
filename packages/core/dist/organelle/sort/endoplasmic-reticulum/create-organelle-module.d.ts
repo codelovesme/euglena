@@ -15,11 +15,7 @@ declare const endoplasmicReticulum: import("../..").CreateOrganelleModuleInterfa
                 type: "InMemory";
                 organelle: import("../..").OrganelleModule<import("../..").P<any, {
                     organelleName: string;
-                }>, import("../..").AllOrganelleParticles<{
-                    [x: string]: import("../..").P<any, {}>;
-                }, {
-                    [x: string]: import("../..").P<any, {}>;
-                }>>;
+                }>, any>;
             };
         }, {}>;
     };

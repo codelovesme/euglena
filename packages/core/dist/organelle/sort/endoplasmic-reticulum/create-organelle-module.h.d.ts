@@ -14,7 +14,7 @@ export declare type POrganelleInfo = P<{
         path: string;
     } | {
         type: "InMemory";
-        organelle: OrganelleModule<Sap>;
+        organelle: OrganelleModule<Sap, any>;
     };
 }>;
 export declare type PTransmitResponse = P<Particle | void>;

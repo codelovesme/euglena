@@ -162,16 +162,16 @@
         "signature": "f3a5e953127af99fd35fac46f0317de8f3c6dd93e2013d2b8d8f5cc3fd35d325"
       },
       "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts": {
-        "version": "1f1c1075951cfc26a1e27704243007ca01bde27c75d255c20072814fc504fd2a",
-        "signature": "1f1c1075951cfc26a1e27704243007ca01bde27c75d255c20072814fc504fd2a"
+        "version": "708fc7927a31262c11a7f87ea4ad5cac82da8168fc4b0087b4cd2c319c0a2d7c",
+        "signature": "708fc7927a31262c11a7f87ea4ad5cac82da8168fc4b0087b4cd2c319c0a2d7c"
       },
       "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts": {
-        "version": "a90ce500799c0c26c41a2d1d30011b36e5ad35cc8f2871d0981f2f2319e11fb0",
-        "signature": "a90ce500799c0c26c41a2d1d30011b36e5ad35cc8f2871d0981f2f2319e11fb0"
+        "version": "377a8a229574592c7a345fdc00617fde01b20486d6996e18e56321d470bb9867",
+        "signature": "377a8a229574592c7a345fdc00617fde01b20486d6996e18e56321d470bb9867"
       },
       "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts": {
-        "version": "af281d615359826cfd7606b57a21d9b198eb236a8b854d9e86c3ee4a51cd80ad",
-        "signature": "af281d615359826cfd7606b57a21d9b198eb236a8b854d9e86c3ee4a51cd80ad"
+        "version": "f8735f93667a75cae0b76a9c8b78d72588d54caa54332582c347f97b35c0a301",
+        "signature": "f8735f93667a75cae0b76a9c8b78d72588d54caa54332582c347f97b35c0a301"
       },
       "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts": {
         "version": "94115ae82cbd38651cdb60587a6fdd1e881fd6db082db97026174f3e0fe71c66",
@@ -2291,6 +2291,7 @@
       "../../core/dist/organelle/define-organelle-module-create.d.ts",
       "../../core/dist/organelle/sort/nucleus/gene.h.d.ts",
       "../../core/dist/organelle/sort/nucleus/gene.d.ts",
+      "../../core/dist/create-euglena.d.ts",
       "../../../node_modules/@types/node/globals.d.ts",
       "../../../node_modules/@types/node/assert.d.ts",
       "../../../node_modules/@types/node/async_hooks.d.ts",
@@ -2337,10 +2338,8 @@
       "../../../node_modules/@types/node/ts3.2/globals.d.ts",
       "../../../node_modules/@types/node/ts3.2/index.d.ts",
       "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts",
-      "../../core/dist/create-euglena.d.ts",
-      "../../core/dist/index.d.ts",
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts",
       "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts",
+      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts",
       "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
       "../../core/dist/organelle/sort/nucleus/create-organelle-module.d.ts",
       "../../core/dist/organelle/sort/nucleus/organelle-module.d.ts",
@@ -2361,6 +2360,7 @@
       "../../core/dist/common/common-particles.h.d.ts",
       "../../core/dist/common/common-particles.d.ts",
       "../../core/dist/common/index.d.ts",
+      "../../core/dist/index.d.ts",
       "../src/index.ts"
     ]
   },

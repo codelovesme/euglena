@@ -62,7 +62,10 @@ var react_1 = __importStar(require("react"));
 var react_dom_1 = __importDefault(require("react-dom"));
 var serviceWorker_1 = require("./serviceWorker");
 var App;
-exports.ToolsContext = react_1.createContext({ t: {}, cp: {} });
+exports.ToolsContext = react_1.createContext({
+    t: {},
+    cp: {}
+});
 exports.default = core_1.ui.v1.com({
     Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
         var _a, rootComponent, serviceWorker;

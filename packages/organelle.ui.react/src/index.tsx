@@ -1,11 +1,40 @@
-import { ui, Sap } from "@euglena/core";
+import { ui, Sap, Particle, CreateOrganelleParticles, P } from "@euglena/core";
 
 import React, { createContext } from "react";
 import ReactDOM from "react-dom";
 import { register, unregister } from "./serviceWorker";
+import { OrganelleTransmit } from "@euglena/core/dist/organelle/organelle-receive.h";
+import { sys } from "cessnalib";
 
 let App: React.FC<any>;
-export const ToolsContext = createContext({ t: {} as any, cp: {} as any });
+export const ToolsContext = createContext({
+    t: {} as OrganelleTransmit<
+        | Particle<"ACK", undefined, {}>
+        | Particle<"Exception", sys.type.Exception, {}>
+        | Particle<
+              "Log",
+              {
+                  message: string;
+                  level: "Error" | "Info" | "Warning";
+              },
+              {}
+          >
+        | Particle<"Event">,
+        void | Particle
+    >,
+    cp: {} as CreateOrganelleParticles<{
+        ACK: P<undefined, {}>;
+        Exception: P<sys.type.Exception, {}>;
+        Log: P<
+            {
+                message: string;
+                level: "Error" | "Info" | "Warning";
+            },
+            {}
+        >;
+        Event: P<any, {}>;
+    }>
+});
 
 export default ui.v1.com<Sap<{ rootComponent: typeof App; serviceWorker: boolean }>>({
     Sap: async (p) => {
@@ -16,7 +45,7 @@ export default ui.v1.com<Sap<{ rootComponent: typeof App; serviceWorker: boolean
     Render: async ({ data: props }, { t, cp }) => {
         ReactDOM.render(
             <ToolsContext.Provider value={{ t, cp }}>
-                <App {...(props as any)} />
+                <App {...props} />
             </ToolsContext.Provider>,
             document.getElementById("root")
         );
