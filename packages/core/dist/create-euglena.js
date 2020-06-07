@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ce = exports.createEuglena = void 0;
 var sort_1 = require("./organelle/sort");
 exports.createEuglena = function (particles) {
     var reticulumReceive = sort_1.endoplasmicReticulumJs.co();

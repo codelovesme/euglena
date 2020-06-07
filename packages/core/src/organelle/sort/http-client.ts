@@ -66,7 +66,7 @@ const httpClient = {
             Log: CommonParticles["Log"];
             Response: PResponse;
         };
-    }>(["Get"], ["Log", "ACK", "Exception", "Response"])
+    }>(["Get", "Post"], ["Log", "ACK", "Exception", "Response"])
 };
 
 type Response = FromP<"Response", PResponse>;

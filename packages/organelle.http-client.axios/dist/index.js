@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,6 +52,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@euglena/core");
 var axios_1 = __importDefault(require("axios"));
+var capitalizeWord = function (string) {
+    return string[0].toUpperCase() + string.slice(1);
+};
+var capitalizeHeaders = function (headers) {
+    return Object.keys(headers).reduce(function (acc, key) {
+        var _a;
+        return (__assign(__assign({}, acc), (_a = {}, _a[capitalizeWord(key)] = headers[key], _a)));
+    }, {});
+};
 exports.default = core_1.httpClient.v1.com({
     Sap: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/];
@@ -58,7 +78,7 @@ exports.default = core_1.httpClient.v1.com({
                         resp = _c.sent();
                         return [2 /*return*/, cp.Response({
                                 body: resp.data,
-                                headers: resp.headers,
+                                headers: capitalizeHeaders(resp.headers),
                                 status: resp.status
                             })];
                 }
@@ -68,17 +88,17 @@ exports.default = core_1.httpClient.v1.com({
     Post: function (p, _a) {
         var t = _a.t, cp = _a.cp;
         return __awaiter(void 0, void 0, void 0, function () {
-            var _b, url, headers, resp;
+            var _b, url, headers, body, resp;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _b = p.data, url = _b.url, headers = _b.headers;
-                        return [4 /*yield*/, axios_1.default.get(url, { headers: headers })];
+                        _b = p.data, url = _b.url, headers = _b.headers, body = _b.body;
+                        return [4 /*yield*/, axios_1.default.post(url, body, { headers: headers })];
                     case 1:
                         resp = _c.sent();
                         return [2 /*return*/, cp.Response({
                                 body: resp.data,
-                                headers: resp.headers,
+                                headers: capitalizeHeaders(resp.headers),
                                 status: resp.status
                             })];
                 }
