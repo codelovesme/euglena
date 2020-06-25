@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -81,8 +70,7 @@ exports.default = core_1.ui.v1.com({
         var t = _b.t, cp = _b.cp;
         return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_c) {
-                react_dom_1.default.render(react_1.default.createElement(exports.ToolsContext.Provider, { value: { t: t, cp: cp } },
-                    react_1.default.createElement(App, __assign({}, props))), document.getElementById("root"));
+                react_dom_1.default.render(react_1.default.createElement(exports.ToolsContext.Provider, { value: { t: t, cp: cp } }, App(props)), document.getElementById("root"));
                 return [2 /*return*/, cp.ACK()];
             });
         });

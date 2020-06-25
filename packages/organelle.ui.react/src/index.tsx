@@ -44,9 +44,7 @@ export default ui.v1.com<Sap<{ rootComponent: typeof App; serviceWorker: boolean
     },
     Render: async ({ data: props }, { t, cp }) => {
         ReactDOM.render(
-            <ToolsContext.Provider value={{ t, cp }}>
-                <App {...props} />
-            </ToolsContext.Provider>,
+            <ToolsContext.Provider value={{ t, cp }}>{App(props)}</ToolsContext.Provider>,
             document.getElementById("root")
         );
         return cp.ACK();
