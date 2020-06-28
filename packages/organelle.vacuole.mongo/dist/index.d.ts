@@ -13,7 +13,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             query?: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
                 [x: string]: any;
             }>> | undefined;
-            count: import("@euglena/core").Count;
+            count: number | "all";
         } | import("@euglena/core").Particle<string, any, {
             [x: string]: any;
         }>[], {}>;
@@ -21,13 +21,13 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
                 [x: string]: any;
             }>>;
-            count: import("@euglena/core").Count;
+            count: number | "all";
         }, {}>;
         RemoveParticle: import("@euglena/core").P<{
             query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
                 [x: string]: any;
             }>>;
-            count: import("@euglena/core").Count;
+            count: number | "all";
         }, {}>;
         GetAlive: import("@euglena/core").P<undefined, {}>;
         Hibernate: import("@euglena/core").P<undefined, {}>;

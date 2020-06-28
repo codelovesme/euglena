@@ -101,7 +101,7 @@ exports.default = core_1.vacuole.v1.com({
             return __generator(this, function (_c) {
                 if (p.data instanceof Array) {
                     particles = __spreadArrays(particles, p.data);
-                    return [2 /*return*/, cp.Metas([])];
+                    return [2 /*return*/, cp.Metas(p.data.map(function (p) { return p.meta; }))];
                 }
                 else {
                     overridedParticles = [];
@@ -117,6 +117,7 @@ exports.default = core_1.vacuole.v1.com({
                         }
                     }
                     else {
+                        overridedParticles.push(particle.meta);
                         particles = __spreadArrays(particles, [particle]);
                     }
                     return [2 /*return*/, cp.Metas(overridedParticles)];

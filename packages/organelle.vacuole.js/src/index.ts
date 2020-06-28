@@ -38,7 +38,7 @@ export default vacuole.v1.com<
     SaveParticle: async (p, { cp }) => {
         if (p.data instanceof Array) {
             particles = [...particles, ...p.data];
-            return cp.Metas([]);
+            return cp.Metas(p.data.map((p) => p.meta));
         } else {
             const overridedParticles: Meta[] = [];
             const { query, count, particle } = p.data;
@@ -52,6 +52,7 @@ export default vacuole.v1.com<
                     }
                 }
             } else {
+                overridedParticles.push(particle.meta);
                 particles = [...particles, particle];
             }
             return cp.Metas(overridedParticles);

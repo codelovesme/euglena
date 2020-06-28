@@ -104,6 +104,26 @@ exports.default = core_1.httpClient.v1.com({
                 }
             });
         });
+    },
+    Delete: function (p, _a) {
+        var t = _a.t, cp = _a.cp;
+        return __awaiter(void 0, void 0, void 0, function () {
+            var _b, url, headers, resp;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _b = p.data, url = _b.url, headers = _b.headers;
+                        return [4 /*yield*/, axios_1.default.delete(url, { headers: headers })];
+                    case 1:
+                        resp = _c.sent();
+                        return [2 /*return*/, cp.Response({
+                                body: resp.data,
+                                headers: capitalizeHeaders(resp.headers),
+                                status: resp.status
+                            })];
+                }
+            });
+        });
     }
 });
 //# sourceMappingURL=index.js.map

@@ -11,7 +11,6 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ccp = exports.createCommonParticles = void 0;
 var particle_1 = require("../particle");
 var defineCommonParticles = function (particleNames) {
     return particleNames.reduce(function (acc, curr) {

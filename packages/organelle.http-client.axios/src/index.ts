@@ -30,5 +30,14 @@ export default httpClient.v1.com<Sap<undefined>>({
             headers: capitalizeHeaders(resp.headers),
             status: resp.status
         });
+    },
+    Delete: async (p, { t, cp }) => {
+        const { url, headers } = p.data;
+        const resp = await axios.delete(url, { headers });
+        return cp.Response({
+            body: resp.data,
+            headers: capitalizeHeaders(resp.headers),
+            status: resp.status
+        });
     }
 });
