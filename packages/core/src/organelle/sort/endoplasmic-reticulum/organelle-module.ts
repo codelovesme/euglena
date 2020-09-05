@@ -14,7 +14,7 @@ const nucleusJsName: string = "Nucleus";
 const transmit = async (source: string, particle: Particle, target?: string) => {
     if (!target) {
         target = nucleusJsName;
-        particle = nucleus.cp.ReceiveParticle({ particle, source });
+        particle = await nucleus.cp.ReceiveParticle({ particle, source });
     }
     const resp = (await organelles[endoplasmicReticulumName](
         reticulum.cp.TransmitParticle({ particle, target: target! })

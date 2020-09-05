@@ -104,8 +104,9 @@ exports.default = core_1.webServer.v1.com({
                                 }))];
                             case 1:
                                 resp = _a.sent();
-                                console.log("RESP: " + JSON.stringify(resp));
-                                res.send(resp);
+                                Promise.all(resp).then(function (x) {
+                                    res.send(x[0]);
+                                });
                                 return [2 /*return*/];
                         }
                     });

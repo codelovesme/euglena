@@ -1,12 +1,14 @@
-import { CommonParticles } from "../../common";
 declare const logger: {
     v1: import("..").CreateOrganelleModuleInterface<{
         incoming: {
-            Log: CommonParticles["Log"];
+            Log: import("..").P<{
+                message: string;
+                level: "Error" | "Info" | "Warning";
+            }, {}>;
         };
         outgoing: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
+            ACK: import("..").P<undefined, {}>;
+            Exception: import("..").P<import("cessnalib").sys.type.Exception, {}>;
         };
     }, undefined>;
 };

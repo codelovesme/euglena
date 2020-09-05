@@ -1,4 +1,3 @@
-import { CommonParticles } from "../../common";
 import { P, FromP } from "../particles.h";
 declare type PAddRoute = P<{
     method: "get" | "post" | "put" | "delete";
@@ -23,14 +22,33 @@ declare type WebServerImpulse = FromP<"WebServerImpulse", PWebServerImpulse>;
 declare const webServer: {
     v1: import("..").CreateOrganelleModuleInterface<{
         incoming: {
-            GetAlive: CommonParticles["GetAlive"];
-            AddRoute: PAddRoute;
+            GetAlive: P<undefined, {}>;
+            AddRoute: P<{
+                method: "get" | "post" | "put" | "delete";
+                path: string;
+                queryParams?: string[] | undefined;
+                pathParams?: string[] | undefined;
+            }, {}>;
         };
         outgoing: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
-            WebServerImpulse: PWebServerImpulse;
-            Log: CommonParticles["Log"];
+            ACK: P<undefined, {}>;
+            Exception: P<import("cessnalib").sys.type.Exception, {}>;
+            WebServerImpulse: P<{
+                route: string;
+                path: string;
+                method: string;
+                queryParams: object;
+                pathParams: object;
+                user?: {
+                    id: string;
+                    roles: string;
+                } | undefined;
+                body: object;
+            }, {}>;
+            Log: P<{
+                message: string;
+                level: "Error" | "Info" | "Warning";
+            }, {}>;
         };
     }, undefined>;
 };

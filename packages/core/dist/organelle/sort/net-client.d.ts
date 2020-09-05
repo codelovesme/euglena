@@ -1,21 +1,25 @@
 import { Particle } from "../../particle";
 import { P } from "../particles.h";
-import { CommonParticles } from "../../common";
 declare const netClient: {
     v1: import("..").CreateOrganelleModuleInterface<{
         incoming: {
             TransmitParticle: P<{
-                particle: Particle;
+                particle: Particle<string, any, {
+                    [x: string]: any;
+                }>;
                 target: {
                     host: string;
                     port: number;
                 };
-            }>;
+            }, {}>;
         };
         outgoing: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
-            Log: CommonParticles["Log"];
+            ACK: P<undefined, {}>;
+            Exception: P<import("cessnalib").sys.type.Exception, {}>;
+            Log: P<{
+                message: string;
+                level: "Error" | "Info" | "Warning";
+            }, {}>;
         };
     }, undefined>;
 };

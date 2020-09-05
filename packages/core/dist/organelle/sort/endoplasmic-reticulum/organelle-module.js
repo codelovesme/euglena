@@ -10,25 +10,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -65,8 +46,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.endoplasmicReticulumJs = void 0;
 var create_organelle_module_1 = require("./create-organelle-module");
 var nucleus_1 = require("../nucleus");
 var endoplasmicReticulumName = "EndoplasmicReticulum";
@@ -77,12 +64,14 @@ var transmit = function (source, particle, target) { return __awaiter(void 0, vo
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!target) {
-                    target = nucleusJsName;
-                    particle = nucleus_1.nucleus.cp.ReceiveParticle({ particle: particle, source: source });
-                }
-                return [4 /*yield*/, organelles[endoplasmicReticulumName](create_organelle_module_1.endoplasmicReticulum.cp.TransmitParticle({ particle: particle, target: target }))];
+                if (!!target) return [3 /*break*/, 2];
+                target = nucleusJsName;
+                return [4 /*yield*/, nucleus_1.nucleus.cp.ReceiveParticle({ particle: particle, source: source })];
             case 1:
+                particle = _a.sent();
+                _a.label = 2;
+            case 2: return [4 /*yield*/, organelles[endoplasmicReticulumName](create_organelle_module_1.endoplasmicReticulum.cp.TransmitParticle({ particle: particle, target: target }))];
+            case 3:
                 resp = (_a.sent());
                 return [2 /*return*/, resp ? resp.data : undefined];
         }

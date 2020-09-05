@@ -23,7 +23,7 @@ export default webServer.v1.com<
     AddRoute: async ({ data: { method, path, pathParams, queryParams } }, { cp, t }) => {
         const route: string = `${path}${getPathParamsAsString(pathParams)}`;
         app[method](`${route}`, async (req, res) => {
-            const resp = await t(
+            const resp: any = await t(
                 cp.WebServerImpulse({
                     route,
                     path,
@@ -49,8 +49,9 @@ export default webServer.v1.com<
                     body: req.body
                 })
             );
-            console.log("RESP: " + JSON.stringify(resp));
-            res.send(resp);
+            Promise.all(resp).then((x) => {
+                res.send(x[0]);
+            });
         });
         return cp.ACK();
     },

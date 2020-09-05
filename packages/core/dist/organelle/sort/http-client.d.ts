@@ -1,5 +1,4 @@
 import { P, FromP } from "../particles.h";
-import { CommonParticles } from "../../common";
 declare type HttpHeaderUnion = "A-IM" | "Accept" | "Accept-Charset" | "Accept-Encoding" | "Accept-Language" | "Accept-Datetime" | "Access-Control-Request-Method" | "Access-Control-Request-Headers" | "Authorization" | "Cache-Control" | "Connection" | "Content-Length" | "Content-Type" | "Cookie" | "Date" | "Expect" | "Forwarded" | "From" | "Host" | "If-Match" | "If-Modified-Since" | "If-None-Match" | "If-Range" | "If-Unmodified-Since" | "Max-Forwards" | "Origin" | "Pragma" | "Proxy-Authorization" | "Range" | "Referer" | "TE" | "User-Agent" | "Upgrade" | "Via" | "Warning";
 declare type Headers = {
     [key in HttpHeaderUnion]?: string;
@@ -14,28 +13,35 @@ declare const httpClient: {
         incoming: {
             Get: P<{
                 url: string;
-                headers?: Headers;
-            }>;
+                headers?: Headers | undefined;
+            }, {}>;
             Post: P<{
                 url: string;
-                headers?: Headers;
+                headers?: Headers | undefined;
                 body: any;
-            }>;
+            }, {}>;
             Put: P<{
                 url: string;
-                headers?: Headers;
+                headers?: Headers | undefined;
                 body: any;
-            }>;
+            }, {}>;
             Delete: P<{
                 url: string;
-                headers?: Headers;
-            }>;
+                headers?: Headers | undefined;
+            }, {}>;
         };
         outgoing: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
-            Log: CommonParticles["Log"];
-            Response: PResponse;
+            ACK: P<undefined, {}>;
+            Exception: P<import("cessnalib").sys.type.Exception, {}>;
+            Log: P<{
+                message: string;
+                level: "Error" | "Info" | "Warning";
+            }, {}>;
+            Response: P<{
+                headers: Headers;
+                body: any;
+                status: number;
+            }, {}>;
         };
     }, undefined>;
 };
