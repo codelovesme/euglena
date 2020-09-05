@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.net-client.browser",
     "domain": "codeloves.me",
-    "version": "1.1.4",
+    "version": "1.2.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -31,7 +31,7 @@
         "@euglena/core": "^1.1.4"
     },
     "devDependencies": {
-        "@euglena/core": "^1.1.4"
+        "@euglena/core": "^1.2.0"
     },
     "files": [
         "dist/*",
