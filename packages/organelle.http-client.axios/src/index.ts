@@ -39,5 +39,16 @@ export default httpClient.v1.com<Sap<undefined>>({
             headers: capitalizeHeaders(resp.headers),
             status: resp.status
         });
+    },
+    Put: async (p, { t, cp }) => {
+        const {
+            data: { url, headers, body }
+        } = p;
+        const resp = await axios.put(url, body, { headers });
+        return cp.Response({
+            body: resp.data,
+            headers: capitalizeHeaders(resp.headers),
+            status: resp.status
+        });
     }
 });

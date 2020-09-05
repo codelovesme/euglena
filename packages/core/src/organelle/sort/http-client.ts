@@ -59,6 +59,11 @@ const httpClient = {
                 headers?: Headers;
                 body: any;
             }>;
+            Put: P<{
+                url: string;
+                headers?: Headers;
+                body: any;
+            }>;
             Delete: P<{
                 url: string;
                 headers?: Headers;
@@ -70,7 +75,7 @@ const httpClient = {
             Log: CommonParticles["Log"];
             Response: PResponse;
         };
-    }>(["Get", "Post", "Delete"], ["Log", "ACK", "Exception", "Response"])
+    }>(["Get", "Post", "Put", "Delete"], ["Log", "ACK", "Exception", "Response"])
 };
 
 type Response = FromP<"Response", PResponse>;

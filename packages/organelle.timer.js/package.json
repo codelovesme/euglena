@@ -24,7 +24,7 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "peerDependencies": {
-        "@euglena/core": "^1.1.2"
+        "@euglena/core": "^1.1.4"
     },
     "dependencies": {
         "cessnalib": "^0.9.0"

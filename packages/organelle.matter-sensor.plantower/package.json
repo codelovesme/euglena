@@ -28,7 +28,7 @@
         "plantower": "^1.1.10"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.1.2"
+        "@euglena/core": "^1.1.4"
     },
     "devDependencies": {
         "@euglena/core": "^1.1.4"

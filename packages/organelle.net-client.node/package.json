@@ -28,7 +28,7 @@
         "cessnalib": "^0.9.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.1.2"
+        "@euglena/core": "^1.1.4"
     },
     "devDependencies": {
         "@euglena/core": "^1.1.4"

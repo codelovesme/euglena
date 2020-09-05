@@ -20,6 +20,11 @@ declare const httpClient: {
                 headers?: Headers | undefined;
                 body: any;
             }, {}>;
+            Put: P<{
+                url: string;
+                headers?: Headers | undefined;
+                body: any;
+            }, {}>;
             Delete: P<{
                 url: string;
                 headers?: Headers | undefined;
