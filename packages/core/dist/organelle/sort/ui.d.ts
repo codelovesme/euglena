@@ -1,19 +1,18 @@
 import { P, FromP } from "../particles.h";
+import { PACK, PLog, PException } from "../../common";
 declare type PEvent = P;
+declare type PRender = P;
 export declare type Event = FromP<"Event", PEvent>;
 declare const ui: {
     v1: import("..").CreateOrganelleModuleInterface<{
         incoming: {
-            Render: P<any, {}>;
+            Render: PRender;
         };
         outgoing: {
-            ACK: P<undefined, {}>;
-            Exception: P<import("cessnalib").sys.type.Exception, {}>;
-            Log: P<{
-                message: string;
-                level: "Error" | "Info" | "Warning";
-            }, {}>;
-            Event: P<any, {}>;
+            ACK: PACK;
+            Exception: PException;
+            Log: PLog;
+            Event: PEvent;
         };
     }, undefined>;
 };

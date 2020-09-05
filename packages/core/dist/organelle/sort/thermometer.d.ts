@@ -1,17 +1,15 @@
 import { P } from "../particles.h";
+import { CommonParticles } from "../../common";
 declare const thermometer: {
     v1: import("..").CreateOrganelleModuleInterface<{
         incoming: {
-            Listen: P<undefined, {}>;
+            Listen: P<undefined>;
         };
         outgoing: {
-            ACK: P<undefined, {}>;
-            Temperature: P<number, {}>;
-            Log: P<{
-                message: string;
-                level: "Error" | "Info" | "Warning";
-            }, {}>;
-            Exception: P<import("cessnalib").sys.type.Exception, {}>;
+            ACK: CommonParticles["ACK"];
+            Temperature: P<number>;
+            Log: CommonParticles["Log"];
+            Exception: CommonParticles["Exception"];
         };
     }, undefined>;
 };

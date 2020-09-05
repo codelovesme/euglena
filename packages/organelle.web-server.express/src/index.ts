@@ -5,8 +5,8 @@ let app: Express;
 let sap: {
     port: number;
 };
-const getPathParamsAsString = (pathParams: string[]): string => {
-    if (pathParams.length! > 0) {
+const getPathParamsAsString = (pathParams: string[] | undefined): string => {
+    if (pathParams?.length! > 0) {
         return pathParams!.reduce((acc, curr) => `${acc}/:${curr}`, "/");
     }
     return "";
@@ -23,30 +23,34 @@ export default webServer.v1.com<
     AddRoute: async ({ data: { method, path, pathParams, queryParams } }, { cp, t }) => {
         const route: string = `${path}${getPathParamsAsString(pathParams)}`;
         app[method](`${route}`, async (req, res) => {
-            res.send(
-                await t(
-                    cp.Impulse({
-                        route,
-                        path,
-                        method,
-                        pathParams: pathParams.reduce(
-                            (acc, curr) => ({
-                                ...acc,
-                                [curr]: req.params[curr]
-                            }),
-                            {}
-                        ),
-                        queryParams: queryParams.reduce(
-                            (acc, curr) => ({
-                                ...acc,
-                                [curr]: req.query[curr]
-                            }),
-                            {}
-                        ),
-                        body: req.body
-                    })
-                )
+            const resp = await t(
+                cp.WebServerImpulse({
+                    route,
+                    path,
+                    method,
+                    pathParams: pathParams
+                        ? pathParams.reduce(
+                              (acc, curr) => ({
+                                  ...acc,
+                                  [curr]: req.params[curr]
+                              }),
+                              {}
+                          )
+                        : {},
+                    queryParams: queryParams
+                        ? queryParams.reduce(
+                              (acc, curr) => ({
+                                  ...acc,
+                                  [curr]: req.query[curr]
+                              }),
+                              {}
+                          )
+                        : {},
+                    body: req.body
+                })
             );
+            console.log("RESP: " + JSON.stringify(resp));
+            res.send(resp);
         });
         return cp.ACK();
     },

@@ -43,6 +43,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.nucleusJs = void 0;
 var cessnalib_1 = require("cessnalib");
 var create_organelle_module_1 = require("./create-organelle-module");
 var genes = [];

@@ -55,7 +55,8 @@ var express_1 = __importDefault(require("express"));
 var app;
 var sap;
 var getPathParamsAsString = function (pathParams) {
-    if (pathParams.length > 0) {
+    var _a;
+    if (((_a = pathParams) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         return pathParams.reduce(function (acc, curr) { return acc + "/:" + curr; }, "/");
     }
     return "";
@@ -80,27 +81,31 @@ exports.default = core_1.webServer.v1.com({
             return __generator(this, function (_d) {
                 route = "" + path + getPathParamsAsString(pathParams);
                 app[method]("" + route, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-                    var _a, _b;
-                    return __generator(this, function (_c) {
-                        switch (_c.label) {
-                            case 0:
-                                _b = (_a = res).send;
-                                return [4 /*yield*/, t(cp.Impulse({
-                                        route: route,
-                                        path: path,
-                                        method: method,
-                                        pathParams: pathParams.reduce(function (acc, curr) {
+                    var resp;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, t(cp.WebServerImpulse({
+                                    route: route,
+                                    path: path,
+                                    method: method,
+                                    pathParams: pathParams
+                                        ? pathParams.reduce(function (acc, curr) {
                                             var _a;
                                             return (__assign(__assign({}, acc), (_a = {}, _a[curr] = req.params[curr], _a)));
-                                        }, {}),
-                                        queryParams: queryParams.reduce(function (acc, curr) {
+                                        }, {})
+                                        : {},
+                                    queryParams: queryParams
+                                        ? queryParams.reduce(function (acc, curr) {
                                             var _a;
                                             return (__assign(__assign({}, acc), (_a = {}, _a[curr] = req.query[curr], _a)));
-                                        }, {}),
-                                        body: req.body
-                                    }))];
+                                        }, {})
+                                        : {},
+                                    body: req.body
+                                }))];
                             case 1:
-                                _b.apply(_a, [_c.sent()]);
+                                resp = _a.sent();
+                                console.log("RESP: " + JSON.stringify(resp));
+                                res.send(resp);
                                 return [2 /*return*/];
                         }
                     });
