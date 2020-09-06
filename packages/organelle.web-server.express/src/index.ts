@@ -5,11 +5,8 @@ let app: Express;
 let sap: {
     port: number;
 };
-const getPathParamsAsString = (pathParams: string[] | undefined): string => {
-    if (pathParams?.length! > 0) {
-        return pathParams!.reduce((acc, curr) => `${acc}/:${curr}`, "/");
-    }
-    return "";
+const parsePathParams = (path: string): string[] => {
+    return path.split("/:").slice(1);
 };
 export default webServer.v1.com<
     Sap<{
@@ -20,12 +17,11 @@ export default webServer.v1.com<
         sap = data;
         app = express();
     },
-    AddRoute: async ({ data: { method, path, pathParams, queryParams } }, { cp, t }) => {
-        const route: string = `${path}${getPathParamsAsString(pathParams)}`;
-        app[method](`${route}`, async (req, res) => {
+    AddRoute: async ({ data: { method, path, queryParams } }, { cp, t }) => {
+        const pathParams = parsePathParams(path);
+        app[method](`${path}`, async (req, res) => {
             const resp: any = await t(
                 cp.WebServerImpulse({
-                    route,
                     path,
                     method,
                     pathParams: pathParams

@@ -9,14 +9,12 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             method: "get" | "post" | "put" | "delete";
             path: string;
             queryParams?: string[] | undefined;
-            pathParams?: string[] | undefined;
         }, {}>;
     };
     outgoing: {
         ACK: import("@euglena/core").P<undefined, {}>;
         Exception: import("@euglena/core").P<import("cessnalib").sys.type.Exception, {}>;
         WebServerImpulse: import("@euglena/core").P<{
-            route: string;
             path: string;
             method: string;
             queryParams: object;

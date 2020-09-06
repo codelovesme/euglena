@@ -3,11 +3,9 @@ declare type PAddRoute = P<{
     method: "get" | "post" | "put" | "delete";
     path: string;
     queryParams?: string[];
-    pathParams?: string[];
 }>;
 declare type AddRoute = FromP<"AddRoute", PAddRoute>;
 declare type PWebServerImpulse = P<{
-    route: string;
     path: string;
     method: string;
     queryParams: object;
@@ -27,14 +25,12 @@ declare const webServer: {
                 method: "get" | "post" | "put" | "delete";
                 path: string;
                 queryParams?: string[] | undefined;
-                pathParams?: string[] | undefined;
             }, {}>;
         };
         outgoing: {
             ACK: P<undefined, {}>;
             Exception: P<import("cessnalib").sys.type.Exception, {}>;
             WebServerImpulse: P<{
-                route: string;
                 path: string;
                 method: string;
                 queryParams: object;

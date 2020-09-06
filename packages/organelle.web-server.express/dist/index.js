@@ -54,12 +54,8 @@ var core_1 = require("@euglena/core");
 var express_1 = __importDefault(require("express"));
 var app;
 var sap;
-var getPathParamsAsString = function (pathParams) {
-    var _a;
-    if (((_a = pathParams) === null || _a === void 0 ? void 0 : _a.length) > 0) {
-        return pathParams.reduce(function (acc, curr) { return acc + "/:" + curr; }, "/");
-    }
-    return "";
+var parsePathParams = function (path) {
+    return path.split("/:").slice(1);
 };
 exports.default = core_1.webServer.v1.com({
     Sap: function (_a, _b) {
@@ -74,18 +70,17 @@ exports.default = core_1.webServer.v1.com({
         });
     },
     AddRoute: function (_a, _b) {
-        var _c = _a.data, method = _c.method, path = _c.path, pathParams = _c.pathParams, queryParams = _c.queryParams;
+        var _c = _a.data, method = _c.method, path = _c.path, queryParams = _c.queryParams;
         var cp = _b.cp, t = _b.t;
         return __awaiter(void 0, void 0, void 0, function () {
-            var route;
+            var pathParams;
             return __generator(this, function (_d) {
-                route = "" + path + getPathParamsAsString(pathParams);
-                app[method]("" + route, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+                pathParams = parsePathParams(path);
+                app[method]("" + path, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
                     var resp;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, t(cp.WebServerImpulse({
-                                    route: route,
                                     path: path,
                                     method: method,
                                     pathParams: pathParams

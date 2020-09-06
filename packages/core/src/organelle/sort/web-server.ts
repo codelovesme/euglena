@@ -6,13 +6,11 @@ type PAddRoute = P<{
     method: "get" | "post" | "put" | "delete";
     path: string;
     queryParams?: string[];
-    pathParams?: string[];
 }>;
 
 type AddRoute = FromP<"AddRoute", PAddRoute>;
 
 type PWebServerImpulse = P<{
-    route: string;
     path: string;
     method: string;
     queryParams: object;
