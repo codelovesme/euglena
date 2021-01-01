@@ -1,21 +1,14 @@
+import { CommonParticles } from "../../common";
 declare const netServer: {
     v1: import("..").CreateOrganelleModuleInterface<{
         incoming: {
-            GetAlive: import("..").P<undefined, {}>;
+            GetAlive: CommonParticles["GetAlive"];
         };
         outgoing: {
-            ACK: import("..").P<undefined, {}>;
-            Exception: import("..").P<import("cessnalib").sys.type.Exception, {}>;
-            Impulse: import("..").P<{
-                particle: import("../..").Particle<string, any, {
-                    [x: string]: any;
-                }>;
-                source: string;
-            }, {}>;
-            Log: import("..").P<{
-                message: string;
-                level: "Error" | "Info" | "Warning";
-            }, {}>;
+            ACK: CommonParticles["ACK"];
+            Exception: CommonParticles["Exception"];
+            Impulse: CommonParticles["Impulse"];
+            Log: CommonParticles["Log"];
         };
     }, undefined>;
 };

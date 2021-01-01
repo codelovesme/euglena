@@ -1,4 +1,5 @@
 import { FromP, P } from "../particles.h";
+import { PLog, PException } from "../../common";
 export declare type PMatter = P<Array<{
     pm: number;
     value: number;
@@ -8,19 +9,12 @@ export declare type Matter = FromP<"Matter", PMatter>;
 declare const matterSensor: {
     v1: import("..").CreateOrganelleModuleInterface<{
         incoming: {
-            Read: P<undefined, {}>;
+            Read: P<undefined>;
         };
         outgoing: {
-            Matter: P<{
-                pm: number;
-                value: number;
-                type: "Normal" | "Atmos" | "Count";
-            }[], {}>;
-            Log: P<{
-                message: string;
-                level: "Error" | "Info" | "Warning";
-            }, {}>;
-            Exception: P<import("cessnalib").sys.type.Exception, {}>;
+            Matter: PMatter;
+            Log: PLog;
+            Exception: PException;
         };
     }, undefined>;
 };

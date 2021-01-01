@@ -3,9 +3,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
     path: string;
     type: "FileSystemPath" | "NodeModules" | "Url";
 } | {
-    particles: Particle<string, any, {
-        [x: string]: any;
-    }>[];
+    particles: Particle[];
     type: "InMemory";
 }, {
     organelleName: string;
@@ -57,9 +55,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
     path: string;
     type: "FileSystemPath" | "NodeModules" | "Url";
 } | {
-    particles: Particle<string, any, {
-        [x: string]: any;
-    }>[];
+    particles: Particle[];
     type: "InMemory";
 }, {
     organelleName: string;

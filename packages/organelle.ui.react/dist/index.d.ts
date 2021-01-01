@@ -2,6 +2,7 @@ import { Particle, CreateOrganelleParticles, P } from "@euglena/core";
 import React from "react";
 import { OrganelleTransmit } from "@euglena/core/dist/organelle/organelle-receive.h";
 import { sys } from "cessnalib";
+declare let App: React.FC<any>;
 export declare const ToolsContext: React.Context<{
     t: OrganelleTransmit<Particle<"ACK", undefined, {}> | Particle<"Exception", sys.type.Exception, {}> | Particle<"Log", {
         message: string;
@@ -22,7 +23,7 @@ export declare const ToolsContext: React.Context<{
     }>;
 }>;
 declare const _default: import("@euglena/core").OrganelleModule<P<{
-    rootComponent: React.FC<any>;
+    rootComponent: typeof App;
     serviceWorker: boolean;
 }, {
     organelleName: string;
@@ -40,7 +41,7 @@ declare const _default: import("@euglena/core").OrganelleModule<P<{
         Event: P<any, {}>;
     };
 }, P<{
-    rootComponent: React.FC<any>;
+    rootComponent: typeof App;
     serviceWorker: boolean;
 }, {
     organelleName: string;
