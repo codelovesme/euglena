@@ -62,7 +62,7 @@ export default domc("NetClient", {
 
 [@euglena/organelle.net-client.browser](packages/organelle.net-client.browser/README.md)
 
-[@euglena/organelle.net-client.node](packages/organelle.net-client.node/README.md)
+[@euglena/organelle.net-client.nodejs](packages/organelle.net-client.nodejs/README.md)
 
 [@euglena/organelle.net-server](packages/organelle.net-server/README.md)
 
@@ -82,6 +82,6 @@ export default domc("NetClient", {
 
 [@euglena/organelle.vacuole.js](packages/organelle.vacuole.js/README.md)
 
-[@euglena/organelle.vacuole.mongo](packages/organelle.vacuole.mongo/README.md)
+[@euglena/organelle.vacuole.mongodb](packages/organelle.vacuole.mongodb/README.md)
 
 [@euglena/organelle.vacuole.nedb](packages/organelle.vacuole.nedb/README.md)

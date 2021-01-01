@@ -24,8 +24,34 @@ npm manifest:
           "packages/*"
       ],
       "scripts": {
+<<<<<<< HEAD
           "compile": "lerna run compile",
           "clean": "lerna run clean && rm -r node_modules",
+=======
+          "c-c": "yarn workspace @euglena/core compile",
+          "c-ol": "yarn workspace @euglena/organelle.logger compile",
+          "c-ons": "yarn workspace @euglena/organelle.net-server compile",
+          "c-onsn": "yarn workspace @euglena/organelle.net-server.nodejs compile",
+          "c-onc": "yarn workspace @euglena/organelle.net-client compile",
+          "c-oncn": "yarn workspace @euglena/organelle.net-client.nodejs compile",
+          "c-oncb": "yarn workspace @euglena/organelle.net-client.browser compile",
+          "c-olc": "yarn workspace @euglena/organelle.logger.console compile",
+          "c-ov": "yarn workspace @euglena/organelle.vacuole compile",
+          "c-ovj": "yarn workspace @euglena/organelle.vacuole.js compile",
+          "c-ovm": "yarn workspace @euglena/organelle.vacuole.mongodb compile",
+          "c-ovn": "yarn workspace @euglena/organelle.vacuole.nedb compile",
+          "c-ot": "yarn workspace @euglena/organelle.timer compile",
+          "c-otj": "yarn workspace @euglena/organelle.timer.js compile",
+          "c-og": "yarn workspace @euglena/organelle.gps compile",
+          "c-ogs": "yarn workspace @euglena/organelle.gps.serial-port compile",
+          "c-ote": "yarn workspace @euglena/organelle.temperature compile",
+          "c-otei": "yarn workspace @euglena/organelle.temperature.i2c compile",
+          "c-ou": "yarn workspace @euglena/organelle.ui compile",
+          "c-our": "yarn workspace @euglena/organelle.ui.react compile",
+          "c-cl": "yarn workspace @euglena/cli compile",
+          "c": "yarn c-c  && ((yarn c-onc && yarn c-oncn && yarn c-oncb) & (yarn c-ons && yarn c-onsn) & (yarn c-ol && yarn c-olc) & (yarn c-ov && (yarn c-ovj & yarn c-ovm)) & (yarn c-ot && yarn c-otj) & (yarn c-og && yarn c-ogs) ) & (yarn c-ou && yarn c-our)",
+          "cl": "lerna run clean && rm -r node_modules",
+>>>>>>> 1414d4b... Refactor: Rename some packages
           "p-e": "(cp -r packages ../euglena-dist)&(cp package.json ../euglena-dist/)"
       },
       "prettier": {
