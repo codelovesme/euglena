@@ -36,6 +36,7 @@ export declare type PRemoveParticle = P<{
 export declare type PImpulse = P<{
     particle: Particle;
     source: string;
+    token: string;
 }>;
 export declare type ACK = FromP<"ACK", PACK>;
 export declare type EuglenaName = FromP<"EuglenaName", PEuglenaName>;

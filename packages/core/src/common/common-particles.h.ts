@@ -35,6 +35,7 @@ export type PRemoveParticle = P<{ query: sys.type.RecursivePartial<Particle>; co
 export type PImpulse = P<{
     particle: Particle;
     source: string;
+    token: string;
 }>;
 
 export type ACK = FromP<"ACK", PACK>;

@@ -11,3 +11,4 @@ export * from "./ui";
 export * from "./vacuole";
 export * from "./web-server";
 export * from "./http-client";
+export * from "./fs";

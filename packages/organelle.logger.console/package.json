@@ -28,7 +28,7 @@
         "moment": "^2.24.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.1"
+        "@euglena/core": "^1.2.4"
     },
     "devDependencies": {
         "@euglena/core": "^1.2.4"

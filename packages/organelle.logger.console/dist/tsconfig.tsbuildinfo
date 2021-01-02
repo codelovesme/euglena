@@ -227,13 +227,13 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/common/common-particles.h.d.ts": {
-        "version": "80002aef45446250886d0e980e61ff72ffc5953c56c211e77911faa4aae7221b",
-        "signature": "80002aef45446250886d0e980e61ff72ffc5953c56c211e77911faa4aae7221b",
+        "version": "a1c7f3b91a1723df8f1b780ada0a1d7cc149d91aabefaac8c823ad7087e67587",
+        "signature": "a1c7f3b91a1723df8f1b780ada0a1d7cc149d91aabefaac8c823ad7087e67587",
         "affectsGlobalScope": false
       },
       "../../core/dist/common/common-particles.d.ts": {
-        "version": "26842879f4ae9cf71a2f787f51e2eee6627afc6c0d79c385e23b8a71a02fe62a",
-        "signature": "26842879f4ae9cf71a2f787f51e2eee6627afc6c0d79c385e23b8a71a02fe62a",
+        "version": "6b7ee58e7b41879b1e76163ec223424d692ac9397b9ab112a3aff27615b8c63e",
+        "signature": "6b7ee58e7b41879b1e76163ec223424d692ac9397b9ab112a3aff27615b8c63e",
         "affectsGlobalScope": false
       },
       "../../core/dist/common/index.d.ts": {
@@ -321,9 +321,14 @@
         "signature": "9ca7b89cf5c7740230080f41d485665b55ec7e7e8fdf157faaa8843e6e043cce",
         "affectsGlobalScope": false
       },
+      "../../core/dist/organelle/sort/fs.d.ts": {
+        "version": "03eae04788f07f4dc80505212ec016e8984cc09849d3ac6c8ac337ff277db242",
+        "signature": "03eae04788f07f4dc80505212ec016e8984cc09849d3ac6c8ac337ff277db242",
+        "affectsGlobalScope": false
+      },
       "../../core/dist/organelle/sort/index.d.ts": {
-        "version": "0349fc168bce4d2a4b1d90a8976626db180eff9b9f0fa51568cf2f765e555aa0",
-        "signature": "0349fc168bce4d2a4b1d90a8976626db180eff9b9f0fa51568cf2f765e555aa0",
+        "version": "80be45e57df6cf58288f53167c22315a2e0aa30646dbf12ae77ce62fae66444f",
+        "signature": "80be45e57df6cf58288f53167c22315a2e0aa30646dbf12ae77ce62fae66444f",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/index.d.ts": {
@@ -865,6 +870,11 @@
         "../../core/dist/organelle/particles.h.d.ts",
         "../../core/dist/particle/index.d.ts"
       ],
+      "../../core/dist/organelle/sort/fs.d.ts": [
+        "../../core/dist/common/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts"
+      ],
       "../../core/dist/organelle/sort/gps-receiver.d.ts": [
         "../../core/dist/common/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
@@ -877,6 +887,7 @@
       ],
       "../../core/dist/organelle/sort/index.d.ts": [
         "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
+        "../../core/dist/organelle/sort/fs.d.ts",
         "../../core/dist/organelle/sort/gps-receiver.d.ts",
         "../../core/dist/organelle/sort/http-client.d.ts",
         "../../core/dist/organelle/sort/logger.d.ts",
@@ -1228,6 +1239,11 @@
         "../../core/dist/organelle/particles.h.d.ts",
         "../../core/dist/particle/index.d.ts"
       ],
+      "../../core/dist/organelle/sort/fs.d.ts": [
+        "../../core/dist/common/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts"
+      ],
       "../../core/dist/organelle/sort/gps-receiver.d.ts": [
         "../../core/dist/common/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
@@ -1240,6 +1256,7 @@
       ],
       "../../core/dist/organelle/sort/index.d.ts": [
         "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
+        "../../core/dist/organelle/sort/fs.d.ts",
         "../../core/dist/organelle/sort/gps-receiver.d.ts",
         "../../core/dist/organelle/sort/http-client.d.ts",
         "../../core/dist/organelle/sort/logger.d.ts",
@@ -1432,6 +1449,7 @@
       "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts",
       "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
       "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts",
+      "../../core/dist/organelle/sort/fs.d.ts",
       "../../core/dist/organelle/sort/gps-receiver.d.ts",
       "../../core/dist/organelle/sort/http-client.d.ts",
       "../../core/dist/organelle/sort/index.d.ts",

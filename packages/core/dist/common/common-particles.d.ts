@@ -52,6 +52,7 @@ export declare const createCommonParticles: CreateOrganelleParticles<{
             [x: string]: any;
         }>;
         source: string;
+        token: string;
     }, {}>;
 }>;
 /**
@@ -110,5 +111,6 @@ export declare const ccp: CreateOrganelleParticles<{
             [x: string]: any;
         }>;
         source: string;
+        token: string;
     }, {}>;
 }>;

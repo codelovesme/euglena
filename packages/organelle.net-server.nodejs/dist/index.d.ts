@@ -14,6 +14,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
                 [x: string]: any;
             }>;
             source: string;
+            token: string;
         }, {}>;
         Log: import("@euglena/core").P<{
             message: string;
