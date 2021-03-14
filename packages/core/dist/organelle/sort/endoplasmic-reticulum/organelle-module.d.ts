@@ -29,7 +29,7 @@ declare const endoplasmicReticulumJs: import("../../organelle-module.h").Endopla
     outgoing: {
         Log: P<{
             message: string;
-            level: "Error" | "Info" | "Warning";
+            level: "Warning" | "Error" | "Info";
         }, {}>;
         TransmitResponse: P<void | Particle<string, any, {
             [x: string]: any;

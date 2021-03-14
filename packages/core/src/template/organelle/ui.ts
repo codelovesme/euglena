@@ -1,6 +1,6 @@
-import { P, FromP } from "../particles.h";
-import { domc } from "../define-organelle-module-create";
-import { PACK, PLog, PException } from "../../common";
+import { P, FromP } from "../../organelle/particles.h";
+import { domc } from "../../organelle/define-organelle-module-create";
+import { PACK, PLog, PException } from "..";
 
 type PEvent = P;
 type PRender = P;

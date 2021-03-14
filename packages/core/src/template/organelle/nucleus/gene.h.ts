@@ -1,6 +1,6 @@
 import { sys } from "cessnalib";
 import { Particle } from "../../../particle";
-import { NucleusTransmit } from "../../organelle-receive.h";
+import { NucleusTransmit } from "../../../organelle/organelle-receive.h";
 
 export interface GeneReaction<TriggerParticle extends Particle = Particle> {
     (

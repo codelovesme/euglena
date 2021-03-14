@@ -1,6 +1,6 @@
-import { PLog, PException, PACK } from "../../common";
-import { P } from "../particles.h";
-import { domc } from "../define-organelle-module-create";
+import { PLog, PException, PACK } from "..";
+import { P } from "../../organelle/particles.h";
+import { domc } from "../../organelle/define-organelle-module-create";
 
 type Encoding = "ascii" | "utf8" | "utf-8" | "utf16le" | "ucs2" | "ucs-2" | "base64" | "latin1" | "binary" | "hex";
 

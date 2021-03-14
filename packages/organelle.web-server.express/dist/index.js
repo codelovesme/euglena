@@ -95,7 +95,8 @@ exports.default = core_1.webServer.v1.com({
                                             return (__assign(__assign({}, acc), (_a = {}, _a[curr] = req.query[curr], _a)));
                                         }, {})
                                         : {},
-                                    body: req.body
+                                    body: req.body,
+                                    headers: req.headers
                                 }))];
                             case 1:
                                 resp = _a.sent();

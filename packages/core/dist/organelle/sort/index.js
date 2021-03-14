@@ -24,4 +24,5 @@ __exportStar(require("./vacuole"), exports);
 __exportStar(require("./web-server"), exports);
 __exportStar(require("./http-client"), exports);
 __exportStar(require("./fs"), exports);
+__exportStar(require("./utils"), exports);
 //# sourceMappingURL=index.js.map

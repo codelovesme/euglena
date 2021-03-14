@@ -1,6 +1,7 @@
-import { CommonParticles } from "../../common";
-import { domc } from "../define-organelle-module-create";
-import { P, FromP } from "../particles.h";
+import { CommonParticles } from "..";
+import { domc } from "../../organelle/define-organelle-module-create";
+import { P, FromP } from "../../organelle/particles.h";
+import { Headers } from "./utils";
 
 type PAddRoute = P<{
     method: "get" | "post" | "put" | "delete";
@@ -15,10 +16,7 @@ type PWebServerImpulse = P<{
     method: string;
     queryParams: object;
     pathParams: object;
-    user?: {
-        id: string;
-        roles: string;
-    };
+    headers?: Headers;
     body: object;
 }>;
 type WebServerImpulse = FromP<"WebServerImpulse", PWebServerImpulse>;

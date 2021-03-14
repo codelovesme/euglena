@@ -212,8 +212,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts": {
-        "version": "d946d317997a420ebadc21c32f6c5d136f5b29e272f25719f27dc28f371a3bf9",
-        "signature": "d946d317997a420ebadc21c32f6c5d136f5b29e272f25719f27dc28f371a3bf9",
+        "version": "0fa4e3481bc343db0fde60193e796253cbaa7a6b35f83d2ba6587b04eb4ffa18",
+        "signature": "0fa4e3481bc343db0fde60193e796253cbaa7a6b35f83d2ba6587b04eb4ffa18",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts": {
@@ -232,8 +232,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/common/common-particles.d.ts": {
-        "version": "6b7ee58e7b41879b1e76163ec223424d692ac9397b9ab112a3aff27615b8c63e",
-        "signature": "6b7ee58e7b41879b1e76163ec223424d692ac9397b9ab112a3aff27615b8c63e",
+        "version": "b7a402ce222f4ebaa1d4a3ca7e9b44d6dc22f7d7ae928fc8cde2612ab3912c23",
+        "signature": "b7a402ce222f4ebaa1d4a3ca7e9b44d6dc22f7d7ae928fc8cde2612ab3912c23",
         "affectsGlobalScope": false
       },
       "../../core/dist/common/index.d.ts": {
@@ -252,8 +252,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/sort/nucleus/organelle-module.d.ts": {
-        "version": "6a81a46fe53f3fa9462bc9b202fba692862a836c9b33619c59ee8e2235337344",
-        "signature": "6a81a46fe53f3fa9462bc9b202fba692862a836c9b33619c59ee8e2235337344",
+        "version": "aa2bea2b5e63abcf1b33779fe5acf36d61b9e12e46d0176a6eae9302c1845c40",
+        "signature": "aa2bea2b5e63abcf1b33779fe5acf36d61b9e12e46d0176a6eae9302c1845c40",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/sort/nucleus/gene.d.ts": {
@@ -311,14 +311,19 @@
         "signature": "f6afbd4665aa5620190dd36ad35ebc3185add7cd5f593739d9bd8a1d0d430469",
         "affectsGlobalScope": false
       },
+      "../../core/dist/organelle/sort/utils.d.ts": {
+        "version": "5344a2879e9eb51b6077323a37785b1aff3d93dcadeca44fc83631a71246804c",
+        "signature": "5344a2879e9eb51b6077323a37785b1aff3d93dcadeca44fc83631a71246804c",
+        "affectsGlobalScope": false
+      },
       "../../core/dist/organelle/sort/web-server.d.ts": {
-        "version": "dac388db914a4f31abb1299754f5051441c273b39aded738f4745bc2a11ce0a5",
-        "signature": "dac388db914a4f31abb1299754f5051441c273b39aded738f4745bc2a11ce0a5",
+        "version": "5596580c7b8479977bf201cc8908f309a7284e4a60c5cb9a6a3255c53475674b",
+        "signature": "5596580c7b8479977bf201cc8908f309a7284e4a60c5cb9a6a3255c53475674b",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/sort/http-client.d.ts": {
-        "version": "9ca7b89cf5c7740230080f41d485665b55ec7e7e8fdf157faaa8843e6e043cce",
-        "signature": "9ca7b89cf5c7740230080f41d485665b55ec7e7e8fdf157faaa8843e6e043cce",
+        "version": "2d69b6f53f8ed8a019bee0d0b167a2f2a43dda89972b07110a4262e8f2f50ff1",
+        "signature": "2d69b6f53f8ed8a019bee0d0b167a2f2a43dda89972b07110a4262e8f2f50ff1",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/sort/fs.d.ts": {
@@ -327,8 +332,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/sort/index.d.ts": {
-        "version": "80be45e57df6cf58288f53167c22315a2e0aa30646dbf12ae77ce62fae66444f",
-        "signature": "80be45e57df6cf58288f53167c22315a2e0aa30646dbf12ae77ce62fae66444f",
+        "version": "01ded7de3d5d53650e612d25542db6cabcd8b53420e3692d8cffd51965444eec",
+        "signature": "01ded7de3d5d53650e612d25542db6cabcd8b53420e3692d8cffd51965444eec",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/index.d.ts": {
@@ -883,7 +888,8 @@
       "../../core/dist/organelle/sort/http-client.d.ts": [
         "../../core/dist/common/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/organelle/sort/utils.d.ts"
       ],
       "../../core/dist/organelle/sort/index.d.ts": [
         "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
@@ -898,6 +904,7 @@
         "../../core/dist/organelle/sort/thermometer.d.ts",
         "../../core/dist/organelle/sort/timer.d.ts",
         "../../core/dist/organelle/sort/ui.d.ts",
+        "../../core/dist/organelle/sort/utils.d.ts",
         "../../core/dist/organelle/sort/vacuole.d.ts",
         "../../core/dist/organelle/sort/web-server.d.ts"
       ],
@@ -970,7 +977,8 @@
       "../../core/dist/organelle/sort/web-server.d.ts": [
         "../../core/dist/common/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/organelle/sort/utils.d.ts"
       ],
       "../../core/dist/particle/index.d.ts": [
         "../../core/dist/particle/particle.d.ts",
@@ -1252,7 +1260,8 @@
       "../../core/dist/organelle/sort/http-client.d.ts": [
         "../../core/dist/common/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/organelle/sort/utils.d.ts"
       ],
       "../../core/dist/organelle/sort/index.d.ts": [
         "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
@@ -1267,6 +1276,7 @@
         "../../core/dist/organelle/sort/thermometer.d.ts",
         "../../core/dist/organelle/sort/timer.d.ts",
         "../../core/dist/organelle/sort/ui.d.ts",
+        "../../core/dist/organelle/sort/utils.d.ts",
         "../../core/dist/organelle/sort/vacuole.d.ts",
         "../../core/dist/organelle/sort/web-server.d.ts"
       ],
@@ -1339,7 +1349,8 @@
       "../../core/dist/organelle/sort/web-server.d.ts": [
         "../../core/dist/common/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/organelle/sort/utils.d.ts"
       ],
       "../../core/dist/particle/index.d.ts": [
         "../../core/dist/particle/particle.d.ts",
@@ -1465,6 +1476,7 @@
       "../../core/dist/organelle/sort/thermometer.d.ts",
       "../../core/dist/organelle/sort/timer.d.ts",
       "../../core/dist/organelle/sort/ui.d.ts",
+      "../../core/dist/organelle/sort/utils.d.ts",
       "../../core/dist/organelle/sort/vacuole.d.ts",
       "../../core/dist/organelle/sort/web-server.d.ts",
       "../../core/dist/particle/index.d.ts",

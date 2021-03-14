@@ -20,7 +20,7 @@ declare const nucleusJs: import("../..").SingletonOrganelleModule<P<{
     outgoing: {
         Log: P<{
             message: string;
-            level: "Error" | "Info" | "Warning";
+            level: "Warning" | "Error" | "Info";
         }, {}>;
         Exception: P<sys.type.Exception, {}>;
         ACK: P<undefined, {}>;

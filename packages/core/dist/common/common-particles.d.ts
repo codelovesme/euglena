@@ -15,7 +15,7 @@ export declare const createCommonParticles: CreateOrganelleParticles<{
     InvalidParticle: import("../organelle").P<undefined, {}>;
     Log: import("../organelle").P<{
         message: string;
-        level: "Error" | "Info" | "Warning";
+        level: "Warning" | "Error" | "Info";
     }, {}>;
     GetAlive: import("../organelle").P<undefined, {}>;
     Hibernate: import("../organelle").P<undefined, {}>;
@@ -74,7 +74,7 @@ export declare const ccp: CreateOrganelleParticles<{
     InvalidParticle: import("../organelle").P<undefined, {}>;
     Log: import("../organelle").P<{
         message: string;
-        level: "Error" | "Info" | "Warning";
+        level: "Warning" | "Error" | "Info";
     }, {}>;
     GetAlive: import("../organelle").P<undefined, {}>;
     Hibernate: import("../organelle").P<undefined, {}>;

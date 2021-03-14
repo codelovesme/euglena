@@ -1,4 +1,4 @@
-import { domc } from "../..";
+import { domc } from "../../../organelle";
 import { PLog } from "../../..";
 import { PTransmitParticle, POrganelleInfo, PTransmitResponse, PEuglenaHasBeenBorn } from "./create-organelle-module.h";
 

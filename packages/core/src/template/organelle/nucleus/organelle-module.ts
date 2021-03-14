@@ -2,8 +2,8 @@ import { js, sys } from "cessnalib";
 import { nucleus } from "./create-organelle-module";
 import { Particle } from "../../../particle";
 import { Gene, GeneReaction } from "./gene.h";
-import { NucleusTransmit } from "../../organelle-receive.h";
-import { P } from "../../particles.h";
+import { NucleusTransmit } from "../../../organelle/organelle-receive.h";
+import { P } from "../../../organelle/particles.h";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle, sourceOrganelle: string) => Promise<Particle | void>[];

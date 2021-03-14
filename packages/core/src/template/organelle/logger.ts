@@ -1,5 +1,5 @@
-import { domc } from "../define-organelle-module-create";
-import { CommonParticles } from "../../common";
+import { domc } from "../../organelle/define-organelle-module-create";
+import { CommonParticles } from "..";
 
 const logger = {
     v1: domc<{

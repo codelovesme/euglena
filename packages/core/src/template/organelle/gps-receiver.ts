@@ -1,6 +1,6 @@
-import { PLog, PException } from "../../common";
-import { FromP, P } from "../particles.h";
-import { domc } from "../define-organelle-module-create";
+import { PLog, PException } from "..";
+import { FromP, P } from "../../organelle/particles.h";
+import { domc } from "../../organelle/define-organelle-module-create";
 
 export type PCoordinate = P<{
     lat: number;

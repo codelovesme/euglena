@@ -1,5 +1,5 @@
 import { cp } from "../particle";
-import { CommonParticles } from "./common-particles.h";
+import { CommonParticles } from "./particles.h";
 import { CreateOrganelleParticles } from "../organelle";
 
 const defineCommonParticles = <P extends keyof CommonParticles>(

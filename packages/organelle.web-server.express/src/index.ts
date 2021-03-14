@@ -42,7 +42,8 @@ export default webServer.v1.com<
                               {}
                           )
                         : {},
-                    body: req.body
+                    body: req.body,
+                    headers: req.headers
                 })
             );
             Promise.all(resp).then((x) => {

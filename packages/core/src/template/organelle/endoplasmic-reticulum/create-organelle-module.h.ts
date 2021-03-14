@@ -1,7 +1,7 @@
-import { P } from "../..";
+import { P } from "../../../organelle";
 import { Particle } from "../../..";
-import { FromP, Sap } from "../../particles.h";
-import { OrganelleModule } from "../../organelle-module.h";
+import { FromP, Sap } from "../../../organelle/particles.h";
+import { OrganelleModule } from "../../../organelle/organelle-module.h";
 
 export type PEuglenaHasBeenBorn = P;
 export type PTransmitParticle = P<{ target: string; particle: Particle }>;

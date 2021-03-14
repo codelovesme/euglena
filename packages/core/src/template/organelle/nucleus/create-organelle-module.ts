@@ -1,7 +1,7 @@
 import { Particle } from "../../../particle";
-import { PLog, PException, PACK } from "../../../common";
-import { P } from "../../particles.h";
-import { domc } from "../../define-organelle-module-create";
+import { PLog, PException, PACK } from "../..";
+import { P } from "../../../organelle/particles.h";
+import { domc } from "../../../organelle/define-organelle-module-create";
 
 const nucleus = domc<
     {

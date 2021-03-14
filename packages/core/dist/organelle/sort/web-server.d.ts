@@ -1,5 +1,6 @@
 import { CommonParticles } from "../../common";
 import { P, FromP } from "../particles.h";
+import { Headers } from "./utils";
 declare type PAddRoute = P<{
     method: "get" | "post" | "put" | "delete";
     path: string;
@@ -11,10 +12,7 @@ declare type PWebServerImpulse = P<{
     method: string;
     queryParams: object;
     pathParams: object;
-    user?: {
-        id: string;
-        roles: string;
-    };
+    headers?: Headers;
     body: object;
 }>;
 declare type WebServerImpulse = FromP<"WebServerImpulse", PWebServerImpulse>;

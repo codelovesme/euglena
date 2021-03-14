@@ -1,9 +1,9 @@
 import { endoplasmicReticulum as reticulum } from "./create-organelle-module";
-import { P, Sap } from "../../particles.h";
-import { OrganelleReceive, OrganelleTransmit } from "../../organelle-receive.h";
+import { P, Sap } from "../../../organelle/particles.h";
+import { OrganelleReceive, OrganelleTransmit } from "../../../organelle/organelle-receive.h";
 import { Particle } from "../../../particle";
 import { nucleus, nucleusJs } from "../nucleus";
-import { OrganelleModule } from "../../organelle-module.h";
+import { OrganelleModule } from "../../../organelle/organelle-module.h";
 
 const endoplasmicReticulumName: "EndoplasmicReticulum" = "EndoplasmicReticulum";
 
