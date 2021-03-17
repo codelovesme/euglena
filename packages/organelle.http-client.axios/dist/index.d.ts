@@ -4,21 +4,21 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
     incoming: {
         Get: import("@euglena/core").P<{
             url: string;
-            headers?: import("@euglena/core/dist/organelle/sort/utils").Headers | undefined;
+            headers?: import("@euglena/core/dist/template/organelle/utils").Headers | undefined;
         }, {}>;
         Post: import("@euglena/core").P<{
             url: string;
-            headers?: import("@euglena/core/dist/organelle/sort/utils").Headers | undefined;
+            headers?: import("@euglena/core/dist/template/organelle/utils").Headers | undefined;
             body: any;
         }, {}>;
         Put: import("@euglena/core").P<{
             url: string;
-            headers?: import("@euglena/core/dist/organelle/sort/utils").Headers | undefined;
+            headers?: import("@euglena/core/dist/template/organelle/utils").Headers | undefined;
             body: any;
         }, {}>;
         Delete: import("@euglena/core").P<{
             url: string;
-            headers?: import("@euglena/core/dist/organelle/sort/utils").Headers | undefined;
+            headers?: import("@euglena/core/dist/template/organelle/utils").Headers | undefined;
         }, {}>;
     };
     outgoing: {
@@ -29,7 +29,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             level: "Warning" | "Error" | "Info";
         }, {}>;
         Response: import("@euglena/core").P<{
-            headers?: import("@euglena/core/dist/organelle/sort/utils").Headers | undefined;
+            headers?: import("@euglena/core/dist/template/organelle/utils").Headers | undefined;
             body: any;
             status: number;
         }, {}>;

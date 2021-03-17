@@ -1,6 +1,6 @@
 import { sys } from "cessnalib";
-import { Particle, Meta } from "../particle";
-import { OrganelleParticles, P, FromP } from "../organelle";
+import { Particle, Meta } from "../../particle";
+import { OrganelleParticles, P, FromP } from "../../organelle";
 
 export type Count = "all" | number;
 
@@ -25,10 +25,10 @@ export type PReadParticle = P<{
 }>;
 export type PSaveParticle = P<
     | {
-          particle: Particle;
-          query?: sys.type.RecursivePartial<Particle>;
-          count: Count;
-      }
+        particle: Particle;
+        query?: sys.type.RecursivePartial<Particle>;
+        count: Count;
+    }
     | Particle[]
 >;
 export type PRemoveParticle = P<{ query: sys.type.RecursivePartial<Particle>; count: Count }>;

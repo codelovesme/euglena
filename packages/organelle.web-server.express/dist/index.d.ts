@@ -19,7 +19,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             method: string;
             queryParams: object;
             pathParams: object;
-            headers?: import("@euglena/core/dist/organelle/sort/utils").Headers | undefined;
+            headers?: import("@euglena/core/dist/template/organelle/utils").Headers | undefined;
             body: object;
         }, {}>;
         Log: import("@euglena/core").P<{

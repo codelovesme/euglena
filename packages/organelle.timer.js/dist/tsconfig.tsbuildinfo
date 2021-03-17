@@ -201,139 +201,144 @@
         "signature": "f3a5e953127af99fd35fac46f0317de8f3c6dd93e2013d2b8d8f5cc3fd35d325",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts": {
-        "version": "f8735f93667a75cae0b76a9c8b78d72588d54caa54332582c347f97b35c0a301",
-        "signature": "f8735f93667a75cae0b76a9c8b78d72588d54caa54332582c347f97b35c0a301",
+      "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts": {
+        "version": "949f8ca38a6d2946cf3db69a6f0948b4607d5a863b401ed9c152e78c58f898fb",
+        "signature": "949f8ca38a6d2946cf3db69a6f0948b4607d5a863b401ed9c152e78c58f898fb",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts": {
-        "version": "ef0d7049681b9218ca96bb57098712db4703e04c6984e63a1c2afc3d1395924c",
-        "signature": "ef0d7049681b9218ca96bb57098712db4703e04c6984e63a1c2afc3d1395924c",
+      "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts": {
+        "version": "905fc5ed9a127948b3322b938958e80fa070ab2d0b67379a3ba10a32db15e266",
+        "signature": "905fc5ed9a127948b3322b938958e80fa070ab2d0b67379a3ba10a32db15e266",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts": {
-        "version": "0fa4e3481bc343db0fde60193e796253cbaa7a6b35f83d2ba6587b04eb4ffa18",
-        "signature": "0fa4e3481bc343db0fde60193e796253cbaa7a6b35f83d2ba6587b04eb4ffa18",
+      "../../core/dist/template/organelle/endoplasmic-reticulum/organelle-module.d.ts": {
+        "version": "45e6469989b83fb40edfda36779c5ce45dd619d59452824f022f3e0a07a335cb",
+        "signature": "45e6469989b83fb40edfda36779c5ce45dd619d59452824f022f3e0a07a335cb",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts": {
+      "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts": {
         "version": "94115ae82cbd38651cdb60587a6fdd1e881fd6db082db97026174f3e0fe71c66",
         "signature": "94115ae82cbd38651cdb60587a6fdd1e881fd6db082db97026174f3e0fe71c66",
         "affectsGlobalScope": false
       },
-      "../../core/dist/common/common-particles.h.d.ts": {
-        "version": "a1c7f3b91a1723df8f1b780ada0a1d7cc149d91aabefaac8c823ad7087e67587",
-        "signature": "a1c7f3b91a1723df8f1b780ada0a1d7cc149d91aabefaac8c823ad7087e67587",
+      "../../core/dist/template/particle/particles.d.ts": {
+        "version": "a46c5195166bfdac80d865ffe000dc883d9dbfacd874e17e2544694a0654f8cc",
+        "signature": "a46c5195166bfdac80d865ffe000dc883d9dbfacd874e17e2544694a0654f8cc",
         "affectsGlobalScope": false
       },
-      "../../core/dist/common/common-particles.d.ts": {
-        "version": "b7a402ce222f4ebaa1d4a3ca7e9b44d6dc22f7d7ae928fc8cde2612ab3912c23",
-        "signature": "b7a402ce222f4ebaa1d4a3ca7e9b44d6dc22f7d7ae928fc8cde2612ab3912c23",
+      "../../core/dist/template/particle/particles.h.d.ts": {
+        "version": "b09198be693fb9921827f450d142906824e4ef52864fa3938c50dba83589b8b7",
+        "signature": "b09198be693fb9921827f450d142906824e4ef52864fa3938c50dba83589b8b7",
         "affectsGlobalScope": false
       },
-      "../../core/dist/common/index.d.ts": {
-        "version": "d953e4855f2e5da60467d819c80f5e174c1dc248910b87d17e4e44043fa9c0b5",
-        "signature": "d953e4855f2e5da60467d819c80f5e174c1dc248910b87d17e4e44043fa9c0b5",
+      "../../core/dist/template/particle/index.d.ts": {
+        "version": "38ee3b6d941aba36e20bf344a02c2c07eb64053a30eaab1963637b33c53f0461",
+        "signature": "38ee3b6d941aba36e20bf344a02c2c07eb64053a30eaab1963637b33c53f0461",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/nucleus/create-organelle-module.d.ts": {
-        "version": "9790f049fd7087a52d777fc566e5a9d90a63da39c054fdf91355e4b497097662",
-        "signature": "9790f049fd7087a52d777fc566e5a9d90a63da39c054fdf91355e4b497097662",
+      "../../core/dist/template/index.d.ts": {
+        "version": "593cd2ab2ad2b43c24b3c78a60e66e9c02c58d857e130e099024694fc97f39af",
+        "signature": "593cd2ab2ad2b43c24b3c78a60e66e9c02c58d857e130e099024694fc97f39af",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/nucleus/gene.h.d.ts": {
-        "version": "eb70346412c7c66596a84a77810306a5d1205391fc6a2e13de46fcfe5dfb6c51",
-        "signature": "eb70346412c7c66596a84a77810306a5d1205391fc6a2e13de46fcfe5dfb6c51",
+      "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts": {
+        "version": "97254334121c28525a74a8efa0641f0655c7b31fae34c669b815a0e4a21e4325",
+        "signature": "97254334121c28525a74a8efa0641f0655c7b31fae34c669b815a0e4a21e4325",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/nucleus/organelle-module.d.ts": {
-        "version": "aa2bea2b5e63abcf1b33779fe5acf36d61b9e12e46d0176a6eae9302c1845c40",
-        "signature": "aa2bea2b5e63abcf1b33779fe5acf36d61b9e12e46d0176a6eae9302c1845c40",
+      "../../core/dist/template/organelle/nucleus/gene.h.d.ts": {
+        "version": "53cd71f87ed58f621510df394ca81cfb7e64710df7a92d75d97afb3cc73356fe",
+        "signature": "53cd71f87ed58f621510df394ca81cfb7e64710df7a92d75d97afb3cc73356fe",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/nucleus/gene.d.ts": {
+      "../../core/dist/template/organelle/nucleus/organelle-module.d.ts": {
+        "version": "a94453f6530e0c4230030eb434c069e0813ba70047bfce381fd1235f4bccf5c5",
+        "signature": "a94453f6530e0c4230030eb434c069e0813ba70047bfce381fd1235f4bccf5c5",
+        "affectsGlobalScope": false
+      },
+      "../../core/dist/template/organelle/nucleus/gene.d.ts": {
         "version": "1472fd620e6fedf8150d62ebce0e08a852f19474353c46e10acf1762f3718ad0",
         "signature": "1472fd620e6fedf8150d62ebce0e08a852f19474353c46e10acf1762f3718ad0",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/nucleus/index.d.ts": {
+      "../../core/dist/template/organelle/nucleus/index.d.ts": {
         "version": "201f1094c802b5eeec21fd01a72cd44711e2d5a40e68bf12fee26e3eed489a03",
         "signature": "201f1094c802b5eeec21fd01a72cd44711e2d5a40e68bf12fee26e3eed489a03",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/logger.d.ts": {
-        "version": "b7629e3a4bddbc6b8e142bd6c7e2e0d61033a4dee521756eb7d96d68266a41f1",
-        "signature": "b7629e3a4bddbc6b8e142bd6c7e2e0d61033a4dee521756eb7d96d68266a41f1",
+      "../../core/dist/template/organelle/logger.d.ts": {
+        "version": "be6f9556c9f49c4c9757f6fd9977746f486ed4f914155d55e8b57c1bc536ee07",
+        "signature": "be6f9556c9f49c4c9757f6fd9977746f486ed4f914155d55e8b57c1bc536ee07",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/gps-receiver.d.ts": {
-        "version": "aeea5071a5d179efcf14267b65557dae5b7158913d031f1281ff8820e98b3da6",
-        "signature": "aeea5071a5d179efcf14267b65557dae5b7158913d031f1281ff8820e98b3da6",
+      "../../core/dist/template/organelle/gps-receiver.d.ts": {
+        "version": "bda97caeb700f8721f7df1ce193d9ce60283dcbc123b63572a83cfb23546ff8c",
+        "signature": "bda97caeb700f8721f7df1ce193d9ce60283dcbc123b63572a83cfb23546ff8c",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/matter-sensor.d.ts": {
-        "version": "d83b9ac7af8af6e4e6a1ea33fee6b8de3446862e0bf5889cb5e4f1f2894c8005",
-        "signature": "d83b9ac7af8af6e4e6a1ea33fee6b8de3446862e0bf5889cb5e4f1f2894c8005",
+      "../../core/dist/template/organelle/matter-sensor.d.ts": {
+        "version": "99f103ef5e51be85333d67d5f5b5ed444fe2ae7a75d4eb20fc8f7a670a81eb34",
+        "signature": "99f103ef5e51be85333d67d5f5b5ed444fe2ae7a75d4eb20fc8f7a670a81eb34",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/net-client.d.ts": {
-        "version": "cfec6cdbd6bb4b666889ee89fad579cae1bc3ce520826aaff88ce44518d5b449",
-        "signature": "cfec6cdbd6bb4b666889ee89fad579cae1bc3ce520826aaff88ce44518d5b449",
+      "../../core/dist/template/organelle/net-client.d.ts": {
+        "version": "f68f7e320e03563bc88a48d9704791b7bfe75dad63405d033dda096f1079081a",
+        "signature": "f68f7e320e03563bc88a48d9704791b7bfe75dad63405d033dda096f1079081a",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/net-server.d.ts": {
-        "version": "078f526c6970d2ced2b572f402aa4b2330baa694a15653802f4ad8caf107ee01",
-        "signature": "078f526c6970d2ced2b572f402aa4b2330baa694a15653802f4ad8caf107ee01",
+      "../../core/dist/template/organelle/net-server.d.ts": {
+        "version": "96afab608675fb8b0b862a9d16c63c897da9efa59ac27f2005ad2dc3b0f773b0",
+        "signature": "96afab608675fb8b0b862a9d16c63c897da9efa59ac27f2005ad2dc3b0f773b0",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/thermometer.d.ts": {
-        "version": "04e3ba42b73e3f63e1243b1f45c75bed6bc4297ac10ded880d5af782b0c45d85",
-        "signature": "04e3ba42b73e3f63e1243b1f45c75bed6bc4297ac10ded880d5af782b0c45d85",
+      "../../core/dist/template/organelle/thermometer.d.ts": {
+        "version": "771ee2361b472eb5c3069ff44797faae4720c0c6438f1c867fdd34de57674555",
+        "signature": "771ee2361b472eb5c3069ff44797faae4720c0c6438f1c867fdd34de57674555",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/timer.d.ts": {
-        "version": "8d141810b39d748ef9096c0318e2cf6760ce95e9f7277cb3bd68d2c0231aa8f8",
-        "signature": "8d141810b39d748ef9096c0318e2cf6760ce95e9f7277cb3bd68d2c0231aa8f8",
+      "../../core/dist/template/organelle/timer.d.ts": {
+        "version": "055d76857753dfa38b2dd24fd6b93a1b2ab7a7e7af2bef16961bb78877eb7cf4",
+        "signature": "055d76857753dfa38b2dd24fd6b93a1b2ab7a7e7af2bef16961bb78877eb7cf4",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/ui.d.ts": {
-        "version": "3967a21be1a3d6a9fd586b30dc6681e93bdbb5970b0bdd886eaa7378583853fa",
-        "signature": "3967a21be1a3d6a9fd586b30dc6681e93bdbb5970b0bdd886eaa7378583853fa",
+      "../../core/dist/template/organelle/ui.d.ts": {
+        "version": "d89431b510da464d29fbeefbc5eb09c6f9ace5b79d1aa36f98b23b15da0f5726",
+        "signature": "d89431b510da464d29fbeefbc5eb09c6f9ace5b79d1aa36f98b23b15da0f5726",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/vacuole.d.ts": {
-        "version": "f6afbd4665aa5620190dd36ad35ebc3185add7cd5f593739d9bd8a1d0d430469",
-        "signature": "f6afbd4665aa5620190dd36ad35ebc3185add7cd5f593739d9bd8a1d0d430469",
+      "../../core/dist/template/organelle/vacuole.d.ts": {
+        "version": "d2b0ff7e93baa834e0f6d4e7d97cfda5f119419b8e495c7e328c19f27a4401f7",
+        "signature": "d2b0ff7e93baa834e0f6d4e7d97cfda5f119419b8e495c7e328c19f27a4401f7",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/utils.d.ts": {
+      "../../core/dist/template/organelle/utils.d.ts": {
         "version": "5344a2879e9eb51b6077323a37785b1aff3d93dcadeca44fc83631a71246804c",
         "signature": "5344a2879e9eb51b6077323a37785b1aff3d93dcadeca44fc83631a71246804c",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/web-server.d.ts": {
-        "version": "5596580c7b8479977bf201cc8908f309a7284e4a60c5cb9a6a3255c53475674b",
-        "signature": "5596580c7b8479977bf201cc8908f309a7284e4a60c5cb9a6a3255c53475674b",
+      "../../core/dist/template/organelle/web-server.d.ts": {
+        "version": "a7fa7d3cc74772f7fd31284318eec5ee07bfbf1285fa57d9b18da2c969966f9e",
+        "signature": "a7fa7d3cc74772f7fd31284318eec5ee07bfbf1285fa57d9b18da2c969966f9e",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/http-client.d.ts": {
-        "version": "2d69b6f53f8ed8a019bee0d0b167a2f2a43dda89972b07110a4262e8f2f50ff1",
-        "signature": "2d69b6f53f8ed8a019bee0d0b167a2f2a43dda89972b07110a4262e8f2f50ff1",
+      "../../core/dist/template/organelle/http-client.d.ts": {
+        "version": "19189f7bf01c47bf5e4379c5535129e876cdbfc2874bd7df7ac0f4f12a9846a4",
+        "signature": "19189f7bf01c47bf5e4379c5535129e876cdbfc2874bd7df7ac0f4f12a9846a4",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/fs.d.ts": {
-        "version": "03eae04788f07f4dc80505212ec016e8984cc09849d3ac6c8ac337ff277db242",
-        "signature": "03eae04788f07f4dc80505212ec016e8984cc09849d3ac6c8ac337ff277db242",
+      "../../core/dist/template/organelle/fs.d.ts": {
+        "version": "5c0890024941055554389e2352514e373d6d8e6e14dcbc137db99bf597b0d5f1",
+        "signature": "5c0890024941055554389e2352514e373d6d8e6e14dcbc137db99bf597b0d5f1",
         "affectsGlobalScope": false
       },
-      "../../core/dist/organelle/sort/index.d.ts": {
+      "../../core/dist/template/organelle/index.d.ts": {
         "version": "01ded7de3d5d53650e612d25542db6cabcd8b53420e3692d8cffd51965444eec",
         "signature": "01ded7de3d5d53650e612d25542db6cabcd8b53420e3692d8cffd51965444eec",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/index.d.ts": {
-        "version": "e384b3f1ee161aa250dca897cacc5d5aa819affb480631e2f8bbafd14d964f68",
-        "signature": "e384b3f1ee161aa250dca897cacc5d5aa819affb480631e2f8bbafd14d964f68",
+        "version": "af82d1ad3114f0df7219e2957dec5fdc7525de53c87edb1ce2284843473abfb3",
+        "signature": "af82d1ad3114f0df7219e2957dec5fdc7525de53c87edb1ce2284843473abfb3",
         "affectsGlobalScope": false
       },
       "../../core/dist/create-euglena.d.ts": {
@@ -342,8 +347,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/index.d.ts": {
-        "version": "a354dfd0b2697ea731a062dda498d3de43b9e8b7a554e3bbf6375347a0f0c1ad",
-        "signature": "a354dfd0b2697ea731a062dda498d3de43b9e8b7a554e3bbf6375347a0f0c1ad",
+        "version": "d4836dcb6c34846bdcf54035fa6ab298b823abe1183ee24ae77e08b4c9561f49",
+        "signature": "d4836dcb6c34846bdcf54035fa6ab298b823abe1183ee24ae77e08b4c9561f49",
         "affectsGlobalScope": false
       },
       "../src/index.ts": {
@@ -783,28 +788,14 @@
       "../../../node_modules/@types/node/zlib.d.ts": [
         "../../../node_modules/@types/node/stream.d.ts"
       ],
-      "../../core/dist/common/common-particles.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/common/common-particles.h.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/common/index.d.ts": [
-        "../../core/dist/common/common-particles.d.ts",
-        "../../core/dist/common/common-particles.h.d.ts"
-      ],
       "../../core/dist/create-euglena.d.ts": [
         "../../core/dist/particle/index.d.ts"
       ],
       "../../core/dist/index.d.ts": [
-        "../../core/dist/common/index.d.ts",
         "../../core/dist/create-euglena.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
       ],
       "../../core/dist/organelle/bind-reaction.h.d.ts": [
         "../../core/dist/organelle/particles.h.d.ts",
@@ -832,7 +823,7 @@
         "../../core/dist/organelle/organelle-module.h.d.ts",
         "../../core/dist/organelle/particles.h.d.ts",
         "../../core/dist/organelle/singleton-organelle.h.d.ts",
-        "../../core/dist/organelle/sort/index.d.ts"
+        "../../core/dist/template/organelle/index.d.ts"
       ],
       "../../core/dist/organelle/organelle-module.h.d.ts": [
         "../../core/dist/organelle/create-organelle.h.d.ts",
@@ -848,139 +839,156 @@
         "../../core/dist/organelle/organelle-receive.h.d.ts",
         "../../core/dist/organelle/particles.h.d.ts"
       ],
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts": [
-        "../../core/dist/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts": [
-        "../../core/dist/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/organelle-module.h.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts": [
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts",
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts",
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts"
-      ],
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts": [
-        "../../core/dist/organelle/organelle-module.h.d.ts",
-        "../../core/dist/organelle/organelle-receive.h.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/fs.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/gps-receiver.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/http-client.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/organelle/sort/utils.d.ts"
-      ],
-      "../../core/dist/organelle/sort/index.d.ts": [
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
-        "../../core/dist/organelle/sort/fs.d.ts",
-        "../../core/dist/organelle/sort/gps-receiver.d.ts",
-        "../../core/dist/organelle/sort/http-client.d.ts",
-        "../../core/dist/organelle/sort/logger.d.ts",
-        "../../core/dist/organelle/sort/matter-sensor.d.ts",
-        "../../core/dist/organelle/sort/net-client.d.ts",
-        "../../core/dist/organelle/sort/net-server.d.ts",
-        "../../core/dist/organelle/sort/nucleus/index.d.ts",
-        "../../core/dist/organelle/sort/thermometer.d.ts",
-        "../../core/dist/organelle/sort/timer.d.ts",
-        "../../core/dist/organelle/sort/ui.d.ts",
-        "../../core/dist/organelle/sort/utils.d.ts",
-        "../../core/dist/organelle/sort/vacuole.d.ts",
-        "../../core/dist/organelle/sort/web-server.d.ts"
-      ],
-      "../../core/dist/organelle/sort/logger.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/matter-sensor.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/net-client.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/net-server.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/create-organelle-module.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/gene.d.ts": [
-        "../../core/dist/organelle/sort/nucleus/gene.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/gene.h.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/organelle-receive.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/index.d.ts": [
-        "../../core/dist/organelle/sort/nucleus/create-organelle-module.d.ts",
-        "../../core/dist/organelle/sort/nucleus/gene.d.ts",
-        "../../core/dist/organelle/sort/nucleus/gene.h.d.ts",
-        "../../core/dist/organelle/sort/nucleus/organelle-module.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/organelle-module.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/organelle/sort/nucleus/gene.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/thermometer.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/timer.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/ui.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/vacuole.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/web-server.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/organelle/sort/utils.d.ts"
-      ],
       "../../core/dist/particle/index.d.ts": [
         "../../core/dist/particle/particle.d.ts",
         "../../core/dist/particle/particle.h.d.ts"
       ],
       "../../core/dist/particle/particle.d.ts": [
         "../../core/dist/particle/particle.h.d.ts"
+      ],
+      "../../core/dist/template/index.d.ts": [
+        "../../core/dist/template/organelle/index.d.ts",
+        "../../core/dist/template/particle/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts"
+      ],
+      "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/organelle/organelle-module.h.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts"
+      ],
+      "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts": [
+        "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts",
+        "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts",
+        "../../core/dist/template/organelle/endoplasmic-reticulum/organelle-module.d.ts"
+      ],
+      "../../core/dist/template/organelle/endoplasmic-reticulum/organelle-module.d.ts": [
+        "../../core/dist/organelle/organelle-module.h.d.ts",
+        "../../core/dist/organelle/organelle-receive.h.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/particle/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/fs.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/gps-receiver.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/http-client.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts",
+        "../../core/dist/template/organelle/utils.d.ts"
+      ],
+      "../../core/dist/template/organelle/index.d.ts": [
+        "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts",
+        "../../core/dist/template/organelle/fs.d.ts",
+        "../../core/dist/template/organelle/gps-receiver.d.ts",
+        "../../core/dist/template/organelle/http-client.d.ts",
+        "../../core/dist/template/organelle/logger.d.ts",
+        "../../core/dist/template/organelle/matter-sensor.d.ts",
+        "../../core/dist/template/organelle/net-client.d.ts",
+        "../../core/dist/template/organelle/net-server.d.ts",
+        "../../core/dist/template/organelle/nucleus/index.d.ts",
+        "../../core/dist/template/organelle/thermometer.d.ts",
+        "../../core/dist/template/organelle/timer.d.ts",
+        "../../core/dist/template/organelle/ui.d.ts",
+        "../../core/dist/template/organelle/utils.d.ts",
+        "../../core/dist/template/organelle/vacuole.d.ts",
+        "../../core/dist/template/organelle/web-server.d.ts"
+      ],
+      "../../core/dist/template/organelle/logger.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/matter-sensor.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/net-client.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/net-server.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/gene.d.ts": [
+        "../../core/dist/template/organelle/nucleus/gene.h.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/gene.h.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/organelle/organelle-receive.h.d.ts",
+        "../../core/dist/particle/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/index.d.ts": [
+        "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts",
+        "../../core/dist/template/organelle/nucleus/gene.d.ts",
+        "../../core/dist/template/organelle/nucleus/gene.h.d.ts",
+        "../../core/dist/template/organelle/nucleus/organelle-module.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/organelle-module.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/template/organelle/nucleus/gene.h.d.ts"
+      ],
+      "../../core/dist/template/organelle/thermometer.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/timer.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/ui.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/vacuole.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/web-server.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts",
+        "../../core/dist/template/organelle/utils.d.ts"
+      ],
+      "../../core/dist/template/particle/index.d.ts": [
+        "../../core/dist/template/particle/particles.d.ts",
+        "../../core/dist/template/particle/particles.h.d.ts"
+      ],
+      "../../core/dist/template/particle/particles.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/particle/index.d.ts"
+      ],
+      "../../core/dist/template/particle/particles.h.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/particle/index.d.ts"
       ],
       "../src/index.ts": [
         "../../../node_modules/cessnalib/.dist/src/index.d.ts",
@@ -1155,28 +1163,14 @@
       "../../../node_modules/@types/node/zlib.d.ts": [
         "../../../node_modules/@types/node/stream.d.ts"
       ],
-      "../../core/dist/common/common-particles.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/common/common-particles.h.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/common/index.d.ts": [
-        "../../core/dist/common/common-particles.d.ts",
-        "../../core/dist/common/common-particles.h.d.ts"
-      ],
       "../../core/dist/create-euglena.d.ts": [
         "../../core/dist/particle/index.d.ts"
       ],
       "../../core/dist/index.d.ts": [
-        "../../core/dist/common/index.d.ts",
         "../../core/dist/create-euglena.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
       ],
       "../../core/dist/organelle/bind-reaction.h.d.ts": [
         "../../core/dist/organelle/particles.h.d.ts",
@@ -1204,7 +1198,7 @@
         "../../core/dist/organelle/organelle-module.h.d.ts",
         "../../core/dist/organelle/particles.h.d.ts",
         "../../core/dist/organelle/singleton-organelle.h.d.ts",
-        "../../core/dist/organelle/sort/index.d.ts"
+        "../../core/dist/template/organelle/index.d.ts"
       ],
       "../../core/dist/organelle/organelle-module.h.d.ts": [
         "../../core/dist/organelle/create-organelle.h.d.ts",
@@ -1220,139 +1214,156 @@
         "../../core/dist/organelle/organelle-receive.h.d.ts",
         "../../core/dist/organelle/particles.h.d.ts"
       ],
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts": [
-        "../../core/dist/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts": [
-        "../../core/dist/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/organelle-module.h.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts": [
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts",
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts",
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts"
-      ],
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts": [
-        "../../core/dist/organelle/organelle-module.h.d.ts",
-        "../../core/dist/organelle/organelle-receive.h.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/fs.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/gps-receiver.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/http-client.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/organelle/sort/utils.d.ts"
-      ],
-      "../../core/dist/organelle/sort/index.d.ts": [
-        "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
-        "../../core/dist/organelle/sort/fs.d.ts",
-        "../../core/dist/organelle/sort/gps-receiver.d.ts",
-        "../../core/dist/organelle/sort/http-client.d.ts",
-        "../../core/dist/organelle/sort/logger.d.ts",
-        "../../core/dist/organelle/sort/matter-sensor.d.ts",
-        "../../core/dist/organelle/sort/net-client.d.ts",
-        "../../core/dist/organelle/sort/net-server.d.ts",
-        "../../core/dist/organelle/sort/nucleus/index.d.ts",
-        "../../core/dist/organelle/sort/thermometer.d.ts",
-        "../../core/dist/organelle/sort/timer.d.ts",
-        "../../core/dist/organelle/sort/ui.d.ts",
-        "../../core/dist/organelle/sort/utils.d.ts",
-        "../../core/dist/organelle/sort/vacuole.d.ts",
-        "../../core/dist/organelle/sort/web-server.d.ts"
-      ],
-      "../../core/dist/organelle/sort/logger.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/matter-sensor.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/net-client.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/net-server.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/create-organelle-module.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/gene.d.ts": [
-        "../../core/dist/organelle/sort/nucleus/gene.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/gene.h.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/organelle-receive.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/index.d.ts": [
-        "../../core/dist/organelle/sort/nucleus/create-organelle-module.d.ts",
-        "../../core/dist/organelle/sort/nucleus/gene.d.ts",
-        "../../core/dist/organelle/sort/nucleus/gene.h.d.ts",
-        "../../core/dist/organelle/sort/nucleus/organelle-module.d.ts"
-      ],
-      "../../core/dist/organelle/sort/nucleus/organelle-module.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/organelle/sort/nucleus/gene.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/thermometer.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/timer.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/ui.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts"
-      ],
-      "../../core/dist/organelle/sort/vacuole.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts"
-      ],
-      "../../core/dist/organelle/sort/web-server.d.ts": [
-        "../../core/dist/common/index.d.ts",
-        "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/organelle/sort/utils.d.ts"
-      ],
       "../../core/dist/particle/index.d.ts": [
         "../../core/dist/particle/particle.d.ts",
         "../../core/dist/particle/particle.h.d.ts"
       ],
       "../../core/dist/particle/particle.d.ts": [
         "../../core/dist/particle/particle.h.d.ts"
+      ],
+      "../../core/dist/template/index.d.ts": [
+        "../../core/dist/template/organelle/index.d.ts",
+        "../../core/dist/template/particle/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts"
+      ],
+      "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/organelle/organelle-module.h.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts"
+      ],
+      "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts": [
+        "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts",
+        "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts",
+        "../../core/dist/template/organelle/endoplasmic-reticulum/organelle-module.d.ts"
+      ],
+      "../../core/dist/template/organelle/endoplasmic-reticulum/organelle-module.d.ts": [
+        "../../core/dist/organelle/organelle-module.h.d.ts",
+        "../../core/dist/organelle/organelle-receive.h.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/particle/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/fs.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/gps-receiver.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/http-client.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts",
+        "../../core/dist/template/organelle/utils.d.ts"
+      ],
+      "../../core/dist/template/organelle/index.d.ts": [
+        "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts",
+        "../../core/dist/template/organelle/fs.d.ts",
+        "../../core/dist/template/organelle/gps-receiver.d.ts",
+        "../../core/dist/template/organelle/http-client.d.ts",
+        "../../core/dist/template/organelle/logger.d.ts",
+        "../../core/dist/template/organelle/matter-sensor.d.ts",
+        "../../core/dist/template/organelle/net-client.d.ts",
+        "../../core/dist/template/organelle/net-server.d.ts",
+        "../../core/dist/template/organelle/nucleus/index.d.ts",
+        "../../core/dist/template/organelle/thermometer.d.ts",
+        "../../core/dist/template/organelle/timer.d.ts",
+        "../../core/dist/template/organelle/ui.d.ts",
+        "../../core/dist/template/organelle/utils.d.ts",
+        "../../core/dist/template/organelle/vacuole.d.ts",
+        "../../core/dist/template/organelle/web-server.d.ts"
+      ],
+      "../../core/dist/template/organelle/logger.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/matter-sensor.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/net-client.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/net-server.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/gene.d.ts": [
+        "../../core/dist/template/organelle/nucleus/gene.h.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/gene.h.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/organelle/organelle-receive.h.d.ts",
+        "../../core/dist/particle/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/index.d.ts": [
+        "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts",
+        "../../core/dist/template/organelle/nucleus/gene.d.ts",
+        "../../core/dist/template/organelle/nucleus/gene.h.d.ts",
+        "../../core/dist/template/organelle/nucleus/organelle-module.d.ts"
+      ],
+      "../../core/dist/template/organelle/nucleus/organelle-module.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/particle/index.d.ts",
+        "../../core/dist/template/organelle/nucleus/gene.h.d.ts"
+      ],
+      "../../core/dist/template/organelle/thermometer.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/timer.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/ui.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/vacuole.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
+      "../../core/dist/template/organelle/web-server.d.ts": [
+        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/particles.h.d.ts",
+        "../../core/dist/template/index.d.ts",
+        "../../core/dist/template/organelle/utils.d.ts"
+      ],
+      "../../core/dist/template/particle/index.d.ts": [
+        "../../core/dist/template/particle/particles.d.ts",
+        "../../core/dist/template/particle/particles.h.d.ts"
+      ],
+      "../../core/dist/template/particle/particles.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/particle/index.d.ts"
+      ],
+      "../../core/dist/template/particle/particles.h.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/particle/index.d.ts"
       ],
       "../src/index.ts": [
         "../../../node_modules/cessnalib/.dist/src/index.d.ts",
@@ -1435,9 +1446,6 @@
       "../../../node_modules/typescript/lib/lib.es2020.bigint.d.ts",
       "../../../node_modules/typescript/lib/lib.es5.d.ts",
       "../../../node_modules/typescript/lib/lib.esnext.intl.d.ts",
-      "../../core/dist/common/common-particles.d.ts",
-      "../../core/dist/common/common-particles.h.d.ts",
-      "../../core/dist/common/index.d.ts",
       "../../core/dist/create-euglena.d.ts",
       "../../core/dist/index.d.ts",
       "../../core/dist/organelle/bind-reaction.h.d.ts",
@@ -1450,32 +1458,36 @@
       "../../core/dist/organelle/particles.h.d.ts",
       "../../core/dist/organelle/reaction.h.d.ts",
       "../../core/dist/organelle/singleton-organelle.h.d.ts",
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.d.ts",
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/create-organelle-module.h.d.ts",
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/index.d.ts",
-      "../../core/dist/organelle/sort/endoplasmic-reticulum/organelle-module.d.ts",
-      "../../core/dist/organelle/sort/fs.d.ts",
-      "../../core/dist/organelle/sort/gps-receiver.d.ts",
-      "../../core/dist/organelle/sort/http-client.d.ts",
-      "../../core/dist/organelle/sort/index.d.ts",
-      "../../core/dist/organelle/sort/logger.d.ts",
-      "../../core/dist/organelle/sort/matter-sensor.d.ts",
-      "../../core/dist/organelle/sort/net-client.d.ts",
-      "../../core/dist/organelle/sort/net-server.d.ts",
-      "../../core/dist/organelle/sort/nucleus/create-organelle-module.d.ts",
-      "../../core/dist/organelle/sort/nucleus/gene.d.ts",
-      "../../core/dist/organelle/sort/nucleus/gene.h.d.ts",
-      "../../core/dist/organelle/sort/nucleus/index.d.ts",
-      "../../core/dist/organelle/sort/nucleus/organelle-module.d.ts",
-      "../../core/dist/organelle/sort/thermometer.d.ts",
-      "../../core/dist/organelle/sort/timer.d.ts",
-      "../../core/dist/organelle/sort/ui.d.ts",
-      "../../core/dist/organelle/sort/utils.d.ts",
-      "../../core/dist/organelle/sort/vacuole.d.ts",
-      "../../core/dist/organelle/sort/web-server.d.ts",
       "../../core/dist/particle/index.d.ts",
       "../../core/dist/particle/particle.d.ts",
       "../../core/dist/particle/particle.h.d.ts",
+      "../../core/dist/template/index.d.ts",
+      "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts",
+      "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts",
+      "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts",
+      "../../core/dist/template/organelle/endoplasmic-reticulum/organelle-module.d.ts",
+      "../../core/dist/template/organelle/fs.d.ts",
+      "../../core/dist/template/organelle/gps-receiver.d.ts",
+      "../../core/dist/template/organelle/http-client.d.ts",
+      "../../core/dist/template/organelle/index.d.ts",
+      "../../core/dist/template/organelle/logger.d.ts",
+      "../../core/dist/template/organelle/matter-sensor.d.ts",
+      "../../core/dist/template/organelle/net-client.d.ts",
+      "../../core/dist/template/organelle/net-server.d.ts",
+      "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts",
+      "../../core/dist/template/organelle/nucleus/gene.d.ts",
+      "../../core/dist/template/organelle/nucleus/gene.h.d.ts",
+      "../../core/dist/template/organelle/nucleus/index.d.ts",
+      "../../core/dist/template/organelle/nucleus/organelle-module.d.ts",
+      "../../core/dist/template/organelle/thermometer.d.ts",
+      "../../core/dist/template/organelle/timer.d.ts",
+      "../../core/dist/template/organelle/ui.d.ts",
+      "../../core/dist/template/organelle/utils.d.ts",
+      "../../core/dist/template/organelle/vacuole.d.ts",
+      "../../core/dist/template/organelle/web-server.d.ts",
+      "../../core/dist/template/particle/index.d.ts",
+      "../../core/dist/template/particle/particles.d.ts",
+      "../../core/dist/template/particle/particles.h.d.ts",
       "../src/index.ts"
     ]
   },

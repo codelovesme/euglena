@@ -11,7 +11,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./define-organelle-module-create"), exports);
-__exportStar(require("./sort"), exports);
+__exportStar(require("../template/organelle"), exports);
 __exportStar(require("./particles.h"), exports);
 __exportStar(require("./bind-reaction.h"), exports);
 __exportStar(require("./create-organelle.h"), exports);

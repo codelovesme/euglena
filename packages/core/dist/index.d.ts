@@ -1,4 +1,4 @@
 export * from "./organelle";
-export * from "./common";
+export * from "./template";
 export * from "./create-euglena";
 export * from "./particle";
