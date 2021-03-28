@@ -1,4 +1,4 @@
-import { CreateParticle, CreateMeta, Particle } from "./particle.h";
+import { CreateMeta, CreateParticle, Particle } from "./particle.h";
 export declare const createMeta: CreateMeta;
 export declare const createParticle: CreateParticle;
 export declare function assertNotParticle(particle: never, message: string): void;

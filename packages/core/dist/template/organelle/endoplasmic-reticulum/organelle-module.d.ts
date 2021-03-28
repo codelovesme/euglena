@@ -9,9 +9,7 @@ declare const endoplasmicReticulumJs: import("../../../organelle/organelle-modul
     incoming: {
         TransmitParticle: P<{
             target: string;
-            particle: Particle<string, any, {
-                [x: string]: any;
-            }>;
+            particle: Particle<string, unknown, {}>;
         }, {}>;
         OrganelleInfo: P<{
             name: string;
@@ -31,9 +29,7 @@ declare const endoplasmicReticulumJs: import("../../../organelle/organelle-modul
             message: string;
             level: "Error" | "Info" | "Warning";
         }, {}>;
-        TransmitResponse: P<void | Particle<string, any, {
-            [x: string]: any;
-        }>, {}>;
+        TransmitResponse: P<void | Particle<string, unknown, {}>, {}>;
         EuglenaHasBeenBorn: P<any, {}>;
     };
 }, P<{

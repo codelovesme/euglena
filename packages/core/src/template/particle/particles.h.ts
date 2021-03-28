@@ -25,10 +25,10 @@ export type PReadParticle = P<{
 }>;
 export type PSaveParticle = P<
     | {
-        particle: Particle;
-        query?: sys.type.RecursivePartial<Particle>;
-        count: Count;
-    }
+          particle: Particle;
+          query?: sys.type.RecursivePartial<Particle>;
+          count: Count;
+      }
     | Particle[]
 >;
 export type PRemoveParticle = P<{ query: sys.type.RecursivePartial<Particle>; count: Count }>;

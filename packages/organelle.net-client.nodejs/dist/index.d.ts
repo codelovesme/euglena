@@ -3,9 +3,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
 }>, import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         TransmitParticle: import("@euglena/core").P<{
-            particle: import("@euglena/core").Particle<string, any, {
-                [x: string]: any;
-            }>;
+            particle: import("@euglena/core").Particle<string, unknown, {}>;
             target: {
                 host: string;
                 port: number;

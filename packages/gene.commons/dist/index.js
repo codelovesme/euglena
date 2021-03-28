@@ -37,8 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@euglena/core");
-exports.default = core_1.createChromosome(function (addGene) {
-    addGene("Log", { meta: { name: "Log" } }, function (particle, source, _a) {
+exports.default = core_1.cc(function (g) {
+    g("Log", { meta: { class: "Log" } }, function (particle, source, _a) {
         var t = _a.t;
         return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_b) {

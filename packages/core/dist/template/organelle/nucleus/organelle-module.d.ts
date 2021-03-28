@@ -11,9 +11,7 @@ declare const nucleusJs: import("../../..").SingletonOrganelleModule<P<{
 }, {}>, import("../../../organelle/particles.h").InsertSapIntoParticles<{
     incoming: {
         ReceiveParticle: P<{
-            particle: Particle<string, any, {
-                [x: string]: any;
-            }>;
+            particle: Particle<string, unknown, {}>;
             source: string;
         }, {}>;
     };

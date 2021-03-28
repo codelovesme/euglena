@@ -147,13 +147,13 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/particle/particle.h.d.ts": {
-        "version": "132af98e7fb3f306bab4133b1ebb26ab223da124d4d19dfae3f3fd5e41df1d8d",
-        "signature": "132af98e7fb3f306bab4133b1ebb26ab223da124d4d19dfae3f3fd5e41df1d8d",
+        "version": "2a6a95507bf32ce4ae54ab56bd01d9fc1855c1044f212058aa9f4a79801e1a2d",
+        "signature": "2a6a95507bf32ce4ae54ab56bd01d9fc1855c1044f212058aa9f4a79801e1a2d",
         "affectsGlobalScope": false
       },
       "../../core/dist/particle/particle.d.ts": {
-        "version": "25d8f3afc740ef749cc0c1f5f3a6446df9ccffbf7541fb8f28feb0c9190adeb2",
-        "signature": "25d8f3afc740ef749cc0c1f5f3a6446df9ccffbf7541fb8f28feb0c9190adeb2",
+        "version": "9fb4a79ce3542899c544818d503523cd95987d6e6f2b64dfa95b14b655f4782d",
+        "signature": "9fb4a79ce3542899c544818d503523cd95987d6e6f2b64dfa95b14b655f4782d",
         "affectsGlobalScope": false
       },
       "../../core/dist/particle/index.d.ts": {
@@ -212,8 +212,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/endoplasmic-reticulum/organelle-module.d.ts": {
-        "version": "45e6469989b83fb40edfda36779c5ce45dd619d59452824f022f3e0a07a335cb",
-        "signature": "45e6469989b83fb40edfda36779c5ce45dd619d59452824f022f3e0a07a335cb",
+        "version": "070876503355b03af28c466c76a4e2841f1aeb6a81d762a3fbb08d93d356793f",
+        "signature": "070876503355b03af28c466c76a4e2841f1aeb6a81d762a3fbb08d93d356793f",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts": {
@@ -222,8 +222,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/particles.d.ts": {
-        "version": "a46c5195166bfdac80d865ffe000dc883d9dbfacd874e17e2544694a0654f8cc",
-        "signature": "a46c5195166bfdac80d865ffe000dc883d9dbfacd874e17e2544694a0654f8cc",
+        "version": "773b47c1c7b78494792878fee22bb3ce46e23a764e169c6580c151a094fc3436",
+        "signature": "773b47c1c7b78494792878fee22bb3ce46e23a764e169c6580c151a094fc3436",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/particles.h.d.ts": {
@@ -252,8 +252,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/nucleus/organelle-module.d.ts": {
-        "version": "a94453f6530e0c4230030eb434c069e0813ba70047bfce381fd1235f4bccf5c5",
-        "signature": "a94453f6530e0c4230030eb434c069e0813ba70047bfce381fd1235f4bccf5c5",
+        "version": "8bd37da436b67351ffdb7a252d5d2c58ce46d41a2a6a15e1b55146928e189eda",
+        "signature": "8bd37da436b67351ffdb7a252d5d2c58ce46d41a2a6a15e1b55146928e189eda",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/nucleus/gene.d.ts": {

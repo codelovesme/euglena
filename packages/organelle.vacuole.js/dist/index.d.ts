@@ -10,26 +10,16 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
 }>, import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         SaveParticle: import("@euglena/core").P<{
-            particle: Particle<string, any, {
-                [x: string]: any;
-            }>;
-            query?: import("cessnalib").sys.type.RecursivePartial<Particle<string, any, {
-                [x: string]: any;
-            }>> | undefined;
+            particle: Particle<string, unknown, {}>;
+            query?: import("cessnalib").sys.type.RecursivePartial<Particle<string, unknown, {}>> | undefined;
             count: number | "all";
-        } | Particle<string, any, {
-            [x: string]: any;
-        }>[], {}>;
+        } | Particle<string, unknown, {}>[], {}>;
         ReadParticle: import("@euglena/core").P<{
-            query: import("cessnalib").sys.type.RecursivePartial<Particle<string, any, {
-                [x: string]: any;
-            }>>;
+            query: import("cessnalib").sys.type.RecursivePartial<Particle<string, unknown, {}>>;
             count: number | "all";
         }, {}>;
         RemoveParticle: import("@euglena/core").P<{
-            query: import("cessnalib").sys.type.RecursivePartial<Particle<string, any, {
-                [x: string]: any;
-            }>>;
+            query: import("cessnalib").sys.type.RecursivePartial<Particle<string, unknown, {}>>;
             count: number | "all";
         }, {}>;
         GetAlive: import("@euglena/core").P<undefined, {}>;
@@ -38,13 +28,9 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
     outgoing: {
         ACK: import("@euglena/core").P<undefined, {}>;
         Exception: import("@euglena/core").P<import("cessnalib").sys.type.Exception, {}>;
-        Particles: import("@euglena/core").P<Particle<string, any, {
-            [x: string]: any;
-        }>[], {}>;
+        Particles: import("@euglena/core").P<Particle<string, unknown, {}>[], {}>;
         Metas: import("@euglena/core").P<{
             class: string;
-            createdAt: number;
-            expireAt?: number | undefined;
         }[], {}>;
         Log: import("@euglena/core").P<{
             message: string;

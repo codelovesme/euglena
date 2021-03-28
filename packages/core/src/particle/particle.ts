@@ -1,21 +1,24 @@
-import { MetaAdditions, CreateParticle, CreateMeta, Meta, Particle } from "./particle.h";
+import { CreateMeta, CreateParticle, Meta, MetaAdditions, Particle } from "./particle.h";
 
-export const createMeta: CreateMeta = <ClassType extends string, M extends MetaAdditions>(
-    _class: ClassType,
-    adds?: M
-): Meta<ClassType, M> =>
-    ({
-        class: _class,
-        createdAt: new Date().getTime(),
+export const createMeta: CreateMeta = <Class extends string, Additions extends MetaAdditions = {}>(
+    class_: Class,
+    adds?: Additions
+): Meta<Class, Additions> => {
+    return {
+        class: class_,
         ...adds
-    } as Meta<ClassType, M>);
+    } as Meta<Class, Additions>;
+};
 
-export const createParticle: CreateParticle = <ClassType extends string, DataType, M extends MetaAdditions>(
-    _class: ClassType,
-    data: DataType,
-    adds?: M
-): Particle<ClassType, DataType, M> => {
-    return { meta: createMeta(_class, adds), data };
+export const createParticle: CreateParticle = <Class extends string, Data, Additions extends MetaAdditions = {}>(
+    class_: Class,
+    data?: Data,
+    adds?: Additions
+): Particle<Class, Data, Additions> => {
+    return {
+        meta: createMeta(class_, adds),
+        data
+    } as Particle<Class, Data, Additions>;
 };
 
 export function assertNotParticle(particle: never, message: string): void {

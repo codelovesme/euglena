@@ -12,11 +12,14 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cm = exports.cp = exports.isParticle = exports.assertNotParticle = exports.createParticle = exports.createMeta = void 0;
-exports.createMeta = function (_class, adds) {
-    return (__assign({ class: _class, createdAt: new Date().getTime() }, adds));
+exports.createMeta = function (class_, adds) {
+    return __assign({ class: class_ }, adds);
 };
-exports.createParticle = function (_class, data, adds) {
-    return { meta: exports.createMeta(_class, adds), data: data };
+exports.createParticle = function (class_, data, adds) {
+    return {
+        meta: exports.createMeta(class_, adds),
+        data: data
+    };
 };
 function assertNotParticle(particle, message) {
     throw message || "Assertion fails: " + particle + " is a particle where it shouldn't be";

@@ -7,11 +7,7 @@ export declare const ToolsContext: React.Context<{
     t: OrganelleTransmit<Particle<"ACK", undefined, {}> | Particle<"Exception", sys.type.Exception, {}> | Particle<"Log", {
         message: string;
         level: "Error" | "Info" | "Warning";
-    }, {}> | Particle<"Event", any, {
-        [x: string]: any;
-    }>, void | Particle<string, any, {
-        [x: string]: any;
-    }>>;
+    }, {}> | Particle<"Event", unknown, {}>, void | Particle<string, unknown, {}>>;
     cp: CreateOrganelleParticles<{
         ACK: P<undefined, {}>;
         Exception: P<sys.type.Exception, {}>;

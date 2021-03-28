@@ -10,9 +10,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
         ACK: import("@euglena/core").P<undefined, {}>;
         Exception: import("@euglena/core").P<import("cessnalib").sys.type.Exception, {}>;
         Impulse: import("@euglena/core").P<{
-            particle: import("@euglena/core").Particle<string, any, {
-                [x: string]: any;
-            }>;
+            particle: import("@euglena/core").Particle<string, unknown, {}>;
             source: string;
             token: string;
         }, {}>;

@@ -7,26 +7,16 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
 }>, import("@euglena/core").InsertSapIntoParticles<{
     incoming: {
         SaveParticle: import("@euglena/core").P<{
-            particle: import("@euglena/core").Particle<string, any, {
-                [x: string]: any;
-            }>;
-            query?: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
-                [x: string]: any;
-            }>> | undefined;
+            particle: import("@euglena/core").Particle<string, unknown, {}>;
+            query?: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, unknown, {}>> | undefined;
             count: import("@euglena/core").Count;
-        } | import("@euglena/core").Particle<string, any, {
-            [x: string]: any;
-        }>[], {}>;
+        } | import("@euglena/core").Particle<string, unknown, {}>[], {}>;
         ReadParticle: import("@euglena/core").P<{
-            query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
-                [x: string]: any;
-            }>>;
+            query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, unknown, {}>>;
             count: import("@euglena/core").Count;
         }, {}>;
         RemoveParticle: import("@euglena/core").P<{
-            query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, any, {
-                [x: string]: any;
-            }>>;
+            query: import("cessnalib").sys.type.RecursivePartial<import("@euglena/core").Particle<string, unknown, {}>>;
             count: import("@euglena/core").Count;
         }, {}>;
         GetAlive: import("@euglena/core").P<undefined, {}>;
@@ -35,13 +25,9 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
     outgoing: {
         ACK: import("@euglena/core").P<undefined, {}>;
         Exception: import("@euglena/core").P<import("cessnalib").sys.type.Exception, {}>;
-        Particles: import("@euglena/core").P<import("@euglena/core").Particle<string, any, {
-            [x: string]: any;
-        }>[], {}>;
+        Particles: import("@euglena/core").P<import("@euglena/core").Particle<string, unknown, {}>[], {}>;
         Metas: import("@euglena/core").P<{
             class: string;
-            createdAt: number;
-            expireAt?: number | undefined;
         }[], {}>;
         Log: import("@euglena/core").P<{
             message: string;
