@@ -13,3 +13,4 @@ export * from "./web-server";
 export * from "./http-client";
 export * from "./fs";
 export * from "./utils";
+export * from "./jwt";

@@ -38,6 +38,17 @@ export declare type PImpulse = P<{
     source: string;
     token: string;
 }>;
+export declare type PToken = P<{
+    crypted: string;
+    decrypted: {
+        euglenaName: string;
+        createdAt: number;
+        expireAt: number;
+        type: string;
+        roles: string[];
+        status: string;
+    };
+}>;
 export declare type ACK = FromP<"ACK", PACK>;
 export declare type EuglenaName = FromP<"EuglenaName", PEuglenaName>;
 export declare type Exception = FromP<"Exception", PException>;
@@ -53,6 +64,7 @@ export declare type ReadParticle = FromP<"HibReadParticleernate", PReadParticle>
 export declare type SaveParticle = FromP<"SaveParticle", PSaveParticle>;
 export declare type RemoveParticle = FromP<"RemoveParticle", PRemoveParticle>;
 export declare type Impulse = FromP<"Impulse", PImpulse>;
+export declare type Token = FromP<"Token", PToken>;
 export declare type CommonParticles = OrganelleParticles<{
     ACK: PACK;
     EuglenaName: PEuglenaName;
@@ -69,4 +81,5 @@ export declare type CommonParticles = OrganelleParticles<{
     SaveParticle: PSaveParticle;
     RemoveParticle: PRemoveParticle;
     Impulse: PImpulse;
+    Token: PToken;
 }>;

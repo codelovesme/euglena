@@ -38,6 +38,17 @@ export declare const createCommonParticles: CreateOrganelleParticles<{
         source: string;
         token: string;
     }, {}>;
+    Token: import("../../organelle").P<{
+        crypted: string;
+        decrypted: {
+            euglenaName: string;
+            createdAt: number;
+            expireAt: number;
+            type: string;
+            roles: string[];
+            status: string;
+        };
+    }, {}>;
 }>;
 /**
  * createCommonParticle
@@ -80,5 +91,16 @@ export declare const ccp: CreateOrganelleParticles<{
         particle: import("../../particle").Particle<string, unknown, {}>;
         source: string;
         token: string;
+    }, {}>;
+    Token: import("../../organelle").P<{
+        crypted: string;
+        decrypted: {
+            euglenaName: string;
+            createdAt: number;
+            expireAt: number;
+            type: string;
+            roles: string[];
+            status: string;
+        };
     }, {}>;
 }>;

@@ -34,7 +34,8 @@ exports.createCommonParticles = defineCommonParticles([
     "ReadParticle",
     "SaveParticle",
     "RemoveParticle",
-    "Impulse"
+    "Impulse",
+    "Token"
 ]);
 /**
  * createCommonParticle

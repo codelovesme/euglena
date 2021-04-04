@@ -222,13 +222,13 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/particles.d.ts": {
-        "version": "773b47c1c7b78494792878fee22bb3ce46e23a764e169c6580c151a094fc3436",
-        "signature": "773b47c1c7b78494792878fee22bb3ce46e23a764e169c6580c151a094fc3436",
+        "version": "402cfdead7af2d2f0aefc8a78c09cbaa6cd08e1f6bd49e7feac411eaa5aa14f0",
+        "signature": "402cfdead7af2d2f0aefc8a78c09cbaa6cd08e1f6bd49e7feac411eaa5aa14f0",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/particles.h.d.ts": {
-        "version": "b09198be693fb9921827f450d142906824e4ef52864fa3938c50dba83589b8b7",
-        "signature": "b09198be693fb9921827f450d142906824e4ef52864fa3938c50dba83589b8b7",
+        "version": "e7af114c128f9f7bc6b9f3265c4c61bae63f0232f5e8959f99be6553aa5b9a7b",
+        "signature": "e7af114c128f9f7bc6b9f3265c4c61bae63f0232f5e8959f99be6553aa5b9a7b",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/index.d.ts": {
@@ -267,8 +267,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/logger.d.ts": {
-        "version": "be6f9556c9f49c4c9757f6fd9977746f486ed4f914155d55e8b57c1bc536ee07",
-        "signature": "be6f9556c9f49c4c9757f6fd9977746f486ed4f914155d55e8b57c1bc536ee07",
+        "version": "14ecc8d738859b45ea5a8060944cdee7f70999cdcaeb65b7fe3bbc29503ab7ad",
+        "signature": "14ecc8d738859b45ea5a8060944cdee7f70999cdcaeb65b7fe3bbc29503ab7ad",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/gps-receiver.d.ts": {
@@ -331,9 +331,14 @@
         "signature": "5c0890024941055554389e2352514e373d6d8e6e14dcbc137db99bf597b0d5f1",
         "affectsGlobalScope": false
       },
+      "../../core/dist/template/organelle/jwt.d.ts": {
+        "version": "7ea542ae003142b19fff82e7b118a5b338ecabd172975c9d4459d5d3c356dfb5",
+        "signature": "7ea542ae003142b19fff82e7b118a5b338ecabd172975c9d4459d5d3c356dfb5",
+        "affectsGlobalScope": false
+      },
       "../../core/dist/template/organelle/index.d.ts": {
-        "version": "01ded7de3d5d53650e612d25542db6cabcd8b53420e3692d8cffd51965444eec",
-        "signature": "01ded7de3d5d53650e612d25542db6cabcd8b53420e3692d8cffd51965444eec",
+        "version": "c6190a4138b40784288bdd96155d4f95a8a38173e9b9c19d42f49084e54c2034",
+        "signature": "c6190a4138b40784288bdd96155d4f95a8a38173e9b9c19d42f49084e54c2034",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/index.d.ts": {
@@ -892,6 +897,7 @@
         "../../core/dist/template/organelle/fs.d.ts",
         "../../core/dist/template/organelle/gps-receiver.d.ts",
         "../../core/dist/template/organelle/http-client.d.ts",
+        "../../core/dist/template/organelle/jwt.d.ts",
         "../../core/dist/template/organelle/logger.d.ts",
         "../../core/dist/template/organelle/matter-sensor.d.ts",
         "../../core/dist/template/organelle/net-client.d.ts",
@@ -904,8 +910,12 @@
         "../../core/dist/template/organelle/vacuole.d.ts",
         "../../core/dist/template/organelle/web-server.d.ts"
       ],
+      "../../core/dist/template/organelle/jwt.d.ts": [
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
       "../../core/dist/template/organelle/logger.d.ts": [
-        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
         "../../core/dist/template/index.d.ts"
       ],
       "../../core/dist/template/organelle/matter-sensor.d.ts": [
@@ -1267,6 +1277,7 @@
         "../../core/dist/template/organelle/fs.d.ts",
         "../../core/dist/template/organelle/gps-receiver.d.ts",
         "../../core/dist/template/organelle/http-client.d.ts",
+        "../../core/dist/template/organelle/jwt.d.ts",
         "../../core/dist/template/organelle/logger.d.ts",
         "../../core/dist/template/organelle/matter-sensor.d.ts",
         "../../core/dist/template/organelle/net-client.d.ts",
@@ -1279,8 +1290,12 @@
         "../../core/dist/template/organelle/vacuole.d.ts",
         "../../core/dist/template/organelle/web-server.d.ts"
       ],
+      "../../core/dist/template/organelle/jwt.d.ts": [
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
       "../../core/dist/template/organelle/logger.d.ts": [
-        "../../core/dist/index.d.ts",
+        "../../core/dist/organelle/index.d.ts",
         "../../core/dist/template/index.d.ts"
       ],
       "../../core/dist/template/organelle/matter-sensor.d.ts": [
@@ -1470,6 +1485,7 @@
       "../../core/dist/template/organelle/gps-receiver.d.ts",
       "../../core/dist/template/organelle/http-client.d.ts",
       "../../core/dist/template/organelle/index.d.ts",
+      "../../core/dist/template/organelle/jwt.d.ts",
       "../../core/dist/template/organelle/logger.d.ts",
       "../../core/dist/template/organelle/matter-sensor.d.ts",
       "../../core/dist/template/organelle/net-client.d.ts",

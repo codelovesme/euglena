@@ -1,6 +1,6 @@
 import { CommonParticles } from "..";
 declare const logger: {
-    v1: import("../..").CreateOrganelleModuleInterface<{
+    v1: import("../../organelle").CreateOrganelleModuleInterface<{
         incoming: {
             Log: CommonParticles["Log"];
         };
