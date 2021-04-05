@@ -7,12 +7,14 @@ export type PCompare = P<{
     plainPassword: string;
     hashedPassword: string;
 }>;
+export type PCompareResult = P<boolean>;
 
 export type Hash = FromP<"Hash", PHash>;
 export type Compare = FromP<"Compare", PCompare>;
 export type HashedPassword = FromP<"HashedPassword", PHashedPassword>;
+export type CompareResult = FromP<"CompareResult", PCompareResult>;
 
-const jwt = {
+const bcrypt = {
     v1: domc<{
         incoming: {
             Hash: PHash;
@@ -22,8 +24,9 @@ const jwt = {
             HashedPassword: PHashedPassword;
             Exception: CommonParticles["Exception"];
             ACK: CommonParticles["ACK"];
+            CompareResult: PCompareResult
         };
-    }>(["Hash", "Compare"], ["Exception", "ACK", "HashedPassword"])
+    }>(["Hash", "Compare"], ["Exception", "ACK", "HashedPassword", "CompareResult"])
 };
 
-export { jwt };
+export { bcrypt };

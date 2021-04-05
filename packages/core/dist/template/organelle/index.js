@@ -26,4 +26,5 @@ __exportStar(require("./http-client"), exports);
 __exportStar(require("./fs"), exports);
 __exportStar(require("./utils"), exports);
 __exportStar(require("./jwt"), exports);
+__exportStar(require("./bcrypt"), exports);
 //# sourceMappingURL=index.js.map

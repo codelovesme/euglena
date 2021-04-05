@@ -14,3 +14,4 @@ export * from "./http-client";
 export * from "./fs";
 export * from "./utils";
 export * from "./jwt";
+export * from "./bcrypt";

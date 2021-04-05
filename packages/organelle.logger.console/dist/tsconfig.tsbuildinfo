@@ -341,9 +341,14 @@
         "signature": "7ea542ae003142b19fff82e7b118a5b338ecabd172975c9d4459d5d3c356dfb5",
         "affectsGlobalScope": false
       },
+      "../../core/dist/template/organelle/bcrypt.d.ts": {
+        "version": "5f3175e140055eb02260999f60835585872b1ba2daccde6c70ed60b377120938",
+        "signature": "5f3175e140055eb02260999f60835585872b1ba2daccde6c70ed60b377120938",
+        "affectsGlobalScope": false
+      },
       "../../core/dist/template/organelle/index.d.ts": {
-        "version": "c6190a4138b40784288bdd96155d4f95a8a38173e9b9c19d42f49084e54c2034",
-        "signature": "c6190a4138b40784288bdd96155d4f95a8a38173e9b9c19d42f49084e54c2034",
+        "version": "aef5a7d4697764e9c5f36e0eff4cf2bc9274ec52188323d3aa7494d24744ad7e",
+        "signature": "aef5a7d4697764e9c5f36e0eff4cf2bc9274ec52188323d3aa7494d24744ad7e",
         "affectsGlobalScope": false
       },
       "../../core/dist/organelle/index.d.ts": {
@@ -860,6 +865,10 @@
         "../../core/dist/template/organelle/index.d.ts",
         "../../core/dist/template/particle/index.d.ts"
       ],
+      "../../core/dist/template/organelle/bcrypt.d.ts": [
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
       "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts": [
         "../../core/dist/index.d.ts",
         "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts"
@@ -898,6 +907,7 @@
         "../../core/dist/template/organelle/utils.d.ts"
       ],
       "../../core/dist/template/organelle/index.d.ts": [
+        "../../core/dist/template/organelle/bcrypt.d.ts",
         "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts",
         "../../core/dist/template/organelle/fs.d.ts",
         "../../core/dist/template/organelle/gps-receiver.d.ts",
@@ -1240,6 +1250,10 @@
         "../../core/dist/template/organelle/index.d.ts",
         "../../core/dist/template/particle/index.d.ts"
       ],
+      "../../core/dist/template/organelle/bcrypt.d.ts": [
+        "../../core/dist/organelle/index.d.ts",
+        "../../core/dist/template/index.d.ts"
+      ],
       "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts": [
         "../../core/dist/index.d.ts",
         "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts"
@@ -1278,6 +1292,7 @@
         "../../core/dist/template/organelle/utils.d.ts"
       ],
       "../../core/dist/template/organelle/index.d.ts": [
+        "../../core/dist/template/organelle/bcrypt.d.ts",
         "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts",
         "../../core/dist/template/organelle/fs.d.ts",
         "../../core/dist/template/organelle/gps-receiver.d.ts",
@@ -1483,6 +1498,7 @@
       "../../core/dist/particle/particle.d.ts",
       "../../core/dist/particle/particle.h.d.ts",
       "../../core/dist/template/index.d.ts",
+      "../../core/dist/template/organelle/bcrypt.d.ts",
       "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.d.ts",
       "../../core/dist/template/organelle/endoplasmic-reticulum/create-organelle-module.h.d.ts",
       "../../core/dist/template/organelle/endoplasmic-reticulum/index.d.ts",

@@ -1,25 +1,19 @@
-import { GenerateToken, jwt } from "@euglena/core";
-import { sys } from "cessnalib";
-import { sign, verify } from "jsonwebtoken";
+import { bcrypt, Sap } from "@euglena/core";
+import { hash, compare } from "bcrypt";
 
-const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
+// const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
+let saltRounds: string;
 
-export default jwt.v1.com({
-    Sap: async () => {},
-    GenerateToken: async ({ data }: GenerateToken, { cp, t }) => {
-        return cp.Token({
-            crypted: sign(data, secret, {
-                expiresIn: (data.expireAt - data.createdAt) * 1000
-            }),
-            decrypted: data
-        });
+export default bcrypt.v1.com<Sap<{
+    saltRounds: string;
+}>>({
+    Sap: async (p) => {
+        saltRounds = p.data.saltRounds;
     },
-    VerifyToken: async (p, { cp, t }) => {
-        try {
-            verify(p.data, secret);
-            return cp.ACK();
-        } catch (e) {
-            return cp.Exception(new sys.type.Exception("Not a valid token."));
-        }
+    Hash: async ({ data: plainPassword }, { cp }) => {
+        return cp.HashedPassword(await hash(plainPassword, saltRounds));
+    },
+    Compare: async ({ data: { plainPassword, hashedPassword } }, { cp }) => {
+        return cp.CompareResult(await compare(plainPassword, hashedPassword))
     }
 });

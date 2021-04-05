@@ -37,39 +37,43 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@euglena/core");
-var cessnalib_1 = require("cessnalib");
-var jsonwebtoken_1 = require("jsonwebtoken");
-var secret = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
-exports.default = core_1.jwt.v1.com({
-    Sap: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-        return [2 /*return*/];
-    }); }); },
-    GenerateToken: function (_a, _b) {
-        var data = _a.data;
-        var cp = _b.cp, t = _b.t;
+var bcrypt_1 = require("bcrypt");
+// const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
+var saltRounds;
+exports.default = core_1.bcrypt.v1.com({
+    Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            saltRounds = p.data.saltRounds;
+            return [2 /*return*/];
+        });
+    }); },
+    Hash: function (_a, _b) {
+        var plainPassword = _a.data;
+        var cp = _b.cp;
         return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_c) {
-                return [2 /*return*/, cp.Token({
-                        crypted: jsonwebtoken_1.sign(data, secret, {
-                            expiresIn: (data.expireAt - data.createdAt) * 1000
-                        }),
-                        decrypted: data
-                    })];
+            var _c, _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
+                    case 0:
+                        _d = (_c = cp).HashedPassword;
+                        return [4 /*yield*/, bcrypt_1.hash(plainPassword, saltRounds)];
+                    case 1: return [2 /*return*/, _d.apply(_c, [_e.sent()])];
+                }
             });
         });
     },
-    VerifyToken: function (p, _a) {
-        var cp = _a.cp, t = _a.t;
+    Compare: function (_a, _b) {
+        var _c = _a.data, plainPassword = _c.plainPassword, hashedPassword = _c.hashedPassword;
+        var cp = _b.cp;
         return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_b) {
-                try {
-                    jsonwebtoken_1.verify(p.data, secret);
-                    return [2 /*return*/, cp.ACK()];
+            var _d, _e;
+            return __generator(this, function (_f) {
+                switch (_f.label) {
+                    case 0:
+                        _e = (_d = cp).CompareResult;
+                        return [4 /*yield*/, bcrypt_1.compare(plainPassword, hashedPassword)];
+                    case 1: return [2 /*return*/, _e.apply(_d, [_f.sent()])];
                 }
-                catch (e) {
-                    return [2 /*return*/, cp.Exception(new cessnalib_1.sys.type.Exception("Not a valid token."))];
-                }
-                return [2 /*return*/];
             });
         });
     }
