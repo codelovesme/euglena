@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.bcrypt.bcrypt",
     "domain": "codeloves.me",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -31,7 +31,7 @@
         "@euglena/core": "^1.2.5"
     },
     "devDependencies": {
-        "@euglena/core": "^1.2.6",
+        "@euglena/core": "^1.2.7",
         "@types/bcrypt": "^3.0.0"
     },
     "files": [
