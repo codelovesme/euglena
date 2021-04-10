@@ -1,0 +1,78 @@
+Arguments: 
+  /home/cdlvsm/.nvm/versions/node/v12.18.3/bin/node /home/cdlvsm/.nvm/versions/node/v12.18.3/bin/yarn run compile
+
+PATH: 
+  /home/cdlvsm/git/lvsm/euglena/packages/organelle.net-client.nodejs/node_modules/.bin:/home/cdlvsm/git/lvsm/euglena/packages/node_modules/.bin:/home/cdlvsm/git/lvsm/euglena/node_modules/.bin:/home/cdlvsm/git/lvsm/node_modules/.bin:/home/cdlvsm/git/node_modules/.bin:/home/cdlvsm/node_modules/.bin:/home/node_modules/.bin:/node_modules/.bin:/home/cdlvsm/.nvm/versions/node/v12.18.3/bin:/home/cdlvsm/.nvm/versions/node/v12.18.3/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/cdlvsm/git/lvsm/euglena/node_modules/.bin:/home/cdlvsm/.vscode-server/bin/08a217c4d27a02a5bcde898fd7981bda5b49391b/bin:/home/cdlvsm/.nvm/versions/node/v12.18.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/Pulse Secure/VC142.CRT/X64/:/mnt/c/Program Files (x86)/Pulse Secure/VC142.CRT/X86/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Microsoft VS Code/bin:/mnt/c/ProgramData/nvm:/mnt/c/Program Files/nodejs:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/cdlvsm/AppData/Local/Microsoft/WindowsApps:/snap/bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  12.18.3
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: package.json: write EPIPE
+      at afterWriteDispatched (internal/stream_base_commons.js:154:25)
+      at writeGeneric (internal/stream_base_commons.js:145:3)
+      at Socket._writeGeneric (net.js:786:11)
+      at Socket._write (net.js:798:8)
+      at doWrite (_stream_writable.js:403:12)
+      at writeOrBuffer (_stream_writable.js:387:5)
+      at Socket.Writable.write (_stream_writable.js:318:11)
+      at ConsoleReporter.warn (/home/cdlvsm/.nvm/versions/node/v12.18.3/lib/node_modules/yarn/lib/cli.js:96352:17)
+      at warn (/home/cdlvsm/.nvm/versions/node/v12.18.3/lib/node_modules/yarn/lib/cli.js:51521:23)
+      at module.exports.exports.default (/home/cdlvsm/.nvm/versions/node/v12.18.3/lib/node_modules/yarn/lib/cli.js:37355:9)
+
+npm manifest: 
+  {
+      "name": "@euglena/organelle.net-client.nodejs",
+      "domain": "codeloves.me",
+      "version": "1.2.4",
+      "main": "dist/index.js",
+      "types": "dist/index.d.ts",
+      "private": false,
+      "license": "GPL v2",
+      "author": {
+          "name": "Fedai Kaya",
+          "email": "codelovesme@gmail.com"
+      },
+      "scripts": {
+          "compile": "tsc -p .",
+          "clean": "rm -r dist",
+          "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
+      },
+      "repository": {
+          "type": "git",
+          "url": "git+https://github.com/codelovesme/euglena.git"
+      },
+      "bugs": {
+          "url": "https://github.com/codelovesme/euglena/issues"
+      },
+      "homepage": "https://github.com/codelovesme/euglena#readme",
+      "dependencies": {
+          "axios": "~0.19.2",
+          "cessnalib": "^0.9.0"
+      },
+      "peerDependencies": {
+          "@euglena/core": "^1.2.4"
+      },
+      "devDependencies": {
+          "@euglena/core": "^1.2.4"
+      },
+      "files": [
+          "dist/*",
+          "README.md",
+          "LICENSE.txt",
+          "package.json"
+      ],
+      "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

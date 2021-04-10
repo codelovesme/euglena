@@ -28,10 +28,10 @@
         "bcrypt": "^4.0.1"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.4"
+        "@euglena/core": "^1.2.5"
     },
     "devDependencies": {
-        "@euglena/core": "^1.2.4",
+        "@euglena/core": "^1.2.5",
         "@types/bcrypt": "^3.0.0"
     },
     "files": [

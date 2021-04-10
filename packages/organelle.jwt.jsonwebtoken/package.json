@@ -28,10 +28,10 @@
         "jsonwebtoken": "^8.1.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.4"
+        "@euglena/core": "^1.2.5"
     },
     "devDependencies": {
-        "@euglena/core": "^1.2.4",
+        "@euglena/core": "^1.2.5",
         "@types/jsonwebtoken": "^8.3.9"
     },
     "files": [
