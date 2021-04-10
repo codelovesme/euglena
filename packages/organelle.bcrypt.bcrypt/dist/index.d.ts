@@ -1,5 +1,5 @@
 declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").P<{
-    saltRounds: string;
+    saltRounds: string | number;
 }, {
     organelleName: string;
 }>, import("@euglena/core").InsertSapIntoParticles<{
@@ -17,7 +17,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
         CompareResult: import("@euglena/core").P<boolean, {}>;
     };
 }, import("@euglena/core").P<{
-    saltRounds: string;
+    saltRounds: string | number;
 }, {
     organelleName: string;
 }>>>;

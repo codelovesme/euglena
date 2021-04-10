@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cm = exports.cp = exports.isParticle = exports.assertNotParticle = exports.createParticle = exports.createMeta = void 0;
+exports.cm = exports.cp = exports.isParticleClass = exports.isParticle = exports.assertNotParticle = exports.createParticle = exports.createMeta = void 0;
 exports.createMeta = function (class_, adds) {
     return __assign({ class: class_ }, adds);
 };
@@ -32,6 +32,9 @@ function isParticle(x) {
     );
 }
 exports.isParticle = isParticle;
+exports.isParticleClass = function (particle, class_) {
+    return particle.meta.class === class_;
+};
 /**
  * createParticle
  */

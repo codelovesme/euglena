@@ -142,13 +142,13 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/particle/particle.h.d.ts": {
-        "version": "2a6a95507bf32ce4ae54ab56bd01d9fc1855c1044f212058aa9f4a79801e1a2d",
-        "signature": "2a6a95507bf32ce4ae54ab56bd01d9fc1855c1044f212058aa9f4a79801e1a2d",
+        "version": "b05f4f3283412ff3b33032eafbe3cb9e1eed2102efd9ce044c34ae36332d690b",
+        "signature": "b05f4f3283412ff3b33032eafbe3cb9e1eed2102efd9ce044c34ae36332d690b",
         "affectsGlobalScope": false
       },
       "../../core/dist/particle/particle.d.ts": {
-        "version": "9fb4a79ce3542899c544818d503523cd95987d6e6f2b64dfa95b14b655f4782d",
-        "signature": "9fb4a79ce3542899c544818d503523cd95987d6e6f2b64dfa95b14b655f4782d",
+        "version": "41217cf7436dc11e65c8c6339716f35d305b36dd3fab65c32fd38583293de82f",
+        "signature": "41217cf7436dc11e65c8c6339716f35d305b36dd3fab65c32fd38583293de82f",
         "affectsGlobalScope": false
       },
       "../../core/dist/particle/index.d.ts": {
@@ -216,19 +216,19 @@
         "signature": "94115ae82cbd38651cdb60587a6fdd1e881fd6db082db97026174f3e0fe71c66",
         "affectsGlobalScope": false
       },
-      "../../../node_modules/cessnalib/.dist/src/index.d.ts": {
+      "../../core/node_modules/cessnalib/.dist/src/index.d.ts": {
         "version": "78baa32e44d6785aeffa46d3492443768bd25e479f001a5105dbfb5b398001d1",
         "signature": "78baa32e44d6785aeffa46d3492443768bd25e479f001a5105dbfb5b398001d1",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/particles.d.ts": {
-        "version": "402cfdead7af2d2f0aefc8a78c09cbaa6cd08e1f6bd49e7feac411eaa5aa14f0",
-        "signature": "402cfdead7af2d2f0aefc8a78c09cbaa6cd08e1f6bd49e7feac411eaa5aa14f0",
+        "version": "67377be85c62cf607f7df38a8cea202ab7c79dee8423bc9e156fb65a47d1aa6b",
+        "signature": "67377be85c62cf607f7df38a8cea202ab7c79dee8423bc9e156fb65a47d1aa6b",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/particles.h.d.ts": {
-        "version": "e7af114c128f9f7bc6b9f3265c4c61bae63f0232f5e8959f99be6553aa5b9a7b",
-        "signature": "e7af114c128f9f7bc6b9f3265c4c61bae63f0232f5e8959f99be6553aa5b9a7b",
+        "version": "c877bef77ad25f6a528e9b27f7e8fae6c5a70cc9de362fb45685b71cd983ad8c",
+        "signature": "c877bef77ad25f6a528e9b27f7e8fae6c5a70cc9de362fb45685b71cd983ad8c",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/index.d.ts": {
@@ -332,8 +332,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/jwt.d.ts": {
-        "version": "7ea542ae003142b19fff82e7b118a5b338ecabd172975c9d4459d5d3c356dfb5",
-        "signature": "7ea542ae003142b19fff82e7b118a5b338ecabd172975c9d4459d5d3c356dfb5",
+        "version": "8fc61624319fd38212637689ae451bd026483d0b534dfd60829b7d93dc7715b0",
+        "signature": "8fc61624319fd38212637689ae451bd026483d0b534dfd60829b7d93dc7715b0",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/bcrypt.d.ts": {
@@ -359,6 +359,11 @@
       "../../core/dist/index.d.ts": {
         "version": "d4836dcb6c34846bdcf54035fa6ab298b823abe1183ee24ae77e08b4c9561f49",
         "signature": "d4836dcb6c34846bdcf54035fa6ab298b823abe1183ee24ae77e08b4c9561f49",
+        "affectsGlobalScope": false
+      },
+      "../../../node_modules/cessnalib/.dist/src/index.d.ts": {
+        "version": "78baa32e44d6785aeffa46d3492443768bd25e479f001a5105dbfb5b398001d1",
+        "signature": "78baa32e44d6785aeffa46d3492443768bd25e479f001a5105dbfb5b398001d1",
         "affectsGlobalScope": false
       },
       "../src/index.ts": {
@@ -953,9 +958,9 @@
         "../../core/dist/template/organelle/nucleus/gene.h.d.ts"
       ],
       "../../core/dist/template/organelle/nucleus/gene.h.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/organelle/organelle-receive.h.d.ts",
-        "../../core/dist/particle/index.d.ts"
+        "../../core/dist/particle/index.d.ts",
+        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
       ],
       "../../core/dist/template/organelle/nucleus/index.d.ts": [
         "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts",
@@ -964,11 +969,11 @@
         "../../core/dist/template/organelle/nucleus/organelle-module.d.ts"
       ],
       "../../core/dist/template/organelle/nucleus/organelle-module.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/index.d.ts",
         "../../core/dist/organelle/particles.h.d.ts",
         "../../core/dist/particle/index.d.ts",
-        "../../core/dist/template/organelle/nucleus/gene.h.d.ts"
+        "../../core/dist/template/organelle/nucleus/gene.h.d.ts",
+        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
       ],
       "../../core/dist/template/organelle/thermometer.d.ts": [
         "../../core/dist/index.d.ts",
@@ -976,10 +981,10 @@
         "../../core/dist/template/index.d.ts"
       ],
       "../../core/dist/template/organelle/timer.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/index.d.ts",
         "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/template/index.d.ts"
+        "../../core/dist/template/index.d.ts",
+        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
       ],
       "../../core/dist/template/organelle/ui.d.ts": [
         "../../core/dist/index.d.ts",
@@ -1001,18 +1006,18 @@
         "../../core/dist/template/particle/particles.h.d.ts"
       ],
       "../../core/dist/template/particle/particles.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
+        "../../core/dist/particle/index.d.ts",
+        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
       ],
       "../../core/dist/template/particle/particles.h.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
+        "../../core/dist/particle/index.d.ts",
+        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
       ],
       "../src/index.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
-        "../../core/dist/index.d.ts"
+        "../../core/dist/index.d.ts",
+        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
       ]
     },
     "exportedModulesMap": {
@@ -1386,14 +1391,14 @@
         "../../core/dist/template/particle/particles.h.d.ts"
       ],
       "../../core/dist/template/particle/particles.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
+        "../../core/dist/particle/index.d.ts",
+        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
       ],
       "../../core/dist/template/particle/particles.h.d.ts": [
-        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts"
+        "../../core/dist/particle/index.d.ts",
+        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
       ],
       "../src/index.ts": [
         "../../../node_modules/cessnalib/.dist/src/index.d.ts",
@@ -1520,6 +1525,7 @@
       "../../core/dist/template/particle/index.d.ts",
       "../../core/dist/template/particle/particles.d.ts",
       "../../core/dist/template/particle/particles.h.d.ts",
+      "../../core/node_modules/cessnalib/.dist/src/index.d.ts",
       "../src/index.ts"
     ]
   },

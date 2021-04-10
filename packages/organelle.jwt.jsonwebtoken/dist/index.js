@@ -49,27 +49,30 @@ exports.default = core_1.jwt.v1.com({
         var cp = _b.cp, t = _b.t;
         return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_c) {
-                return [2 /*return*/, cp.Token({
-                        crypted: jsonwebtoken_1.sign(data, secret, {
-                            expiresIn: (data.expireAt - data.createdAt) * 1000
-                        }),
-                        decrypted: data
-                    })];
+                return [2 /*return*/, cp.EncryptedToken(jsonwebtoken_1.sign(data, secret, {
+                        expiresIn: (data.expireAt - data.createdAt) * 1000
+                    }))];
             });
         });
     },
-    VerifyToken: function (p, _a) {
-        var cp = _a.cp, t = _a.t;
+    VerifyToken: function (_a, _b) {
+        var crypted = _a.data;
+        var cp = _b.cp, t = _b.t;
         return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_b) {
-                try {
-                    jsonwebtoken_1.verify(p.data, secret);
-                    return [2 /*return*/, cp.ACK()];
+            var decrypted, e_1;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, jsonwebtoken_1.verify(crypted, secret)];
+                    case 1:
+                        decrypted = (_c.sent());
+                        return [2 /*return*/, cp.DecryptedToken(decrypted)];
+                    case 2:
+                        e_1 = _c.sent();
+                        return [2 /*return*/, cp.Exception(new cessnalib_1.sys.type.Exception("Not a valid token."))];
+                    case 3: return [2 /*return*/];
                 }
-                catch (e) {
-                    return [2 /*return*/, cp.Exception(new cessnalib_1.sys.type.Exception("Not a valid token."))];
-                }
-                return [2 /*return*/];
             });
         });
     }

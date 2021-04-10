@@ -1,6 +1,6 @@
 import { FromP, P } from "../../organelle";
 import { CommonParticles } from "..";
-export declare type PGenerateToken = P<CommonParticles["Token"]["data"]["decrypted"]>;
+export declare type PGenerateToken = P<CommonParticles["DecryptedToken"]["data"]>;
 export declare type PVerifyToken = P<string>;
 export declare type GenerateToken = FromP<"GenerateToken", PGenerateToken>;
 export declare type VerifyToken = FromP<"VerifyToken", PVerifyToken>;
@@ -11,9 +11,9 @@ declare const jwt: {
             VerifyToken: PVerifyToken;
         };
         outgoing: {
-            Token: CommonParticles["Token"];
+            DecryptedToken: CommonParticles["DecryptedToken"];
+            EncryptedToken: CommonParticles["EncryptedToken"];
             Exception: CommonParticles["Exception"];
-            ACK: CommonParticles["ACK"];
         };
     }, undefined>;
 };

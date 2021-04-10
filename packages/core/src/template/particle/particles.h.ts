@@ -35,19 +35,17 @@ export type PRemoveParticle = P<{ query: sys.type.RecursivePartial<Particle>; co
 export type PImpulse = P<{
     particle: Particle;
     source: string;
-    token: string;
+    token?: string;
 }>;
 
-export type PToken = P<{
-    crypted: string;
-    decrypted: {
-        euglenaName: string;
-        createdAt: number;
-        expireAt: number;
-        type: string;
-        roles: string[];
-        status: string;
-    };
+export type PEncryptedToken = P<string>;
+export type PDecryptedToken = P<{
+    euglenaName: string;
+    createdAt: number;
+    expireAt: number;
+    type: string;
+    roles: string[];
+    status: "Active" | "Deactive" | "Deleted";
 }>;
 
 export type ACK = FromP<"ACK", PACK>;
@@ -61,11 +59,12 @@ export type Log = FromP<"Log", PLog>;
 export type GetAlive = FromP<"GetAlive", PGetAlive>;
 export type Hibernate = FromP<"Hibernate", PHibernate>;
 export type EuglenaInfo = FromP<"EuglenaInfo", PEuglenaInfo>;
-export type ReadParticle = FromP<"HibReadParticleernate", PReadParticle>;
+export type ReadParticle = FromP<"ReadParticle", PReadParticle>;
 export type SaveParticle = FromP<"SaveParticle", PSaveParticle>;
 export type RemoveParticle = FromP<"RemoveParticle", PRemoveParticle>;
 export type Impulse = FromP<"Impulse", PImpulse>;
-export type Token = FromP<"Token", PToken>;
+export type EncryptedToken = FromP<"EncryptedToken", PEncryptedToken>;
+export type DecryptedToken = FromP<"DecryptedToken", PDecryptedToken>;
 
 export type CommonParticles = OrganelleParticles<{
     ACK: PACK;
@@ -83,5 +82,6 @@ export type CommonParticles = OrganelleParticles<{
     SaveParticle: PSaveParticle;
     RemoveParticle: PRemoveParticle;
     Impulse: PImpulse;
-    Token: PToken;
+    EncryptedToken: PEncryptedToken;
+    DecryptedToken: PDecryptedToken;
 }>;

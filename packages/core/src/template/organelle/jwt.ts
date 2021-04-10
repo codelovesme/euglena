@@ -1,7 +1,7 @@
 import { domc, FromP, P } from "../../organelle";
 import { CommonParticles } from "..";
 
-export type PGenerateToken = P<CommonParticles["Token"]["data"]["decrypted"]>;
+export type PGenerateToken = P<CommonParticles["DecryptedToken"]["data"]>;
 export type PVerifyToken = P<string>;
 
 export type GenerateToken = FromP<"GenerateToken", PGenerateToken>;
@@ -14,11 +14,11 @@ const jwt = {
             VerifyToken: PVerifyToken;
         };
         outgoing: {
-            Token: CommonParticles["Token"];
+            DecryptedToken: CommonParticles["DecryptedToken"];
+            EncryptedToken: CommonParticles["EncryptedToken"];
             Exception: CommonParticles["Exception"];
-            ACK: CommonParticles["ACK"];
         };
-    }>(["VerifyToken", "VerifyToken"], ["Token", "Exception", "ACK"])
+    }>(["GenerateToken", "VerifyToken"], ["DecryptedToken", "Exception", "EncryptedToken"])
 };
 
 export { jwt };

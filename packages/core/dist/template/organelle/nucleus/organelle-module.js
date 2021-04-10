@@ -90,7 +90,7 @@ var createReceive = function (t) { return function (particle, source) {
     for (var i = 0; i < reactions.length; i++) {
         var reaction = reactions[i];
         var geneName = names[i];
-        console.log("Triggering Gene: " + geneName + " Particle: " + JSON.stringify(particle.meta));
+        console.log("Info - Triggering Gene: " + geneName + " Particle: " + JSON.stringify(particle.meta));
         promises = __spreadArrays(promises, [
             reaction(particle, source, {
                 t: t

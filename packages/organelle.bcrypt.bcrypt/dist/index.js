@@ -38,7 +38,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@euglena/core");
 var bcrypt_1 = require("bcrypt");
-// const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
+/**
+ * 12
+ */
 var saltRounds;
 exports.default = core_1.bcrypt.v1.com({
     Sap: function (p) { return __awaiter(void 0, void 0, void 0, function () {

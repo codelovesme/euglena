@@ -36,18 +36,16 @@ export declare type PRemoveParticle = P<{
 export declare type PImpulse = P<{
     particle: Particle;
     source: string;
-    token: string;
+    token?: string;
 }>;
-export declare type PToken = P<{
-    crypted: string;
-    decrypted: {
-        euglenaName: string;
-        createdAt: number;
-        expireAt: number;
-        type: string;
-        roles: string[];
-        status: string;
-    };
+export declare type PEncryptedToken = P<string>;
+export declare type PDecryptedToken = P<{
+    euglenaName: string;
+    createdAt: number;
+    expireAt: number;
+    type: string;
+    roles: string[];
+    status: "Active" | "Deactive" | "Deleted";
 }>;
 export declare type ACK = FromP<"ACK", PACK>;
 export declare type EuglenaName = FromP<"EuglenaName", PEuglenaName>;
@@ -60,11 +58,12 @@ export declare type Log = FromP<"Log", PLog>;
 export declare type GetAlive = FromP<"GetAlive", PGetAlive>;
 export declare type Hibernate = FromP<"Hibernate", PHibernate>;
 export declare type EuglenaInfo = FromP<"EuglenaInfo", PEuglenaInfo>;
-export declare type ReadParticle = FromP<"HibReadParticleernate", PReadParticle>;
+export declare type ReadParticle = FromP<"ReadParticle", PReadParticle>;
 export declare type SaveParticle = FromP<"SaveParticle", PSaveParticle>;
 export declare type RemoveParticle = FromP<"RemoveParticle", PRemoveParticle>;
 export declare type Impulse = FromP<"Impulse", PImpulse>;
-export declare type Token = FromP<"Token", PToken>;
+export declare type EncryptedToken = FromP<"EncryptedToken", PEncryptedToken>;
+export declare type DecryptedToken = FromP<"DecryptedToken", PDecryptedToken>;
 export declare type CommonParticles = OrganelleParticles<{
     ACK: PACK;
     EuglenaName: PEuglenaName;
@@ -81,5 +80,6 @@ export declare type CommonParticles = OrganelleParticles<{
     SaveParticle: PSaveParticle;
     RemoveParticle: PRemoveParticle;
     Impulse: PImpulse;
-    Token: PToken;
+    EncryptedToken: PEncryptedToken;
+    DecryptedToken: PDecryptedToken;
 }>;

@@ -35,7 +35,8 @@ exports.createCommonParticles = defineCommonParticles([
     "SaveParticle",
     "RemoveParticle",
     "Impulse",
-    "Token"
+    "DecryptedToken",
+    "EncryptedToken"
 ]);
 /**
  * createCommonParticle

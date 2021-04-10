@@ -29,7 +29,8 @@ export const createCommonParticles = defineCommonParticles([
     "SaveParticle",
     "RemoveParticle",
     "Impulse",
-    "Token"
+    "DecryptedToken",
+    "EncryptedToken"
 ]);
 
 /**

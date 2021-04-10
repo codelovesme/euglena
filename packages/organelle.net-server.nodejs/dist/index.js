@@ -108,13 +108,19 @@ exports.default = core_1.netServer.v1.com({
             });
         });
     },
-    GetAlive: function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            server.listen(sap.port, function () {
-                console.log("Server running at " + sap.port);
+    GetAlive: function (p, _a) {
+        var t = _a.t, cp = _a.cp;
+        return __awaiter(void 0, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                server.listen(sap.port, function () {
+                    t(cp.Log({
+                        message: "Server running at " + sap.port,
+                        level: "Info"
+                    }));
+                });
+                return [2 /*return*/];
             });
-            return [2 /*return*/];
         });
-    }); }
+    }
 });
 //# sourceMappingURL=index.js.map

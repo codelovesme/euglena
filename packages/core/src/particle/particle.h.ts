@@ -21,3 +21,5 @@ export type CreateParticle = <Class extends string, Data, Additions extends Meta
     data?: Data,
     adds?: Additions
 ) => Particle<Class, Data, Additions>;
+
+export type IsParticleClass = <Class extends string>(particle: Particle, class_: Class) => particle is Particle<Class>;

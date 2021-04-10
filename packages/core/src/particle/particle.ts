@@ -1,4 +1,4 @@
-import { CreateMeta, CreateParticle, Meta, MetaAdditions, Particle } from "./particle.h";
+import { CreateMeta, CreateParticle, IsParticleClass, Meta, MetaAdditions, Particle } from "./particle.h";
 
 export const createMeta: CreateMeta = <Class extends string, Additions extends MetaAdditions = {}>(
     class_: Class,
@@ -32,6 +32,13 @@ export function isParticle(x: any): x is Particle {
         // "data" in x
     );
 }
+
+export const isParticleClass: IsParticleClass = <Class extends string>(
+    particle: Particle,
+    class_: Class
+): particle is Particle<Class> => {
+    return particle.meta.class === class_;
+};
 
 /**
  * createParticle

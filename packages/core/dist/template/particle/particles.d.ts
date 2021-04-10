@@ -36,18 +36,16 @@ export declare const createCommonParticles: CreateOrganelleParticles<{
     Impulse: import("../../organelle").P<{
         particle: import("../../particle").Particle<string, unknown, {}>;
         source: string;
-        token: string;
+        token?: string | undefined;
     }, {}>;
-    Token: import("../../organelle").P<{
-        crypted: string;
-        decrypted: {
-            euglenaName: string;
-            createdAt: number;
-            expireAt: number;
-            type: string;
-            roles: string[];
-            status: string;
-        };
+    EncryptedToken: import("../../organelle").P<string, {}>;
+    DecryptedToken: import("../../organelle").P<{
+        euglenaName: string;
+        createdAt: number;
+        expireAt: number;
+        type: string;
+        roles: string[];
+        status: "Active" | "Deactive" | "Deleted";
     }, {}>;
 }>;
 /**
@@ -90,17 +88,15 @@ export declare const ccp: CreateOrganelleParticles<{
     Impulse: import("../../organelle").P<{
         particle: import("../../particle").Particle<string, unknown, {}>;
         source: string;
-        token: string;
+        token?: string | undefined;
     }, {}>;
-    Token: import("../../organelle").P<{
-        crypted: string;
-        decrypted: {
-            euglenaName: string;
-            createdAt: number;
-            expireAt: number;
-            type: string;
-            roles: string[];
-            status: string;
-        };
+    EncryptedToken: import("../../organelle").P<string, {}>;
+    DecryptedToken: import("../../organelle").P<{
+        euglenaName: string;
+        createdAt: number;
+        expireAt: number;
+        type: string;
+        roles: string[];
+        status: "Active" | "Deactive" | "Deleted";
     }, {}>;
 }>;

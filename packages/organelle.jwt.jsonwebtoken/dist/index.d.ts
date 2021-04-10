@@ -9,24 +9,21 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
             expireAt: number;
             type: string;
             roles: string[];
-            status: string;
+            status: "Active" | "Deactive" | "Deleted";
         }, {}>;
         VerifyToken: import("@euglena/core").P<string, {}>;
     };
     outgoing: {
-        Token: import("@euglena/core").P<{
-            crypted: string;
-            decrypted: {
-                euglenaName: string;
-                createdAt: number;
-                expireAt: number;
-                type: string;
-                roles: string[];
-                status: string;
-            };
+        DecryptedToken: import("@euglena/core").P<{
+            euglenaName: string;
+            createdAt: number;
+            expireAt: number;
+            type: string;
+            roles: string[];
+            status: "Active" | "Deactive" | "Deleted";
         }, {}>;
+        EncryptedToken: import("@euglena/core").P<string, {}>;
         Exception: import("@euglena/core").P<sys.type.Exception, {}>;
-        ACK: import("@euglena/core").P<undefined, {}>;
     };
 }, import("@euglena/core").P<any, {
     organelleName: string;
