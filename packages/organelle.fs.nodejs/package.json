@@ -20,7 +20,7 @@
         "url": "git+https://github.com/codelovesme/euglena.git"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.5"
+        "@euglena/core": "^1.2.8"
     },
     "devDependencies": {
         "@euglena/core": "^1.2.8"
