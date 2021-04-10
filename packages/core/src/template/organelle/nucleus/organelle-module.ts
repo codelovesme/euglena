@@ -50,7 +50,7 @@ const createReceive = (t: NucleusTransmit) => (particle: Particle, source: strin
     for (let i = 0; i < reactions.length; i++) {
         let reaction: GeneReaction = reactions[i];
         const geneName: string = names[i];
-        console.log(`Triggering Gene: ${geneName} Particle: ${JSON.stringify(particle.meta)}`);
+        console.log(`Info - Triggering Gene: ${geneName} Particle: ${JSON.stringify(particle.meta)}`);
         promises = [
             ...promises,
             reaction(particle, source, {

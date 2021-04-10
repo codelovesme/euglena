@@ -50,9 +50,14 @@ export default netServer.v1.com<
             }
         });
     },
-    GetAlive: async () => {
+    GetAlive: async (p, { t, cp }) => {
         server.listen(sap.port, () => {
-            console.log(`Server running at ${sap.port}`);
+            t(
+                cp.Log({
+                    message: `Server running at ${sap.port}`,
+                    level: "Info"
+                })
+            );
         });
     }
 });
