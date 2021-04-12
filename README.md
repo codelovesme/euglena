@@ -3,10 +3,10 @@
 
 Euglena is an event driven architecture with enhanced side features. Mostly focused onto those below difficulties:
 
-* Dependency injection
-* Code reusability
-* Logic reusability
-* Logic update at runtime
+    * Dependency injection
+    * Code reusability
+    * Logic reusability
+    * Logic update at runtime
 
 An euglena application consists of three main part. Organelles, Chromosome, Particles.
 
