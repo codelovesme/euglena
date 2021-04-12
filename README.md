@@ -1,10 +1,8 @@
 ## Euglena
-<table>
-<tr>
-<td><img src="docs/euglena.png" alt="Euglena" width="800"/></td>
-<td>
-      
+<img src="docs/euglena.png" alt="Euglena" width="200" align="left"/>
+
 Euglena is an event driven architecture with enhanced side features. Mostly focused onto those below difficulties:
+
 * Dependency injection
 * Code reusability
 * Logic reusability
@@ -17,9 +15,10 @@ As well as an euglena in the mother nature has flagellum organelle to move aroun
 in the digital nature here an euglena has net-server organelle to listen requests, vacuole organelle again to store particles, logger organelle to log. 
 
 Straight forward right ?
-</td>
-</tr>
-</table>
+
+Except for two, all organelles are not necessarily needed to be included in a euglena application. These two organelles are endoplasmic reticulum and nucleus. Whereas endoplasmic reticulum is responsible from delivery of particles, nucleus keeps chromosome (genes) and trigger actions corresponding to a gene when a particle is received.
+
+![Euglena inside](docs/euglena-inside.png)
 
 
 
