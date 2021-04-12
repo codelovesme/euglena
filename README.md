@@ -1,5 +1,9 @@
 ## Euglena
-
+<table>
+<tr>
+<td><img src="docs/euglena.png" alt="Euglena" width="800"/></td>
+<td>
+      
 Euglena is an event driven architecture with enhanced side features. Mostly focused onto those below difficulties:
 * Dependency injection
 * Code reusability
@@ -8,12 +12,15 @@ Euglena is an event driven architecture with enhanced side features. Mostly focu
 
 An euglena application consists of three main part. Organelles, Chromosome, Particles.
 
-
 Organelles are functionalities of the application. Such as birds need wings to fly, euglenas need organelles to do something.
 As well as an euglena in the mother nature has flagellum organelle to move around, vacuole organelle to keep waste together, mitocondri organelle to produce ATP,
 in the digital nature here an euglena has net-server organelle to listen requests, vacuole organelle again to store particles, logger organelle to log. 
 
 Straight forward right ?
+</td>
+</tr>
+</table>
+
 
 
 ### Packages
