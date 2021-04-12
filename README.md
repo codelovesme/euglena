@@ -1,5 +1,5 @@
 ## Euglena
-<img src="docs/euglena.png" alt="Euglena" width="200" align="left"/>
+<img src="docs/euglena.png" alt="Euglena" width="20%" align="left"/>
 
 Euglena is an event driven architecture with enhanced side features. Mostly focused onto those below difficulties:
 
