@@ -1,3 +1,10 @@
+##Euglena
+Euglena is an event driven architecture with enhanced side features. Mostly focused onto those below difficulties:
+* Dependency injection
+* Code reusability
+* Logic reusability
+* Logic update at runtime
+
 ### Packages
 
 [@euglena/cli](packages/cli/README.md)
