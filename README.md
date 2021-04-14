@@ -9,7 +9,9 @@ Euglena is an event driven architecture with enhanced side features. Mostly focu
     * Logic reusability
     * Logic update at runtime
 
-An euglena application consists of three main part. Organelles, Chromosome, Particles.
+An euglena application consists of three main part. Organelles, Particles, Genes.
+
+### Organelle
 
 Organelles are functionalities of the application. Such as birds need wings to fly, euglenas need organelles to do
 something. As well as an euglena in the mother nature has flagellum organelle to move around, vacuole organelle to keep
@@ -30,6 +32,8 @@ the organelle can take in and give off.
 
 ![Organelle Multi Implementation](docs/organelle-impl.png)
 
+### Particle
+
 Particles are data objects to store event information and command either. However, it doesn't matter what they carry,
 they are just piece of data. And particles consist of two parts which are "meta" and "data". Predictably "meta" keeps
 data about the part "data". Meta has one must have record "class". Class basicly is identity of the particle.
@@ -44,27 +48,68 @@ data about the part "data". Meta has one must have record "class". Class basicly
       }
     }
 
+### Gene
+
+A gene is a serializable code block which is the logic behind how euglena will behave inorder to respond to an event. A
+gene is represented as javascript object below.
+
+    {
+      "meta":{
+        "class": "Gene"
+      },
+      "data":{
+        "name": "When got exception, do something",
+        "triggers": { "meta": { "class": "Exception" } },
+        "reaction": async (p, s, { t })=>{
+          //Exception particle is received
+          //Do something
+        },
+      }
+    }
+
+As you see "data" has some properties. "name" stands for the description of the gene. "triggers" declares what kind of
+particle this gene will respond to. "reaction" is the function where we put the logic. If you catch it takes 3
+parameteres. p represents particle which is received. In this case it is Exception particle. s represents source
+organelle. Each particle travels inside the euglena created by an organelle. The source is name of this organelle. Third
+parameter is an object keeps tools. t is shown above is a function to transmit particles from nucleus to target
+organelle. Below there is an sample for inside of a reaction. A log particle was defined with the information from the
+exception particle. Then it is transmitted to the organelle "LoggerConsole".
+
+    const logParticle = {
+      "meta": { "class": "Log" },
+      "data": { "level": "error", "message": particle.data.message }
+    }
+    t(logParticle,"LoggerConsole")
+
+TODO : In the near future There will be a store under euglena.codeloves.me/store to expose organelle implementation
+
 ### Packages
 
 [@euglena/cli](packages/cli/README.md)
 
 [@euglena/core](packages/core/README.md)
 
+[@euglena/organelle.bcrypt.bcrypt](packages/organelle.bcrypt.bcrypt/README.md)
+
+[@euglena/organelle.fs.nodejs](packages/organelle.fs.nodejs/README.md)
+
 [@euglena/organelle.gps.serial-port](packages/organelle.gps.serial-port/README.md)
+
+[@euglena/organelle.http-client.axios](packages/organelle.http-client.axios/README.md)
+
+[@euglena/organelle.jwt.jsonwebtoken](packages/organelle.jwt.jsonwebtoken/README.md)
 
 [@euglena/organelle.logger.console](packages/organelle.logger.console/README.md)
 
-[@euglena/organelle.matter.plantower](packages/organelle.matter.plantower/README.md)
+[@euglena/organelle.matter-sensor.plantower](packages/organelle.matter-sensor.plantower/README.md)
 
 [@euglena/organelle.net-client.browser](packages/organelle.net-client.browser/README.md)
 
 [@euglena/organelle.net-client.nodejs](packages/organelle.net-client.nodejs/README.md)
 
-[@euglena/organelle.net-server](packages/organelle.net-server/README.md)
+[@euglena/organelle.net-server.nodejs](packages/organelle.net-server.nodejs/README.md)
 
-[@euglena/organelle.temperature](packages/organelle.temperature/README.md)
-
-[@euglena/organelle.temperature.i2c](packages/organelle.temperature.i2c/README.md)
+[@euglena/organelle.thermometer.i2c](packages/organelle.thermometer.i2c/README.md)
 
 [@euglena/organelle.timer.js](packages/organelle.timer.js/README.md)
 
@@ -75,3 +120,7 @@ data about the part "data". Meta has one must have record "class". Class basicly
 [@euglena/organelle.vacuole.mongodb](packages/organelle.vacuole.mongodb/README.md)
 
 [@euglena/organelle.vacuole.nedb](packages/organelle.vacuole.nedb/README.md)
+
+[@euglena/organelle.web-server.express](packages/organelle.web-server.express/README.md)
+
+[@euglena/organelle.script](packages/organelle.script/README.md)
