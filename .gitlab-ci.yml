@@ -6,7 +6,7 @@ stages:
 publish:
     stage: publish
     script:
-        - apk install g++ gcc make
+        - apk add g++ gcc make
         - npm i -g lerna
         - yarn
         - yarn compile:prod
