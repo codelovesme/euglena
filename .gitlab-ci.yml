@@ -1,4 +1,4 @@
-image: nikolaik/python-nodejs:python3.6-nodejs16-alpine
+image: nikolaik/python-nodejs:python3.6-nodejs16-stretch
 
 stages:
     - publish
@@ -6,7 +6,6 @@ stages:
 publish:
     stage: publish
     script:
-        - apk add g++ gcc make
         - npm i -g lerna
         - yarn
         - yarn compile:prod
