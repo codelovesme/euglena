@@ -24,5 +24,8 @@
         "insertPragma": false,
         "proseWrap": "always",
         "endOfLine": "lf"
+    },
+    "publishConfig": {
+        "@codelovesme:registry": " http://codeloves.me:2800/api/v4/projects/3/packages/npm/"
     }
 }
