@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.gps-receiver.serial-port",
     "domain": "codeloves.me",
-    "version": "1.2.11",
+    "version": "1.2.9",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -24,7 +24,9 @@
     },
     "homepage": "https://github.com/codelovesme/euglena#readme",
     "dependencies": {
-        "cessnalib": "^0.9.0"
+        "cessnalib": "^0.9.0",
+        "gps": "^0.5.3",
+        "serialport": "^9.0.0"
     },
     "peerDependencies": {
         "@euglena/core": "^1.2.8"
