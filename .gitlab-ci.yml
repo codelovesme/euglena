@@ -11,6 +11,6 @@ publish:
         - yarn
         - yarn compile:prod
         - echo "//codeloves.me:2800/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">.npmrc
-        - lerna publish
+        - lerna publish from-package
     # only:
     #     - tags
