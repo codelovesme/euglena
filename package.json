@@ -9,6 +9,9 @@
         "clean": "lerna run clean && rm -r node_modules",
         "p-e": "(cp -r packages ../euglena-dist)&(cp package.json ../euglena-dist/)"
     },
+    "repository": {
+        "url": "http://codeloves.me:2800/codelovesme/euglena.git"
+    },
     "prettier": {
         "printWidth": 120,
         "tabWidth": 4,
