@@ -216,7 +216,7 @@
         "signature": "94115ae82cbd38651cdb60587a6fdd1e881fd6db082db97026174f3e0fe71c66",
         "affectsGlobalScope": false
       },
-      "../../core/node_modules/cessnalib/.dist/src/index.d.ts": {
+      "../../../node_modules/cessnalib/.dist/src/index.d.ts": {
         "version": "78baa32e44d6785aeffa46d3492443768bd25e479f001a5105dbfb5b398001d1",
         "signature": "78baa32e44d6785aeffa46d3492443768bd25e479f001a5105dbfb5b398001d1",
         "affectsGlobalScope": false
@@ -359,11 +359,6 @@
       "../../core/dist/index.d.ts": {
         "version": "d4836dcb6c34846bdcf54035fa6ab298b823abe1183ee24ae77e08b4c9561f49",
         "signature": "d4836dcb6c34846bdcf54035fa6ab298b823abe1183ee24ae77e08b4c9561f49",
-        "affectsGlobalScope": false
-      },
-      "../../../node_modules/cessnalib/.dist/src/index.d.ts": {
-        "version": "78baa32e44d6785aeffa46d3492443768bd25e479f001a5105dbfb5b398001d1",
-        "signature": "78baa32e44d6785aeffa46d3492443768bd25e479f001a5105dbfb5b398001d1",
         "affectsGlobalScope": false
       },
       "../src/index.ts": {
@@ -958,9 +953,9 @@
         "../../core/dist/template/organelle/nucleus/gene.h.d.ts"
       ],
       "../../core/dist/template/organelle/nucleus/gene.h.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/organelle/organelle-receive.h.d.ts",
-        "../../core/dist/particle/index.d.ts",
-        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
+        "../../core/dist/particle/index.d.ts"
       ],
       "../../core/dist/template/organelle/nucleus/index.d.ts": [
         "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts",
@@ -969,11 +964,11 @@
         "../../core/dist/template/organelle/nucleus/organelle-module.d.ts"
       ],
       "../../core/dist/template/organelle/nucleus/organelle-module.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/index.d.ts",
         "../../core/dist/organelle/particles.h.d.ts",
         "../../core/dist/particle/index.d.ts",
-        "../../core/dist/template/organelle/nucleus/gene.h.d.ts",
-        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
+        "../../core/dist/template/organelle/nucleus/gene.h.d.ts"
       ],
       "../../core/dist/template/organelle/thermometer.d.ts": [
         "../../core/dist/index.d.ts",
@@ -981,10 +976,10 @@
         "../../core/dist/template/index.d.ts"
       ],
       "../../core/dist/template/organelle/timer.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/index.d.ts",
         "../../core/dist/organelle/particles.h.d.ts",
-        "../../core/dist/template/index.d.ts",
-        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
+        "../../core/dist/template/index.d.ts"
       ],
       "../../core/dist/template/organelle/ui.d.ts": [
         "../../core/dist/index.d.ts",
@@ -1006,18 +1001,18 @@
         "../../core/dist/template/particle/particles.h.d.ts"
       ],
       "../../core/dist/template/particle/particles.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts",
-        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
+        "../../core/dist/particle/index.d.ts"
       ],
       "../../core/dist/template/particle/particles.h.d.ts": [
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
         "../../core/dist/organelle/index.d.ts",
-        "../../core/dist/particle/index.d.ts",
-        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
+        "../../core/dist/particle/index.d.ts"
       ],
       "../src/index.ts": [
-        "../../core/dist/index.d.ts",
-        "../../core/node_modules/cessnalib/.dist/src/index.d.ts"
+        "../../../node_modules/cessnalib/.dist/src/index.d.ts",
+        "../../core/dist/index.d.ts"
       ]
     },
     "exportedModulesMap": {
@@ -1525,7 +1520,6 @@
       "../../core/dist/template/particle/index.d.ts",
       "../../core/dist/template/particle/particles.d.ts",
       "../../core/dist/template/particle/particles.h.d.ts",
-      "../../core/node_modules/cessnalib/.dist/src/index.d.ts",
       "../src/index.ts"
     ]
   },

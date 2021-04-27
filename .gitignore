@@ -1,4 +1,4 @@
 node_modules
-apps
 *.tsbuildinfo
-lerna-debug.log
+*.log
+.npmrc
