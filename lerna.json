@@ -1,11 +1,14 @@
 {
     "npmClient": "yarn",
     "useWorkspaces": true,
-    "packages": [
-        "packages/*"
-    ],
+    "packages": ["packages/*"],
     "version": "1.2.12",
     "publishConfig": {
         "access": "public"
+    },
+    "command": {
+        "publish": {
+            "registry": "http://codeloves.me:2800/api/v4/projects/3/packages/npm/"
+        }
     }
 }
