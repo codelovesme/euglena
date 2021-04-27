@@ -1,8 +1,9 @@
 ## Euglena
 
-<img src="docs/euglena.png" alt="Euglena" width="20%" align="left" margin="10"/>
+<img src="docs/euglena.png" alt="Euglena" width="150"  align="left"/>
 
-Euglena is an event driven architecture with enhanced side features. Mostly focused onto those below difficulties:
+Euglena is an open source framewaork to make developers' coding routine more strict, problems more predictable, efforts
+less. It has event driven architecture with enhanced side features. Mostly focused onto those below difficulties:
 
     * Dependency injection
     * Code reusability
@@ -69,7 +70,7 @@ gene is represented as javascript object below.
 
 As you see "data" has some properties. "name" stands for the description of the gene. "triggers" declares what kind of
 particle this gene will respond to. "reaction" is the function where we put the logic. If you catch it takes 3
-parameteres. p represents particle which is received. In this case it is Exception particle. s represents source
+parameters. p represents particle which is received. In this case it is Exception particle. s represents source
 organelle. Each particle travels inside the euglena created by an organelle. The source is name of this organelle. Third
 parameter is an object keeps tools. t is shown above is a function to transmit particles from nucleus to target
 organelle. Below there is an sample for inside of a reaction. A log particle was defined with the information from the
@@ -81,7 +82,8 @@ exception particle. Then it is transmitted to the organelle "LoggerConsole".
     }
     t(logParticle,"LoggerConsole")
 
-TODO : In the near future There will be a store under euglena.codeloves.me/store to expose organelle implementation
+TODO : In the near future There will be a store under euglena.codeloves.me/store to expose organelle implementations and
+genes
 
 ### Packages
 
