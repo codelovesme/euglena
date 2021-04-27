@@ -8,7 +8,7 @@ publish:
     script:
         - npm i -g lerna
         - yarn
-        - yarn compile:prod
+        - yarn compile
         - echo "//codeloves.me:2800/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">.npmrc
         - lerna publish from-package
     # only:
