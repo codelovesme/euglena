@@ -1,4 +1,4 @@
-image: node:lts-alpine3.13
+image: nikolaik/python-nodejs:python3.6-nodejs16-alpine
 
 stages:
     - publish
