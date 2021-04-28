@@ -9,7 +9,9 @@ publish:
         - npm i -g lerna
         - yarn
         - yarn compile
-        - echo "//codeloves.me:2800/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">.npmrc
+        - echo "@codelovesme:registry=http://codeloves.me:2800/api/v4/projects/${CI_PROJECT_ID}/packages/npm/">>.npmrc
+        - echo "//codeloves.me:2800/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}">>.npmrc
+        - echo "//codeloves.me:2800/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">>.npmrc
         - lerna publish from-package --registry
           http://codeloves.me:2800/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN} -y
     # only:
