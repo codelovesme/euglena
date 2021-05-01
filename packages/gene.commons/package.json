@@ -1,6 +1,5 @@
 {
     "name": "@euglena/gene.commons",
-    "domain": "codeloves.me",
     "version": "1.2.13",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -25,13 +24,6 @@
         "@euglena/core": "^1.2.13"
     },
     "files": [
-        "dist/*",
-        "README.md",
-        "LICENSE.txt",
-        "package.json"
-    ],
-    "publishConfig": {
-        "@euglena:registry": " http://codeloves.me:2800/api/v4/projects/3/packages/npm/"
-    },
-    "gitHead": "2f92d876ffad3434c71920bc26cceaef451da76e"
+        "dist"
+    ]
 }

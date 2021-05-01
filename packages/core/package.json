@@ -1,10 +1,11 @@
 {
     "name": "@euglena/core",
+    "domain": "codeloves.me",
     "version": "1.2.13",
-    "license": "GPL v2",
-    "main": "dist",
+    "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
+    "license": "GPL v2",
     "author": {
         "name": "Fedai Kaya",
         "email": "codelovesme@gmail.com"
@@ -22,9 +23,5 @@
     },
     "files": [
         "dist"
-    ],
-    "publishConfig": {
-        "@euglena:registry": "http://codeloves.me:2800/api/v4/projects/3/packages/npm/"
-    },
-    "gitHead": "2f92d876ffad3434c71920bc26cceaef451da76e"
+    ]
 }
