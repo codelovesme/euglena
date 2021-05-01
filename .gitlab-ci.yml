@@ -9,7 +9,9 @@ publish:
         - npm i -g lerna
         - yarn
         - yarn compile
+        - cd packages/core
         - echo "//codeloves.me:2800/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">.npmrc
-        - npm run publish ${CI_PROJECT_ID} ${CI_JOB_TOKEN}
+        - npm publish
+        # - npm run publish ${CI_PROJECT_ID} ${CI_JOB_TOKEN}
     # only:
     #     - tags
