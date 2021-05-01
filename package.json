@@ -6,8 +6,8 @@
     ],
     "scripts": {
         "compile": "lerna run compile",
-        "clean": "lerna run clean && rm -r node_modules",
-        "p-e": "(cp -r packages ../euglena-dist)&(cp package.json ../euglena-dist/)"
+        "clean": "lerna run clean",
+        "publish": "sh scripts/publish.sh"
     },
     "repository": {
         "url": "http://codeloves.me:2800/codelovesme/euglena.git"

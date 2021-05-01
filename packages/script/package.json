@@ -36,5 +36,8 @@
         "LICENSE.txt",
         "package.json"
     ],
+    "publishConfig": {
+        "@euglena:registry": " http://codeloves.me:2800/api/v4/projects/3/packages/npm/"
+    },
     "gitHead": "345d1525ae6354e08ecd87625cda59cf60726da9"
 }
