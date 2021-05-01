@@ -15,14 +15,6 @@
         "clean": "rm -r dist",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/codelovesme/euglena.git"
-    },
-    "bugs": {
-        "url": "https://github.com/codelovesme/euglena/issues"
-    },
-    "homepage": "https://github.com/codelovesme/euglena#readme",
     "peerDependencies": {
         "@euglena/core": "^1.2.8"
     },
