@@ -64,30 +64,22 @@ exports.default = core_1.fs.v1.com({
     ReadFile: function (_a, _b) {
         var _c = _a.data, filePath = _c.filePath, encoding = _c.encoding;
         var cp = _b.cp;
-        return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_d) {
-                return [2 /*return*/, new Promise(function (resolve) {
-                        fs.readFile(filePath, encoding, function (err, data) {
-                            if (err)
-                                return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                            return resolve(cp.FileContent(data));
-                        });
-                    })];
+        return new Promise(function (resolve) {
+            fs.readFile(filePath, encoding, function (err, data) {
+                if (err)
+                    return resolve(cp.Exception({ message: JSON.stringify(err) }));
+                return resolve(cp.FileContent(data));
             });
         });
     },
     WriteFile: function (_a, _b) {
         var _c = _a.data, filePath = _c.filePath, content = _c.content, encoding = _c.encoding;
         var cp = _b.cp;
-        return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_d) {
-                return [2 /*return*/, new Promise(function (resolve) {
-                        fs.writeFile(filePath, content, { encoding: encoding }, function (err) {
-                            if (err)
-                                return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                            return resolve(cp.ACK());
-                        });
-                    })];
+        return new Promise(function (resolve) {
+            fs.writeFile(filePath, content, { encoding: encoding }, function (err) {
+                if (err)
+                    return resolve(cp.Exception({ message: JSON.stringify(err) }));
+                return resolve(cp.ACK());
             });
         });
     }

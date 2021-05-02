@@ -46,65 +46,81 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.nucleusJs = void 0;
 var cessnalib_1 = require("cessnalib");
 var create_organelle_module_1 = require("./create-organelle-module");
+var particle_1 = require("../../particle");
 var genes = [];
 var receive;
-var createReceive = function (t) { return function (particle, source) {
-    //find which genes are matched with properties of the particle
-    var triggerableReactions = new Array();
-    for (var i = 0; i < genes.length; i++) {
-        var triggers = genes[i].data.triggers;
-        if (cessnalib_1.js.Class.doesMongoCover(particle, triggers)) {
-            var reaction = genes[i].data.reaction;
-            triggerableReactions.push({
-                index: i,
-                triggers: Object.keys(triggers),
-                reaction: reaction
-            });
+var createReceive = function (t) { return function (particle, source) { return __awaiter(void 0, void 0, void 0, function () {
+    var triggerableReactions, i, triggers, reaction, reactions, names, _i, triggerableReactions_1, tr, doTrigger, _a, triggerableReactions_2, tr2, promises, i, reaction, geneName, allResults;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                triggerableReactions = new Array();
+                for (i = 0; i < genes.length; i++) {
+                    triggers = genes[i].data.triggers;
+                    if (cessnalib_1.js.Class.doesMongoCover(particle, triggers)) {
+                        reaction = genes[i].data.reaction;
+                        triggerableReactions.push({
+                            index: i,
+                            triggers: Object.keys(triggers),
+                            reaction: reaction
+                        });
+                    }
+                }
+                reactions = Array();
+                names = Array();
+                for (_i = 0, triggerableReactions_1 = triggerableReactions; _i < triggerableReactions_1.length; _i++) {
+                    tr = triggerableReactions_1[_i];
+                    doTrigger = true;
+                    //Check if the tr is contained by others, if true
+                    for (_a = 0, triggerableReactions_2 = triggerableReactions; _a < triggerableReactions_2.length; _a++) {
+                        tr2 = triggerableReactions_2[_a];
+                        //if it is the same object, do nothing
+                        if (tr.index === tr2.index)
+                            continue;
+                        //then if triggers of tr2 does not contain triggers of tr, do nothing
+                        if (!cessnalib_1.sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers))
+                            continue;
+                        //then check if tr2 overrides tr
+                        doTrigger = genes[tr2.index].data.override !== genes[tr.index].data.name;
+                    }
+                    if (doTrigger) {
+                        reactions.push(tr.reaction);
+                        names.push(genes[tr.index].data.name);
+                    }
+                }
+                promises = [];
+                for (i = 0; i < reactions.length; i++) {
+                    reaction = reactions[i];
+                    geneName = names[i];
+                    console.log("Info - Triggering Gene: " + geneName + " Particle: " + JSON.stringify(particle.meta));
+                    promises = __spreadArrays(promises, [
+                        reaction(particle, source, {
+                            t: t
+                        })
+                    ]);
+                }
+                return [4 /*yield*/, Promise.all(promises)];
+            case 1:
+                allResults = _b.sent();
+                return [2 /*return*/, allResults.filter(function (x) { return x !== undefined; })];
         }
-    }
-    //get rid of overridden reactions
-    var reactions = Array();
-    var names = Array();
-    for (var _i = 0, triggerableReactions_1 = triggerableReactions; _i < triggerableReactions_1.length; _i++) {
-        var tr = triggerableReactions_1[_i];
-        var doTrigger = true;
-        //Check if the tr is contained by others, if true
-        for (var _a = 0, triggerableReactions_2 = triggerableReactions; _a < triggerableReactions_2.length; _a++) {
-            var tr2 = triggerableReactions_2[_a];
-            //if it is the same object, do nothing
-            if (tr.index === tr2.index)
-                continue;
-            //then if triggers of tr2 does not contain triggers of tr, do nothing
-            if (!cessnalib_1.sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers))
-                continue;
-            //then check if tr2 overrides tr
-            doTrigger = genes[tr2.index].data.override !== genes[tr.index].data.name;
-        }
-        if (doTrigger) {
-            reactions.push(tr.reaction);
-            names.push(genes[tr.index].data.name);
-        }
-    }
-    //trigger collected reactions
-    var promises = [];
-    for (var i = 0; i < reactions.length; i++) {
-        var reaction = reactions[i];
-        var geneName = names[i];
-        console.log("Info - Triggering Gene: " + geneName + " Particle: " + JSON.stringify(particle.meta));
-        promises = __spreadArrays(promises, [
-            reaction(particle, source, {
-                t: t
-            })
-        ]);
-    }
-    return promises;
-}; };
+    });
+}); }; };
 var nucleusJs = create_organelle_module_1.nucleus.com({
     ReceiveParticle: function (p) { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, particle, source;
+        var _a, particle, source, result;
         return __generator(this, function (_b) {
-            _a = p.data, particle = _a.particle, source = _a.source;
-            return [2 /*return*/, receive(particle, source)];
+            switch (_b.label) {
+                case 0:
+                    _a = p.data, particle = _a.particle, source = _a.source;
+                    return [4 /*yield*/, receive(particle, source)];
+                case 1:
+                    result = _b.sent();
+                    if (result.length > 0) {
+                        return [2 /*return*/, particle_1.ccp.Particles(result)];
+                    }
+                    return [2 /*return*/];
+            }
         });
     }); },
     Sap: function (particle, _a) {

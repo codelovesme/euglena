@@ -84,9 +84,11 @@ exports.default = core_1.netServer.v1.com({
                                 var particle = JSON.parse(body);
                                 if (core_1.isParticle(particle) && particle.meta.class === "Impulse") {
                                     t(particle).then(function (resp) {
-                                        Promise.all(resp).then(function (x) {
-                                            res.end(JSON.stringify(x[0]));
-                                        });
+                                        var results = resp;
+                                        res.end(JSON.stringify(core_1.ccp.Impulse({
+                                            particle: results.data[0],
+                                            source: sap.euglenaName
+                                        })));
                                     });
                                 }
                             }

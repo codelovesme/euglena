@@ -15,6 +15,7 @@ const defineCommonParticles = <P extends keyof CommonParticles>(
 
 export const createCommonParticles = defineCommonParticles([
     "ACK",
+    "NACK",
     "EuglenaName",
     "Exception",
     "InvalidParticle",

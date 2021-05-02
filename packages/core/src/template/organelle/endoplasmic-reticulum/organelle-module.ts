@@ -105,6 +105,12 @@ const endoplasmicReticulumJs = reticulum.com<P<{ particles: Particle[]; reticulu
         /**
          * send particle to the organelle
          */
+        // t(
+        //     cp.Log({
+        //         message: `Transmitting particle ${JSON.stringify(particle.meta)} to ${target}`,
+        //         level: "Info"
+        //     })
+        // );
         const resp = await organelleReceive(particle);
         return cp.TransmitResponse(resp);
     }

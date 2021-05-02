@@ -99,10 +99,8 @@ exports.default = core_1.webServer.v1.com({
                                     headers: req.headers
                                 }))];
                             case 1:
-                                resp = _a.sent();
-                                Promise.all(resp).then(function (x) {
-                                    res.send(x[0]);
-                                });
+                                resp = (_a.sent());
+                                res.send(resp.data[0]);
                                 return [2 /*return*/];
                         }
                     });

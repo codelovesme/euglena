@@ -22,6 +22,7 @@ declare const nucleusJs: import("../../..").SingletonOrganelleModule<P<{
         }, {}>;
         Exception: P<sys.type.Exception, {}>;
         ACK: P<undefined, {}>;
+        Particles: P<Particle<string, unknown, {}>[], {}>;
     };
 }, P<{
     path: string;

@@ -3,7 +3,7 @@ import * as fs from "fs";
 
 export default fsOrganelle.v1.com({
     Sap: async (p) => {},
-    ReadFile: async ({ data: { filePath, encoding } }, { cp }) => {
+    ReadFile: ({ data: { filePath, encoding } }, { cp }) => {
         return new Promise((resolve) => {
             fs.readFile(filePath, encoding, (err, data) => {
                 if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
@@ -11,7 +11,7 @@ export default fsOrganelle.v1.com({
             });
         });
     },
-    WriteFile: async ({ data: { filePath, content, encoding } }, { cp }) => {
+    WriteFile: ({ data: { filePath, content, encoding } }, { cp }) => {
         return new Promise((resolve) => {
             fs.writeFile(filePath, content, { encoding }, (err) => {
                 if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));

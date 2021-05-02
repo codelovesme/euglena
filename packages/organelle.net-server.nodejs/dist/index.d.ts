@@ -1,5 +1,6 @@
 declare const _default: import("@euglena/core").OrganelleModule<import("@euglena/core").P<{
     port: number;
+    euglenaName: string;
 }, {
     organelleName: string;
 }>, import("@euglena/core").InsertSapIntoParticles<{
@@ -21,6 +22,7 @@ declare const _default: import("@euglena/core").OrganelleModule<import("@euglena
     };
 }, import("@euglena/core").P<{
     port: number;
+    euglenaName: string;
 }, {
     organelleName: string;
 }>>>;

@@ -1,6 +1,7 @@
 import { CreateOrganelleParticles } from "../../organelle";
 export declare const createCommonParticles: CreateOrganelleParticles<{
     ACK: import("../../organelle").P<undefined, {}>;
+    NACK: import("../../organelle").P<undefined, {}>;
     EuglenaName: import("../../organelle").P<string, {}>;
     Exception: import("../../organelle").P<import("cessnalib").sys.type.Exception, {}>;
     Particles: import("../../organelle").P<import("../../particle").Particle<string, unknown, {}>[], {}>;
@@ -53,6 +54,7 @@ export declare const createCommonParticles: CreateOrganelleParticles<{
  */
 export declare const ccp: CreateOrganelleParticles<{
     ACK: import("../../organelle").P<undefined, {}>;
+    NACK: import("../../organelle").P<undefined, {}>;
     EuglenaName: import("../../organelle").P<string, {}>;
     Exception: import("../../organelle").P<import("cessnalib").sys.type.Exception, {}>;
     Particles: import("../../organelle").P<import("../../particle").Particle<string, unknown, {}>[], {}>;

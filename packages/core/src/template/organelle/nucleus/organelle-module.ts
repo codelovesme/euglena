@@ -4,11 +4,15 @@ import { Particle } from "../../../particle";
 import { Gene, GeneReaction } from "./gene.h";
 import { NucleusTransmit } from "../../../organelle/organelle-receive.h";
 import { P } from "../../../organelle/particles.h";
+import { ccp } from "../../particle";
 
 let genes: Gene[] = [];
-let receive: (particle: Particle, sourceOrganelle: string) => Promise<Particle | void>[];
+let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;
 
-const createReceive = (t: NucleusTransmit) => (particle: Particle, source: string): Promise<Particle | void>[] => {
+const createReceive = (t: NucleusTransmit) => async (
+    particle: Particle,
+    source: string
+): Promise<Particle<string, unknown, {}>[]> => {
     //find which genes are matched with properties of the particle
     const triggerableReactions = new Array<{
         index: number;
@@ -58,7 +62,8 @@ const createReceive = (t: NucleusTransmit) => (particle: Particle, source: strin
             })
         ];
     }
-    return promises;
+    const allResults = await Promise.all(promises);
+    return allResults.filter((x) => x !== undefined) as Particle<string, unknown, {}>[];
 };
 
 const nucleusJs = nucleus.com<
@@ -66,10 +71,14 @@ const nucleusJs = nucleus.com<
 >({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
-        return receive(particle, source) as any;
+        const result = await receive(particle, source);
+        if (result.length > 0) {
+            return ccp.Particles(result);
+        }
+        return;
     },
     Sap: async (particle, { t, cp }) => {
-        receive = createReceive(t as any);
+        receive = createReceive(t as NucleusTransmit);
         try {
             switch (particle.data.type) {
                 case "FileSystemPath":

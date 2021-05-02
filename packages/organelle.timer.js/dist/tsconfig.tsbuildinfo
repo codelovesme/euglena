@@ -227,13 +227,13 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/particles.d.ts": {
-        "version": "67377be85c62cf607f7df38a8cea202ab7c79dee8423bc9e156fb65a47d1aa6b",
-        "signature": "67377be85c62cf607f7df38a8cea202ab7c79dee8423bc9e156fb65a47d1aa6b",
+        "version": "09104bac103e711d1aeb35cc9292b200594a101c6e080138fcd69483a647766a",
+        "signature": "09104bac103e711d1aeb35cc9292b200594a101c6e080138fcd69483a647766a",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/particles.h.d.ts": {
-        "version": "c877bef77ad25f6a528e9b27f7e8fae6c5a70cc9de362fb45685b71cd983ad8c",
-        "signature": "c877bef77ad25f6a528e9b27f7e8fae6c5a70cc9de362fb45685b71cd983ad8c",
+        "version": "d9e9c05c0b840c064ad3d9dd3472ac23aebb28179d83d7fa8ec4a763cd0d7be8",
+        "signature": "d9e9c05c0b840c064ad3d9dd3472ac23aebb28179d83d7fa8ec4a763cd0d7be8",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/particle/index.d.ts": {
@@ -247,8 +247,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/nucleus/create-organelle-module.d.ts": {
-        "version": "97254334121c28525a74a8efa0641f0655c7b31fae34c669b815a0e4a21e4325",
-        "signature": "97254334121c28525a74a8efa0641f0655c7b31fae34c669b815a0e4a21e4325",
+        "version": "70bd435bc0d16ff35a256f43ff7a638b8d0102a26967ceb95b3fdd0cb1698a4f",
+        "signature": "70bd435bc0d16ff35a256f43ff7a638b8d0102a26967ceb95b3fdd0cb1698a4f",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/nucleus/gene.h.d.ts": {
@@ -257,8 +257,8 @@
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/nucleus/organelle-module.d.ts": {
-        "version": "8bd37da436b67351ffdb7a252d5d2c58ce46d41a2a6a15e1b55146928e189eda",
-        "signature": "8bd37da436b67351ffdb7a252d5d2c58ce46d41a2a6a15e1b55146928e189eda",
+        "version": "f0fcd3b60003b1ecb0fb5bd6d7c422ccaa52110f87edbd7d9fd3860401d6f8e4",
+        "signature": "f0fcd3b60003b1ecb0fb5bd6d7c422ccaa52110f87edbd7d9fd3860401d6f8e4",
         "affectsGlobalScope": false
       },
       "../../core/dist/template/organelle/nucleus/gene.d.ts": {

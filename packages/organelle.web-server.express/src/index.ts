@@ -1,4 +1,4 @@
-import { webServer, Sap } from "@euglena/core";
+import { webServer, Sap, Particles } from "@euglena/core";
 import express, { Express } from "express";
 
 let app: Express;
@@ -20,7 +20,7 @@ export default webServer.v1.com<
     AddRoute: async ({ data: { method, path, queryParams } }, { cp, t }) => {
         const pathParams = parsePathParams(path);
         app[method](`${path}`, async (req, res) => {
-            const resp: any = await t(
+            const resp = (await t(
                 cp.WebServerImpulse({
                     path,
                     method,
@@ -45,10 +45,8 @@ export default webServer.v1.com<
                     body: req.body,
                     headers: req.headers
                 })
-            );
-            Promise.all(resp).then((x) => {
-                res.send(x[0]);
-            });
+            )) as Particles;
+            res.send(resp.data[0]);
         });
         return cp.ACK();
     },

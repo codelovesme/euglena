@@ -5,6 +5,7 @@ import { OrganelleParticles, P, FromP } from "../../organelle";
 export type Count = "all" | number;
 
 export type PACK = P<undefined>;
+export type PNACK = P<undefined>;
 export type PEuglenaName = P<string>;
 export type PException = P<sys.type.Exception>;
 export type PParticles = P<Particle[]>;
@@ -49,6 +50,7 @@ export type PDecryptedToken = P<{
 }>;
 
 export type ACK = FromP<"ACK", PACK>;
+export type NACK = FromP<"NACK", PNACK>;
 export type EuglenaName = FromP<"EuglenaName", PEuglenaName>;
 export type Exception = FromP<"Exception", PException>;
 export type Particles = FromP<"Particles", PParticles>;
@@ -68,6 +70,7 @@ export type DecryptedToken = FromP<"DecryptedToken", PDecryptedToken>;
 
 export type CommonParticles = OrganelleParticles<{
     ACK: PACK;
+    NACK: PNACK;
     EuglenaName: PEuglenaName;
     Exception: PException;
     Particles: PParticles;

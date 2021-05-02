@@ -3,6 +3,7 @@ import { Particle, Meta } from "../../particle";
 import { OrganelleParticles, P, FromP } from "../../organelle";
 export declare type Count = "all" | number;
 export declare type PACK = P<undefined>;
+export declare type PNACK = P<undefined>;
 export declare type PEuglenaName = P<string>;
 export declare type PException = P<sys.type.Exception>;
 export declare type PParticles = P<Particle[]>;
@@ -48,6 +49,7 @@ export declare type PDecryptedToken = P<{
     status: "Active" | "Deactive" | "Deleted";
 }>;
 export declare type ACK = FromP<"ACK", PACK>;
+export declare type NACK = FromP<"NACK", PNACK>;
 export declare type EuglenaName = FromP<"EuglenaName", PEuglenaName>;
 export declare type Exception = FromP<"Exception", PException>;
 export declare type Particles = FromP<"Particles", PParticles>;
@@ -66,6 +68,7 @@ export declare type EncryptedToken = FromP<"EncryptedToken", PEncryptedToken>;
 export declare type DecryptedToken = FromP<"DecryptedToken", PDecryptedToken>;
 export declare type CommonParticles = OrganelleParticles<{
     ACK: PACK;
+    NACK: PNACK;
     EuglenaName: PEuglenaName;
     Exception: PException;
     Particles: PParticles;

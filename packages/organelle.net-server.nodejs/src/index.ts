@@ -1,13 +1,15 @@
 import * as http from "http";
-import { netServer, Sap, isParticle } from "@euglena/core";
+import { netServer, Sap, isParticle, Particles, ccp } from "@euglena/core";
 
 let server: http.Server;
 let sap: {
     port: number;
+    euglenaName: string;
 };
 export default netServer.v1.com<
     Sap<{
         port: number;
+        euglenaName: string;
     }>
 >({
     Sap: async ({ data }, { cp, t }) => {
@@ -29,9 +31,15 @@ export default netServer.v1.com<
                         const particle = JSON.parse(body);
                         if (isParticle(particle) && particle.meta.class === "Impulse") {
                             t(particle as any).then((resp: any) => {
-                                Promise.all(resp).then((x) => {
-                                    res.end(JSON.stringify(x[0]));
-                                });
+                                const results: Particles = resp;
+                                res.end(
+                                    JSON.stringify(
+                                        ccp.Impulse({
+                                            particle: results.data[0],
+                                            source: sap.euglenaName
+                                        })
+                                    )
+                                );
                             });
                         }
                     } catch (e) {

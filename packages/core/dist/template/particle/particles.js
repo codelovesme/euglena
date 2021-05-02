@@ -21,6 +21,7 @@ var defineCommonParticles = function (particleNames) {
 };
 exports.createCommonParticles = defineCommonParticles([
     "ACK",
+    "NACK",
     "EuglenaName",
     "Exception",
     "InvalidParticle",

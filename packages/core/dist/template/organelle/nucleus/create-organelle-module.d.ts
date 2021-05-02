@@ -1,5 +1,5 @@
 import { Particle } from "../../../particle";
-import { PLog, PException, PACK } from "../..";
+import { PLog, PException, PParticles, PACK } from "../..";
 import { P } from "../../../organelle/particles.h";
 declare const nucleus: import("../../..").CreateOrganelleModuleInterface<{
     incoming: {
@@ -12,6 +12,7 @@ declare const nucleus: import("../../..").CreateOrganelleModuleInterface<{
         Log: PLog;
         Exception: PException;
         ACK: PACK;
+        Particles: PParticles;
     };
 }, "Nucleus">;
 export { nucleus };
