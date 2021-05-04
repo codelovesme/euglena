@@ -82,6 +82,11 @@ exception particle. Then it is transmitted to the organelle "LoggerConsole".
     }
     t(logParticle,"LoggerConsole")
 
+Caution:
+
+-   When writing gene, be aware of that there should not be any global variable or any library reference being consumed
+    by genes. Each gene should be seperate from each other and also isolated from the environment.
+
 TODO : In the near future There will be a store under euglena.codeloves.me/store to expose organelle implementations and
 genes
 
