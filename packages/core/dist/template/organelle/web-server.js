@@ -1,9 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.webServer = void 0;
-var define_organelle_module_create_1 = require("../../organelle/define-organelle-module-create");
-var webServer = {
-    v1: define_organelle_module_create_1.domc(["GetAlive", "AddRoute"], ["ACK", "Exception", "WebServerImpulse", "Log"])
-};
-exports.webServer = webServer;
-//# sourceMappingURL=web-server.js.map
