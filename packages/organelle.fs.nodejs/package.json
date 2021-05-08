@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.fs.nodejs",
     "domain": "codeloves.me",
-    "version": "1.2.15",
+    "version": "1.2.16",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -19,7 +19,7 @@
         "@euglena/core": "^1.2.16"
     },
     "devDependencies": {
-        "@euglena/core": "^1.2.15"
+        "@euglena/core": "^1.2.16"
     },
     "files": [
         "dist"
