@@ -21,7 +21,7 @@
         "serialport": "^9.0.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.8"
+        "@euglena/core": "^1.2.16"
     },
     "devDependencies": {
         "@euglena/core": "^1.2.15",
