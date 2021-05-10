@@ -1,7 +1,7 @@
 {
     "name": "@euglena/core",
     "domain": "codeloves.me",
-    "version": "1.2.19",
+    "version": "1.2.20",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -19,8 +19,8 @@
         "cessnalib": "^0.9.0"
     },
     "devDependencies": {
-        "typescript": "^3.6.3",
         "lerna": "~4.0.0",
+        "typescript": "^3.6.3",
         "yarn": "~1.22.10"
     },
     "files": [
