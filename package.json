@@ -9,9 +9,6 @@
         "clean": "lerna run clean",
         "publish": "sh scripts/publish.sh"
     },
-    "repository": {
-        "url": "http://codeloves.me:2800/codelovesme/euglena.git"
-    },
     "prettier": {
         "printWidth": 120,
         "tabWidth": 4,

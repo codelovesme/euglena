@@ -19,3 +19,5 @@ euglena new `application_name` -t node
 set the type of the application by -t, --type
 
 Available types _node_, _angular_, _react_, _organelle_
+
+## Cli is implemented to work on LINUX
