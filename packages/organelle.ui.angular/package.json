@@ -17,7 +17,7 @@
     "peerDependencies": {
         "@angular/core": "~11.2.12",
         "@angular/platform-browser-dynamic": "~11.2.12",
-        "@euglena/core": "^1.2.16",
+        "@euglena/core": "^1.2.20",
         "rxjs": "~6.6.0"
     },
     "dependencies": {

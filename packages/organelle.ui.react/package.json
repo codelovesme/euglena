@@ -16,7 +16,7 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.16",
+        "@euglena/core": "^1.2.20",
         "react": "^16.9.0",
         "react-dom": "^16.9.0"
     },

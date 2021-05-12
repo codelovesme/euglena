@@ -20,7 +20,7 @@
         "express": "^4.17.1"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.16"
+        "@euglena/core": "^1.2.20"
     },
     "devDependencies": {
         "@euglena/core": "^1.2.20",

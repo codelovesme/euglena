@@ -20,7 +20,7 @@
         "jsonwebtoken": "^8.1.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.16"
+        "@euglena/core": "^1.2.20"
     },
     "devDependencies": {
         "@euglena/core": "^1.2.20",
