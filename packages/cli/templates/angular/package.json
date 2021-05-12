@@ -22,11 +22,11 @@
         "rxjs": "~6.6.0",
         "tslib": "^2.0.0",
         "zone.js": "~0.11.3",
-        "@euglena/core": "^1.2.20",
-        "@euglena/organelle.vacuole.js": "^1.2.20",
-        "@euglena/organelle.logger.console": "^1.2.20",
-        "@euglena/organelle.ui.angular": "^1.2.20",
-        "@euglena/organelle.timer.js": "^1.2.20"
+        "@euglena/core": "^1.2.22",
+        "@euglena/organelle.vacuole.js": "^1.2.22",
+        "@euglena/organelle.logger.console": "^1.2.22",
+        "@euglena/organelle.ui.angular": "^1.2.22",
+        "@euglena/organelle.timer.js": "^1.2.22"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "~0.1102.11",
