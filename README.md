@@ -92,6 +92,10 @@ TODO :
 -   Tell about gene override
 -   In the near future There will be a store under euglena.codeloves.me/store to expose organelle implementations and
     genes
+-   should print log when transmitting particle to a organelle (debug mode)
+-   debug mode - to trace flow of particles throuch the organelles and genes. Can be on / off according to developers'
+    desire. When off no log except logger organelle printing. This means no internal prints.
+-   Sample project creation video for all types; node, react,angular,organelle
 
 ### Packages
 
