@@ -1,6 +1,6 @@
-import { CommonParticles } from "..";
 import { domc } from "../../organelle/define-organelle-module-create";
 import { P, FromP } from "../../organelle/particles.h";
+import { CommonParticles } from "../particle/particles.h";
 import { Headers } from "./utils";
 
 type PAddRoute = P<{

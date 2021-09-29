@@ -1,7 +1,7 @@
 import { sys } from "cessnalib";
 import { domc } from "../../organelle/define-organelle-module-create";
 import { P } from "../../organelle/particles.h";
-import { CommonParticles } from "..";
+import { CommonParticles } from "../particle/particles.h";
 
 const timer = {
     v1: domc<{

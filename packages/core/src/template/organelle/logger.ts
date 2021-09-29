@@ -1,5 +1,5 @@
 import { domc } from "../../organelle";
-import { CommonParticles } from "..";
+import { CommonParticles } from "../particle/particles.h";
 
 const logger = {
     v1: domc<{

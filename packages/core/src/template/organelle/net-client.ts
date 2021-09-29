@@ -1,7 +1,7 @@
 import { domc } from "../../organelle/define-organelle-module-create";
 import { Particle } from "../../particle";
 import { P } from "../../organelle/particles.h";
-import { CommonParticles } from "..";
+import { CommonParticles } from "../particle/particles.h";
 
 const netClient = {
     v1: domc<{

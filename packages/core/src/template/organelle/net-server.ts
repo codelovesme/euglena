@@ -1,5 +1,5 @@
 import { domc } from "../../organelle/define-organelle-module-create";
-import { CommonParticles } from "..";
+import { CommonParticles } from "../particle/particles.h";
 
 const netServer = {
     v1: domc<{

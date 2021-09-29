@@ -1,5 +1,5 @@
 import { domc, FromP, P } from "../../organelle";
-import { CommonParticles } from "..";
+import { CommonParticles } from "../particle/particles.h";
 
 export type PGenerateToken = P<CommonParticles["DecryptedToken"]["data"]>;
 export type PVerifyToken = P<string>;

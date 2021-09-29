@@ -1,6 +1,6 @@
 import { domc } from "../../organelle/define-organelle-module-create";
 import { P } from "../../organelle/particles.h";
-import { CommonParticles } from "..";
+import { CommonParticles } from "../particle/particles.h";
 
 const thermometer = {
     v1: domc<{

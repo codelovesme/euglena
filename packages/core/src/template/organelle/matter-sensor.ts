@@ -1,6 +1,6 @@
 import { FromP, P } from "../../organelle/particles.h";
 import { domc } from "../../organelle/define-organelle-module-create";
-import { PLog, PException } from "..";
+import { PException, PLog } from "../particle/particles.h";
 
 export type PMatter = P<
     Array<{

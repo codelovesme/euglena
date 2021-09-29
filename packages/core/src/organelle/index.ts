@@ -1,5 +1,4 @@
 export * from "./define-organelle-module-create";
-export * from "../template/organelle";
 export * from "./particles.h";
 export * from "./bind-reaction.h";
 export * from "./create-organelle.h";

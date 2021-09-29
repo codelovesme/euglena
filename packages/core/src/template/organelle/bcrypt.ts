@@ -1,5 +1,6 @@
-import { domc, FromP, P } from "../../organelle";
-import { CommonParticles } from "..";
+import { domc } from "../../organelle/define-organelle-module-create";
+import { FromP, P } from "../../organelle/particles.h";
+import { CommonParticles } from "../particle/particles.h";
 
 export type PHash = P<string>;
 export type PHashedPassword = P<string>;
