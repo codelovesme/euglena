@@ -8,11 +8,11 @@ stages:
 setup:
   stage: setup
   script:
-    - npm i -g lerna
     - yarn
   artifacts:
     paths:
       - node_modules/
+      - packages/**/node_modules/
 
 compile:
   stage: compile

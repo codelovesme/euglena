@@ -6,7 +6,9 @@
     ],
     "scripts": {
         "compile": "npx lerna run compile",
-        "clean": "npx lerna run clean",
+        "clean": "rm -r node_modules && npx lerna run clean",
+        "cleanDependencies": "rm -r node_modules && npx lerna run cleanDependencies",
+        "cleanDist": "npx lerna run cleanDist",
         "publish": "npx lerna publish from-package --no-verify-access -y"
     },
     "prettier": {

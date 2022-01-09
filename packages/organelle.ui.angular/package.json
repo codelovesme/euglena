@@ -12,7 +12,10 @@
     },
     "scripts": {
         "compile": "tsc -p .",
-        "clean": "rm -r dist"
+        "cleanDist": "if [ -d dist ]; then rm -rf dist; fi",
+        "cleanDependencies":"if [ -d node_modules ]; then rm -rf dist; fi",
+        "clean":"npm run cleanDependencies && npm run cleanDist",
+        "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "peerDependencies": {
         "@angular/core": "~11.2.12",

@@ -11,7 +11,9 @@
     },
     "scripts": {
         "compile": "tsc -p .",
-        "clean": "rm -r dist",
+        "cleanDist": "if [ -d dist ]; then rm -rf dist; fi",
+        "cleanDependencies":"if [ -d node_modules ]; then rm -rf dist; fi",
+        "clean":"npm run cleanDependencies && npm run cleanDist",
         "start": "node dist/index.js",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
