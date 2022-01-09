@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.web-server.express",
     "domain": "codeloves.me",
-    "version": "1.2.26",
+    "version": "1.2.27",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -23,7 +23,7 @@
         "@euglena/core": "^1.2.22"
     },
     "devDependencies": {
-        "@euglena/core": "^1.2.26",
+        "@euglena/core": "^1.2.27",
         "@types/express": "^4.17.8"
     },
     "files": [
