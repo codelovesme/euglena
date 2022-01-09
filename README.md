@@ -104,4 +104,4 @@ TODO :
 
 [core](packages/core/README.md)
 
-[organelle](docs/organelle.md)
+[organelles](docs/organelle.md)
