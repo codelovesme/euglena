@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.vacuole.mongodb",
     "domain": "codeloves.me",
-    "version": "1.2.24",
+    "version": "1.2.26",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -23,7 +23,7 @@
         "mongodb": "^3.3.2"
     },
     "devDependencies": {
-        "@euglena/core": "^1.2.24",
+        "@euglena/core": "^1.2.26",
         "@types/mongodb": "~3.3.6"
     },
     "files": [
