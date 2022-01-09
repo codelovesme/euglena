@@ -5,8 +5,8 @@
         "packages/*"
     ],
     "scripts": {
-        "compile": "lerna run compile",
-        "clean": "lerna run clean",
+        "compile": "npx lerna run compile",
+        "clean": "npx lerna run clean",
         "publish": "sh scripts/publish.sh"
     },
     "prettier": {
@@ -24,5 +24,10 @@
         "insertPragma": false,
         "proseWrap": "always",
         "endOfLine": "lf"
+    },
+    "dependencies": {
+        "lerna":"^4.0.0",
+        "typescript": "^3.6.3",
+        "yarn": "~1.22.10"
     }
 }
