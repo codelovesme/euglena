@@ -1,16 +1,28 @@
 image: nikolaik/python-nodejs:python3.6-nodejs16-stretch
 
 stages:
+    - setup
+    - compile
     - publish
 
-publish:
-    stage: publish
+setup:
+    stage: setup
     script:
         - npm i -g lerna
         - yarn
+
+compile:
+    stage: compile
+    dependencies:
+        - setup
+    script:
         - yarn compile
-        - cd packages/core
-        - echo "//codeloves.me:2800/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">.npmrc
+
+publish:
+    stage: publish
+    dependencies:
+        - compile
+    script:
         - npm publish
     only:
         - tags

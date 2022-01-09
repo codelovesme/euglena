@@ -7,7 +7,7 @@
     "scripts": {
         "compile": "npx lerna run compile",
         "clean": "npx lerna run clean",
-        "publish": "sh scripts/publish.sh"
+        "publish": "sh scripts/publish.sh $NPMJS_TOKEN"
     },
     "prettier": {
         "printWidth": 120,
