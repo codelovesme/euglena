@@ -1,28 +1,35 @@
 image: nikolaik/python-nodejs:python3.6-nodejs16-stretch
 
 stages:
-    - setup
-    - compile
-    - publish
+  - setup
+  - compile
+  - publish
 
 setup:
-    stage: setup
-    script:
-        - npm i -g lerna
-        - yarn
+  stage: setup
+  script:
+    - npm i -g lerna
+    - yarn
+  artifacts:
+    paths:
+      - node_modules/
 
 compile:
-    stage: compile
-    dependencies:
-        - setup
-    script:
-        - yarn compile
+  stage: compile
+  dependencies:
+    - setup
+  script:
+    - yarn compile
+  artifacts:
+    paths:
+      - packages/**/dist/
 
 publish:
-    stage: publish
-    dependencies:
-        - compile
-    script:
-        - npm publish
-    only:
-        - tags
+  stage: publish
+  dependencies:
+    - compile
+  script:
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+    - npm run publish
+  only:
+    - tags
