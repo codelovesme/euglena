@@ -105,3 +105,15 @@ TODO :
 [core](packages/core/README.md)
 
 [organelles](docs/organelle.md)
+
+# How to
+
+## Install dependencies
+
+```yarn```
+
+## How to increment version
+
+```npx lerna version patch```
+
+
