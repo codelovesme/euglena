@@ -27,9 +27,11 @@ compile:
 publish:
   stage: publish
   dependencies:
+    - setup
     - compile
   script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+    - git status
     - npm run publish
   only:
     - tags
