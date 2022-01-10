@@ -1,4 +1,5 @@
 ## Euglena
+[![pipeline status](https://gitlab.com/codelovesme/euglena/badges/develop/pipeline.svg)](https://gitlab.com/codelovesme/euglena/-/commits/develop)
 
 <img src="docs/euglena.png" alt="Euglena" width="150"  align="left"/>
 
