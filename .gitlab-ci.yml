@@ -8,7 +8,7 @@ stages:
 setup:
   stage: setup
   script:
-    - npm ci
+    - yarn install --frozen-lockfile
   artifacts:
     paths:
       - node_modules/

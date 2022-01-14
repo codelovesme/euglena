@@ -9,7 +9,7 @@
         "clean": "rm -r node_modules && npx lerna run clean",
         "cleanDependencies": "rm -r node_modules && npx lerna run cleanDependencies",
         "cleanDist": "npx lerna run cleanDist",
-        "publish": "npx lerna publish from-package --no-verify-access -y",
+        "publish": "npx lerna publish from-package --no-verify-access --ignore-changes 'packages/**/package.json' -y",
         "versionPatch": "npx lerna version patch --force-publish -y",
         "versionMinor": "npx lerna version minor --force-publish -y"
     },
