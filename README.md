@@ -118,3 +118,7 @@ TODO :
 ```npx lerna version patch```
 
 
+## Version Table
+|euglena version|compiled js version|required nodejs version|template angular version|template react version|
+| ------------- | ----------------- | --------------------- | ---------------------- | -------------------- |
+|1.4.4          |es5                |12 or higher           |11.2.12                 |17.0.2                |
