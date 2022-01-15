@@ -1,9 +1,10 @@
-image: nikolaik/python-nodejs:python3.6-nodejs16-stretch
+image: nikolaik/python-nodejs:python3.10-nodejs17-bullseye
 
 stages:
   - setup
   - compile
   - publish
+  - push
 
 setup:
   stage: setup
@@ -24,14 +25,25 @@ compile:
     paths:
       - packages/**/dist/
 
-publish:
+npm:
   stage: publish
   needs:
     - setup
     - compile
   script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
-    - git status
+    - git restore .
     - npm run publish
   only:
     - tags
+
+github:
+  stage: push
+  needs: []
+  script: 
+    - git restore .
+    - git checkout $CI_COMMIT_BRANCH
+    - git push https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git $CI_COMMIT_BRANCH
+  only:
+    - develop
+    - master
