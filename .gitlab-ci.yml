@@ -12,13 +12,7 @@ pre_check:
   stage: pre_check
   image: alpine:3.15.0
   script:
-    - echo "Branch names have to be started with bugfix/, feature/ or break/" >> /dev/stderr
-    - exit 1
-  except:
-    - develop
-    - /^bugfix/
-    - /^feature/
-    - /^break/
+    - if [[$CI_COMMIT_BRANCH  != "bugfix/"*]] && [[$CI_COMMIT_BRANCH  != feature/]] && [[$CI_COMMIT_BRANCH  != break/]]; then echo -e "\033[31m Branch names have to be started with bugfix/, feature/ or break/" && exit 1; fi
 
 setup:
   stage: setup
