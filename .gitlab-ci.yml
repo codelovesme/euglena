@@ -61,14 +61,13 @@ version:
 github:
   stage: push
   needs:
-    - version
+    - check_branch_name
   script: 
     - git restore .
     - git checkout $CI_COMMIT_BRANCH
     - git push --follow-tags https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git $CI_COMMIT_BRANCH
   only:
-    - develop
-    - master
+    - tags
 
 
 npm:
