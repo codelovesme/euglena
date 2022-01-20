@@ -61,8 +61,7 @@ version:
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'bugfix/"* ]]; then yarn versionPatch; fi
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'feature/"* ]]; then yarn versionMinor; fi
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'break/"* ]]; then yarn versionMajor; fi
-  only:
-    - develop
+
 
 
 github:
