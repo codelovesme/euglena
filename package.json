@@ -11,7 +11,8 @@
         "cleanDist": "npx lerna run cleanDist",
         "publish": "npx lerna publish from-package --no-verify-access -y",
         "versionPatch": "npx lerna version patch --force-publish -y",
-        "versionMinor": "npx lerna version minor --force-publish -y"
+        "versionMinor": "npx lerna version minor --force-publish -y",
+        "versionMajor": "npx lerna version major --force-publish -y"
     },
     "prettier": {
         "printWidth": 120,
