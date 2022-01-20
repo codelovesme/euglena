@@ -8,7 +8,7 @@ stages:
   - push
   - version
 
-check_branch_name:
+pre_check:
   stage: pre_check
   image: alpine:3.15.0
   script:
@@ -23,7 +23,7 @@ check_branch_name:
 setup:
   stage: setup
   needs:
-    - check_branch_name
+    - pre_check
   script:
     - yarn install --frozen-lockfile
   artifacts:
@@ -44,7 +44,7 @@ compile:
 version:
   stage: version
   needs: 
-    - check_branch_name
+    - pre_check
   script:
     - git checkout $CI_COMMIT_BRANCH
     - git config user.name "GitLab CI/CD"
@@ -62,7 +62,7 @@ version:
 github:
   stage: push
   needs:
-    - check_branch_name
+    - pre_check
   script: 
     - git restore .
     - git checkout $CI_COMMIT_BRANCH
@@ -74,7 +74,7 @@ github:
 npm:
   stage: publish
   needs:
-    - check_branch_name
+    - pre_check
   script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
     - git restore .
