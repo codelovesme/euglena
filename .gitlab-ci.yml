@@ -23,7 +23,7 @@ pre_check:
 setup:
   stage: setup
   needs:
-    - pre_check
+  - pre_check
   script:
     - yarn install --frozen-lockfile
   artifacts:
