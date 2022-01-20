@@ -22,7 +22,7 @@ check_branch_name:
 setup:
   stage: setup
   needs:
-    - pre_check
+    - check_branch_name
   script:
     - yarn install --frozen-lockfile
   artifacts:
@@ -43,7 +43,7 @@ compile:
 version:
   stage: version
   needs: 
-    - pre_check
+    - check_branch_name
   script:
     - git checkout $CI_COMMIT_BRANCH
     - git config user.name "GitLab CI/CD"
@@ -74,7 +74,7 @@ github:
 npm:
   stage: publish
   needs:
-    - pre_check
+    - check_branch_name
   script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
     - git restore .
