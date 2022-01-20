@@ -2,11 +2,11 @@ image: nikolaik/python-nodejs:python3.10-nodejs17-bullseye
 
 stages:
   - pre_check
-  - setup
-  - compile
+  - version
   - publish
   - push
-  - version
+  - setup
+  - compile
 
 pre_check:
   stage: pre_check
