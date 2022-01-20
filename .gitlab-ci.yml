@@ -12,18 +12,27 @@ pre_check:
   stage: pre_check
   image: alpine:3.15.0
   script:
-    - if [[$CI_COMMIT_BRANCH  != "bugfix/"*]] && [[$CI_COMMIT_BRANCH  != feature/]] && [[$CI_COMMIT_BRANCH  != break/]]; then echo -e "\033[31m Branch names have to be started with bugfix/, feature/ or break/" && exit 1; fi
+    - echo -e "\033[31m Branch names have to be started with bugfix/, feature/ or break/"
+    - exit 1
+  except:
+    - develop
+    - tags
+    - /^bugfix/
+    - /^feature/
+    - /^break/
 
 setup:
   stage: setup
-  needs:
-  - pre_check
   script:
     - yarn install --frozen-lockfile
   artifacts:
     paths:
       - node_modules/
       - packages/**/node_modules/
+  only:
+    - /^bugfix/
+    - /^feature/
+    - /^break/
 
 compile:
   stage: compile
@@ -34,6 +43,10 @@ compile:
   artifacts:
     paths:
       - packages/**/dist/
+  only:
+    - /^bugfix/
+    - /^feature/
+    - /^break/
 
 version:
   stage: version
@@ -43,20 +56,17 @@ version:
     - git checkout $CI_COMMIT_BRANCH
     - git config user.name "GitLab CI/CD"
     - git config user.email "gitlab@codeloves.me"
-    - git remote show origin
-    - git remote set-url --push origin git@gitlab:$CI_PROJECT_PATH
-    - git remote show origin
-    - git push --follow-tags origin HEAD:$CI_COMMIT_REF_NAME
+    - url_host=`git remote get-url origin | sed -e "s/https:\/\/gitlab-ci-token:.*@//g"`
+    - git remote set-url origin "https://$GITLAB_USER_LOGIN:$PERSONAL_ACCESS_TOKEN@${url_host}"
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'bugfix/"* ]]; then yarn versionPatch; fi
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'feature/"* ]]; then yarn versionMinor; fi
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'break/"* ]]; then yarn versionMajor; fi
   only:
     - develop
 
+
 github:
   stage: push
-  needs:
-    - pre_check
   script: 
     - git restore .
     - git checkout $CI_COMMIT_BRANCH
@@ -67,8 +77,6 @@ github:
 
 npm:
   stage: publish
-  needs:
-    - pre_check
   script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
     - git restore .
