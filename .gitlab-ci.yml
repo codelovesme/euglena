@@ -32,6 +32,8 @@ version:
   script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
     - git checkout $CI_COMMIT_BRANCH
+    - git config user.name "GitLab CI/CD"
+    - git config user.email "gitlab@codeloves.me"
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'bugfix/"* ]]; then yarn versionPatch; fi
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'feature/"* ]]; then yarn versionMinor; fi
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'break/"* ]]; then yarn versionMajor; fi
@@ -54,6 +56,7 @@ github:
     - git restore .
     - git checkout $CI_COMMIT_BRANCH
     - git push https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git $CI_COMMIT_BRANCH
+    - git push https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git $CI_COMMIT_BRANCH --tags
   only:
     - develop
     - master
