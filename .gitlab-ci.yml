@@ -1,14 +1,28 @@
 image: nikolaik/python-nodejs:python3.10-nodejs17-bullseye
 
 stages:
+  - pre_check
   - setup
   - compile
   - publish
   - push
   - version
 
+check_branch_name:
+  stage: pre_check
+  script:
+    - echo "Branch names have to be started with bugfix/, feature/ or break/" >> /dev/stderr
+    - exit 1
+  except:
+    - develop
+    - bugfix/*
+    - feature/*
+    - break/*
+
 setup:
   stage: setup
+  needs:
+    - pre_check
   script:
     - yarn install --frozen-lockfile
   artifacts:
@@ -28,9 +42,9 @@ compile:
 
 version:
   stage: version
-  needs: []
+  needs: 
+    - pre_check
   script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
     - git checkout $CI_COMMIT_BRANCH
     - git config user.name "GitLab CI/CD"
     - git config user.email "gitlab@codeloves.me"
@@ -40,23 +54,26 @@ version:
   only:
     - develop
 
+github:
+  stage: push
+  needs:
+    - version
+  script: 
+    - git restore .
+    - git checkout $CI_COMMIT_BRANCH
+    - git push --follow-tags https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git $CI_COMMIT_BRANCH
+  only:
+    - develop
+    - master
+
+
 npm:
   stage: publish
+  needs:
+    - pre_check
   script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
     - git restore .
     - npm run publish
   only:
     - tags
-
-github:
-  stage: push
-  needs: []
-  script: 
-    - git restore .
-    - git checkout $CI_COMMIT_BRANCH
-    - git push https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git $CI_COMMIT_BRANCH
-    - git push https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git $CI_COMMIT_BRANCH --tags
-  only:
-    - develop
-    - master
