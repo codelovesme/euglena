@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.ui.react",
     "domain": "codeloves.me",
-    "version": "1.4.4",
+    "version": "1.4.5",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -26,7 +26,7 @@
         "cessnalib": "^0.9.0"
     },
     "devDependencies": {
-        "@euglena/core": "^1.4.4",
+        "@euglena/core": "^1.4.5",
         "@types/react": "^16.9.35",
         "@types/react-dom": "^16.9.8"
     },
