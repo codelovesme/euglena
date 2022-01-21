@@ -30,6 +30,7 @@ setup:
       - node_modules/
       - packages/**/node_modules/
   only:
+    - tags
     - /^bugfix/
     - /^feature/
     - /^break/
@@ -78,7 +79,6 @@ github:
 npm:
   stage: publish
   needs:
-    - compile
   script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
     - git restore .
