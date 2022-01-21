@@ -66,6 +66,7 @@ version:
 
 github:
   stage: push
+  needs: []
   script: 
     - git restore .
     - git checkout $CI_COMMIT_BRANCH
