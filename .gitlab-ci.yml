@@ -69,7 +69,7 @@ version:
     - git config user.name "GitLab CI/CD"
     - git config user.email "gitlab@codeloves.me"
     - url_host=`git remote get-url origin | sed -e "s/https:\/\/gitlab-ci-token:.*@//g"`
-    - git remote set-url origin "https://$GITLAB_USER_LOGIN:$PERSONAL_ACCESS_TOKEN@${url_host}"
+    - git remote set-url origin "https://codelovesme:$PERSONAL_ACCESS_TOKEN@${url_host}"
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'bugfix/"* ]]; then yarn versionPatch; fi
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'feature/"* ]]; then yarn versionMinor; fi
     - if [[ $CI_COMMIT_MESSAGE == "Merge branch 'break/"* ]]; then yarn versionMajor; fi
@@ -83,6 +83,6 @@ github:
   needs: []
   script: 
     - git restore .
-    - git push --follow-tags https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git HEAD:develop
+    - git push --follow-tags https://codelovesme:$GITHUB_TOKEN@github.com/codelovesme/$CI_PROJECT_NAME.git HEAD:develop
   only:
     - tags
