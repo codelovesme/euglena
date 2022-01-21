@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.vacuole.nedb",
     "domain": "codeloves.me",
-    "version": "1.4.10",
+    "version": "1.4.12",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -25,7 +25,7 @@
         "nedb": "^1.8.0"
     },
     "devDependencies": {
-        "@euglena/core": "^1.4.10",
+        "@euglena/core": "^1.4.12",
         "@types/nedb": "~1.8.9"
     },
     "files": [
