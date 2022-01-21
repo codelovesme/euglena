@@ -2,11 +2,11 @@ image: nikolaik/python-nodejs:python3.10-nodejs17-bullseye
 
 stages:
   - pre_check
+  - setup
+  - compile
   - version
   - publish
   - push
-  - setup
-  - compile
 
 pre_check:
   stage: pre_check
@@ -50,6 +50,17 @@ compile:
     - /^feature/
     - /^break/
 
+npm:
+  stage: publish
+  needs:
+    - compile
+  script:
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+    - git restore .
+    - npm run publish
+  only:
+    - tags
+
 version:
   stage: version
   script:
@@ -73,17 +84,5 @@ github:
     - git restore .
     - git checkout $CI_COMMIT_BRANCH
     - git push --follow-tags https://$GITLAB_USER_LOGIN:$GITHUB_TOKEN@github.com/$GITLAB_USER_LOGIN/$CI_PROJECT_NAME.git $CI_COMMIT_BRANCH
-  only:
-    - tags
-
-
-npm:
-  stage: publish
-  needs:
-    - compile
-  script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
-    - git restore .
-    - npm run publish
   only:
     - tags
