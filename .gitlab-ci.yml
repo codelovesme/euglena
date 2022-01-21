@@ -45,6 +45,7 @@ compile:
     paths:
       - packages/**/dist/
   only:
+    - tags
     - /^bugfix/
     - /^feature/
     - /^break/
