@@ -19,7 +19,7 @@ type VacuoleMongoDbSap = Sap<{
      * @example
      * "mongodb://dbdevc2scdlvsm:<password>@dbdevc2scdlvsm.documents.azure.com:10255/?ssl=true"
      */
-    url: string;
+    url?: string;
 }>;
 
 let db: Db;
