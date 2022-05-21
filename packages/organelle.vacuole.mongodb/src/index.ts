@@ -2,17 +2,37 @@ import { vacuole, Sap } from "@euglena/core";
 import { js } from "cessnalib";
 import { MongoClient, Db } from "mongodb";
 
+type VacuoleMongoDbSap = Sap<{
+    /**
+     * @deprecated since version 1.4.13
+     * Use @param url instead
+     */
+    host: string;
+    /**
+     * @deprecated since version 1.4.13
+     * Use @param url instead
+     */
+    port: number;
+    database: string;
+
+    /**
+     * @example
+     * "mongodb://dbdevc2scdlvsm:<password>@dbdevc2scdlvsm.documents.azure.com:10255/?ssl=true"
+     */
+    url: string;
+}>;
+
 let db: Db;
-let sap: { host: string; port: number; database: string };
-export default vacuole.v1.com<Sap<{ host: string; port: number; database: string }>>({
+let sap: VacuoleMongoDbSap["data"];
+export default vacuole.v1.com<VacuoleMongoDbSap>({
     Sap: async (p) => {
         sap = p.data;
     },
     GetAlive: (p, { cp, t }) => {
-        const { host, port, database } = sap;
+        const { host, port, database, url } = sap;
         return new Promise((resolve) => {
             MongoClient.connect(
-                `mongodb://${host}:${port}`,
+                url ? url : `mongodb://${host}:${port}`,
                 { useNewUrlParser: true, useUnifiedTopology: true },
                 (err, _db) => {
                     if (!err) {
