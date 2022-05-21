@@ -5,12 +5,12 @@ import { MongoClient, Db } from "mongodb";
 type VacuoleMongoDbSap = Sap<{
     /**
      * @deprecated since version 1.4.13
-     * Use @param url instead
+     * Use @param uri instead
      */
     host: string;
     /**
      * @deprecated since version 1.4.13
-     * Use @param url instead
+     * Use @param uri instead
      */
     port: number;
     database: string;
@@ -19,7 +19,7 @@ type VacuoleMongoDbSap = Sap<{
      * @example
      * "mongodb://dbdevc2scdlvsm:<password>@dbdevc2scdlvsm.documents.azure.com:10255/?ssl=true"
      */
-    url?: string;
+    uri?: string;
 }>;
 
 let db: Db;
@@ -29,10 +29,10 @@ export default vacuole.v1.com<VacuoleMongoDbSap>({
         sap = p.data;
     },
     GetAlive: (p, { cp, t }) => {
-        const { host, port, database, url } = sap;
+        const { host, port, database, uri } = sap;
         return new Promise((resolve) => {
             MongoClient.connect(
-                url ? url : `mongodb://${host}:${port}`,
+                uri ? uri : `mongodb://${host}:${port}`,
                 { useNewUrlParser: true, useUnifiedTopology: true },
                 (err, _db) => {
                     if (!err) {
