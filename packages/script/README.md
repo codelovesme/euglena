@@ -24,3 +24,13 @@ Suggested structure of the application is shown below.
 
 >>>organelle-impls
 
+## pipeline
+### 1. Lexing
+Source Code => Token
+### 2. Parsing
+Token List => Abstract Syntax Tree
+### 3. Action Tree
+AST => Action Tree
+### 4. Execute
+Action Tree => typescript/javascript
+
