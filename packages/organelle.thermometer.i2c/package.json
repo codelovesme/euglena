@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.thermometer.i2c",
     "domain": "codeloves.me",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -25,7 +25,7 @@
         "@euglena/core": "^1.2.22"
     },
     "devDependencies": {
-        "@euglena/core": "^1.5.2"
+        "@euglena/core": "^1.5.3"
     },
     "files": [
         "dist"
