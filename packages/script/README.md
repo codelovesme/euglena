@@ -24,7 +24,8 @@ Suggested structure of the application is shown below.
 
 >>>organelle-impls
 
-## pipeline
+-----------------------------
+## PIPELINE
 ### 1. Lexing
 Source Code => Token
 ### 2. Parsing
