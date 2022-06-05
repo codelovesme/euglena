@@ -8,7 +8,7 @@ export default logger.v1.com<
 >({
     Log: async (particle, { cp, t }) => {
         console.log(`${particle.data.level} - ${moment().format("YYYY.MM.DD HH:mm:ss")} - ${particle.data.message}`);
-        t(cp.ACK());
+        return cp.ACK();
     },
     Sap: async (particle) => {}
 });
