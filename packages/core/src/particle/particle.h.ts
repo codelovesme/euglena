@@ -1,5 +1,5 @@
 export interface MetaAdditions {
-    [P: string]: string | number;
+    [P: string]: string | number | boolean;
 }
 
 export type Meta<Class extends string = string, Additions extends MetaAdditions = {}> = Additions & {

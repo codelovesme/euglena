@@ -40,6 +40,11 @@ export type PImpulse = P<{
 }>;
 
 export type PEncryptedToken = P<string>;
+
+/**
+ * Use PDecryptedTokenV2 instead of this.
+ * The status has been changed
+ */
 export type PDecryptedToken = P<{
     euglenaName: string;
     createdAt: number;
@@ -48,6 +53,14 @@ export type PDecryptedToken = P<{
     roles: string[];
     status: "Active" | "Deactive" | "Deleted";
 }>;
+export type PDecryptedTokenV2 = P<{
+    euglenaName: string;
+    createdAt: number;
+    expireAt: number;
+    type: string;
+    roles: string[];
+    status: "Active" | "Deactive" | "NeedsVerification";
+},{version:"2.0"}>;
 
 export type ACK = FromP<"ACK", PACK>;
 export type NACK = FromP<"NACK", PNACK>;
@@ -67,6 +80,7 @@ export type RemoveParticle = FromP<"RemoveParticle", PRemoveParticle>;
 export type Impulse = FromP<"Impulse", PImpulse>;
 export type EncryptedToken = FromP<"EncryptedToken", PEncryptedToken>;
 export type DecryptedToken = FromP<"DecryptedToken", PDecryptedToken>;
+export type DecryptedTokenV2 = FromP<"DecryptedToken", PDecryptedTokenV2>;
 
 export type CommonParticles = OrganelleParticles<{
     ACK: PACK;
@@ -87,4 +101,5 @@ export type CommonParticles = OrganelleParticles<{
     Impulse: PImpulse;
     EncryptedToken: PEncryptedToken;
     DecryptedToken: PDecryptedToken;
+    DecryptedTokenV2: PDecryptedTokenV2;
 }>;
