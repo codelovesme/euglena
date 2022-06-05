@@ -1,12 +1,13 @@
 import { js, sys } from "cessnalib";
 import { nucleus } from "./create-organelle-module";
 import { Particle } from "../../../particle";
-import { Gene, GeneReaction } from "./gene.h";
+import { Dependencies, Gene, GeneReaction } from "./gene.h";
 import { NucleusTransmit } from "../../../organelle/organelle-receive.h";
 import { P } from "../../../organelle/particles.h";
 import { ccp } from "../../particle";
 import * as templateModule from "../../../template";
 import * as particleModule from "../../../particle";
+import * as cessnalib from "cessnalib";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;
@@ -19,7 +20,10 @@ const createReceive =
             index: number;
             triggers: string[];
             reaction: GeneReaction;
-            organelles: {};
+            dependencies: {
+                organelles: { nucleus: "Nucleus" };
+                parameters: {};
+            };
         }>();
         for (let i = 0; i < genes.length; i++) {
             let triggers: any = genes[i].data.triggers;
@@ -29,12 +33,18 @@ const createReceive =
                     index: i,
                     triggers: Object.keys(triggers),
                     reaction: reaction,
-                    organelles: genes[i].data.organelles
+                    dependencies: {
+                        ...genes[i].data.dependencies,
+                        organelles: {
+                            ...genes[i].data.dependencies.organelles,
+                            nucleus: "Nucleus"
+                        }
+                    }
                 });
             }
         }
         //get rid of overridden reactions
-        const reactions = Array<[GeneReaction, {}]>();
+        const reactions = Array<[GeneReaction, Dependencies]>();
         const names = Array<string>();
         for (let tr of triggerableReactions) {
             let doTrigger = true;
@@ -48,30 +58,32 @@ const createReceive =
                 doTrigger = genes[tr2.index].data.override !== genes[tr.index].data.name;
             }
             if (doTrigger) {
-                reactions.push([tr.reaction, tr.organelles || {}]);
+                reactions.push([tr.reaction, tr.dependencies]);
                 names.push(genes[tr.index].data.name);
             }
         }
         //trigger collected reactions
         let promises: Promise<Particle | void>[] = [];
         for (let i = 0; i < reactions.length; i++) {
-            let [reaction, organelles] = reactions[i];
+            let [reaction, dependencies] = reactions[i];
             const geneName: string = names[i];
             console.log(`Info - Triggering Gene: ${geneName} Particle: ${JSON.stringify(particle.meta)}`);
             promises = [
                 ...promises,
                 reaction(particle, source, {
                     t: t,
-                    o: organelles,
-                    to: Object.keys(organelles).reduce(
+                    o: dependencies.organelles,
+                    to: Object.keys(dependencies.organelles).reduce(
                         (acc, curr) => ({
                             ...acc,
                             [curr]: (particle: Particle) => t(particle, curr)
                         }),
-                        {}
+                        {} as any
                     ),
+                    params: dependencies.parameters,
                     template: templateModule,
-                    particle: particleModule
+                    particle: particleModule,
+                    cessnalib: cessnalib
                 })
             ];
         }

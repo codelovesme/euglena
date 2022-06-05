@@ -1,4 +1,4 @@
-import { AddGene, GeneOptionals, GeneReaction, CreateChromosome, Chromosome, Gene, Organelles } from "./gene.h";
+import { AddGene, GeneOptionals, GeneReaction, CreateChromosome, Chromosome, Gene, Dependencies } from "./gene.h";
 import { sys } from "cessnalib";
 import { Particle, createMeta, Meta, cp } from "../../../particle";
 
@@ -21,19 +21,19 @@ export const createChromosome: CreateChromosome = (bind: (addGene: AddGene<Parti
 };
 
 export const defineGene =
-    <P extends Particle, O extends Organelles>(
+    <P extends Particle, D extends Dependencies = Dependencies>(
         name: string,
         triggers: sys.type.RecursivePartial<P>,
-        reaction: GeneReaction<P, O>,
+        reaction: GeneReaction<P, D>,
         override?: string
     ) =>
-    (organelles: O): Gene<P,O> =>
+    (dependencies: D): Gene<P,D> =>
         cp("Gene", {
             name,
             reaction,
             triggers,
             override,
-            organelles
+            dependencies
         });
 
 /**

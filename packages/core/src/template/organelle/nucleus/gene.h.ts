@@ -3,13 +3,30 @@ import { Particle } from "../../../particle";
 import { NucleusTransmit } from "../../../organelle/organelle-receive.h";
 import * as templateModule from "../../../template";
 import * as particleModule from "../../../particle";
+import * as cessnalib from "cessnalib";
 
 export type TemplateModule = typeof templateModule;
 export type ParticleModule = typeof particleModule;
+export type Cessnalib = typeof cessnalib;
 
-export type Organelles = { [organelleName: string]: string };
+type _Organelles = {
+    [organelleName: string]: string;
+};
+export type Organelles<T extends _Organelles = _Organelles> = T & {
+    nucleus: "Nucleus";
+};
 
-export interface GeneReaction<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles> {
+type _Parameters = {
+    [key: string]: string | number | boolean;
+};
+export type Parameters<T extends _Parameters = _Parameters> = T;
+
+export type Dependencies<O extends Organelles = Organelles, P extends Parameters = Parameters> = {
+    organelles: O;
+    parameters: P;
+};
+
+export interface GeneReaction<TriggerParticle extends Particle = Particle, D extends Dependencies = Dependencies> {
     (
         particle: TriggerParticle,
         source: string,
@@ -22,30 +39,44 @@ export interface GeneReaction<TriggerParticle extends Particle = Particle, O ext
              *Send particle to specific organelle
              */
             to: {
-                [P in keyof O]: <P extends Particle = Particle, Resp extends Particle | void = Particle | void>(
+                [P in keyof D["organelles"]]: <
+                    P extends Particle = Particle,
+                    Resp extends Particle | void = Particle | void
+                >(
                     particle: P
                 ) => ReturnType<NucleusTransmit<P, Resp>>;
             };
             /**
              * Specify the referenced organelle names
              */
-            o: O;
+            o: D["organelles"];
             /**
-             * @euglena/core
+             * Parameters
+             */
+            params: D["parameters"];
+            /**
+             * template module
              */
             template: TemplateModule;
+            /**
+             * particle module
+             */
             particle: ParticleModule;
+            /**
+             * cassnalib
+             */
+            cessnalib: Cessnalib;
         }
     ): Promise<Particle | void>;
 }
 
-export type Gene<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles> = Particle<
+export type Gene<TriggerParticle extends Particle = Particle, D extends Dependencies = Dependencies> = Particle<
     "Gene",
     {
         name: string;
         triggers: sys.type.RecursivePartial<TriggerParticle>;
-        reaction: GeneReaction<TriggerParticle, O>;
-        organelles: O;
+        reaction: GeneReaction<TriggerParticle, D>;
+        dependencies: D;
         override?: string;
     }
 >;
