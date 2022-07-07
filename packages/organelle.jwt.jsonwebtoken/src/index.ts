@@ -17,7 +17,7 @@ export default jwt.v1.com({
         try {
             const decrypted = (await verify(crypted, secret)) as DecryptedToken["data"];
             return cp.DecryptedToken(decrypted);
-        } catch (e) {
+        } catch (e:any) {
             return cp.Exception(new sys.type.Exception("Not a valid token."));
         }
     }

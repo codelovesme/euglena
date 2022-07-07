@@ -18,7 +18,7 @@ export default netClient.v1.com<Sap<undefined>>({
                 body: JSON.stringify(particle)
             });
             return resp.json();
-        } catch (e) {
+        } catch (e:any) {
             return cp.Exception({ message: JSON.stringify(e) });
         }
     }

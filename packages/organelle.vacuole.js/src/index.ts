@@ -18,7 +18,7 @@ export default vacuole.v1.com<
                     break;
             }
             return cp.ACK();
-        } catch (error) {
+        } catch (error:any) {
             return cp.Exception(error.message);
         }
     },

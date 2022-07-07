@@ -34,7 +34,7 @@ export default thermometer.v1.com<Sap<typeof sap>>({
                     .catch(console.error);
             }, interval);
             return cp.ACK();
-        } catch (e) {
+        } catch (e:any) {
             return cp.Exception({ message: JSON.stringify(e) });
         }
     }

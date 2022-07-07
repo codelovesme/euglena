@@ -116,7 +116,7 @@ const nucleusJs = nucleus.com<
                     break;
             }
             return cp.ACK();
-        } catch (error) {
+        } catch (error:any) {
             return cp.Exception(new sys.type.Exception(error.message));
         }
     }

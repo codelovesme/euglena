@@ -15,7 +15,7 @@ export default netClient.v1.com<Sap<undefined>>({
         t(cp.Log({ message: `Particle got to sent ${JSON.stringify(particle.meta)}`, level: "Info" }));
         try {
             return (await http.post(`http://${host}:${port}`, particle)).data;
-        } catch (e) {
+        } catch (e:any) {
             return cp.Exception({ message: JSON.stringify(e) });
         }
     }

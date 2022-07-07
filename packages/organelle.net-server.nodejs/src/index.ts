@@ -42,7 +42,7 @@ export default netServer.v1.com<
                                 );
                             });
                         }
-                    } catch (e) {
+                    } catch (e:any) {
                         t(
                             cp.Log({
                                 message: `In ${"Net Server"} error occurred while receiving impulse Err: ${e.message}`,

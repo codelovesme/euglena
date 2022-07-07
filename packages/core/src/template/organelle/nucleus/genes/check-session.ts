@@ -1,5 +1,5 @@
 import { Particle } from "../../../../particle";
-import { DecryptedToken, Exception, Particles } from "../../../particle";
+import { DecryptedToken, DecryptedTokenV2, Exception, Particles } from "../../../particle";
 import { dg } from "../../nucleus";
 import { Dependencies, Parameters, Organelles } from "../gene.h";
 
@@ -9,7 +9,7 @@ export type Session = Particle<
     "Session",
     {
         encryptedToken: string;
-        decryptedToken: DecryptedToken["data"];
+        decryptedToken: DecryptedTokenV2["data"];
     }
 >;
 

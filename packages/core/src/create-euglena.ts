@@ -1,15 +1,10 @@
-import { endoplasmicReticulumJs as reticulum } from "./template/organelle";
+import { endoplasmicReticulumJs } from "./template/organelle/endoplasmic-reticulum";
 import { OrganelleReceive } from "./organelle/organelle-receive.h";
 import { Particle } from "./particle";
 
 export const createEuglena = (particles: Particle[]) => {
-    const reticulumReceive: OrganelleReceive = reticulum.co() as any;
-    reticulumReceive(
-        reticulum.cs({
-            reticulumReceive: reticulumReceive,
-            particles: particles
-        })
-    );
+    const reticulumReceive = endoplasmicReticulumJs.co() as OrganelleReceive;
+    reticulumReceive(endoplasmicReticulumJs.cs({ reticulumReceive, particles }));
 };
 
 /**

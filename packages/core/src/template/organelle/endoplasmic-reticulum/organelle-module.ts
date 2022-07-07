@@ -36,7 +36,7 @@ const attachOrganelle = async (
                 organelle = (await import(organelleInfoData.location.path)).default;
 
                 //t(cp.Info(`${organelle.name} attached to the body.`, "Info"));
-            } catch (e) {
+            } catch (e:any) {
                 console.log(`Error - While attaching ${organelleInfoData.name} : ${e.message}`);
                 //t(cp.Info(organelleInfoData.name + " " + e.message, "Error"));
             }

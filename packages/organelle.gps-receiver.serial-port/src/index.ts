@@ -51,7 +51,7 @@ export default gpsReceiver.v1.com<Sap<typeof sap>>({
                 }
             }, interval);
             return cp.Log({ message: "Listening GPS", level: "Info" });
-        } catch (e) {
+        } catch (e:any) {
             return cp.Exception({ message: JSON.stringify(e) });
         }
     }

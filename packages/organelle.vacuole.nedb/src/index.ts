@@ -13,7 +13,7 @@ export default vacuole.v1.com<Sap<{ filename: string }>>({
         try {
             db = new Datastore({ filename, autoload: true });
             return cp.ACK();
-        } catch (e) {
+        } catch (e:any) {
             return cp.Exception({
                 innerException: e,
                 message: "Error occurred while initializing the Datastore"
