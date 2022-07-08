@@ -1,4 +1,5 @@
-import { webServer, Sap, Particles } from "@euglena/core";
+import { Sap } from "@euglena/core";
+import { webServer, Particles } from "@euglena/template";
 import express, { Express } from "express";
 
 let app: Express;

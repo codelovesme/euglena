@@ -1,5 +1,6 @@
 import moment from "moment";
-import { logger, Sap } from "@euglena/core";
+import { Sap } from "@euglena/core";
+import { logger } from "@euglena/template";
 
 export default logger.v1.com<
     Sap<{

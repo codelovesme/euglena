@@ -1,10 +1,10 @@
-import { DecryptedToken, GenerateToken, jwt } from "@euglena/core";
 import { sys } from "cessnalib";
 import { sign, verify } from "jsonwebtoken";
+import { jwt, GenerateToken, DecryptedToken } from "@euglena/template";
 
 const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
 
-export default jwt.v1.com({
+ const _jwt = jwt.v1.com({
     Sap: async () => {},
     GenerateToken: async ({ data }: GenerateToken, { cp, t }) => {
         return cp.EncryptedToken(
@@ -17,8 +17,11 @@ export default jwt.v1.com({
         try {
             const decrypted = (await verify(crypted, secret)) as DecryptedToken["data"];
             return cp.DecryptedToken(decrypted);
-        } catch (e:any) {
-            return cp.Exception(new sys.type.Exception("Not a valid token."));
+        } catch (e: any) {
+            const exception = new sys.type.Exception("Not a valid token.");
+            return cp.Exception(exception);
         }
     }
 });
+
+export default _jwt;

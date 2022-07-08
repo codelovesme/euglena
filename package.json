@@ -12,7 +12,8 @@
         "publishNPM": "npx lerna publish from-package --no-verify-access -y",
         "versionPatch": "npx lerna version patch --force-publish -y",
         "versionMinor": "npx lerna version minor --force-publish -y",
-        "versionMajor": "npx lerna version major --force-publish -y"
+        "versionMajor": "npx lerna version major --force-publish -y",
+        "linkDependencies":"./scripts/link.sh 1"
     },
     "prettier": {
         "printWidth": 120,

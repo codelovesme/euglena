@@ -1,4 +1,5 @@
-import { matterSensor, Sap } from "@euglena/core";
+import { Sap } from "@euglena/core";
+import { matterSensor } from "@euglena/template";
 import Plantower from "plantower";
 
 interface Value {

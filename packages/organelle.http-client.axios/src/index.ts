@@ -1,4 +1,5 @@
-import { httpClient, Sap } from "@euglena/core";
+import { Sap } from "@euglena/core";
+import { httpClient } from "@euglena/template";
 import axios from "axios";
 
 const capitalizeWord = (string: string) => {
@@ -7,7 +8,7 @@ const capitalizeWord = (string: string) => {
 const capitalizeHeaders = (headers: { [x: string]: string }) => {
     return Object.keys(headers).reduce((acc, key) => ({ ...acc, [capitalizeWord(key)]: headers[key] }), {});
 };
-export default httpClient.v1.com<Sap<undefined>>({
+const _httpClient = httpClient.v1.com<Sap<undefined>>({
     Sap: async () => {},
     Get: async (p, { t, cp }) => {
         const {
@@ -52,3 +53,5 @@ export default httpClient.v1.com<Sap<undefined>>({
         });
     }
 });
+
+export default _httpClient;

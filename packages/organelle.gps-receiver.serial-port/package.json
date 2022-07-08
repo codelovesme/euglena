@@ -20,14 +20,16 @@
     "dependencies": {
         "cessnalib": "^0.9.0",
         "gps": "^0.5.3",
-        "serialport": "^9.0.0"
+        "serialport": "^9.0.0",
+        "@types/serialport": "^8.0.1"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.7.0"
+        "@euglena/core": "^1.7.0",
+        "@euglena/template": "^1.7.0"
     },
     "devDependencies": {
         "@euglena/core": "^1.7.0",
-        "@types/serialport": "^8.0.1"
+        "@euglena/template": "^1.7.0"
     },
     "files": [
         "dist"

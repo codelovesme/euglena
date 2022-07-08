@@ -4,7 +4,7 @@ import * as path from "path";
 import { program } from "commander";
 import { mkdirSync } from "fs";
 import { execSync } from "child_process";
-import { ce } from "@euglena/core";
+import { ce } from "@euglena/template";
 
 const packageJson = require("../package.json");
 

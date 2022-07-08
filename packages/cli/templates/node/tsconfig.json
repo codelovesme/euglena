@@ -21,6 +21,5 @@
         "outDir": "dist",
         "incremental": true
     },
-    "files": ["src/index.ts", "src/chromosome.ts"],
-    "exclude": ["node_modules"]
+    "files": ["src/index.ts", "src/chromosome.ts"]
 }

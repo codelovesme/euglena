@@ -1,4 +1,5 @@
-import { vacuole, Sap, Particle, Meta } from "@euglena/core";
+import { Sap, Particle, Meta } from "@euglena/core";
+import { vacuole } from "@euglena/template";
 import { js } from "cessnalib";
 
 let particles: Particle[] = [];
@@ -18,7 +19,7 @@ export default vacuole.v1.com<
                     break;
             }
             return cp.ACK();
-        } catch (error:any) {
+        } catch (error: any) {
             return cp.Exception(error.message);
         }
     },

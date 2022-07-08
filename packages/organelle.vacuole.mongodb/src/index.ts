@@ -1,4 +1,5 @@
-import { vacuole, Sap,Particle } from "@euglena/core";
+import { Sap,Particle } from "@euglena/core";
+import { vacuole } from "@euglena/template";
 import { js } from "cessnalib";
 import { MongoClient, Db } from "mongodb";
 

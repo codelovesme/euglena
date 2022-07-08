@@ -1,4 +1,5 @@
-import { ui, Sap, Particle, PEvent, CreateOrganelleParticles, PACK, PException, PLog } from "@euglena/core";
+import { Sap, Particle, CreateOrganelleParticles } from "@euglena/core";
+import { ui, PEvent, PACK, PException, PLog } from "@euglena/template";
 import { EventEmitter, Injectable } from "@angular/core";
 import { sys } from "cessnalib";
 

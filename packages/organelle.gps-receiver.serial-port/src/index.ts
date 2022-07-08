@@ -1,6 +1,7 @@
 import SerialPort from "serialport";
 import GPS from "gps";
-import { gpsReceiver, Sap } from "@euglena/core";
+import { Sap } from "@euglena/core";
+import { gpsReceiver } from "@euglena/template";
 
 let gps: any;
 let sap: { path: string; interval: number };
@@ -51,7 +52,7 @@ export default gpsReceiver.v1.com<Sap<typeof sap>>({
                 }
             }, interval);
             return cp.Log({ message: "Listening GPS", level: "Info" });
-        } catch (e:any) {
+        } catch (e: any) {
             return cp.Exception({ message: JSON.stringify(e) });
         }
     }

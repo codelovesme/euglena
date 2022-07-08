@@ -1,4 +1,5 @@
-import { bcrypt, Sap } from "@euglena/core";
+import { Sap } from "@euglena/core";
+import { bcrypt } from "@euglena/template";
 import { hash, compare } from "bcrypt";
 
 /**

@@ -1,4 +1,4 @@
-import { fs as fsOrganelle } from "@euglena/core";
+import { fs as fsOrganelle } from "@euglena/template";
 import * as fs from "fs";
 
 export default fsOrganelle.v1.com({

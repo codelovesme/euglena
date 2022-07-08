@@ -22,10 +22,12 @@
         "moment": "^2.24.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.7.0"
+        "@euglena/core": "^1.7.0",
+        "@euglena/template": "^1.7.0"
     },
     "devDependencies": {
-        "@euglena/core": "^1.7.0"
+        "@euglena/core": "^1.7.0",
+        "@euglena/template": "^1.7.0"
     },
     "files": [
         "dist"

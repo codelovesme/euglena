@@ -1,4 +1,5 @@
-import { ui, Sap, Particle, CreateOrganelleParticles, P } from "@euglena/core";
+import { Sap, Particle, CreateOrganelleParticles, P } from "@euglena/core";
+import {ui} from "@euglena/template";
 
 import React, { createContext } from "react";
 import ReactDOM from "react-dom";

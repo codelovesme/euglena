@@ -1,4 +1,5 @@
-import { netClient, Sap } from "@euglena/core";
+import { Sap } from "@euglena/core";
+import { netClient } from "@euglena/template";
 import http from "axios";
 
 export default netClient.v1.com<Sap<undefined>>({

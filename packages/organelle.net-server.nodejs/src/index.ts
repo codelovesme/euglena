@@ -1,5 +1,6 @@
 import * as http from "http";
-import { netServer, Sap, isParticle, Particles, ccp } from "@euglena/core";
+import { Sap, isParticle } from "@euglena/core";
+import { netServer, ccp, Particles } from "@euglena/template";
 
 let server: http.Server;
 let sap: {
@@ -42,7 +43,7 @@ export default netServer.v1.com<
                                 );
                             });
                         }
-                    } catch (e:any) {
+                    } catch (e: any) {
                         t(
                             cp.Log({
                                 message: `In ${"Net Server"} error occurred while receiving impulse Err: ${e.message}`,
