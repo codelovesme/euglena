@@ -74,7 +74,7 @@ const createReceive =
                     to: Object.keys(dependencies.organelles).reduce(
                         (acc, curr) => ({
                             ...acc,
-                            [curr]: (particle: Particle) => t(particle, curr)
+                            [curr]: (particle: Particle) => t(particle, dependencies.organelles[curr])
                         }),
                         {} as any
                     ),

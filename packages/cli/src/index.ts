@@ -32,7 +32,7 @@ const main = () => {
         .action((name: string, { type }: { type: string }) => {
             if (!types.includes(type)) throw "Unknown application type!";
 
-            const templateFolder = path.join(__dirname, "../dist/templates", type);
+            const templateFolder = path.join(__dirname, "../templates", type);
 
             console.log(`Creating directory ${name}`);
             mkdirSync(name);
