@@ -23,10 +23,10 @@
         "serialport": "^9.0.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.22"
+        "@euglena/core": "^1.7.0"
     },
     "devDependencies": {
-        "@euglena/core": "^1.6.0",
+        "@euglena/core": "^1.7.0",
         "@types/serialport": "^8.0.1"
     },
     "files": [

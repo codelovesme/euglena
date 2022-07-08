@@ -22,10 +22,10 @@
         "plantower": "^1.1.10"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.2.22"
+        "@euglena/core": "^1.7.0"
     },
     "devDependencies": {
-        "@euglena/core": "^1.6.0"
+        "@euglena/core": "^1.7.0"
     },
     "files": [
         "dist"
