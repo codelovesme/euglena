@@ -1,7 +1,7 @@
 import { fs as fsOrganelle } from "@euglena/template";
 import * as fs from "fs";
 
-export default fsOrganelle.v1.com({
+const _fsOrganelle = fsOrganelle.v1.com({
     Sap: async (p) => {},
     ReadFile: ({ data: { filePath, encoding } }, { cp }) => {
         return new Promise((resolve) => {
@@ -20,3 +20,5 @@ export default fsOrganelle.v1.com({
         });
     }
 });
+
+export default _fsOrganelle;

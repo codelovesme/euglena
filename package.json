@@ -5,7 +5,7 @@
         "packages/*"
     ],
     "scripts": {
-        "compile": "npx lerna run compile",
+        "compile": "./scripts/compile.sh",
         "clean": "rm -r node_modules && npx lerna run clean",
         "cleanDependencies": "rm -r node_modules && npx lerna run cleanDependencies",
         "cleanDist": "npx lerna run cleanDist",
@@ -13,7 +13,9 @@
         "versionPatch": "npx lerna version patch --force-publish -y",
         "versionMinor": "npx lerna version minor --force-publish -y",
         "versionMajor": "npx lerna version major --force-publish -y",
-        "linkDependencies":"./scripts/link.sh 1"
+        "linkDependencies":"./scripts/link.sh",
+        "linkDependenciesWithCessnalib":"./scripts/link.sh 1",
+        "unlinkDependencies":"rm -r ~/.config/yarn/link/@euglena"
     },
     "prettier": {
         "printWidth": 120,

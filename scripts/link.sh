@@ -11,27 +11,19 @@ fi
 
 
 #make links for @euglena/core and @euglena/template
-cd ./packages
-# yarn link
-ls -al
-# cd ..
-# ls -al
-# cd template
-# ls -al
-# yarn link
-# cd ..
-# ls -al
+cd ./packages/core
+yarn link
+cd ../template
+yarn link
+cd ..
 
 # # tie links
-# for entry in packages/*
-# do
-#   cd $entry
-#   yarn link @euglena/core
-#   yarn link @euglena/template
-#   if [ $linkCessnalib ];
-#   then
-#     result=$(grep 'version' package.json)
-#     [[ $result ]] && yarn link cessnalib
-#   fi
-#   cd ../..
-# done
+for entry in *
+do
+  cd $entry
+  echo "link dependencies of $entry"
+  [[ $linkCessnalib && $(grep 'cessnalib' package.json) ]] && yarn link cessnalib
+  [[ $(grep '@euglena/core' package.json) ]] && yarn link @euglena/core
+  [[ $(grep '@euglena/template' package.json) ]] && yarn link @euglena/template
+  cd ..
+done

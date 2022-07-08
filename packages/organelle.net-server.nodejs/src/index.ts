@@ -23,7 +23,7 @@ export default netServer.v1.com<
                     // Too much POST data, kill the connection!
                     if (body.length > 1e6) req.socket.destroy();
                 });
-                req.on("end", () => {
+                req.on("end", async () => {
                     res.writeHead(200, {
                         "Content-Type": "application/json",
                         "Access-Control-Allow-Origin": "*"
@@ -31,17 +31,15 @@ export default netServer.v1.com<
                     try {
                         const particle = JSON.parse(body);
                         if (isParticle(particle) && particle.meta.class === "Impulse") {
-                            t(particle as any).then((resp: any) => {
-                                const results: Particles = resp;
-                                res.end(
-                                    JSON.stringify(
-                                        ccp.Impulse({
-                                            particle: results.data[0],
-                                            source: sap.euglenaName
-                                        })
-                                    )
-                                );
-                            });
+                            const results = await t(particle as any) as Particles;
+                            res.end(
+                                JSON.stringify(
+                                    ccp.Impulse({
+                                        particle: results.data[0],
+                                        source: sap.euglenaName
+                                    })
+                                )
+                            );
                         }
                     } catch (e: any) {
                         t(
@@ -50,12 +48,12 @@ export default netServer.v1.com<
                                 level: "Error"
                             })
                         );
-                        return res.end("Inccorect particle format!");
+                        res.end("Inccorect particle format!");
                     }
                 });
             } else if (req.method == "GET") {
                 res.writeHead(200, { "Content-Type": "text/plain" });
-                return res.end("Only POST method accepted!");
+                res.end("Only POST method accepted!");
             }
         });
     },
