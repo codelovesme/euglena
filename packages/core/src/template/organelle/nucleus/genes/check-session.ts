@@ -1,44 +1,10 @@
 import { Particle } from "../../../../particle";
-import { DecryptedToken, DecryptedTokenV2, Exception, Particles } from "../../../particle";
+import { DecryptedToken, Exception, Particles } from "../../../particle";
 import { dg } from "../../nucleus";
 import { Dependencies, Parameters, Organelles } from "../gene.h";
+import { Session, EuglenaInfoV2 } from "./particles";
 
 export type CheckSession = Particle<"CheckSession", string>;
-
-export type Session = Particle<
-    "Session",
-    {
-        encryptedToken: string;
-        decryptedToken: DecryptedTokenV2["data"];
-    }
->;
-
-export type EuglenaInfoV2 = Particle<
-    "EuglenaInfo",
-    {
-        euglenaName: string;
-        password: string;
-        info:
-            | {
-                  type: "App";
-                  email?: string;
-              }
-            | {
-                  type: "Human";
-                  email: string;
-                  name: string;
-                  surname: string;
-                  birthdate: number;
-                  pictureUrl: string;
-              };
-        roles: string[];
-        status: "Active" | "NeedsVerification" | "Deactive";
-    },
-    {
-        createdAt: number;
-        versoin: "2.0";
-    }
->;
 
 export type CheckSessionOrganelles = Organelles<{
     jwt: string;

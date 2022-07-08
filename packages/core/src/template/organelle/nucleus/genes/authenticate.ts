@@ -2,8 +2,8 @@ import { ACK, DecryptedTokenV2, EncryptedToken, Exception, Impulse, Particles } 
 import { CompareResult } from "../../../organelle/bcrypt";
 import { dg } from "../../../organelle/nucleus/gene";
 import { Dependencies, Parameters, Organelles } from "../../../organelle/nucleus/gene.h";
-import { EuglenaInfoV2, Session } from "../";
 import { Particle } from "../../../../particle";
+import { EuglenaInfoV2, Session } from "./particles";
 
 export type Authenticate = Particle<
     "Authenticate",

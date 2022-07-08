@@ -2,7 +2,7 @@ import { Exception, Particles } from "../../../..";
 import { Particle } from "../../../../particle";
 import { dg, Organelles, Parameters } from "../../nucleus";
 import { Dependencies } from "../gene.h";
-import { EuglenaInfoV2 } from "./check-session";
+import { EuglenaInfoV2 } from "./particles";
 
 export type CheckPermission = Particle<
     "CheckPermission",
