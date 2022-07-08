@@ -22,9 +22,9 @@ for entry in *; do
 done
 
 #print result
-[[ ${#problems[@]} != 0 ]] && echo "There are problems with those packages !" || echo "All is well !"
+[[ ${#problems[@]} != 0 ]] && echo "There are problems with those packages:" || echo "All is well !"
 for item in ${problems[@]}; do
-  echo $item
+  echo "-$item"
 done
 
 #return length of problems

@@ -1,7 +1,7 @@
-import { ACK, DecryptedTokenV2, EncryptedToken, Exception, Impulse, Particles } from "../../../particle";
-import { CompareResult } from "../../../organelle/bcrypt";
-import { dg } from "../../../organelle/nucleus/gene";
-import { Dependencies, Parameters, Organelles } from "../../../organelle/nucleus/gene.h";
+import { ACK, DecryptedTokenV2, EncryptedToken, Exception, Impulse, Particles } from "../../../../particle";
+import { CompareResult } from "../../../bcrypt";
+import { dg } from "../../gene";
+import { Dependencies, Parameters, Organelles } from "../../gene.h";
 import { EuglenaInfoV2, Session } from "./particles";
 import { Particle } from "@euglena/core";
 

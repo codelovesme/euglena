@@ -1,5 +1,5 @@
 import { Particle } from "@euglena/core";
-import { DecryptedTokenV2 } from "../../../particle";
+import { DecryptedTokenV2 } from "../../../../particle";
 
 export type EuglenaInfoV2 = Particle<
     "EuglenaInfo",

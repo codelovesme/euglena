@@ -1,0 +1,1 @@
+export * as vacuoleGetAlive from "./vacuole-get-alive";

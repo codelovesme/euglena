@@ -1,10 +1,11 @@
 import { sys } from "cessnalib";
 import { sign, verify } from "jsonwebtoken";
 import { jwt, GenerateToken, DecryptedToken } from "@euglena/template";
+import { Sap } from "@euglena/core";
 
 const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
 
- const _jwt = jwt.v1.com({
+ const jwtJsonwebtoken = jwt.v1.com<Sap>({
     Sap: async () => {},
     GenerateToken: async ({ data }: GenerateToken, { cp, t }) => {
         return cp.EncryptedToken(
@@ -24,4 +25,4 @@ const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
     }
 });
 
-export default _jwt;
+export default jwtJsonwebtoken;

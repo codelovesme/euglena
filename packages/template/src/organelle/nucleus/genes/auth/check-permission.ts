@@ -1,7 +1,7 @@
 import { Particle } from "@euglena/core";
-import { Particles, Exception } from "../../../particle";
-import { dg, Organelles, Parameters } from "../../nucleus";
-import { Dependencies } from "../gene.h";
+import { Particles, Exception } from "../../../../particle";
+import { dg, Organelles, Parameters } from "../../../nucleus";
+import { Dependencies } from "../../gene.h";
 import { EuglenaInfoV2 } from "./particles";
 
 export type CheckPermission = Particle<

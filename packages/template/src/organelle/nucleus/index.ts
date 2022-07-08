@@ -2,4 +2,4 @@ export * from "./create-organelle-module";
 export * from "./organelle-module";
 export * from "./gene";
 export * from "./gene.h";
-export * from "./genes";
+export * as genes from "./genes";

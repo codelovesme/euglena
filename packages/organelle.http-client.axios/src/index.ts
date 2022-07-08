@@ -8,7 +8,7 @@ const capitalizeWord = (string: string) => {
 const capitalizeHeaders = (headers: { [x: string]: string }) => {
     return Object.keys(headers).reduce((acc, key) => ({ ...acc, [capitalizeWord(key)]: headers[key] }), {});
 };
-const _httpClient = httpClient.v1.com<Sap<undefined>>({
+const _httpClient = httpClient.v1.com<Sap>({
     Sap: async () => {},
     Get: async (p, { t, cp }) => {
         const {

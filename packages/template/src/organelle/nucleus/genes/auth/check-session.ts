@@ -1,7 +1,7 @@
 import { Particle } from "@euglena/core";
-import { DecryptedToken, Exception, Particles } from "../../../particle";
-import { dg } from "../../nucleus";
-import { Dependencies, Parameters, Organelles } from "../gene.h";
+import { DecryptedToken, Exception, Particles } from "../../../../particle";
+import { dg } from "../../../nucleus";
+import { Dependencies, Parameters, Organelles } from "../../gene.h";
 import { Session, EuglenaInfoV2 } from "./particles";
 
 export type CheckSession = Particle<"CheckSession", string>;

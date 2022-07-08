@@ -1,9 +1,9 @@
 import { EuglenaInfoV2 } from "./particles";
-import { ACK, Exception, Impulse, NACK } from "../../../particle";
+import { ACK, Exception, Impulse, NACK } from "../../../../particle";
 import { CheckSession } from "./check-session";
 import { CheckPermission } from "./check-permission";
-import { dg, Dependencies, Parameters, Organelles, nucleus } from "../../../organelle/nucleus";
-import { HashedPassword } from "../../../organelle/bcrypt";
+import { dg, Dependencies, Parameters, Organelles, nucleus } from "../..";
+import { HashedPassword } from "../../../bcrypt";
 import { Particle } from "@euglena/core";
 
 export type CreateEuglenaInfo = Particle<"CreateEuglenaInfo", EuglenaInfoV2["data"]>;
