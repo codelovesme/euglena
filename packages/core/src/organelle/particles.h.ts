@@ -7,6 +7,9 @@ export type P<Data = any, Adds extends MetaAdditions = {}> = {
 
 export type FromP<Class extends string, R extends P> = Particle<Class, R["data"], R["adds"]>;
 
+//@ts-ignore
+export type ToP<Par extends Particle> = P<Par["data"], Omit<Par["meta"], "class">>;
+
 export type Sap<
     Data = any,
     Adds extends MetaAdditions & { organelleName: string } = {
@@ -14,50 +17,40 @@ export type Sap<
     }
 > = P<Data, Adds>;
 
-export type OrganelleParticles<T1 extends { [x: string]: P } = { [x: string]: P }> = T1;
+type Find<Class extends string, ParticleUnion extends Particle> = ParticleUnion extends { meta: { class: Class } }
+    ? ParticleUnion
+    : never;
 
-export type AllOrganelleParticles<
-    T1 extends { [x: string]: P } = { [x: string]: P },
-    T2 extends { [x: string]: P } = { [x: string]: P }
-> = {
-    incoming: OrganelleParticles<T1>;
-    outgoing: OrganelleParticles<T2>;
+export type OrganelleParticles<ParticleUnion extends Particle = Particle> = {
+    [P in ParticleUnion["meta"]["class"]]: ToP<Find<P, ParticleUnion>>;
 };
 
-export type CreateOrganelleParticles<T extends OrganelleParticles> = {
-    [P in Exclude<keyof T, number | symbol>]: T[P]["adds"] extends { [x: string]: undefined }
-        ? T[P]["data"] extends undefined
-            ? () => Particle<P, undefined>
-            : (data: T[P]["data"]) => Particle<P, T[P]["data"]>
-        : <M extends T[P]["adds"]>(data: T[P]["data"], adds: M) => Particle<P, T[P]["data"], M>;
-};
+export type Interaction = [Particle] | [Particle, Particle] | [Particle, Particle, Particle];
+export type SapInteraction = [Particle<"Sap", any, { organelleName: string }>];
 
-export type CreateAllOrganelleParticles<T extends AllOrganelleParticles> = {
-    incoming: CreateOrganelleParticles<T["incoming"]>;
-    outgoing: CreateOrganelleParticles<T["outgoing"]>;
-};
+export type AllOrganelleParticles<I extends Interaction[] = Interaction[]> = I;
 
-export type ParticleNameUnion<CP extends OrganelleParticles> = Exclude<keyof CP, number | symbol>;
+export type Incoming<T extends AllOrganelleParticles> = OrganelleParticles<T[number][0]>;
+export type Outgoing<T extends AllOrganelleParticles> = T[number][1] extends undefined
+    ? {}
+    : OrganelleParticles<Exclude<T[number][1], undefined>>;
 
-export type InComingParticleNameUnion<COP extends AllOrganelleParticles> = ParticleNameUnion<COP["incoming"]>;
-export type OutGoingParticleNameUnion<COP extends AllOrganelleParticles> = ParticleNameUnion<COP["outgoing"]>;
+export type InComingParticleNameUnion<COP extends AllOrganelleParticles> = COP[number][0]["meta"]["class"];
+
+export type OutGoingParticleNameUnion<COP extends AllOrganelleParticles> = Exclude<COP[number][1],void>["meta"]["class"];
 
 export type InComingParticle<
     COP extends AllOrganelleParticles,
     N extends InComingParticleNameUnion<COP> = InComingParticleNameUnion<COP>
 > = {
-    [P in N]: Particle<P, COP["incoming"][P]["data"], COP["incoming"][P]["adds"]>;
-}[N];
-export type OutGoingParticle<
-    COP extends AllOrganelleParticles,
-    N extends OutGoingParticleNameUnion<COP> = OutGoingParticleNameUnion<COP>
-> = {
-    [P in N]: Particle<P, COP["outgoing"][P]["data"], COP["outgoing"][P]["adds"]>;
+    [P in N]: Find<P, COP[number][0]>;
 }[N];
 
-export type InsertSapIntoParticles<COP extends AllOrganelleParticles, S extends P> = {
-    incoming: COP["incoming"] & {
-        ["Sap"]: S;
-    };
-    outgoing: COP["outgoing"];
-};
+export type OutGoingParticle<
+    COP extends AllOrganelleParticles,
+    N extends InComingParticleNameUnion<COP> = InComingParticleNameUnion<COP>
+> = {
+    [P in N]: Find<P, Exclude<COP[number][1], undefined>>;
+}[N];
+
+export type InsertSapIntoParticles<COP extends AllOrganelleParticles, I extends SapInteraction> = [I, ...COP];

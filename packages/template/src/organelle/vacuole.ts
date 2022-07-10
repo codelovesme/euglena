@@ -1,27 +1,30 @@
 import { domc } from "@euglena/core";
-import { CommonParticles } from "../particle";
+import {
+    ACK,
+    Exception,
+    GetAlive,
+    Hibernate,
+    Particles,
+    ReadParticle,
+    RemoveParticle,
+    SaveParticle
+} from "../particle";
 
-
+/**
+ * TODO:
+ * Remove javascript 
+ * Keep just type definition here which particle it takes and which particles returns, throws
+ */
 const vacuole = {
-    v1: domc<{
-        incoming: {
-            SaveParticle: CommonParticles["SaveParticle"];
-            ReadParticle: CommonParticles["ReadParticle"];
-            RemoveParticle: CommonParticles["RemoveParticle"];
-            GetAlive: CommonParticles["GetAlive"];
-            Hibernate: CommonParticles["Hibernate"];
-        };
-        outgoing: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
-            Particles: CommonParticles["Particles"];
-            Metas: CommonParticles["Metas"];
-            Log: CommonParticles["Log"];
-        };
-    }>(
-        ["ReadParticle", "RemoveParticle", "SaveParticle", "GetAlive", "Hibernate"],
-        ["ACK", "Exception", "Metas", "Particles", "Log"]
-    )
+    v1: domc<
+        [
+            [SaveParticle, ACK | Exception],
+            [ReadParticle, Particles | Exception],
+            [RemoveParticle, ACK | Exception],
+            [GetAlive, ACK | Exception],
+            [Hibernate, ACK | Exception]
+        ]
+    >()
 };
 
 export { vacuole };

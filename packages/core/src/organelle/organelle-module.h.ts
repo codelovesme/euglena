@@ -2,11 +2,11 @@ import {
     AllOrganelleParticles,
     InComingParticle,
     OutGoingParticle,
-    CreateOrganelleParticles,
     Sap,
-    P
+    P,
 } from "./particles.h";
 import { CreateOrganelle, CreateSingletonOrganelle, CreateEndoplasmicReticulum } from "./create-organelle.h";
+import { Particle } from "../particle";
 
 export interface OrganelleModule<S extends Sap, COP extends AllOrganelleParticles = AllOrganelleParticles> {
     /**
@@ -16,7 +16,12 @@ export interface OrganelleModule<S extends Sap, COP extends AllOrganelleParticle
     /**
      * createParticles
      */
-    cs: CreateOrganelleParticles<{ Sap: S }>["Sap"];
+    cs: <Class extends string>(
+        class_: Class,
+        data?: S["data"],
+        adds?: S["adds"]
+        //@ts-ignore
+    ) => Particle<Class, typeof data, Exclude<typeof adds,undefined>>;
 }
 
 export interface SingletonOrganelleModule<S extends P, COP extends AllOrganelleParticles = AllOrganelleParticles> {
@@ -27,7 +32,12 @@ export interface SingletonOrganelleModule<S extends P, COP extends AllOrganelleP
     /**
      * createParticles
      */
-    cs: CreateOrganelleParticles<{ Sap: S }>["Sap"];
+    cs: <Class extends string>(
+        class_: Class,
+        data?: S["data"],
+        adds?: S["adds"]
+        //@ts-ignore
+    ) => Particle<Class, typeof data, Exclude<typeof adds,undefined>>;
 }
 
 export interface EndoplasmicReticulumModule<S extends P, COP extends AllOrganelleParticles = AllOrganelleParticles> {
@@ -38,5 +48,10 @@ export interface EndoplasmicReticulumModule<S extends P, COP extends AllOrganell
     /**
      * createParticles
      */
-    cs: CreateOrganelleParticles<{ Sap: S }>["Sap"];
+    cs: <Class extends string>(
+        class_: Class,
+        data?: S["data"],
+        adds?: S["adds"]
+        //@ts-ignore
+    ) => Particle<Class, typeof data, Exclude<typeof adds,undefined>>;
 }

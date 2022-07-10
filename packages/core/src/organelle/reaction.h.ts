@@ -2,10 +2,11 @@ import {
     AllOrganelleParticles,
     InComingParticle,
     OutGoingParticle,
-    CreateOrganelleParticles,
-    InComingParticleNameUnion
+    InComingParticleNameUnion,
+    ToP
 } from "./particles.h";
 import { NucleusTransmit, OrganelleTransmit } from "./organelle-receive.h";
+import { Particle } from "../particle";
 
 export interface OrganelleReaction<COP extends AllOrganelleParticles, IPNU extends InComingParticleNameUnion<COP>> {
     (
@@ -14,11 +15,17 @@ export interface OrganelleReaction<COP extends AllOrganelleParticles, IPNU exten
             /**
              * transmit
              */
-            t: OrganelleTransmit<OutGoingParticle<COP>>;
+            t: OrganelleTransmit<Exclude<OutGoingParticle<COP>,void>>;
             /**
              * createParticle
              */
-            cp: CreateOrganelleParticles<COP["outgoing"]>;
+            // cp: CreateOrganelleParticles<Outgoing<COP>>;
+            cp: <Class extends string>(
+                class_: Class,
+                data?: ToP<OutGoingParticle<COP, Class>>["data"],
+                adds?: ToP<OutGoingParticle<COP, Class>>["adds"]
+                //@ts-ignore
+                ) => Particle<Class, typeof data, Exclude<typeof adds,undefined>>;
         }
     ): Promise<OutGoingParticle<COP> | void>;
 }
@@ -30,11 +37,16 @@ export interface NucleusReaction<COP extends AllOrganelleParticles, IPNU extends
             /**
              * transmit
              */
-            t: NucleusTransmit<OutGoingParticle<COP>>;
+            t: NucleusTransmit<Exclude<OutGoingParticle<COP>,void>>;
             /**
              * createParticle
              */
-            cp: CreateOrganelleParticles<COP["outgoing"]>;
+            cp: <Class extends string>(
+                class_: Class,
+                data?: ToP<OutGoingParticle<COP, Class>>["data"],
+                adds?: ToP<OutGoingParticle<COP, Class>>["adds"]
+                //@ts-ignore
+                ) => Particle<Class, typeof data, Exclude<typeof adds,undefined>>;
         }
     ): Promise<OutGoingParticle<COP> | void>;
 }
@@ -49,7 +61,12 @@ export interface EndoplasmicReticulumReaction<
             /**
              * createParticle
              */
-            cp: CreateOrganelleParticles<COP["outgoing"]>;
+            cp: <Class extends string>(
+                class_: Class,
+                data?: ToP<OutGoingParticle<COP, Class>>["data"],
+                adds?: ToP<OutGoingParticle<COP, Class>>["adds"]
+                //@ts-ignore
+                ) => Particle<Class, typeof data, Exclude<typeof adds,undefined>>;
         }
     ): Promise<OutGoingParticle<COP> | void>;
 }

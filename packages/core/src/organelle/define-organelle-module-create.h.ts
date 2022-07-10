@@ -1,16 +1,15 @@
 import { SingletonOrganelleName } from "./singleton-organelle.h";
 import {
     AllOrganelleParticles,
-    InComingParticleNameUnion,
-    OutGoingParticleNameUnion,
-    CreateAllOrganelleParticles,
     InsertSapIntoParticles,
-    Sap,
-    P
+    SapInteraction,
+    ToP,
+    InComingParticle
 } from "./particles.h";
 import { BindOrganelleReactions } from "./bind-reaction.h";
 import { EndoplasmicReticulumModule, OrganelleModule, SingletonOrganelleModule } from "./organelle-module.h";
 import { BindSingletonOrganelleReactions } from "./bind-reaction.h";
+import { Particle } from "../particle";
 
 export interface CreateOrganelleModuleInterface<
     COP extends AllOrganelleParticles,
@@ -20,34 +19,36 @@ export interface CreateOrganelleModuleInterface<
      * createOrganelleModule
      */
     com: OrganelleName extends undefined
-        ? <S extends Sap>(
-              bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, S>>
-          ) => OrganelleModule<S, InsertSapIntoParticles<COP, S>>
+        ? <I extends SapInteraction>(
+              bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>
+          ) => OrganelleModule<ToP<I[0]>, InsertSapIntoParticles<COP, I>>
         : OrganelleName extends "EndoplasmicReticulum"
-        ? <S extends P>(
-              bindReactions: BindSingletonOrganelleReactions<OrganelleName, COP, S>
-          ) => EndoplasmicReticulumModule<S, InsertSapIntoParticles<COP, S>>
-        : <S extends P>(
+        ? <I extends SapInteraction>(
+              bindReactions: BindSingletonOrganelleReactions<OrganelleName, COP, I>
+          ) => EndoplasmicReticulumModule<ToP<I[0]>, InsertSapIntoParticles<COP, I>>
+        : <I extends SapInteraction>(
               bindReactions: BindSingletonOrganelleReactions<
                   Exclude<OrganelleName, undefined | "EndoplasmicReticulum">,
                   COP,
-                  S
+                  I
               >
-          ) => SingletonOrganelleModule<S, InsertSapIntoParticles<COP, S>>;
+          ) => SingletonOrganelleModule<ToP<I[0]>, InsertSapIntoParticles<COP, I>>;
     /**
      * createParticles
      */
-    cp: CreateAllOrganelleParticles<COP>["incoming"];
+    cps: <Class extends string>(class_: Class, opt: ToP<InComingParticle<COP, Class>>) => Particle<Class>;
+    cp: <Class extends string>(
+        class_: Class,
+        data?: ToP<InComingParticle<COP, Class>>["data"],
+        adds?: ToP<InComingParticle<COP, Class>>["adds"]
+        //@ts-ignore
+    ) => Particle<Class, typeof data, Exclude<typeof adds,undefined>>;
 }
 
 export interface DefineOrganelleModuleCreate {
     <COP extends AllOrganelleParticles>(
-        incomingParticleNames: InComingParticleNameUnion<COP>[],
-        outgoingParticleNames: OutGoingParticleNameUnion<COP>[]
     ): CreateOrganelleModuleInterface<COP>;
     <COP extends AllOrganelleParticles, OrganelleName extends SingletonOrganelleName>(
-        incomingParticleNames: InComingParticleNameUnion<COP>[],
-        outgoingParticleNames: OutGoingParticleNameUnion<COP>[],
         organelleName: OrganelleName
     ): CreateOrganelleModuleInterface<COP, OrganelleName>;
 }
