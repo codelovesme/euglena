@@ -1,25 +1,25 @@
-import { CreateMeta, CreateParticle, IsParticleClass, Meta, MetaAdditions, Particle } from "./particle.h";
+import { Meta, MetaAdditions, Particle } from "./particle.h";
 
-export const createMeta: CreateMeta = <Class extends string, Additions extends MetaAdditions = {}>(
+export function createMeta<Class extends string, Additions extends MetaAdditions = {}>(
     class_: Class,
     adds?: Additions
-): Meta<Class, Additions> => {
+): Meta<Class, Additions> {
     return {
         class: class_,
         ...adds
     } as Meta<Class, Additions>;
-};
+}
 
-export const createParticle: CreateParticle = <Class extends string, Data, Additions extends MetaAdditions = {}>(
+export function createParticle<Class extends string, Data, Additions extends MetaAdditions = {}>(
     class_: Class,
     data?: Data,
     adds?: Additions
-): Particle<Class, Data, Additions> => {
+): Particle<Class, Data, Additions> {
     return {
         meta: createMeta(class_, adds),
         data
     } as Particle<Class, Data, Additions>;
-};
+}
 
 export function assertNotParticle(particle: never, message: string): void {
     throw message || `Assertion fails: ${particle} is a particle where it shouldn't be`;
@@ -33,12 +33,9 @@ export function isParticle(x: any): x is Particle {
     );
 }
 
-export const isParticleClass: IsParticleClass = <Class extends string>(
-    particle: Particle,
-    class_: Class
-): particle is Particle<Class> => {
+export function isParticleClass<Class extends string>(particle: Particle, class_: Class): particle is Particle<Class> {
     return particle.meta.class === class_;
-};
+}
 
 /**
  * createParticle

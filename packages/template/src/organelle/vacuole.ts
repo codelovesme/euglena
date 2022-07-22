@@ -21,7 +21,7 @@ const vacuole = {
             [SaveParticle, ACK | Exception],
             [ReadParticle, Particles | Exception],
             [RemoveParticle, ACK | Exception],
-            [GetAlive, ACK | Exception],
+            [GetAlive, ACK],
             [Hibernate, ACK | Exception]
         ]
     >()

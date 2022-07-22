@@ -3,7 +3,7 @@ import { OrganelleReaction, NucleusReaction, EndoplasmicReticulumReaction } from
 import { SingletonOrganelleName } from "./singleton-organelle.h";
 
 export type BindOrganelleReactions<COP extends AllOrganelleParticles> = {
-    [P in InComingParticleNameUnion<COP>]: OrganelleReaction<COP, P>;
+    [Class in InComingParticleNameUnion<COP>]: OrganelleReaction<COP, Class>;
 };
 
 export type BindNucleusReactions<COP extends AllOrganelleParticles> = {

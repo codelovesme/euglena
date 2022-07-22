@@ -1,12 +1,25 @@
-import { Sap, Particle, Meta } from "@euglena/core";
-import { vacuole } from "@euglena/template";
+import { Sap, Particle, Meta, FromP } from "@euglena/core";
+import { ACK, Exception, vacuole } from "@euglena/template";
 import { js } from "cessnalib";
+
+const tt = async () => {
+    return js ? "true" : false 
+}
 
 let particles: Particle[] = [];
 export default vacuole.v1.com<
-    [Sap<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }>]
+    [
+        FromP<
+            "Sap",
+            Sap<
+                | { path: string; type: "FileSystemPath" | "NodeModules" | "Url" }
+                | { particles: Particle[]; type: "InMemory" }
+            >
+        >,
+        Exception | ACK
+    ]
 >({
-    Sap: async (particle, { cp }) => {
+    Sap: async (particle) => {
         try {
             switch (particle.data.type) {
                 case "FileSystemPath":
@@ -17,13 +30,19 @@ export default vacuole.v1.com<
                 case "InMemory":
                     particles = particle.data.particles;
                     break;
-            }
-            return cp("ACK");
+            } 
+            return {} as ACK;
         } catch (error: any) {
-            return cp("Exceptione",error.message);
+            return {} as Exception;
         }
     },
-    GetAlive: async () => {},
+    GetAlive: async () => {
+        return {
+            meta: {
+                class: "ACK"
+            }
+        };
+    },
     Hibernate: async () => {},
     ReadParticle: async (p, { cp }) => {
         const { query, count } = p.data;
@@ -34,12 +53,15 @@ export default vacuole.v1.com<
                 len++;
             }
         }
-        return cp("Particles",retVal);
+        return cp("Particles", retVal);
     },
     SaveParticle: async (p, { cp }) => {
         if (p.data instanceof Array) {
             particles = [...particles, ...p.data];
-            return cp("Metas",p.data.map((p) => p.meta));
+            return cp(
+                "Metas",
+                p.data.map((p) => p.meta)
+            );
         } else {
             const overridedParticles: Meta[] = [];
             const { query, count, particle } = p.data;
@@ -56,7 +78,7 @@ export default vacuole.v1.com<
                 overridedParticles.push(particle.meta);
                 particles = [...particles, particle];
             }
-            return cp("Metas",overridedParticles);
+            return cp("Metas", overridedParticles);
         }
     },
     RemoveParticle: async (p, { cp }) => {
@@ -72,6 +94,6 @@ export default vacuole.v1.com<
                 }
             }
         }
-        return cp("Metas",removedParticles);
+        return cp("Metas", removedParticles);
     }
 });

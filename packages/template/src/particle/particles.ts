@@ -1,4 +1,4 @@
-import { CreateOrganelleParticles, cp } from "@euglena/core";
+import { cp } from "@euglena/core";
 import { CommonParticles } from "./particles.h";
 
 const defineCommonParticles = <P extends Exclude<keyof CommonParticles, symbol | number>>(

@@ -1,4 +1,4 @@
-import { P, Particle, Meta, FromP, OrganelleParticles } from "@euglena/core";
+import { P, Particle, Meta, FromP } from "@euglena/core";
 import { sys } from "cessnalib";
 
 export type Count = "all" | number;
@@ -83,25 +83,3 @@ export type Impulse = FromP<"Impulse", PImpulse>;
 export type EncryptedToken = FromP<"EncryptedToken", PEncryptedToken>;
 export type DecryptedToken = FromP<"DecryptedToken", PDecryptedToken>;
 export type DecryptedTokenV2 = FromP<"DecryptedToken", PDecryptedTokenV2>;
-
-export type CommonParticles = OrganelleParticles<{
-    ACK: PACK;
-    NACK: PNACK;
-    EuglenaName: PEuglenaName;
-    Exception: PException;
-    Particles: PParticles;
-    Metas: PMetas;
-    NoReaction: PNoReaction;
-    InvalidParticle: PInvalidParticle;
-    Log: PLog;
-    GetAlive: PGetAlive;
-    Hibernate: PHibernate;
-    EuglenaInfo: PEuglenaInfo;
-    ReadParticle: PReadParticle;
-    SaveParticle: PSaveParticle;
-    RemoveParticle: PRemoveParticle;
-    Impulse: PImpulse;
-    EncryptedToken: PEncryptedToken;
-    DecryptedToken: PDecryptedToken;
-    DecryptedTokenV2: PDecryptedTokenV2;
-}>;
