@@ -3,32 +3,9 @@ import {
     InComingParticle,
     OutGoingParticle,
     InComingParticleNameUnion,
-    // ToP
 } from "./particles.h";
+import {Exception} from "./particle"
 import { NucleusTransmit, OrganelleTransmit } from "./organelle-receive.h";
-import {MakePromise} from "./utils"
-// import { Particle } from "../particle";
-
-// export type CP<
-//     COP extends AllOrganelleParticles,
-//     IPNU extends InComingParticleNameUnion<COP>
-// > = ToP<OutGoingParticle<COP, IPNU, Class>>["data"] extends undefined
-//     ? ToP<OutGoingParticle<COP, IPNU, Class>>["adds"] extends undefined
-//         ? <Class extends string>(class_: Class) => Particle<Class>
-//         : <Class extends string>(
-//               class_: Class,
-//               adds: ToP<OutGoingParticle<COP, IPNU, Class>>["adds"]
-//           ) => OutGoingParticle<COP, IPNU, Class>
-//     : ToP<OutGoingParticle<COP, IPNU, Class>>["adds"] extends undefined
-//     ? <Class extends string>(
-//           class_: Class,
-//           data: ToP<OutGoingParticle<COP, IPNU, Class>>["data"]
-//       ) => OutGoingParticle<COP, IPNU, Class>
-//     : <Class extends string>(
-//           class_: Class,
-//           data: ToP<OutGoingParticle<COP, IPNU, Class>>["data"],
-//           adds: ToP<OutGoingParticle<COP, IPNU, Class>>["adds"]
-//       ) => OutGoingParticle<COP, IPNU, Class>;
 
 export interface OrganelleReaction<COP extends AllOrganelleParticles, IPNU extends InComingParticleNameUnion<COP>> {
     (
@@ -37,14 +14,14 @@ export interface OrganelleReaction<COP extends AllOrganelleParticles, IPNU exten
             /**
              * transmit
              */
-            t: OrganelleTransmit<Exclude<OutGoingParticle<COP>, void>>;
+            t: OrganelleTransmit<Exclude<OutGoingParticle<COP,IPNU>,void>>;
             /**
              * createParticle
              */
             // cp: CreateOrganelleParticles<Outgoing<COP>>;
             // cp: CP<COP, IPNU>;
         }
-    ): MakePromise<OutGoingParticle<COP, IPNU>>;
+    ): Promise<OutGoingParticle<COP, IPNU> | Exception>;
 }
 
 export interface NucleusReaction<COP extends AllOrganelleParticles, IPNU extends InComingParticleNameUnion<COP>> {

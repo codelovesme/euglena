@@ -7,3 +7,4 @@ export * from "./organelle-receive.h";
 export * from "./particles.h";
 export * from "./reaction.h";
 export * from "./singleton-organelle.h";
+export * from "./particle";

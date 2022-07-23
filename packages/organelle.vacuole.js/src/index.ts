@@ -1,10 +1,6 @@
-import { Sap, Particle, Meta, FromP } from "@euglena/core";
-import { ACK, Exception, vacuole } from "@euglena/template";
+import { Sap, Particle, Meta, FromP, Exception } from "@euglena/core";
+import { ACK, vacuole } from "@euglena/template";
 import { js } from "cessnalib";
-
-const tt = async () => {
-    return js ? "true" : false 
-}
 
 let particles: Particle[] = [];
 export default vacuole.v1.com<
@@ -16,7 +12,7 @@ export default vacuole.v1.com<
                 | { particles: Particle[]; type: "InMemory" }
             >
         >,
-        Exception | ACK
+        ACK
     ]
 >({
     Sap: async (particle) => {
@@ -37,13 +33,9 @@ export default vacuole.v1.com<
         }
     },
     GetAlive: async () => {
-        return {
-            meta: {
-                class: "ACK"
-            }
-        };
+        return true;
     },
-    Hibernate: async () => {},
+    Hibernate: async () => ,
     ReadParticle: async (p, { cp }) => {
         const { query, count } = p.data;
         const retVal: Particle[] = [];

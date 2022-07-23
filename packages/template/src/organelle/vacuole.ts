@@ -1,7 +1,5 @@
 import { domc } from "@euglena/core";
 import {
-    ACK,
-    Exception,
     GetAlive,
     Hibernate,
     Particles,
@@ -18,11 +16,11 @@ import {
 const vacuole = {
     v1: domc<
         [
-            [SaveParticle, ACK | Exception],
-            [ReadParticle, Particles | Exception],
-            [RemoveParticle, ACK | Exception],
-            [GetAlive, ACK],
-            [Hibernate, ACK | Exception]
+            [SaveParticle],
+            [ReadParticle, Particles],
+            [RemoveParticle],
+            [GetAlive],
+            [Hibernate]
         ]
     >()
 };

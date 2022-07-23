@@ -3,10 +3,8 @@ import { sys } from "cessnalib";
 
 export type Count = "all" | number;
 
-export type PACK = P<undefined>;
 export type PNACK = P<undefined>;
 export type PEuglenaName = P<string>;
-export type PException = P<sys.type.Exception>;
 export type PParticles = P<Particle[]>;
 export type PMetas = P<Meta[]>;
 export type PNoReaction = P<undefined>;
@@ -63,11 +61,9 @@ export type PDecryptedTokenV2 = P<
     },
     { version: "2.0" }
 >;
-
-export type ACK = FromP<"ACK", PACK>;
 export type NACK = FromP<"NACK", PNACK>;
 export type EuglenaName = FromP<"EuglenaName", PEuglenaName>;
-export type Exception = FromP<"Exception", PException>;
+
 export type Particles = FromP<"Particles", PParticles>;
 export type Metas = FromP<"Metas", PMetas>;
 export type NoReaction = FromP<"NoReaction", PNoReaction>;
