@@ -10,10 +10,10 @@ export type Coordinate = FromP<"Coordinate", PCoordinate>;
 
 const gpsReceiver = {
     v1: domc<{
-        incoming: {
+        in: {
             Listen: P<undefined>;
         };
-        outgoing: {
+        out: {
             Coordinate: PCoordinate;
             Log: PLog;
             Exception: PException;

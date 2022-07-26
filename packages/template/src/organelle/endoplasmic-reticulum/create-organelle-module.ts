@@ -4,11 +4,11 @@ import { PTransmitParticle, POrganelleInfo, PTransmitResponse, PEuglenaHasBeenBo
 
 const endoplasmicReticulum = domc<
     {
-        incoming: {
+        in: {
             TransmitParticle: PTransmitParticle;
             OrganelleInfo: POrganelleInfo;
         };
-        outgoing: {
+        out: {
             Log: PLog;
             TransmitResponse: PTransmitResponse;
             EuglenaHasBeenBorn: PEuglenaHasBeenBorn;

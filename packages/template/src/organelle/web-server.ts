@@ -1,5 +1,5 @@
 import { domc, FromP, P } from "@euglena/core";
-import { CommonParticles } from "../particle";
+import { GetAlive, Log } from "../particle";
 import { Headers } from "./utils";
 
 type PAddRoute = P<{
@@ -22,17 +22,9 @@ type WebServerImpulse = FromP<"WebServerImpulse", PWebServerImpulse>;
 
 const webServer = {
     v1: domc<{
-        incoming: {
-            GetAlive: CommonParticles["GetAlive"];
-            AddRoute: PAddRoute;
-        };
-        outgoing: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
-            WebServerImpulse: PWebServerImpulse;
-            Log: CommonParticles["Log"];
-        };
-    }>(["GetAlive", "AddRoute"], ["ACK", "Exception", "WebServerImpulse", "Log"])
+        in: [[GetAlive], [AddRoute]];
+        out: [[WebServerImpulse], [Log]];
+    }>()
 };
 
 export { webServer, AddRoute, PAddRoute, WebServerImpulse };

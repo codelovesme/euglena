@@ -8,10 +8,10 @@ export type Render = FromP<"Render", PRender>;
 
 const ui = {
     v1: domc<{
-        incoming: {
+        in: {
             Render: PRender;
         };
-        outgoing: {
+        out: {
             ACK: PACK;
             Exception: PException;
             Log: PLog;

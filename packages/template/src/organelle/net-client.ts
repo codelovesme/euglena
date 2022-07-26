@@ -3,7 +3,7 @@ import { CommonParticles } from "../particle/particles.h";
 
 const netClient = {
     v1: domc<{
-        incoming: {
+        in: {
             TransmitParticle: P<{
                 particle: Particle;
                 target: {
@@ -12,7 +12,7 @@ const netClient = {
                 };
             }>;
         };
-        outgoing: {
+        out: {
             ACK: CommonParticles["ACK"];
             Exception: CommonParticles["Exception"];
             Log: CommonParticles["Log"];

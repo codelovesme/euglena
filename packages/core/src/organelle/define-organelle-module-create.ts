@@ -3,10 +3,7 @@ import { BindOrganelleReactions } from "./bind-reaction.h";
 import { DefineOrganelleModuleCreate } from "./define-organelle-module-create.h";
 import {
     Sap,
-    AllOrganelleParticles,
-    InsertSapIntoParticles,
     FromP,
-    SapInteraction,
     ToP
 } from "./particles.h";
 import { OrganelleModule } from "./organelle-module.h";
@@ -16,7 +13,8 @@ import { SingletonOrganelleName } from "./singleton-organelle.h";
 import { Particle } from "../particle";
 import { CreateOrganelle } from "./create-organelle.h";
 import { OrganelleReceive } from "./organelle-receive.h";
-import { InComingParticle, OutGoingParticle } from "./particles.h";
+import { AllOrganelleParticles, ComingParticles, ComingResponseParticle } from "./particle";
+import { SapInteraction, InsertSapIntoParticles } from "./utils";
 
 const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <
     COP extends AllOrganelleParticles,
@@ -28,7 +26,7 @@ const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <
         com: <I extends SapInteraction>(
             bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>
         ): OrganelleModule<ToP<I[0]>, InsertSapIntoParticles<COP, I>> => {
-            const createOrganelle: CreateOrganelle<InComingParticle<COP>, OutGoingParticle<COP>> = <
+            const createOrganelle: CreateOrganelle<ComingParticles<COP>, ComingResponseParticle<COP>> = <
                 OrganelleName extends string
             >(params?: {
                 name?: OrganelleName;
@@ -37,7 +35,7 @@ const defineOrganelleModuleCreate: DefineOrganelleModuleCreate = <
                     particle: Particle,
                     targetOrganelle?: string
                 ) => Promise<Particle | void>;
-            }): OrganelleReceive<InComingParticle<COP>, OutGoingParticle<COP>> => async (particle) => {
+            }): OrganelleReceive<ComingParticles<COP>, ComingResponseParticle<COP>> => async (particle) => {
                 const name = organelleName || params?.name;
                 let reaction: any = (bindReactions as any)[(particle as any).meta.class] as any;
                 if (reaction) {

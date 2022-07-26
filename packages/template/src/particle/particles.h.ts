@@ -10,7 +10,6 @@ export type PMetas = P<Meta[]>;
 export type PNoReaction = P<undefined>;
 export type PInvalidParticle = P<undefined>;
 export type PLog = P<{ message: string; level: "Error" | "Info" | "Warning" }>;
-export type PGetAlive = P<undefined>;
 export type PHibernate = P<undefined>;
 export type PEuglenaInfo = P<{
     id: string;
@@ -69,7 +68,7 @@ export type Metas = FromP<"Metas", PMetas>;
 export type NoReaction = FromP<"NoReaction", PNoReaction>;
 export type InvalidParticle = FromP<"InvalidParticle", PInvalidParticle>;
 export type Log = FromP<"Log", PLog>;
-export type GetAlive = FromP<"GetAlive", PGetAlive>;
+
 export type Hibernate = FromP<"Hibernate", PHibernate>;
 export type EuglenaInfo = FromP<"EuglenaInfo", PEuglenaInfo>;
 export type ReadParticle = FromP<"ReadParticle", PReadParticle>;
@@ -79,3 +78,6 @@ export type Impulse = FromP<"Impulse", PImpulse>;
 export type EncryptedToken = FromP<"EncryptedToken", PEncryptedToken>;
 export type DecryptedToken = FromP<"DecryptedToken", PDecryptedToken>;
 export type DecryptedTokenV2 = FromP<"DecryptedToken", PDecryptedTokenV2>;
+
+export type PGetAlive = P<undefined>;
+export type GetAlive = FromP<"GetAlive", PGetAlive>;

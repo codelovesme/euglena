@@ -10,7 +10,7 @@ type PResponse = P<{
 
 const httpClient = {
     v1: domc<{
-        incoming: {
+        in: {
             Get: P<{
                 url: string;
                 headers?: Headers;
@@ -30,7 +30,7 @@ const httpClient = {
                 headers?: Headers;
             }>;
         };
-        outgoing: {
+        out: {
             ACK: CommonParticles["ACK"];
             Exception: CommonParticles["Exception"];
             Log: CommonParticles["Log"];

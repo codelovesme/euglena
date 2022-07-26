@@ -1,9 +1,11 @@
 import { SingletonOrganelleName } from "./singleton-organelle.h";
-import { AllOrganelleParticles, InsertSapIntoParticles, SapInteraction, ToP, InComingParticle } from "./particles.h";
+import { ToP } from "./particles.h";
 import { BindOrganelleReactions } from "./bind-reaction.h";
 import { EndoplasmicReticulumModule, OrganelleModule, SingletonOrganelleModule } from "./organelle-module.h";
 import { BindSingletonOrganelleReactions } from "./bind-reaction.h";
 import { Particle } from "../particle";
+import { AllOrganelleParticles, ComingParticle } from "./particle";
+import { SapInteraction, InsertSapIntoParticles } from "./utils";
 
 export interface CreateOrganelleModuleInterface<
     COP extends AllOrganelleParticles,
@@ -30,7 +32,7 @@ export interface CreateOrganelleModuleInterface<
     /**
      * createParticles
      */
-    cps: <Class extends string>(class_: Class, opt: ToP<InComingParticle<COP, Class>>) => Particle<Class>;
+    cps: <Class extends string>(class_: Class, opt: ToP<ComingParticle<COP, Class>>) => Particle<Class>;
 
 }
 

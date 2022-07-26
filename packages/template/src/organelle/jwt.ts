@@ -11,22 +11,22 @@ export type VerifyToken = FromP<"VerifyToken", PVerifyToken>;
 
 const jwt = {
     v1: domc<{
-        incoming: {
+        in: {
             GenerateToken: PGenerateToken;
             VerifyToken: PVerifyToken;
         };
-        outgoing: {
+        out: {
             DecryptedToken: CommonParticles["DecryptedToken"];
             EncryptedToken: CommonParticles["EncryptedToken"];
             Exception: CommonParticles["Exception"];
         };
     }>(["GenerateToken", "VerifyToken"], ["DecryptedToken", "Exception", "EncryptedToken"]),
     v2: domc<{
-        incoming: {
+        in: {
             GenerateToken: PGenerateTokenV2;
             VerifyToken: PVerifyToken;
         };
-        outgoing: {
+        out: {
             DecryptedToken: CommonParticles["DecryptedToken"];
             EncryptedToken: CommonParticles["EncryptedToken"];
             Exception: CommonParticles["Exception"];

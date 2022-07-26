@@ -1,7 +1,6 @@
 import { Particle } from "../../particle";
 
 export type Interaction<
-    P extends Particle = Particle,
-    P2 extends Particle = Particle,
-    P3 extends Particle = Particle
-> = [P] | [P, P2] | [P, P2, P3];
+    P extends Particle = Particle<string,any>,
+    P2 extends Particle = Particle<string,any>
+> = [P] | [P, P2];

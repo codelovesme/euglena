@@ -3,10 +3,10 @@ import { CommonParticles } from "../particle/particles.h";
 
 const netServer = {
     v1: domc<{
-        incoming: {
+        in: {
             GetAlive: CommonParticles["GetAlive"];
         };
-        outgoing: {
+        out: {
             ACK: CommonParticles["ACK"];
             Exception: CommonParticles["Exception"];
             Impulse: CommonParticles["Impulse"];

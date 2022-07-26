@@ -4,11 +4,11 @@ import { CommonParticles } from "../particle";
 
 const timer = {
     v1: domc<{
-        incoming: {
+        in: {
             ReadTime: P;
             SetTime: P<sys.type.Time>;
         };
-        outgoing: {
+        out: {
             ACK: CommonParticles["ACK"];
             Time: P<sys.type.Time>;
         };

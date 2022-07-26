@@ -3,10 +3,10 @@ import { PLog, PException, PACK, PParticles } from "../../particle";
 
 const nucleus = domc<
     {
-        incoming: {
+        in: {
             ReceiveParticle: P<{ particle: Particle; source: string }>;
         };
-        outgoing: {
+        out: {
             Log: PLog;
             Exception: PException;
             ACK: PACK;

@@ -1,17 +1,18 @@
-import { InComingParticleNameUnion, AllOrganelleParticles, InsertSapIntoParticles, SapInteraction } from "./particles.h";
+import { AllOrganelleParticles, ComingParticleNameUnion } from "./particle";
 import { OrganelleReaction, NucleusReaction, EndoplasmicReticulumReaction } from "./reaction.h";
 import { SingletonOrganelleName } from "./singleton-organelle.h";
+import { SapInteraction, InsertSapIntoParticles } from "./utils";
 
 export type BindOrganelleReactions<COP extends AllOrganelleParticles> = {
-    [Class in InComingParticleNameUnion<COP>]: OrganelleReaction<COP, Class>;
+    [CPN in ComingParticleNameUnion<COP>]: OrganelleReaction<COP, CPN>;
 };
 
 export type BindNucleusReactions<COP extends AllOrganelleParticles> = {
-    [P in InComingParticleNameUnion<COP>]: NucleusReaction<COP, P>;
+    [P in ComingParticleNameUnion<COP>]: NucleusReaction<COP, P>;
 };
 
 export type BindReticulumReactions<COP extends AllOrganelleParticles> = {
-    [P in InComingParticleNameUnion<COP>]: EndoplasmicReticulumReaction<COP, P>;
+    [P in ComingParticleNameUnion<COP>]: EndoplasmicReticulumReaction<COP, P>;
 };
 export type BindSingletonOrganelleReactions<
     OrganelleName extends SingletonOrganelleName,

@@ -3,10 +3,10 @@ import { CommonParticles } from "../particle/particles.h";
 
 const logger = {
     v1: domc<{
-        incoming: {
+        in: {
             Log: CommonParticles["Log"];
         };
-        outgoing: {
+        out: {
             ACK: CommonParticles["ACK"];
             Exception: CommonParticles["Exception"];
         };

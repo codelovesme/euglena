@@ -16,11 +16,11 @@ export type CompareResult = FromP<"CompareResult", PCompareResult>;
 
 const bcrypt = {
     v1: domc<{
-        incoming: {
+        in: {
             Hash: PHash;
             Compare: PCompare;
         };
-        outgoing: {
+        out: {
             HashedPassword: PHashedPassword;
             Exception: CommonParticles["Exception"];
             ACK: CommonParticles["ACK"];

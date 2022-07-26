@@ -13,10 +13,10 @@ export type Matter = FromP<"Matter", PMatter>;
 
 const matterSensor = {
     v1: domc<{
-        incoming: {
+        in: {
             Read: P<undefined>;
         };
-        outgoing: {
+        out: {
             Matter: PMatter;
             Log: PLog;
             Exception: PException;

@@ -1,5 +1,5 @@
 import { Sap, Particle, Meta, FromP, Exception } from "@euglena/core";
-import { ACK, vacuole } from "@euglena/template";
+import { vacuole } from "@euglena/template";
 import { js } from "cessnalib";
 
 let particles: Particle[] = [];
@@ -11,8 +11,7 @@ export default vacuole.v1.com<
                 | { path: string; type: "FileSystemPath" | "NodeModules" | "Url" }
                 | { particles: Particle[]; type: "InMemory" }
             >
-        >,
-        ACK
+        >
     ]
 >({
     Sap: async (particle) => {
@@ -27,15 +26,13 @@ export default vacuole.v1.com<
                     particles = particle.data.particles;
                     break;
             } 
-            return {} as ACK;
+            return;
         } catch (error: any) {
             return {} as Exception;
         }
     },
-    GetAlive: async () => {
-        return true;
-    },
-    Hibernate: async () => ,
+    GetAlive: async () => {},
+    Hibernate: async () => {},
     ReadParticle: async (p, { cp }) => {
         const { query, count } = p.data;
         const retVal: Particle[] = [];
@@ -45,15 +42,12 @@ export default vacuole.v1.com<
                 len++;
             }
         }
-        return cp("Particles", retVal);
+        return cp.Particles(retVal);
     },
     SaveParticle: async (p, { cp }) => {
         if (p.data instanceof Array) {
             particles = [...particles, ...p.data];
-            return cp(
-                "Metas",
-                p.data.map((p) => p.meta)
-            );
+            return cp.Metas(p.data.map((p) => p.meta));
         } else {
             const overridedParticles: Meta[] = [];
             const { query, count, particle } = p.data;
@@ -70,7 +64,7 @@ export default vacuole.v1.com<
                 overridedParticles.push(particle.meta);
                 particles = [...particles, particle];
             }
-            return cp("Metas", overridedParticles);
+            return cp.Metas(overridedParticles);
         }
     },
     RemoveParticle: async (p, { cp }) => {
@@ -86,6 +80,6 @@ export default vacuole.v1.com<
                 }
             }
         }
-        return cp("Metas", removedParticles);
+        return cp.Metas(removedParticles);
     }
 });

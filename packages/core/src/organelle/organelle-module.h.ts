@@ -1,18 +1,13 @@
-import {
-    AllOrganelleParticles,
-    InComingParticle,
-    OutGoingParticle,
-    Sap,
-    P,
-} from "./particles.h";
 import { CreateOrganelle, CreateSingletonOrganelle, CreateEndoplasmicReticulum } from "./create-organelle.h";
 import { Particle } from "../particle";
+import { AllOrganelleParticles, ComingParticles, ComingResponseParticle } from "./particle";
+import { Sap, P } from "./particles.h";
 
 export interface OrganelleModule<S extends Sap, COP extends AllOrganelleParticles = AllOrganelleParticles> {
     /**
      * createOrganelle
      */
-    co: CreateOrganelle<InComingParticle<COP>, OutGoingParticle<COP>>;
+    co: CreateOrganelle<ComingParticles<COP>, ComingResponseParticle<COP>>;
     /**
      * createParticles
      */
@@ -28,7 +23,7 @@ export interface SingletonOrganelleModule<S extends P, COP extends AllOrganelleP
     /**
      * createOrganelle
      */
-    co: CreateSingletonOrganelle<InComingParticle<COP>, OutGoingParticle<COP>>;
+    co: CreateSingletonOrganelle<ComingParticles<COP>, ComingResponseParticle<COP>>;
     /**
      * createParticles
      */
@@ -44,7 +39,7 @@ export interface EndoplasmicReticulumModule<S extends P, COP extends AllOrganell
     /**
      * createOrganelle
      */
-    co: CreateEndoplasmicReticulum<InComingParticle<COP>, OutGoingParticle<COP>>;
+    co: CreateEndoplasmicReticulum<ComingParticles<COP>, ComingResponseParticle<COP>>;
     /**
      * createParticles
      */

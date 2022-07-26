@@ -5,7 +5,7 @@ type Encoding = "ascii" | "utf8" | "utf-8" | "utf16le" | "ucs2" | "ucs-2" | "bas
 
 const fs = {
     v1: domc<{
-        incoming: {
+        in: {
             WriteFile: P<{
                 filePath: string;
                 content: string;
@@ -16,7 +16,7 @@ const fs = {
                 encoding?: Encoding;
             }>;
         };
-        outgoing: {
+        out: {
             Log: PLog;
             Exception: PException;
             ACK: PACK;
