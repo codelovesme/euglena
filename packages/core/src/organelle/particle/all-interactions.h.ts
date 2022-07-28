@@ -5,4 +5,4 @@ export type ParticleStructure = {
     out: Interaction[];
 };
 
-export type AllOrganelleParticles<I extends ParticleStructure = ParticleStructure> = I;
+export type AllInteractions<I extends ParticleStructure = ParticleStructure> = I;

@@ -1,6 +1,6 @@
 import { Particle } from "../../particle";
 import { AssertSuper, AssertTrue, Equals } from "../utils";
-import { AllOrganelleParticles } from "./all-organelle-particle.h";
+import { AllInteractions } from "./all-interactions.h";
 import {
     ComingParticle,
     ComingParticleNameUnion,
@@ -9,7 +9,9 @@ import {
     GoingParticle,
     GoingParticleNameUnion,
     GoingParticles,
-    GoingResponseParticleNameUnion
+    GoingResponseParticleNameUnion,
+    ResponseParticleFromInteraction,
+    TriggerParticleFromInteraction
 } from "./in-out-particle.h";
 
 type Aoc = Particle<"Aoc">;
@@ -19,12 +21,23 @@ type Doc = Particle<"Doc", boolean>;
 type CocResponse = Particle<"CocResponse", boolean>;
 type AocResponse = Particle<"AocResponse", boolean>;
 
-type COP = AllOrganelleParticles<{
+type COP = AllInteractions<{
     in: [[Aoc, AocResponse], [Boc]];
     out: [[Coc, CocResponse], [Doc]];
 }>;
-
 export type Result = [
+    AssertSuper<TriggerParticleFromInteraction<COP["in"][number]>, Aoc | Boc>,
+    AssertSuper<Aoc | Boc, TriggerParticleFromInteraction<COP["in"][number]>>,
+
+    AssertSuper<ResponseParticleFromInteraction<COP["in"][number]>, AocResponse>,
+    AssertSuper<AocResponse, ResponseParticleFromInteraction<COP["in"][number]>>,
+
+    AssertSuper<TriggerParticleFromInteraction<COP["out"][number]>, Coc | Doc>,
+    AssertSuper<Coc | Doc, TriggerParticleFromInteraction<COP["out"][number]>>,
+
+    AssertSuper<ResponseParticleFromInteraction<COP["out"][number]>, CocResponse>,
+    AssertSuper<CocResponse, ResponseParticleFromInteraction<COP["out"][number]>>,
+
     AssertSuper<ComingParticleNameUnion<COP>, "Aoc" | "Boc">,
     AssertSuper<"Aoc" | "Boc", ComingParticleNameUnion<COP>>,
 
@@ -56,5 +69,8 @@ export type Result = [
     AssertTrue<Equals<GoingParticle<COP, "Coc">, Coc>>,
 
     AssertSuper<GoingParticle<COP, "Doc">, Doc>,
-    AssertTrue<Equals<GoingParticle<COP, "Doc">, Doc>>
+    AssertTrue<Equals<GoingParticle<COP, "Doc">, Doc>>,
+
+    AssertTrue<[Particle, Particle] extends Particle[] ? true : false>,
+    AssertTrue<[Particle] extends Particle[] ? true : false>
 ];

@@ -1,10 +1,10 @@
-import { Particle } from "../../particle";
-import { AllOrganelleParticles, Interaction } from "../particle";
+// import { Particle } from "../../particle";
+import { AllInteractions, Interaction } from "../particle";
 
-export type SapInteraction = Interaction<Particle<"Sap", any, { organelleName: string }>>;
+// export type SapInteraction = Interaction<Particle<"Sap", any, { organelleName: string }>>;
 
 
-export type InsertSapIntoParticles<COP extends AllOrganelleParticles, I extends SapInteraction> = {
+export type InsertSapIntoParticles<COP extends AllInteractions, I extends Interaction> = {
     in: [I, ...COP["in"]];
     out: COP["out"];
 };

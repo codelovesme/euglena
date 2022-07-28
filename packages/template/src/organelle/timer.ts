@@ -1,18 +1,11 @@
+import { ACK, AllInteractions, Particle } from "@euglena/core";
 import { sys } from "cessnalib";
-import { P, domc } from "@euglena/core";
-import { CommonParticles } from "../particle";
 
-const timer = {
-    v1: domc<{
-        in: {
-            ReadTime: P;
-            SetTime: P<sys.type.Time>;
-        };
-        out: {
-            ACK: CommonParticles["ACK"];
-            Time: P<sys.type.Time>;
-        };
-    }>(["ReadTime", "SetTime"], ["ACK", "Time"])
-};
+export type ReadTime = Particle<"ReadTime">;
+export type SetTime = Particle<"SetTime", sys.type.Time>;
+export type Time = Particle<"Time", sys.type.Time>;
 
-export { timer };
+export type Timer = AllInteractions<{
+    in: [[ReadTime, Time], [SetTime, ACK]];
+    out: [];
+}>;

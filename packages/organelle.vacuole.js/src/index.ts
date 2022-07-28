@@ -1,16 +1,16 @@
-import { Sap, Particle, Meta, FromP, Exception } from "@euglena/core";
-import { vacuole } from "@euglena/template";
+import { Particle, Meta, Exception, dco } from "@euglena/core";
+import { Vacuole } from "@euglena/template";
 import { js } from "cessnalib";
 
 let particles: Particle[] = [];
-export default vacuole.v1.com<
+
+export default dco<
+    Vacuole,
     [
-        FromP<
+        Particle<
             "Sap",
-            Sap<
-                | { path: string; type: "FileSystemPath" | "NodeModules" | "Url" }
-                | { particles: Particle[]; type: "InMemory" }
-            >
+            | { path: string; type: "FileSystemPath" | "NodeModules" | "Url" }
+            | { particles: Particle[]; type: "InMemory" }
         >
     ]
 >({
@@ -25,7 +25,7 @@ export default vacuole.v1.com<
                 case "InMemory":
                     particles = particle.data.particles;
                     break;
-            } 
+            }
             return;
         } catch (error: any) {
             return {} as Exception;

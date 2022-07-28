@@ -1,6 +1,6 @@
 import { Meta, Particle } from "../particle";
 import {
-    AllOrganelleParticles,
+    AllInteractions,
     ComingParticle,
     CreateParticle,
     CreateParticleWithoutClass,
@@ -16,7 +16,7 @@ type Doc = Particle<"Doc">;
 type CocResponse = Particle<"CocResponse", boolean>;
 type AocResponse = Particle<"AocResponse", boolean>;
 
-type COP = AllOrganelleParticles<{
+type COP = AllInteractions<{
     in: [[Aoc, AocResponse], [Boc]];
     out: [[Coc, CocResponse], [Doc]];
 }>;

@@ -1,4 +1,3 @@
-import { P, FromP } from "../particles.h";
+import { Particle } from "../../particle";
 
-export type ACK = FromP<"ACK", PACK>;
-export type PACK = P<undefined>;
+export type ACK = Particle<"ACK">

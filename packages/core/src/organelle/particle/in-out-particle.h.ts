@@ -1,42 +1,52 @@
+import { Particle } from "../../particle";
 import { FindInteraction } from "../utils";
-import { AllOrganelleParticles } from "./all-organelle-particle.h";
+import { AllInteractions } from "./all-interactions.h";
+import { Interaction } from "./interaction.h";
 
-export type ComingParticleNameUnion<COP extends AllOrganelleParticles> = COP["in"][number][0]["meta"]["class"];
-export type ComingResponseParticleNameUnion<COP extends AllOrganelleParticles> = Exclude<
-    COP["in"][number][1],
-    undefined
+export type TriggerParticleFromInteraction<I extends Interaction> = I extends Particle<string, any>[] ? I[0] : I;
+export type ResponseParticleFromInteraction<I extends Interaction> = I extends [
+    Particle<string, any>,
+    Particle<string, any>
+]
+    ? I[1]
+    : never;
+
+export type ComingParticleNameUnion<COP extends AllInteractions> = TriggerParticleFromInteraction<
+    COP["in"][number]
+>["meta"]["class"];
+
+export type ComingResponseParticleNameUnion<COP extends AllInteractions> = ResponseParticleFromInteraction<
+    COP["in"][number]
 >["meta"]["class"];
 
 export type ComingParticle<
-    COP extends AllOrganelleParticles,
+    COP extends AllInteractions,
     N extends ComingParticleNameUnion<COP>
-> = FindInteraction<COP["in"][number], N>[0];
+> = TriggerParticleFromInteraction<FindInteraction<COP["in"][number], N>>;
 
-export type ComingParticles<
-    COP extends AllOrganelleParticles,
-> = COP["in"][number][0];
+export type ComingParticles<COP extends AllInteractions> = TriggerParticleFromInteraction<COP["in"][number]>;
 
 export type ComingResponseParticle<
-    COP extends AllOrganelleParticles,
+    COP extends AllInteractions,
     N extends ComingParticleNameUnion<COP> = ComingParticleNameUnion<COP>
-> = FindInteraction<COP["in"][number], N>[1];
+> = ResponseParticleFromInteraction<FindInteraction<COP["in"][number], N>>;
 
-export type GoingParticleNameUnion<COP extends AllOrganelleParticles> = COP["out"][number][0]["meta"]["class"];
-export type GoingResponseParticleNameUnion<COP extends AllOrganelleParticles> = Exclude<
-    COP["out"][number][1],
-    undefined
+export type GoingParticleNameUnion<COP extends AllInteractions> = TriggerParticleFromInteraction<
+    COP["out"][number]
+>["meta"]["class"];
+
+export type GoingResponseParticleNameUnion<COP extends AllInteractions> = ResponseParticleFromInteraction<
+    COP["out"][number]
 >["meta"]["class"];
 
 export type GoingParticle<
-    COP extends AllOrganelleParticles,
+    COP extends AllInteractions,
     N extends GoingParticleNameUnion<COP>
-> = FindInteraction<COP["out"][number], N>[0];
+> = TriggerParticleFromInteraction<FindInteraction<COP["out"][number], N>>;
 
-export type GoingParticles<
-    COP extends AllOrganelleParticles,
->  = COP["out"][number][0];
+export type GoingParticles<COP extends AllInteractions> = TriggerParticleFromInteraction<COP["out"][number]>;
 
 export type GoingResponseParticle<
-    COP extends AllOrganelleParticles,
+    COP extends AllInteractions,
     N extends GoingParticleNameUnion<COP> = GoingParticleNameUnion<COP>
-> = FindInteraction<COP["out"][number], N>[1];
+> = ResponseParticleFromInteraction<FindInteraction<COP["out"][number], N>>;

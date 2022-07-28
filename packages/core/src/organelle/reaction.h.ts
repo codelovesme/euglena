@@ -1,5 +1,5 @@
 import {
-    AllOrganelleParticles,
+    AllInteractions,
     ComingParticle,
     ComingParticleNameUnion,
     ComingResponseParticle,
@@ -13,7 +13,7 @@ import {
 } from "./particle";
 import { NucleusTransmit, OrganelleTransmit } from "./organelle-receive.h";
 
-export interface OrganelleReaction<COP extends AllOrganelleParticles, CPN extends ComingParticleNameUnion<COP>> {
+export interface OrganelleReaction<COP extends AllInteractions, CPN extends ComingParticleNameUnion<COP>> {
     (
         particle: ComingParticle<COP, CPN>,
         tools: {
@@ -38,7 +38,7 @@ export interface OrganelleReaction<COP extends AllOrganelleParticles, CPN extend
     >;
 }
 
-export interface NucleusReaction<COP extends AllOrganelleParticles, IPNU extends ComingResponseParticleNameUnion<COP>> {
+export interface NucleusReaction<COP extends AllInteractions, IPNU extends ComingResponseParticleNameUnion<COP>> {
     (
         particle: ComingParticle<COP, IPNU>,
         tools: {
@@ -60,7 +60,7 @@ export interface NucleusReaction<COP extends AllOrganelleParticles, IPNU extends
 }
 
 export interface EndoplasmicReticulumReaction<
-    COP extends AllOrganelleParticles,
+    COP extends AllInteractions,
     IPNU extends ComingResponseParticleNameUnion<COP>
 > {
     (

@@ -1,5 +1,4 @@
 import {sys} from "cessnalib";
-import { P, FromP } from "../particles.h";
+import { Particle } from "../../particle";
 
-export type PException = P<sys.type.Exception>;
-export type Exception = FromP<"Exception", PException>;
+export type Exception = Particle<"Exception",sys.type.Exception>;
