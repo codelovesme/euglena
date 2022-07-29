@@ -1,23 +1,14 @@
-import { domc, Particle, P } from "@euglena/core";
-import { CommonParticles } from "../particle/particles.h";
+import {  Particle, AllInteractions, Log } from "@euglena/core";
 
-const netClient = {
-    v1: domc<{
-        in: {
-            TransmitParticle: P<{
-                particle: Particle;
-                target: {
-                    host: string;
-                    port: number;
-                };
-            }>;
-        };
-        out: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
-            Log: CommonParticles["Log"];
-        };
-    }>(["TransmitParticle"], ["Log", "ACK", "Exception"])
-};
+export type TransmitParticle = Particle<"TransmitParticle",{
+    particle: Particle;
+    target: {
+        host: string;
+        port: number;
+    };
+}>
 
-export { netClient };
+export type NetClient = AllInteractions<{
+    in:[TransmitParticle];
+    out:[Log];
+}> 

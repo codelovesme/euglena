@@ -1,5 +1,5 @@
 import { Particle } from "../../particle.h";
-import { Interaction } from "../interaction";
+import { Interaction } from "../interaction.h";
 
 export type FindInteraction<
     InteractionUnion extends Interaction,

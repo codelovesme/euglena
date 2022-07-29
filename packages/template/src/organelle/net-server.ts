@@ -1,18 +1,16 @@
-import { domc } from "@euglena/core";
-import { CommonParticles } from "../particle/particles.h";
+import { AllInteractions, Log, Particle } from "@euglena/core";
+import { GetAlive } from "../particle";
 
-const netServer = {
-    v1: domc<{
-        in: {
-            GetAlive: CommonParticles["GetAlive"];
-        };
-        out: {
-            ACK: CommonParticles["ACK"];
-            Exception: CommonParticles["Exception"];
-            Impulse: CommonParticles["Impulse"];
-            Log: CommonParticles["Log"];
-        };
-    }>(["GetAlive"], ["ACK", "Exception", "Impulse", "Log"])
-};
+export type Impulse = Particle<
+    "Impulse",
+    {
+        particle: Particle;
+        source: string;
+        token?: string;
+    }
+>;
 
-export { netServer };
+export type NetServer = AllInteractions<{
+    in: [GetAlive];
+    out: [[Impulse, Impulse], Log];
+}>;

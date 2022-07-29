@@ -1,9 +1,9 @@
-import { Particle, Log } from "@euglena/core";
+import { Particle, Log, AllInteractions } from "@euglena/core";
 
 export type Listen = Particle<"Listen">;
 export type Temperature = Particle<"Temperature">;
 
-export type Thermometer = {
+export type Thermometer = AllInteractions<{
     in: [Listen];
     out: [Temperature, Log];
-};
+}>;

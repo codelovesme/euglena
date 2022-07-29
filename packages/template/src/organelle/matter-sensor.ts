@@ -1,7 +1,9 @@
-import { FromP, P, domc } from "@euglena/core";
-import { PException, PLog } from "../particle/particles.h";
+import { AllInteractions, Log, Particle } from "@euglena/core";
 
-export type PMatter = P<
+export type Read = Particle<"Read">;
+
+export type Matter = Particle<
+    "Matter",
     Array<{
         pm: number;
         value: number;
@@ -9,19 +11,7 @@ export type PMatter = P<
     }>
 >;
 
-export type Matter = FromP<"Matter", PMatter>;
-
-const matterSensor = {
-    v1: domc<{
-        in: {
-            Read: P<undefined>;
-        };
-        out: {
-            Matter: PMatter;
-            Log: PLog;
-            Exception: PException;
-        };
-    }>(["Read"], ["Matter", "Log", "Exception"])
-};
-
-export { matterSensor };
+export type MatterSensor = AllInteractions<{
+    in: [Read, Matter];
+    out: [Log];
+}>;

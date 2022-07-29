@@ -1,5 +1,4 @@
-import { AllInteractions, ACK, Particle } from "@euglena/core";
-import { Log } from "../particle/particles.h";
+import { AllInteractions, ACK, Particle, Log } from "@euglena/core";
 
 export type Event = Particle<"Event">;
 export type Render = Particle<"Render">;

@@ -1,3 +1,4 @@
+import { Exception } from "../../utils";
 import { Meta, Particle } from "../particle.h";
 import { AllInteractions } from "./all-interactions.h";
 import { CreateParticle, CreateParticleWithoutClass } from "./create-particle.h";
@@ -76,6 +77,7 @@ type Reaction = OrganelleReaction<COP, "Aoc">;
             AssertTrue<Equals<typeof cp["AocResponse"], (data: boolean) => AocResponse>>,
             AssertHasProp<typeof cp, "Coc">,
             AssertTrue<Equals<ReturnType<typeof cp["Coc"]>, Coc>>,
+            AssertTrue<Equals<ReturnType<typeof cp["Exception"]>, Exception>>,
             AssertTrue<
                 Equals<
                     typeof cp["Coc"],

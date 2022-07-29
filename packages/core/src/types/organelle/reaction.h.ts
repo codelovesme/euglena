@@ -1,9 +1,17 @@
 import { Exception } from "../../utils";
 import { AllInteractions } from "./all-interactions.h";
 import { CreateParticleWithoutClass } from "./create-particle.h";
-import { ComingParticleNameUnion, ComingParticle, GoingParticles, GoingResponseParticle, GoingParticleNameUnion, GoingParticle, ComingResponseParticleNameUnion, ComingResponseParticle } from "./in-out-particle.h";
-import { OrganelleTransmit, NucleusTransmit } from "./organelle-receive.h";
-
+import {
+    ComingParticleNameUnion,
+    ComingParticle,
+    GoingParticles,
+    GoingResponseParticle,
+    GoingParticleNameUnion,
+    GoingParticle,
+    ComingResponseParticleNameUnion,
+    ComingResponseParticle
+} from "./in-out-particle.h";
+import { OrganelleTransmit } from "./organelle-receive.h";
 
 export interface OrganelleReaction<COP extends AllInteractions, CPN extends ComingParticleNameUnion<COP>> {
     (
@@ -22,51 +30,14 @@ export interface OrganelleReaction<COP extends AllInteractions, CPN extends Comi
             cp: {
                 [P in GoingParticleNameUnion<COP>]: CreateParticleWithoutClass<GoingParticle<COP, P>>;
             } & {
-                [P in ComingResponseParticleNameUnion<COP>]: CreateParticleWithoutClass<ComingResponseParticle<COP, CPN>>;
+                [P in ComingResponseParticleNameUnion<COP>]: CreateParticleWithoutClass<
+                    ComingResponseParticle<COP, CPN>
+                >;
+            } & {
+                Exception: CreateParticleWithoutClass<Exception>;
             };
         }
     ): Promise<
         Exception | (ComingResponseParticle<COP, CPN> extends undefined ? void : ComingResponseParticle<COP, CPN>)
     >;
-}
-
-export interface NucleusReaction<COP extends AllInteractions, IPNU extends ComingResponseParticleNameUnion<COP>> {
-    (
-        particle: ComingParticle<COP, IPNU>,
-        tools: {
-            /**
-             * transmit
-             */
-            t: NucleusTransmit<Exclude<ComingResponseParticle<COP>, void>>;
-            /**
-             * createParticle
-             */
-            // cp: <Class extends string>(
-            //     class_: Class,
-            //     data?: ToP<OutGoingParticle<COP, Class>>["data"],
-            //     adds?: ToP<OutGoingParticle<COP, Class>>["adds"]
-            //     //@ts-ignore
-            // ) => Particle<Class, typeof data, Exclude<typeof adds, undefined>>;
-        }
-    ): Promise<ComingResponseParticle<COP, IPNU> | Exception>;
-}
-
-export interface EndoplasmicReticulumReaction<
-    COP extends AllInteractions,
-    IPNU extends ComingResponseParticleNameUnion<COP>
-> {
-    (
-        particle: ComingParticle<COP, IPNU>
-        // tools: {
-        /**
-         * createParticle
-         */
-        // cp: <Class extends string>(
-        //     class_: Class,
-        //     data?: ToP<OutGoingParticle<COP, Class>>["data"],
-        //     adds?: ToP<OutGoingParticle<COP, Class>>["adds"]
-        //     //@ts-ignore
-        // ) => Particle<Class, typeof data, Exclude<typeof adds, undefined>>;
-        // }
-    ): Promise<ComingResponseParticle<COP, IPNU> extends undefined ? void : ComingResponseParticle<COP, IPNU>>;
 }

@@ -1,62 +1,17 @@
-import { Particle } from "@euglena/core";
+import { Meta, Particle } from "@euglena/core";
 
-export type PNACK = P<undefined>;
-export type PEuglenaName = P<string>;
-export type PParticles = P<Particle[]>;
-export type PNoReaction = P<undefined>;
-export type PInvalidParticle = P<undefined>;
-export type PLog = P<{ message: string; level: "Error" | "Info" | "Warning" }>;
-export type PHibernate = P<undefined>;
-export type PEuglenaInfo = P<{
-    id: string;
-    name: string;
-    description: string;
-}>;
-export type PImpulse = P<{
-    particle: Particle;
-    source: string;
-    token?: string;
-}>;
-
-export type PEncryptedToken = P<string>;
-
-/**
- * Use PDecryptedTokenV2 instead of this.
- * The status has been changed
- */
-export type PDecryptedToken = P<{
-    euglenaName: string;
-    createdAt: number;
-    expireAt: number;
-    type: string;
-    roles: string[];
-    status: "Active" | "Deactive" | "Deleted";
-}>;
-export type PDecryptedTokenV2 = P<
+export type EuglenaName = Particle<"EuglenaName", string>;
+export type Particles = Particle<"Particles", Particle[]>;
+export type Metas = Particle<"Metas", Meta[]>;
+export type NoReaction = Particle<"NoReaction">;
+export type InvalidParticle = Particle<"InvalidParticle">;
+export type Hibernate = Particle<"Hibernate">;
+export type EuglenaInfo = Particle<
+    "EuglenaInfo",
     {
-        euglenaName: string;
-        createdAt: number;
-        expireAt: number;
-        type: string;
-        roles: string[];
-        status: "Active" | "Deactive" | "NeedsVerification";
-    },
-    { version: "2.0" }
+        id: string;
+        name: string;
+        description: string;
+    }
 >;
-export type NACK = FromP<"NACK", PNACK>;
-export type EuglenaName = FromP<"EuglenaName", PEuglenaName>;
-
-export type Particles = FromP<"Particles", PParticles>;
-export type Metas = FromP<"Metas", PMetas>;
-export type NoReaction = FromP<"NoReaction", PNoReaction>;
-export type InvalidParticle = FromP<"InvalidParticle", PInvalidParticle>;
-export type Log = FromP<"Log", PLog>;
-
-export type Hibernate = FromP<"Hibernate", PHibernate>;
-export type EuglenaInfo = FromP<"EuglenaInfo", PEuglenaInfo>;
-export type Impulse = FromP<"Impulse", PImpulse>;
-export type EncryptedToken = FromP<"EncryptedToken", PEncryptedToken>;
-export type DecryptedToken = FromP<"DecryptedToken", PDecryptedToken>;
-export type DecryptedTokenV2 = FromP<"DecryptedToken", PDecryptedTokenV2>;
-
 export type GetAlive = Particle<"GetAlive">;

@@ -1,20 +1,25 @@
-import { domc } from "@euglena/core";
-import { PLog } from "../../particle";
-import { PTransmitParticle, POrganelleInfo, PTransmitResponse, PEuglenaHasBeenBorn } from "./create-organelle-module.h";
+import { AllInteractions, CreateOrganelle, Log, Particle } from "@euglena/core";
 
-const endoplasmicReticulum = domc<
+export type TransmitParticle = Particle<"TransmitParticle", { target: string; particle: Particle }>;
+export type OrganelleInfo = Particle<
+    "OrganelleInfo",
     {
-        in: {
-            TransmitParticle: PTransmitParticle;
-            OrganelleInfo: POrganelleInfo;
-        };
-        out: {
-            Log: PLog;
-            TransmitResponse: PTransmitResponse;
-            EuglenaHasBeenBorn: PEuglenaHasBeenBorn;
-        };
-    },
-    "EndoplasmicReticulum"
->(["TransmitParticle", "OrganelleInfo"], ["EuglenaHasBeenBorn", "Log", "TransmitResponse"], "EndoplasmicReticulum");
+        name: string;
+        location:
+            | {
+                  type: "FileSystemPath" | "NodeModules" | "Url";
+                  path: string;
+              }
+            | {
+                  type: "InMemory";
+                  organelle: CreateOrganelle;
+              };
+    }
+>;
+export type TransmitResponse = Particle<"TransmitResponse", Particle | void>;
+export type EuglenaHasBeenBorn = Particle<"EuglenaHasBeenBorn">;
 
-export { endoplasmicReticulum };
+export type EndoplasmicReticulum = AllInteractions<{
+    in: [[TransmitParticle, TransmitResponse], OrganelleInfo];
+    out: [Log, EuglenaHasBeenBorn];
+}>;

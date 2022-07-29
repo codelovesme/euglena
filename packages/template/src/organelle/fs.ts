@@ -1,28 +1,34 @@
-import { domc, P } from "@euglena/core";
-import { PACK, PException, PLog } from "../particle";
+import { ACK, AllInteractions, Log, Particle } from "@euglena/core";
 
-type Encoding = "ascii" | "utf8" | "utf-8" | "utf16le" | "ucs2" | "ucs-2" | "base64" | "latin1" | "binary" | "hex";
+export type Encoding =
+    | "ascii"
+    | "utf8"
+    | "utf-8"
+    | "utf16le"
+    | "ucs2"
+    | "ucs-2"
+    | "base64"
+    | "latin1"
+    | "binary"
+    | "hex";
+export type WriteFile = Particle<
+    "WriteFile",
+    {
+        filePath: string;
+        content: string;
+        encoding?: Encoding;
+    }
+>;
+export type ReadFile = Particle<
+    "ReadFile",
+    {
+        filePath: string;
+        encoding?: Encoding;
+    }
+>;
+export type FileContent = Particle<"FileContent", string>;
 
-const fs = {
-    v1: domc<{
-        in: {
-            WriteFile: P<{
-                filePath: string;
-                content: string;
-                encoding?: Encoding;
-            }>;
-            ReadFile: P<{
-                filePath: string;
-                encoding?: Encoding;
-            }>;
-        };
-        out: {
-            Log: PLog;
-            Exception: PException;
-            ACK: PACK;
-            FileContent: P<string>;
-        };
-    }>(["WriteFile", "ReadFile"], ["ACK", "Log", "Exception", "FileContent"])
-};
-
-export { fs };
+export type FS = AllInteractions<{
+    in: [[ReadFile, FileContent]];
+    out: [Log, ACK];
+}>;

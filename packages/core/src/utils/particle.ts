@@ -10,15 +10,15 @@ export function createMeta<Class extends string, Additions extends MetaAdditions
     } as Meta<Class, Additions>;
 }
 
-export function createParticle<Class extends string, Data, Additions extends MetaAdditions = {}>(
-    class_: Class,
-    data?: Data,
-    adds?: Additions
-): Particle<Class, Data, Additions> {
+export function createParticle<P extends Particle>(
+    class_: P["meta"]["class"],
+    data?: P["data"],
+    adds?: Omit<P["meta"],"class">
+): P {
     return {
-        meta: createMeta(class_, adds),
+        meta: createMeta(class_, adds as any),
         data
-    } as Particle<Class, Data, Additions>;
+    } as P;
 }
 
 export function assertNotParticle(particle: never, message: string): void {

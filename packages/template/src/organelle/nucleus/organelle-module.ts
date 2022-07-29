@@ -1,17 +1,17 @@
 import { js, sys } from "cessnalib";
-import { nucleus } from "./create-organelle-module";
+import { Nucleus } from "./create-organelle-module";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
-import { ccp } from "../../particle";
 import * as templateModule from "../../index";
 import * as coreModule from "@euglena/core";
 import * as cessnalib from "cessnalib";
-import { Particle, P, NucleusTransmit } from "@euglena/core";
+import { Particle, OrganelleTransmit, dco, createParticle } from "@euglena/core";
+import { Particles } from "../../index";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;
 
 const createReceive =
-    (t: NucleusTransmit) =>
+    (t: OrganelleTransmit) =>
     async (particle: Particle, source: string): Promise<Particle<string, unknown, {}>[]> => {
         //find which genes are matched with properties of the particle
         const triggerableReactions = new Array<{
@@ -89,19 +89,25 @@ const createReceive =
         return allResults.filter((x) => x !== undefined) as Particle<string, unknown, {}>[];
     };
 
-const nucleusJs = nucleus.com<
-    P<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }>
+const nucleusJs = dco<
+    Nucleus,
+    [
+        Particle<
+            "Sap",
+            { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }
+        >
+    ]
 >({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         const result = await receive(particle, source);
         if (result.length > 0) {
-            return ccp.Particles(result);
+            return createParticle<Particles>("Particles", undefined, result);
         }
         return;
     },
     Sap: async (particle, { t, cp }) => {
-        receive = createReceive(t as NucleusTransmit);
+        receive = createReceive(t as OrganelleTransmit);
         try {
             switch (particle.data.type) {
                 case "FileSystemPath":
@@ -114,7 +120,7 @@ const nucleusJs = nucleus.com<
                     break;
             }
             return cp.ACK();
-        } catch (error:any) {
+        } catch (error: any) {
             return cp.Exception(new sys.type.Exception(error.message));
         }
     }

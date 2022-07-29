@@ -1,37 +1,21 @@
-import { domc, FromP, P } from "@euglena/core";
-import { CommonParticles } from "../particle/particles.h";
+import { AllInteractions, Particle } from "@euglena/core";
 
-export type PGenerateToken = CommonParticles["DecryptedToken"];
-export type PGenerateTokenV2 = CommonParticles["DecryptedTokenV2"];
-export type PVerifyToken = P<string>;
+export type DecryptedTokenV2 = Particle<
+    "DecryptedTokenV2",
+    {
+        euglenaName: string;
+        createdAt: number;
+        expireAt: number;
+        type: string;
+        roles: string[];
+        status: "Active" | "Deactive" | "NeedsVerification";
+    }
+>;
+export type EncryptedToken = Particle<"EncryptedToken", string>;
+export type GenerateTokenV2 = Particle<"GenerateTokenV2", DecryptedTokenV2["data"]>;
+export type VerifyToken = Particle<"VerifyToken", string>;
 
-export type GenerateToken = FromP<"GenerateToken", PGenerateToken>;
-export type GenerateTokenV2 = FromP<"GenerateToken", PGenerateTokenV2>;
-export type VerifyToken = FromP<"VerifyToken", PVerifyToken>;
-
-const jwt = {
-    v1: domc<{
-        in: {
-            GenerateToken: PGenerateToken;
-            VerifyToken: PVerifyToken;
-        };
-        out: {
-            DecryptedToken: CommonParticles["DecryptedToken"];
-            EncryptedToken: CommonParticles["EncryptedToken"];
-            Exception: CommonParticles["Exception"];
-        };
-    }>(["GenerateToken", "VerifyToken"], ["DecryptedToken", "Exception", "EncryptedToken"]),
-    v2: domc<{
-        in: {
-            GenerateToken: PGenerateTokenV2;
-            VerifyToken: PVerifyToken;
-        };
-        out: {
-            DecryptedToken: CommonParticles["DecryptedToken"];
-            EncryptedToken: CommonParticles["EncryptedToken"];
-            Exception: CommonParticles["Exception"];
-        };
-    }>(["GenerateToken", "VerifyToken"], ["DecryptedToken", "Exception", "EncryptedToken"])
-};
-
-export { jwt };
+export type JWT = AllInteractions<{
+    in: [[GenerateTokenV2, EncryptedToken], [VerifyToken, DecryptedTokenV2]];
+    out: [];
+}>;

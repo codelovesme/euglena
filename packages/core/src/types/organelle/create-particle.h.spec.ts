@@ -11,5 +11,5 @@ export type Result = [
     AssertTrue<Equals<CreateParticle<Abc>, (class_: "Abc") => Abc>>,
     AssertTrue<Equals<CreateParticle<Def>, (class_: "Def", data: boolean) => Def>>,
     AssertTrue<Equals<CreateParticle<Klm>, (class_: "Klm", data: boolean, adds: { version: string }) => Klm>>,
-    AssertTrue<Equals<CreateParticle<Xyz>, (class_: "Xyz", adds: { version: string }) => Xyz>>,
+    AssertTrue<Equals<CreateParticle<Xyz>, (class_: "Xyz", data: undefined, adds: { version: string }) => Xyz>>
 ];

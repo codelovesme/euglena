@@ -1,5 +1,6 @@
 import { AllInteractions, Exception, Particle, Log, Meta } from "@euglena/core";
 import { sys } from "cessnalib";
+import { GetAlive } from "../particle";
 
 export type Count = "all" | number;
 export type ReadParticle = Particle<
@@ -19,10 +20,16 @@ export type SaveParticle = Particle<
     | Particle[]
 >;
 export type RemoveParticle = Particle<"RemoveParticle", { query: sys.type.RecursivePartial<Particle>; count: Count }>;
-export type Metas = Particle<"Metas",Meta[]>;
+export type Metas = Particle<"Metas", Meta[]>;
 export type Hibernate = Particle<"Hibernate">;
 
 export type Vacuole = AllInteractions<{
-    in: [[SaveParticle, Metas], [ReadParticle, Particle<"Particles", Particle[]>], RemoveParticle, GetAlive, Hibernate];
+    in: [
+        [SaveParticle, Metas],
+        [ReadParticle, Particle<"Particles", Particle[]>],
+        RemoveParticle,
+        GetAlive,
+        Hibernate
+    ];
     out: [Log, Exception];
 }>;

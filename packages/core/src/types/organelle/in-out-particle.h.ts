@@ -1,6 +1,6 @@
 import { Particle } from "../particle.h";
 import { AllInteractions } from "./all-interactions.h";
-import { Interaction } from "./interaction";
+import { Interaction } from "./interaction.h";
 import { FindInteraction } from "./utils";
 
 export type TriggerParticleFromInteraction<I extends Interaction> = I extends Particle<string, any>[] ? I[0] : I;

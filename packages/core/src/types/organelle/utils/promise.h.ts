@@ -1,1 +1,0 @@
-export type MakePromise<T> = T extends undefined ? Promise<void> : Promise<T>;

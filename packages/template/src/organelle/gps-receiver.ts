@@ -1,24 +1,16 @@
-import { domc, FromP, P } from "@euglena/core";
-import { PException, PLog } from "../particle";
+import { AllInteractions, Log, Particle } from "@euglena/core";
 
-export type PCoordinate = P<{
-    lat: number;
-    lng: number;
+export type Coordinate = Particle<
+    "Coordinate",
+    {
+        lat: number;
+        lng: number;
+    }
+>;
+
+export type Listen = Particle<"Listen">;
+
+export type GpsReceiver = AllInteractions<{
+    in: [];
+    out: [Coordinate, Log];
 }>;
-
-export type Coordinate = FromP<"Coordinate", PCoordinate>;
-
-const gpsReceiver = {
-    v1: domc<{
-        in: {
-            Listen: P<undefined>;
-        };
-        out: {
-            Coordinate: PCoordinate;
-            Log: PLog;
-            Exception: PException;
-        };
-    }>(["Listen"], ["Coordinate", "Log", "Exception"])
-};
-
-export { gpsReceiver };
