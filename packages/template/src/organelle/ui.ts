@@ -6,5 +6,5 @@ export type Render = Particle<"Render">;
 
 export type UI = AllInteractions<{
     in: [[Render, ACK]];
-    out: [[Log], [Event]];
+    out: [Log, Event];
 }>;

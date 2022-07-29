@@ -1,18 +1,9 @@
-import { P, domc } from "@euglena/core";
-import { CommonParticles } from "../particle/particles.h";
+import { Particle, Log } from "@euglena/core";
 
-const thermometer = {
-    v1: domc<{
-        in: {
-            Listen: P<undefined>;
-        };
-        out: {
-            ACK: CommonParticles["ACK"];
-            Temperature: P<number>;
-            Log: CommonParticles["Log"];
-            Exception: CommonParticles["Exception"];
-        };
-    }>(["Listen"], ["Temperature", "Log", "Exception", "ACK"])
+export type Listen = Particle<"Listen">;
+export type Temperature = Particle<"Temperature">;
+
+export type Thermometer = {
+    in: [Listen];
+    out: [Temperature, Log];
 };
-
-export { thermometer };

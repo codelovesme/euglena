@@ -21,6 +21,6 @@ export type WebServerImpulse = Particle<"WebServerImpulse", {
 }>;
 
 export type WebServer = AllInteractions<{
-    in: [[GetAlive], [AddRoute]];
-    out: [[WebServerImpulse], [Log]];
+    in: [GetAlive, AddRoute];
+    out: [WebServerImpulse, Log];
 }>;
