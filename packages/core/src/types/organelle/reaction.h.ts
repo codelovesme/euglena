@@ -41,3 +41,5 @@ export interface OrganelleReaction<COP extends AllInteractions, CPN extends Comi
         Exception | (ComingResponseParticle<COP, CPN> extends undefined ? void : ComingResponseParticle<COP, CPN>)
     >;
 }
+
+import "./reaction.h.spec"

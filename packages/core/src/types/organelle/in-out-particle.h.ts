@@ -3,10 +3,10 @@ import { AllInteractions } from "./all-interactions.h";
 import { Interaction } from "./interaction.h";
 import { FindInteraction } from "./utils";
 
-export type TriggerParticleFromInteraction<I extends Interaction> = I extends Particle<string, any>[] ? I[0] : I;
+export type TriggerParticleFromInteraction<I extends Interaction> = I extends Particle[] ? I[0] : I;
 export type ResponseParticleFromInteraction<I extends Interaction> = I extends [
-    Particle<string, any>,
-    Particle<string, any>
+    Particle,
+    Particle
 ]
     ? I[1]
     : never;
@@ -50,3 +50,5 @@ export type GoingResponseParticle<
     COP extends AllInteractions,
     N extends GoingParticleNameUnion<COP> = GoingParticleNameUnion<COP>
 > = ResponseParticleFromInteraction<FindInteraction<COP["out"][number], N>>;
+
+import "./in-out-particle.h.spec"

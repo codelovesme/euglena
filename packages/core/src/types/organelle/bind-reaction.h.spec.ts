@@ -25,12 +25,28 @@ type COP = AllInteractions<{
 
 type Bind = BindOrganelleReactions<COP>;
 
+type CP = {
+    Coc: (
+        data: boolean,
+        adds: {
+            version: string;
+        }
+    ) => Coc;
+    Doc: () => Doc;
+} & {
+    AocResponse: (data: boolean) => AocResponse;
+} & {
+    Exception: (data: sys.type.Exception) => Exception;
+};
+
+type T = OrganelleTransmit<Coc | Doc, CocResponse>;
+
 export type Result = [
     AssertSuper<keyof Bind, "Aoc" | "Boc">,
     AssertSuper<"Aoc" | "Boc", keyof Bind>,
 
     AssertTrue<Equals<ReturnType<Bind["Aoc"]>, Promise<AocResponse | Exception>>>,
-    AssertSuper<Bind["Aoc"], (particle: Aoc, { t, cp }) => Promise<AocResponse | Exception>>
+    AssertSuper<Bind["Aoc"], (particle: Aoc, { t, cp }: { t: T; cp: CP }) => Promise<AocResponse | Exception>>
 ];
 
 const abc = (t: Bind["Aoc"]) => t;
@@ -38,25 +54,8 @@ const abc = (t: Bind["Aoc"]) => t;
 abc(async (p, { t, cp }) => {
     true as unknown as [
         AssertTrue<Equals<typeof p, Aoc>>,
-        AssertTrue<Equals<typeof t, OrganelleTransmit<Coc | Doc, CocResponse>>>,
-        AssertTrue<
-            Equals<
-                typeof cp,
-                {
-                    Coc: (
-                        data: boolean,
-                        adds: {
-                            version: string;
-                        }
-                    ) => Coc;
-                    Doc: () => Doc;
-                } & {
-                    AocResponse: (data: boolean) => AocResponse;
-                } & {
-                    Exception: (data: sys.type.Exception) => Exception;
-                }
-            >
-        >
+        AssertTrue<Equals<typeof t, T>>,
+        AssertTrue<Equals<typeof cp, CP>>
     ];
     return {} as AocResponse;
 });

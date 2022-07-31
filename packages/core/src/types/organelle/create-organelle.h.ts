@@ -8,3 +8,5 @@ export type CreateOrganelle<
     name: OrganelleName;
     transmit: (sourceOrganelle: string, particle: Particle, targetOrganelle?: string) => Promise<Particle | void>;
 }) => OrganelleReceive<InComingParticle, OutGoingParticle>;
+
+import "./create-organelle.h.spec"

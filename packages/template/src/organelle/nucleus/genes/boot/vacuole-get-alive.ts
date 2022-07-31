@@ -1,7 +1,8 @@
-import { Particle } from "@euglena/core";
-import { Exception } from "../../../../particle";
+import { createParticle, Exception, Particle } from "@euglena/core";
 import { Organelles, Dependencies, Parameters } from "../../gene.h";
 import { dg } from "../../gene";
+import { GetAlive } from "../../../../particle";
+import { ReceiveParticle } from "../../create-organelle-module";
 
 export type VacuoleGetAlive = Particle<"VacuoleGetAlive">;
 
@@ -19,15 +20,14 @@ export type VacuoleGetAliveDependencies = Dependencies<VacuoleGetAliveOrganelles
 export const createGene = dg<VacuoleGetAlive, VacuoleGetAliveDependencies>(
     "Vacuole Get Alive",
     { meta: { class: "VacuoleGetAlive" } },
-    async (p, s, { to, o, params: { retry, retryInterval = 10000 }, template }) => {
-        const { vacuole, nucleus } = template;
-        const getAlive = vacuole.v1.cp.GetAlive();
+    async (p, s, { to, o, params: { retry, retryInterval = 10000 } }) => {
+        const getAlive = createParticle<GetAlive>("GetAlive");
         const x = await to.vacuole(getAlive);
         if ((x as Exception).meta.class === "Exception") {
             if (retry) {
                 setTimeout(() => {
                     to.nucleus(
-                        nucleus.cp.ReceiveParticle({
+                        createParticle<ReceiveParticle>("ReceiveParticle", {
                             particle: { meta: { class: "VacuoleGetAlive" }, data: null },
                             source: o.nucleus
                         })

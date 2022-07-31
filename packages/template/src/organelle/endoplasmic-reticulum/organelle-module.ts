@@ -1,6 +1,6 @@
-import { endoplasmicReticulum as reticulum } from "./create-organelle-module";
-import { nucleus, nucleusJs } from "../nucleus";
-import { Particle, OrganelleModule, Sap, P, OrganelleReceive, OrganelleTransmit } from "@euglena/core";
+import { EndoplasmicReticulum, OrganelleInfo, TransmitParticle } from "./create-organelle-module";
+import { nucleusJs, ReceiveParticle } from "../nucleus";
+import { Particle, OrganelleReceive, cp, CreateOrganelle, dco } from "@euglena/core";
 
 const endoplasmicReticulumName: "EndoplasmicReticulum" = "EndoplasmicReticulum";
 
@@ -11,20 +11,18 @@ const nucleusJsName: string = "Nucleus";
 const transmit = async (source: string, particle: Particle, target?: string) => {
     if (!target) {
         target = nucleusJsName;
-        particle = await nucleus.cp.ReceiveParticle({ particle, source });
+        particle = cp<ReceiveParticle>("ReceiveParticle", { particle, source });
     }
     const resp = (await organelles[endoplasmicReticulumName](
-        reticulum.cp.TransmitParticle({ particle, target: target! })
+        cp<TransmitParticle>("TransmitParticle", { particle, target: target! })
     )) as Particle<string, Particle> | void;
     return resp ? resp.data : undefined;
 };
 
-const t: OrganelleTransmit = (particle: Particle) => transmit(endoplasmicReticulumName, particle);
+const t = (particle: Particle) => transmit(endoplasmicReticulumName, particle);
 
-const attachOrganelle = async (
-    organelleInfoData: ReturnType<typeof reticulum.cp.OrganelleInfo>["data"]
-): Promise<void> => {
-    let organelle: OrganelleModule<Sap> | undefined;
+const attachOrganelle = async (organelleInfoData: OrganelleInfo["data"]): Promise<void> => {
+    let organelle: CreateOrganelle<Particle, void | Particle> | undefined;
     switch (organelleInfoData.location.type) {
         case "FileSystemPath":
         case "NodeModules":
@@ -33,7 +31,7 @@ const attachOrganelle = async (
                 organelle = (await import(organelleInfoData.location.path)).default;
 
                 //t(cp.Info(`${organelle.name} attached to the body.`, "Info"));
-            } catch (e:any) {
+            } catch (e: any) {
                 console.log(`Error - While attaching ${organelleInfoData.name} : ${e.message}`);
                 //t(cp.Info(organelleInfoData.name + " " + e.message, "Error"));
             }
@@ -46,24 +44,25 @@ const attachOrganelle = async (
     if (organelle) {
         organelles = {
             ...organelles,
-            [organelleInfoData.name]: organelle.co({ name: organelleInfoData.name, transmit })
+            [organelleInfoData.name]: organelle({ name: organelleInfoData.name, transmit })
         };
         console.log(`Info - ${organelleInfoData.name} attached to the body.`);
     }
 };
 
-const endoplasmicReticulumJs = reticulum.com<P<{ particles: Particle[]; reticulumReceive: OrganelleReceive }>>({
+const endoplasmicReticulumJs = dco<
+    EndoplasmicReticulum,
+    [Particle<"Sap", { particles: Particle[]; reticulumReceive: OrganelleReceive }>]
+>({
     Sap: async (particle, { cp }) => {
         /**
          * Attach organelles
          */
         const { particles, reticulumReceive } = particle.data;
-        const organelleInfos = particles.filter((x) => x.meta.class === "OrganelleInfo") as ReturnType<
-            typeof reticulum.cp.OrganelleInfo
-        >[];
+        const organelleInfos = particles.filter((x) => x.meta.class === "OrganelleInfo") as OrganelleInfo[];
         organelles = {
             [endoplasmicReticulumName]: reticulumReceive as any,
-            [nucleusJsName]: nucleusJs.co({ transmit })
+            [nucleusJsName]: nucleusJs({ name: "Nucleus", transmit })
         };
         for (let { data } of organelleInfos) {
             await attachOrganelle(data);
@@ -74,8 +73,8 @@ const endoplasmicReticulumJs = reticulum.com<P<{ particles: Particle[]; reticulu
 
         const organelleSaps = particles.filter((x) => x.meta.class === "Sap") as Particle<
             "Sap",
-            Sap["data"],
-            Sap["adds"]
+            any,
+            { organelleName: string }
         >[];
         for (const [organelleName, organelleReceive] of Object.entries(organelles)) {
             const relatedSap = organelleSaps.find((x) => x.meta.organelleName === organelleName);
@@ -84,7 +83,7 @@ const endoplasmicReticulumJs = reticulum.com<P<{ particles: Particle[]; reticulu
         /**
          * Initial Organelles atttached let roll
          */
-        t(cp.EuglenaHasBeenBorn(undefined));
+        t(cp.EuglenaHasBeenBorn());
     },
     OrganelleInfo: async (particle) => {
         attachOrganelle(particle.data);
@@ -92,22 +91,27 @@ const endoplasmicReticulumJs = reticulum.com<P<{ particles: Particle[]; reticulu
     TransmitParticle: async (p, { cp }) => {
         const { target, particle } = p.data;
         if (!organelles)
-            return cp.Log({
-                message: `Organelle ${endoplasmicReticulumName} has not been initialized.`,
-                level: "Error"
-            });
+            /**
+             * TODO:
+             * send particle to the organelle
+             */
+            // t(
+            //     cp.Log({
+            //         message: `Transmitting particle ${JSON.stringify(particle.meta)} to ${target}`,
+            //         level: "Info"
+            //     })
+            // );
+            return cp.TransmitResponse(
+                cp.Log({
+                    message: `Organelle ${endoplasmicReticulumName} has not been initialized.`,
+                    level: "Error"
+                })
+            );
         const organelleReceive: OrganelleReceive = organelles[target];
         if (!organelleReceive)
-            return cp.Log({ message: `Organelle ${target} has not been connected yet!`, level: "Error" });
-        /**
-         * send particle to the organelle
-         */
-        // t(
-        //     cp.Log({
-        //         message: `Transmitting particle ${JSON.stringify(particle.meta)} to ${target}`,
-        //         level: "Info"
-        //     })
-        // );
+            return cp.TransmitResponse(
+                cp.Log({ message: `Organelle ${target} has not been connected yet!`, level: "Error" })
+            );
         const resp = await organelleReceive(particle);
         return cp.TransmitResponse(resp);
     }

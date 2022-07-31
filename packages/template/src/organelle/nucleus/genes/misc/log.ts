@@ -1,5 +1,5 @@
-import { Log } from "../../../../particle";
-import { dg } from "../../..";
+import { Log } from "@euglena/core";
+import { dg } from "../../gene";
 import { Dependencies, Organelles, Parameters } from "../../gene.h";
 
 export type LogOrganelles = Organelles<{

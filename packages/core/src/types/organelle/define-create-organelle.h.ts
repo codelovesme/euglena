@@ -8,3 +8,5 @@ import { InsertSapIntoParticles } from "./utils";
 export type DefineCreateOrganelle = <COP extends AllInteractions, I extends Interaction>(
     bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>
 ) => CreateOrganelle<ComingParticles<COP>,ComingResponseParticle<COP>>;
+
+import "./define-create-organelle.h.spec"

@@ -6,7 +6,7 @@ export type Meta<Class extends string = string, Additions extends MetaAdditions 
     class: Class;
 };
 
-export interface Particle<Class extends string = string, Data extends any = undefined, Additions extends MetaAdditions = {}> {
+export interface Particle<Class extends string = string, Data = any, Additions extends MetaAdditions = {}> {
     meta: Meta<Class, Additions>;
     data: Data;
 }

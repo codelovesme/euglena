@@ -6,6 +6,9 @@ export type FindInteraction<
     Class extends string
 > = InteractionUnion extends Interaction<Particle<Class, any>> ? InteractionUnion : never;
 
-export type FindParticle<ParticleUnion extends Particle<string,any>, Class extends string> = ParticleUnion extends Particle<Class>
+export type FindParticle<ParticleUnion extends Particle, Class extends string> = ParticleUnion extends Particle<Class>
     ? ParticleUnion
     : never;
+
+
+import "./find.h.spec"

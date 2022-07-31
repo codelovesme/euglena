@@ -72,7 +72,7 @@ const createReceive =
                     t: t,
                     o: dependencies.organelles,
                     to: Object.keys(dependencies.organelles).reduce(
-                        (acc, curr) => ({
+                        (acc, curr) => ({ 
                             ...acc,
                             [curr]: (particle: Particle) => t(particle, dependencies.organelles[curr])
                         }),
@@ -101,10 +101,7 @@ const nucleusJs = dco<
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         const result = await receive(particle, source);
-        if (result.length > 0) {
-            return createParticle<Particles>("Particles", undefined, result);
-        }
-        return;
+        return createParticle<Particles>("Particles", result);
     },
     Sap: async (particle, { t, cp }) => {
         receive = createReceive(t as OrganelleTransmit);
@@ -119,7 +116,7 @@ const nucleusJs = dco<
                     genes = particle.data.genes;
                     break;
             }
-            return cp.ACK();
+            return;
         } catch (error: any) {
             return cp.Exception(new sys.type.Exception(error.message));
         }
