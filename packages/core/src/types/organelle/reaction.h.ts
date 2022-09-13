@@ -13,6 +13,17 @@ import {
 } from "./in-out-particle.h";
 import { OrganelleTransmit } from "./organelle-receive.h";
 
+
+export type OrganelleReactionCreateParticle<COP extends AllInteractions, CPN extends ComingParticleNameUnion<COP>> = {
+    [P in GoingParticleNameUnion<COP>]: CreateParticleWithoutClass<GoingParticle<COP, P>>;
+} & {
+    [P in ComingResponseParticleNameUnion<COP>]: CreateParticleWithoutClass<
+        ComingResponseParticle<COP, CPN>
+    >;
+} & {
+    Exception: CreateParticleWithoutClass<Exception>;
+}
+
 export interface OrganelleReaction<COP extends AllInteractions, CPN extends ComingParticleNameUnion<COP>> {
     (
         particle: ComingParticle<COP, CPN>,
@@ -27,15 +38,7 @@ export interface OrganelleReaction<COP extends AllInteractions, CPN extends Comi
             /**
              * createParticle
              */
-            cp: {
-                [P in GoingParticleNameUnion<COP>]: CreateParticleWithoutClass<GoingParticle<COP, P>>;
-            } & {
-                [P in ComingResponseParticleNameUnion<COP>]: CreateParticleWithoutClass<
-                    ComingResponseParticle<COP, CPN>
-                >;
-            } & {
-                Exception: CreateParticleWithoutClass<Exception>;
-            };
+            cp: OrganelleReactionCreateParticle<COP,CPN>;
         }
     ): Promise<
         Exception | (ComingResponseParticle<COP, CPN> extends undefined ? void : ComingResponseParticle<COP, CPN>)

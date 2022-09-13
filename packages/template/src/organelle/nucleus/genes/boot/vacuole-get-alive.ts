@@ -2,7 +2,7 @@ import { createParticle, Exception, Particle } from "@euglena/core";
 import { Organelles, Dependencies, Parameters } from "../../gene.h";
 import { dg } from "../../gene";
 import { GetAlive } from "../../../../particle";
-import { ReceiveParticle } from "../../create-organelle-module";
+import { ReceiveParticle } from "../../create-organelle-module.h";
 
 export type VacuoleGetAlive = Particle<"VacuoleGetAlive">;
 

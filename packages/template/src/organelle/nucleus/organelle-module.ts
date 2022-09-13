@@ -1,11 +1,10 @@
 import { js, sys } from "cessnalib";
-import { Nucleus } from "./create-organelle-module";
+import { Nucleus } from "./create-organelle-module.h";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
 import * as templateModule from "../../index";
 import * as coreModule from "@euglena/core";
 import * as cessnalib from "cessnalib";
 import { Particle, OrganelleTransmit, dco, createParticle } from "@euglena/core";
-import { Particles } from "../../index";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;

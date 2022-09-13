@@ -6,7 +6,7 @@ import { ACK, createParticle, Exception, Particle } from "@euglena/core";
 import { Impulse } from "../../../net-server";
 import { dg } from "../../gene";
 import { Organelles, Dependencies, Parameters } from "../../gene.h";
-import { ReceiveParticle } from "../../create-organelle-module";
+import { ReceiveParticle } from "../../create-organelle-module.h";
 import { SaveParticle } from "../../../vacuole";
 
 export type CreateEuglenaInfo = Particle<"CreateEuglenaInfo", EuglenaInfoV2["data"]>;
@@ -51,7 +51,7 @@ export const createGene = dg<Impulse, CreateEuglenaInfoDependencies>(
             particle: checkPermission,
             source: "Nucleus"
         });
-        const checkPermissionResult = (await to.nucleus(receiveParticle2)) as ACK | NACK | Exception;
+        const checkPermissionResult = (await to.nucleus(receiveParticle2)) as ACK | Exception;
         if (isParticleClass(checkPermissionResult, "Exception")) return checkPermissionResult;
         if (isParticleClass(checkPermissionResult, "NACK"))
             return cp<Exception>(

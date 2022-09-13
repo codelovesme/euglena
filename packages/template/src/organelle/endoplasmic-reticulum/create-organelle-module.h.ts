@@ -1,6 +1,12 @@
 import { AllInteractions, CreateOrganelle, Log, Particle } from "@euglena/core";
 
-export type TransmitParticle = Particle<"TransmitParticle", { target: string; particle: Particle }>;
+export type Namespace = "EndoplasmicReticulum";
+
+export type TransmitParticle = Particle<
+    "TransmitParticle",
+    { target: string; particle: Particle },
+    { namespace: Namespace }
+>;
 export type OrganelleInfo = Particle<
     "OrganelleInfo",
     {
@@ -14,10 +20,11 @@ export type OrganelleInfo = Particle<
                   type: "InMemory";
                   organelle: CreateOrganelle;
               };
-    }
+    },
+    { namespace: Namespace }
 >;
-export type TransmitResponse = Particle<"TransmitResponse", Particle | void>;
-export type EuglenaHasBeenBorn = Particle<"EuglenaHasBeenBorn">;
+export type TransmitResponse = Particle<"TransmitResponse", Particle | void, { namespace: Namespace }>;
+export type EuglenaHasBeenBorn = Particle<"EuglenaHasBeenBorn", { namespace: Namespace }>;
 
 export type EndoplasmicReticulum = AllInteractions<{
     in: [[TransmitParticle, TransmitResponse], OrganelleInfo];

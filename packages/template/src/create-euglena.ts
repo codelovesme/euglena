@@ -1,9 +1,9 @@
-import { OrganelleReceive, Particle } from "@euglena/core";
-import { endoplasmicReticulumJs } from "./organelle/endoplasmic-reticulum";
+import { cp, OrganelleReceive, Particle } from "@euglena/core";
+import { endoplasmicReticulumJs, Sap } from "./organelle/endoplasmic-reticulum";
 
 export const createEuglena = (particles: Particle[]) => {
-    const reticulumReceive = endoplasmicReticulumJs.co() as OrganelleReceive;
-    reticulumReceive(endoplasmicReticulumJs.cs({ reticulumReceive, particles }));
+    const reticulumReceive = endoplasmicReticulumJs({ name: "EndoplasmicReticulum" }) as OrganelleReceive;
+    reticulumReceive(cp<Sap>("Sap", { reticulumReceive, particles }));
 };
 
 /**

@@ -1,9 +1,9 @@
-import { ACK, DecryptedTokenV2, EncryptedToken, Exception, Impulse, Particles } from "../../../../particle";
 import { CompareResult } from "../../../bcrypt";
 import { dg } from "../../gene";
 import { Dependencies, Parameters, Organelles } from "../../gene.h";
 import { EuglenaInfoV2, Session } from "./particles";
 import { Particle } from "@euglena/core";
+import { Impulse } from "../../../net-server";
 
 export type Authenticate = Particle<
     "Authenticate",
@@ -31,7 +31,7 @@ export const createGene = dg<Impulse, AuthenticateDependencies>(
     },
     async (impulse: Impulse, s, { cessnalib, template, core, to }) => {
         const { sys } = cessnalib;
-        const { ccp,vacuole, bcrypt, jwt } = template;
+        const { vacuole, bcrypt, jwt } = template;
         const { cp, isParticleClass } = core;
         const { euglenaName, password } = impulse.data.particle.data as Authenticate["data"];
 

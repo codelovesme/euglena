@@ -1,5 +1,7 @@
 import { AllInteractions, Log, Particle } from "@euglena/core";
 
+export type Namespace = "GpsReceiver";
+
 export type Coordinate = Particle<
     "Coordinate",
     {
@@ -8,7 +10,7 @@ export type Coordinate = Particle<
     }
 >;
 
-export type Listen = Particle<"Listen">;
+export type Listen = Particle<"Listen", { namespace: Namespace }>;
 
 export type GpsReceiver = AllInteractions<{
     in: [];

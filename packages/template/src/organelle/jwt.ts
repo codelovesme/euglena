@@ -1,7 +1,9 @@
 import { AllInteractions, Particle } from "@euglena/core";
 
-export type DecryptedTokenV2 = Particle<
-    "DecryptedTokenV2",
+export type Namespace = "Jwt";
+
+export type DecryptedToken = Particle<
+    "DecryptedToken",
     {
         euglenaName: string;
         createdAt: number;
@@ -9,13 +11,18 @@ export type DecryptedTokenV2 = Particle<
         type: string;
         roles: string[];
         status: "Active" | "Deactive" | "NeedsVerification";
-    }
+    },
+    { version: "2.0"; namespace: Namespace }
 >;
-export type EncryptedToken = Particle<"EncryptedToken", string>;
-export type GenerateTokenV2 = Particle<"GenerateTokenV2", DecryptedTokenV2["data"]>;
-export type VerifyToken = Particle<"VerifyToken", string>;
+export type EncryptedToken = Particle<"EncryptedToken", string, { namespace: Namespace }>;
+export type GenerateToken = Particle<
+    "GenerateToken",
+    DecryptedToken["data"],
+    { version: "2.0"; namespace: Namespace }
+>;
+export type VerifyToken = Particle<"VerifyToken", string, { namespace: Namespace }>;
 
 export type JWT = AllInteractions<{
-    in: [[GenerateTokenV2, EncryptedToken], [VerifyToken, DecryptedTokenV2]];
+    in: [[GenerateToken, EncryptedToken], [VerifyToken, DecryptedToken]];
     out: [];
 }>;

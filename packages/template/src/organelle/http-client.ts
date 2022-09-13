@@ -1,12 +1,15 @@
 import { AllInteractions, Log, Particle } from "@euglena/core";
 import { Headers } from "./utils";
 
+export type Namespace = "HttpClient";
+
 export type Get = Particle<
     "Get",
     {
         url: string;
         headers?: Headers;
-    }
+    },
+    { namespace: Namespace }
 >;
 
 export type Post = Particle<
@@ -15,7 +18,8 @@ export type Post = Particle<
         url: string;
         headers?: Headers;
         body: any;
-    }
+    },
+    { namespace: Namespace }
 >;
 
 export type Put = Particle<
@@ -24,7 +28,8 @@ export type Put = Particle<
         url: string;
         headers?: Headers;
         body: any;
-    }
+    },
+    { namespace: Namespace }
 >;
 
 export type Response = Particle<
@@ -33,7 +38,8 @@ export type Response = Particle<
         headers?: Headers;
         body: any;
         status: number;
-    }
+    },
+    { namespace: Namespace }
 >;
 
 export type HttpClient = AllInteractions<{

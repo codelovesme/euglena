@@ -1,4 +1,4 @@
-import { EndoplasmicReticulum, OrganelleInfo, TransmitParticle } from "./create-organelle-module";
+import { EndoplasmicReticulum, OrganelleInfo, TransmitParticle } from "./create-organelle-module.h";
 import { nucleusJs, ReceiveParticle } from "../nucleus";
 import { Particle, OrganelleReceive, cp, CreateOrganelle, dco } from "@euglena/core";
 
@@ -50,9 +50,11 @@ const attachOrganelle = async (organelleInfoData: OrganelleInfo["data"]): Promis
     }
 };
 
-const endoplasmicReticulumJs = dco<
+export type Sap = Particle<"Sap", { particles: Particle[]; reticulumReceive: OrganelleReceive }>; 
+
+export const endoplasmicReticulumJs = dco<
     EndoplasmicReticulum,
-    [Particle<"Sap", { particles: Particle[]; reticulumReceive: OrganelleReceive }>]
+    [Sap]
 >({
     Sap: async (particle, { cp }) => {
         /**
@@ -116,5 +118,3 @@ const endoplasmicReticulumJs = dco<
         return cp.TransmitResponse(resp);
     }
 });
-
-export { endoplasmicReticulumJs };

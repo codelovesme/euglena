@@ -1,5 +1,4 @@
-import { Particle } from "@euglena/core";
-import { DecryptedToken, Exception, Particles } from "../../../../particle";
+import { cp, Exception, Particle } from "@euglena/core";
 import { dg } from "../../../nucleus";
 import { Dependencies, Parameters, Organelles } from "../../gene.h";
 import { Session, EuglenaInfoV2 } from "./particles";
@@ -22,15 +21,14 @@ export const createGeneCheckSession = dg<CheckSession, CheckSessionDependencies>
     { meta: { class: "CheckSession" } },
     async ({ data: token }, s, { to, template, core, cessnalib }) => {
         const { vacuole, jwt } = template;
-        const { ccp } = template;
         const { isParticleClass } = core;
         const { sys } = cessnalib;
 
         //Check if token exists
-        if (!token) return ccp.Exception(new sys.type.Exception("There is no token"));
+        if (!token) return cp<Exception>("Exception",new sys.type.Exception("There is no token"));
 
         //Decode token and check if it fails
-        const verifyTokenResult = (await to.jwt(jwt.v1.cp.VerifyToken(token))) as DecryptedToken | Exception;
+        const verifyTokenResult = (await to.jwt(jwt.VerifyToken(token))) as DecryptedToken | Exception;
         if (isParticleClass(verifyTokenResult, "Exception")) return verifyTokenResult;
 
         // Fetch token from db (no need token anymore), if session doesn't exist then return error
