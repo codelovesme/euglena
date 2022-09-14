@@ -1,4 +1,4 @@
-import { AllInteractions, Log, Particle } from "@euglena/core";
+import { ACK, AllInteractions, Log, Particle } from "@euglena/core";
 
 export type Namespace = "GpsReceiver";
 
@@ -13,6 +13,6 @@ export type Coordinate = Particle<
 export type Listen = Particle<"Listen", { namespace: Namespace }>;
 
 export type GpsReceiver = AllInteractions<{
-    in: [];
+    in: [[Listen, ACK]];
     out: [Coordinate, Log];
 }>;

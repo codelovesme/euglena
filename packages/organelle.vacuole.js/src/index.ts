@@ -9,7 +9,7 @@ export type Sap = Particle<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }
 >;
 
-export default dco<vacuole.Vacuole, Sap>(vacuole.goingParticleNames, {
+export default dco<vacuole.Vacuole, Sap>({
     Sap: async (particle) => {
         try {
             switch (particle.data.type) {

@@ -1,15 +1,18 @@
 import moment from "moment";
-import { Sap } from "@euglena/core";
 import { logger } from "@euglena/template";
+import { ccp, dco, Particle } from "@euglena/core";
 
-export default logger.v1.com<
-    Sap<{
+export type Sap = Particle<
+    "Sap",
+    {
         test: boolean;
-    }>
->({
-    Log: async (particle, { cp, t }) => {
+    }
+>;
+
+export default dco<logger.Logger, Sap>({
+    Sap: async (particle) => {},
+    Log: async (particle, { t }) => {
         console.log(`${particle.data.level} - ${moment().format("YYYY.MM.DD HH:mm:ss")} - ${particle.data.message}`);
-        return cp.ACK();
-    },
-    Sap: async (particle) => {}
+        return ccp.ACK();
+    }
 });

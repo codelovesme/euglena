@@ -1,5 +1,9 @@
-import { cp, Exception, Particle } from "@euglena/core";
+import { ccp, cp, Exception, isParticleClass, Particle } from "@euglena/core";
+import { sys } from "cessnalib";
+import { Particles } from "../../../../utils/particles";
+import { DecryptedToken, VerifyToken } from "../../../jwt";
 import { dg } from "../../../nucleus";
+import { ReadParticle } from "../../../vacuole";
 import { Dependencies, Parameters, Organelles } from "../../gene.h";
 import { Session, EuglenaInfoV2 } from "./particles";
 
@@ -19,20 +23,16 @@ export type CheckSessionDependencies = Dependencies<CheckSessionOrganelles, Chec
 export const createGeneCheckSession = dg<CheckSession, CheckSessionDependencies>(
     "Check session",
     { meta: { class: "CheckSession" } },
-    async ({ data: token }, s, { to, template, core, cessnalib }) => {
-        const { vacuole, jwt } = template;
-        const { isParticleClass } = core;
-        const { sys } = cessnalib;
-
+    async ({ data: token }, s, { to }) => {
         //Check if token exists
-        if (!token) return cp<Exception>("Exception",new sys.type.Exception("There is no token"));
+        if (!token) return cp<Exception>("Exception", new sys.type.Exception("There is no token"));
 
         //Decode token and check if it fails
-        const verifyTokenResult = (await to.jwt(jwt.VerifyToken(token))) as DecryptedToken | Exception;
+        const verifyTokenResult = (await to.jwt(cp<VerifyToken>("VerifyToken", token))) as DecryptedToken | Exception;
         if (isParticleClass(verifyTokenResult, "Exception")) return verifyTokenResult;
 
         // Fetch token from db (no need token anymore), if session doesn't exist then return error
-        const readSession = vacuole.v1.cp.ReadParticle({
+        const readSession = cp<ReadParticle>("ReadParticle", {
             query: {
                 meta: { class: "Session" },
                 data: { encryptedToken: token, decryptedToken: { euglenaName: verifyTokenResult.data.euglenaName } }
@@ -51,7 +51,7 @@ export const createGeneCheckSession = dg<CheckSession, CheckSessionDependencies>
             return ccp.Exception(new sys.type.Exception("Authorization token is expired"));
 
         //Fetch user
-        const fetchUser = vacuole.v1.cp.ReadParticle({
+        const fetchUser = cp<ReadParticle>("ReadParticle", {
             count: 1,
             query: {
                 meta: { class: "EuglenaInfo" },
@@ -70,3 +70,6 @@ export const createGeneCheckSession = dg<CheckSession, CheckSessionDependencies>
         return fetchUserResult;
     }
 );
+function VerifyToken(token: string): any {
+    throw new Error("Function not implemented.");
+}

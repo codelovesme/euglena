@@ -1,6 +1,6 @@
-import { EndoplasmicReticulum, OrganelleInfo, TransmitParticle } from "./create-organelle-module.h";
+import { EndoplasmicReticulum, EuglenaHasBeenBorn, OrganelleInfo, TransmitParticle, TransmitResponse } from "./create-organelle-module.h";
 import { nucleusJs, ReceiveParticle } from "../nucleus";
-import { Particle, OrganelleReceive, cp, CreateOrganelle, dco } from "@euglena/core";
+import { Particle, OrganelleReceive, cp, CreateOrganelle, dco, Log, ccp } from "@euglena/core";
 
 const endoplasmicReticulumName: "EndoplasmicReticulum" = "EndoplasmicReticulum";
 
@@ -56,7 +56,7 @@ export const endoplasmicReticulumJs = dco<
     EndoplasmicReticulum,
     [Sap]
 >({
-    Sap: async (particle, { cp }) => {
+    Sap: async (particle) => {
         /**
          * Attach organelles
          */
@@ -85,12 +85,12 @@ export const endoplasmicReticulumJs = dco<
         /**
          * Initial Organelles atttached let roll
          */
-        t(cp.EuglenaHasBeenBorn());
+        t(cp<EuglenaHasBeenBorn>("EuglenaHasBeenBorn"));
     },
     OrganelleInfo: async (particle) => {
         attachOrganelle(particle.data);
     },
-    TransmitParticle: async (p, { cp }) => {
+    TransmitParticle: async (p) => {
         const { target, particle } = p.data;
         if (!organelles)
             /**
@@ -103,18 +103,18 @@ export const endoplasmicReticulumJs = dco<
             //         level: "Info"
             //     })
             // );
-            return cp.TransmitResponse(
-                cp.Log({
+            return cp<TransmitResponse>("TransmitResponse",
+                cp<Log>("Log",{
                     message: `Organelle ${endoplasmicReticulumName} has not been initialized.`,
                     level: "Error"
                 })
             );
         const organelleReceive: OrganelleReceive = organelles[target];
         if (!organelleReceive)
-            return cp.TransmitResponse(
-                cp.Log({ message: `Organelle ${target} has not been connected yet!`, level: "Error" })
+            return cp<TransmitResponse>("TransmitResponse",
+                ccp.Log({ message: `Organelle ${target} has not been connected yet!`, level: "Error" })
             );
         const resp = await organelleReceive(particle);
-        return cp.TransmitResponse(resp);
+        return cp<TransmitResponse>("TransmitResponse",resp);
     }
 });

@@ -34,6 +34,6 @@ export type ReadFile = Particle<
 export type FileContent = Particle<"FileContent", string, { namespace: Namespace }>;
 
 export type FS = AllInteractions<{
-    in: [[ReadFile, FileContent]];
+    in: [[ReadFile, FileContent],WriteFile];
     out: [Log, ACK];
 }>;

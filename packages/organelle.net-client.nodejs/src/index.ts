@@ -1,8 +1,10 @@
-import { Sap } from "@euglena/core";
+import { dco, Particle } from "@euglena/core";
 import { netClient } from "@euglena/template";
 import http from "axios";
 
-export default netClient.v1.com<Sap<undefined>>({
+export type Sap = Particle<"Sap">;
+
+export default dco<netClient.NetClient,Sap>({
     Sap: async () => {},
     TransmitParticle: async (
         {

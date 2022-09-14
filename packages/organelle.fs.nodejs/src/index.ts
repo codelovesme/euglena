@@ -1,21 +1,24 @@
+import { ccp, cp, dco, Particle } from "@euglena/core";
 import { fs as fsOrganelle } from "@euglena/template";
 import * as fs from "fs";
 
-const _fsOrganelle = fsOrganelle.v1.com({
+export type Sap = Particle<"Sap">;
+
+const _fsOrganelle = dco<fsOrganelle.FS, Sap>({
     Sap: async (p) => {},
-    ReadFile: ({ data: { filePath, encoding } }, { cp }) => {
+    ReadFile: ({ data: { filePath, encoding } }) => {
         return new Promise((resolve) => {
             fs.readFile(filePath, encoding, (err, data) => {
-                if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                return resolve(cp.FileContent(data as string));
+                if (err) return resolve(ccp.Exception({ message: JSON.stringify(err) }));
+                return resolve(cp<fsOrganelle.FileContent>("FileContent", data as string));
             });
         });
     },
-    WriteFile: ({ data: { filePath, content, encoding } }, { cp }) => {
+    WriteFile: ({ data: { filePath, content, encoding } }) => {
         return new Promise((resolve) => {
             fs.writeFile(filePath, content, { encoding }, (err) => {
-                if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                return resolve(cp.ACK());
+                if (err) return resolve(ccp.Exception({ message: JSON.stringify(err) }));
+                return resolve();
             });
         });
     }

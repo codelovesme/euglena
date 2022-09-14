@@ -1,5 +1,5 @@
 import { Particle } from "@euglena/core";
-import { DecryptedTokenV2 } from "../../../jwt";
+import { DecryptedToken } from "../../../jwt";
 
 export type EuglenaInfoV2 = Particle<
     "EuglenaInfo",
@@ -31,7 +31,7 @@ export type Session = Particle<
     "Session",
     {
         encryptedToken: string;
-        decryptedToken: DecryptedTokenV2["data"];
+        decryptedToken: DecryptedToken["data"];
     }
 >;
 

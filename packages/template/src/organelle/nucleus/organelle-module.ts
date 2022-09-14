@@ -1,10 +1,8 @@
 import { js, sys } from "cessnalib";
 import { Nucleus } from "./create-organelle-module.h";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
-import * as templateModule from "../../index";
-import * as coreModule from "@euglena/core";
-import * as cessnalib from "cessnalib";
-import { Particle, OrganelleTransmit, dco, createParticle } from "@euglena/core";
+import {Particles} from "../../utils/particles";
+import { Particle, OrganelleTransmit, dco, cp, Exception } from "@euglena/core";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;
@@ -71,16 +69,13 @@ const createReceive =
                     t: t,
                     o: dependencies.organelles,
                     to: Object.keys(dependencies.organelles).reduce(
-                        (acc, curr) => ({ 
+                        (acc, curr) => ({
                             ...acc,
                             [curr]: (particle: Particle) => t(particle, dependencies.organelles[curr])
                         }),
                         {} as any
                     ),
-                    params: dependencies.parameters,
-                    template: templateModule,
-                    core: coreModule,
-                    cessnalib: cessnalib
+                    params: dependencies.parameters
                 })
             ];
         }
@@ -100,9 +95,9 @@ const nucleusJs = dco<
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         const result = await receive(particle, source);
-        return createParticle<Particles>("Particles", result);
+        return cp<Particles>("Particles", result);
     },
-    Sap: async (particle, { t, cp }) => {
+    Sap: async (particle, { t }) => {
         receive = createReceive(t as OrganelleTransmit);
         try {
             switch (particle.data.type) {
@@ -117,7 +112,7 @@ const nucleusJs = dco<
             }
             return;
         } catch (error: any) {
-            return cp.Exception(new sys.type.Exception(error.message));
+            return cp<Exception>("Exception", new sys.type.Exception(error.message));
         }
     }
 });

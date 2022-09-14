@@ -1,7 +1,9 @@
-import { Sap } from "@euglena/core";
+import { ccp, dco, Particle} from "@euglena/core";
 import { netClient } from "@euglena/template";
 
-export default netClient.v1.com<Sap<undefined>>({
+export type Sap = Particle<"Sap">;
+
+export default dco<netClient.NetClient,Sap>({
     Sap: async () => {},
     TransmitParticle: async (
         {
@@ -10,9 +12,9 @@ export default netClient.v1.com<Sap<undefined>>({
                 target: { host, port }
             }
         },
-        { cp, t }
+        { t }
     ) => {
-        t(cp.Log({ message: `Particle got to sent ${JSON.stringify(particle.meta)}`, level: "Info" }));
+        t(ccp.Log({ message: `Particle got to sent ${JSON.stringify(particle.meta)}`, level: "Info" }));
         try {
             const resp = await fetch(`http://${host}:${port}`, {
                 method: "POST",
@@ -20,7 +22,7 @@ export default netClient.v1.com<Sap<undefined>>({
             });
             return resp.json();
         } catch (e:any) {
-            return cp.Exception({ message: JSON.stringify(e) });
+            return ccp.Exception({ message: JSON.stringify(e) });
         }
     }
 });

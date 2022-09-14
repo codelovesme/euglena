@@ -1,4 +1,4 @@
-import { sys } from "cessnalib";
+// import { sys } from "cessnalib";
 import { Exception } from "../../utils";
 import { Particle } from "../particle.h";
 import { AllInteractions } from "./all-interactions.h";
@@ -25,19 +25,19 @@ type COP = AllInteractions<{
 
 type Bind = BindOrganelleReactions<COP>;
 
-type CP = {
-    Coc: (
-        data: boolean,
-        adds: {
-            version: string;
-        }
-    ) => Coc;
-    Doc: () => Doc;
-} & {
-    AocResponse: (data: boolean) => AocResponse;
-} & {
-    Exception: (data: sys.type.Exception) => Exception;
-};
+// type CP = {
+//     Coc: (
+//         data: boolean,
+//         adds: {
+//             version: string;
+//         }
+//     ) => Coc;
+//     Doc: () => Doc;
+// } & {
+//     AocResponse: (data: boolean) => AocResponse;
+// } & {
+//     Exception: (data: sys.type.Exception) => Exception;
+// };
 
 type T = OrganelleTransmit<Coc | Doc, CocResponse>;
 
@@ -46,16 +46,25 @@ export type Result = [
     AssertSuper<"Aoc" | "Boc", keyof Bind>,
 
     AssertTrue<Equals<ReturnType<Bind["Aoc"]>, Promise<AocResponse | Exception>>>,
-    AssertSuper<Bind["Aoc"], (particle: Aoc, { t, cp }: { t: T; cp: CP }) => Promise<AocResponse | Exception>>
+    // AssertSuper<Bind["Aoc"], (particle: Aoc, { t, cp }: { t: T; cp: CP }) => Promise<AocResponse | Exception>>
+    AssertSuper<Bind["Aoc"], (particle: Aoc, { t }: { t: T }) => Promise<AocResponse | Exception>>
 ];
 
 const abc = (t: Bind["Aoc"]) => t;
 
-abc(async (p, { t, cp }) => {
+// abc(async (p, { t, cp }) => {
+//     true as unknown as [
+//         AssertTrue<Equals<typeof p, Aoc>>,
+//         AssertTrue<Equals<typeof t, T>>,
+//         AssertTrue<Equals<typeof cp, CP>>
+//     ];
+//     return {} as AocResponse;
+// });
+
+abc(async (p, { t }) => {
     true as unknown as [
         AssertTrue<Equals<typeof p, Aoc>>,
         AssertTrue<Equals<typeof t, T>>,
-        AssertTrue<Equals<typeof cp, CP>>
     ];
     return {} as AocResponse;
 });

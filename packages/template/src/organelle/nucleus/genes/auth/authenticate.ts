@@ -1,9 +1,13 @@
-import { CompareResult } from "../../../bcrypt";
+import { Compare, CompareResult } from "../../../bcrypt";
 import { dg } from "../../gene";
 import { Dependencies, Parameters, Organelles } from "../../gene.h";
 import { EuglenaInfoV2, Session } from "./particles";
-import { Particle } from "@euglena/core";
+import { ACK, ccp, cp, Exception, isParticleClass, Particle } from "@euglena/core";
 import { Impulse } from "../../../net-server";
+import { sys } from "cessnalib";
+import { ReadParticle, SaveParticle } from "../../../vacuole";
+import { Particles } from "../../../../utils/particles";
+import { DecryptedToken, EncryptedToken, GenerateToken } from "../../../jwt";
 
 export type Authenticate = Particle<
     "Authenticate",
@@ -29,10 +33,7 @@ export const createGene = dg<Impulse, AuthenticateDependencies>(
         meta: { class: "Impulse" },
         data: { particle: { meta: { class: "Authenticate" } } }
     },
-    async (impulse: Impulse, s, { cessnalib, template, core, to }) => {
-        const { sys } = cessnalib;
-        const { vacuole, bcrypt, jwt } = template;
-        const { cp, isParticleClass } = core;
+    async (impulse: Impulse, s, { to }) => {
         const { euglenaName, password } = impulse.data.particle.data as Authenticate["data"];
 
         /**
@@ -45,7 +46,7 @@ export const createGene = dg<Impulse, AuthenticateDependencies>(
          * Get user info
          *
          */
-        const fetchEuglenaInfo = vacuole.v1.cp.ReadParticle({
+        const fetchEuglenaInfo = cp<ReadParticle>("ReadParticle", {
             query: { meta: { class: "EuglenaInfo" }, data: { euglenaName } },
             count: 1
         });
@@ -63,7 +64,7 @@ export const createGene = dg<Impulse, AuthenticateDependencies>(
         /**
          * Compare Password
          */
-        const encryptPassword = bcrypt.v1.cp.Compare({
+        const encryptPassword = cp<Compare>("Compare", {
             hashedPassword: euglenaInfo.data.password,
             plainPassword: password
         });
@@ -77,7 +78,7 @@ export const createGene = dg<Impulse, AuthenticateDependencies>(
         const createdAt = new Date().getTime();
         const expireAt =
             createdAt + sys.type.StaticTools.TimeSpan.toUnixTimestamp(new sys.type.TimeSpan(1, 1, 1, 1, 1));
-        const decryptedTokenData: DecryptedTokenV2["data"] = {
+        const decryptedTokenData: DecryptedToken["data"] = {
             euglenaName: euglenaName,
             createdAt,
             expireAt,
@@ -85,7 +86,10 @@ export const createGene = dg<Impulse, AuthenticateDependencies>(
             roles: euglenaInfo.data.roles,
             status: euglenaInfo.data.status
         };
-        const generateToken = jwt.v2.cp.GenerateToken(decryptedTokenData, { version: "2.0" });
+        const generateToken = cp<GenerateToken>("GenerateToken", decryptedTokenData, {
+            version: "2.0",
+            namespace: "Jwt"
+        });
         const generateTokenResult = (await to.jwt(generateToken)) as EncryptedToken | Exception;
         if (isParticleClass(generateTokenResult, "Exception")) return generateTokenResult;
 
@@ -96,7 +100,7 @@ export const createGene = dg<Impulse, AuthenticateDependencies>(
             decryptedToken: decryptedTokenData,
             encryptedToken: generateTokenResult.data
         });
-        const saveSession = vacuole.v1.cp.SaveParticle({
+        const saveSession = cp<SaveParticle>("SaveParticle", {
             count: 1,
             particle: session,
             query: {

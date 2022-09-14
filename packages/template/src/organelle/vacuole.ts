@@ -1,5 +1,12 @@
-import { AllInteractions, Exception, Particle, Log, Meta, GoingParticleNameUnion } from "@euglena/core";
-import { sys, ts } from "cessnalib";
+import {
+    AllInteractions,
+    Exception,
+    Particle,
+    Log,
+    Meta,
+} from "@euglena/core";
+import { sys} from "cessnalib";
+import { GetAlive } from "../utils/particles";
 
 export type Count = "all" | number;
 export type ReadParticle = Particle<
@@ -21,11 +28,8 @@ export type SaveParticle = Particle<
 export type RemoveParticle = Particle<"RemoveParticle", { query: sys.type.RecursivePartial<Particle>; count: Count }>;
 export type Metas = Particle<"Metas", Meta[]>;
 export type Hibernate = Particle<"Hibernate">;
-export type GetAlive = Particle<"GetAlive">;
 
 export type Vacuole = AllInteractions<{
     in: [[SaveParticle, Metas], [ReadParticle, Particle<"Particles", Particle[]>], RemoveParticle, GetAlive, Hibernate];
     out: [Log, Exception];
 }>;
-
-export const goingParticleNames: ts.TupleFromUnion<GoingParticleNameUnion<Vacuole>> = ["Log", "Exception"];

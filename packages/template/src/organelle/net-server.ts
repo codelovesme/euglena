@@ -1,5 +1,5 @@
 import { AllInteractions, Log, Particle } from "@euglena/core";
-import { GetAlive } from "../particle";
+import { GetAlive } from "../utils/particles";
 
 export type Impulse = Particle<
     "Impulse",

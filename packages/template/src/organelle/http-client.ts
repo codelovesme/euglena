@@ -32,6 +32,15 @@ export type Put = Particle<
     { namespace: Namespace }
 >;
 
+export type Delete = Particle<
+    "Delete",
+    {
+        url: string;
+        headers?: Headers;
+    },
+    { namespace: Namespace }
+>;
+
 export type Response = Particle<
     "Response",
     {
@@ -43,6 +52,6 @@ export type Response = Particle<
 >;
 
 export type HttpClient = AllInteractions<{
-    in: [[Get, Response], [Post, Response], [Put, Response]];
+    in: [[Get, Response], [Post, Response], [Put, Response], [Delete, Response]];
     out: [Log];
 }>;

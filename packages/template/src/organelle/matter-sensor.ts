@@ -12,6 +12,6 @@ export type Matter = Particle<
 >;
 
 export type MatterSensor = AllInteractions<{
-    in: [Read, Matter];
+    in: [[Read, Matter]];
     out: [Log];
 }>;

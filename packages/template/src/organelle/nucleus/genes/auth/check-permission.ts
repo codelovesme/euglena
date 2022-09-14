@@ -1,6 +1,7 @@
-import { Particle } from "@euglena/core";
-import { Particles, Exception } from "../../../../particle";
+import { cp, Exception, isParticleClass, ccp, Particle } from "@euglena/core";
+import { Particles } from "../../../../utils/particles";
 import { dg, Organelles, Parameters } from "../../../nucleus";
+import { ReadParticle } from "../../../vacuole";
 import { Dependencies } from "../../gene.h";
 import { EuglenaInfoV2 } from "./particles";
 
@@ -49,12 +50,9 @@ export type CheckPermissionDependencies = Dependencies<CheckPermissionOrganelles
 export const createGeneCheckPermission = dg<CheckPermission, CheckPermissionDependencies>(
     "Check Permission",
     { meta: { class: "CheckPermission" } },
-    async ({ data: { particle: particleToCheck, sender } }, s, { to, params, template, core }) => {
-        const { vacuole,ccp } = template;
-        const { isParticleClass } = core;
-
+    async ({ data: { particle: particleToCheck, sender } }, s, { to, params }) => {
         //Read permissons of the euglena
-        const readPermissions = vacuole.v1.cp.ReadParticle({
+        const readPermissions = cp<ReadParticle>("ReadParticle", {
             count: "all",
             query: { meta: { class: "Permission" }, data: { receiverEuglenaName: params.euglenaName } }
         });
@@ -68,7 +66,7 @@ export const createGeneCheckPermission = dg<CheckPermission, CheckPermissionDepe
                 "role" in permission.data.sender
                     ? sender.data.roles.includes(permission.data.sender.role)
                     : permission.data.sender.euglenaName == sender.data.euglenaName;
-            if (relatedPermission && permission.data.particles.includes(particleToCheck)) return ccp.ACK();
+            if (relatedPermission && permission.data.particles.includes(particleToCheck)) return ccp.ACK()
         }
         return ccp.NACK();
     }

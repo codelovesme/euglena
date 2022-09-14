@@ -53,18 +53,6 @@ export interface GeneReaction<TriggerParticle extends Particle = Particle, D ext
              * Parameters
              */
             params: D["parameters"];
-            /**
-             * template module
-             */
-            template: TemplateModule;
-            /**
-             * core module
-             */
-            core: CoreModule;
-            /**
-             * cassnalib
-             */
-            cessnalib: Cessnalib;
         }
     ): Promise<Particle | void>;
 }

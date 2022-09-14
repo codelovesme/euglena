@@ -1,5 +1,5 @@
 import { AllInteractions, Log, Particle } from "@euglena/core";
-import { Particles } from "../../particle";
+import { Particles } from "../../utils/particles";
 
 export type Namespace = "Nucleus";
 

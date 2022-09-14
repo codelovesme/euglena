@@ -1,4 +1,3 @@
-import { cp } from "./particle";
 import {
     AllInteractions,
     BindOrganelleReactions,
@@ -6,18 +5,15 @@ import {
     ComingResponseParticle,
     CreateOrganelle,
     DefineCreateOrganelle,
-    GoingParticleNameUnion,
     InsertSapIntoParticles,
     Interaction,
     OrganelleReceive,
     Particle
 } from "../types";
-import { ts } from "cessnalib";
 
 export const dco: DefineCreateOrganelle =
     <COP extends AllInteractions, I extends Interaction>(
-        goingParticles: ts.TupleFromUnion<GoingParticleNameUnion<COP>>,
-        bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>,
+        bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>
     ): CreateOrganelle<ComingParticles<COP>, ComingResponseParticle<COP>> =>
     <OrganelleName extends string>(params: {
         name: OrganelleName;
@@ -29,14 +25,7 @@ export const dco: DefineCreateOrganelle =
         if (reaction) {
             const t = params?.transmit ? params?.transmit.bind(undefined, name as string) : undefined;
             return await reaction(particle, {
-                t: t,
-                cp: (goingParticles as GoingParticleNameUnion<COP>[]).reduce(
-                    (acc, curr) => ({
-                        ...acc,
-                        [curr]: (...params: any[]) => cp(curr, ...params)
-                    }),
-                    {}
-                )
+                t: t ? (particle:Particle) => t(particle,"Nucleus") : undefined
             });
         } else {
             // return cps.Log(

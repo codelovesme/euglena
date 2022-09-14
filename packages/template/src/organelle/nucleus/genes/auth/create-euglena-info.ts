@@ -2,12 +2,13 @@ import { EuglenaInfoV2 } from "./particles";
 import { CheckSession } from "./check-session";
 import { CheckPermission } from "./check-permission";
 import { Hash, HashedPassword } from "../../../bcrypt";
-import { ACK, createParticle, Exception, Particle } from "@euglena/core";
+import { ACK, ccp, cp, createParticle, Exception, isParticleClass, Particle } from "@euglena/core";
 import { Impulse } from "../../../net-server";
 import { dg } from "../../gene";
 import { Organelles, Dependencies, Parameters } from "../../gene.h";
 import { ReceiveParticle } from "../../create-organelle-module.h";
 import { SaveParticle } from "../../../vacuole";
+import { sys } from "cessnalib";
 
 export type CreateEuglenaInfo = Particle<"CreateEuglenaInfo", EuglenaInfoV2["data"]>;
 
@@ -25,13 +26,12 @@ export type CreateEuglenaInfoDependencies = Dependencies<CreateEuglenaInfoOrgane
 export const createGene = dg<Impulse, CreateEuglenaInfoDependencies>(
     "Create EuglenaInfo",
     { meta: { class: "Impulse" }, data: { particle: { meta: { class: "CreateEuglenaInfo" } } } },
-    async (p, s, { t, to, core, cessnalib, params }) => {
-        const { isParticleClass, cp } = core;
+    async (p, s, { t, to, params }) => {
         const token = p.data.token;
         const createEuglenaInfoParticle = p.data.particle as CreateEuglenaInfo;
 
         //check session
-        const checkSession: CheckSession = cp("CheckSession", token);
+        const checkSession: CheckSession = cp<CheckSession>("CheckSession", token);
         const receiveParticle = createParticle<ReceiveParticle>("ReceiveParticle", {
             particle: checkSession,
             source: "Nucleus"
@@ -54,9 +54,8 @@ export const createGene = dg<Impulse, CreateEuglenaInfoDependencies>(
         const checkPermissionResult = (await to.nucleus(receiveParticle2)) as ACK | Exception;
         if (isParticleClass(checkPermissionResult, "Exception")) return checkPermissionResult;
         if (isParticleClass(checkPermissionResult, "NACK"))
-            return cp<Exception>(
-                "Exception",
-                new cessnalib.sys.type.Exception(
+            return ccp.Exception(
+                new sys.type.Exception(
                     `Euglena ${checkSessionResult.data.euglenaName} is no permission to send particle ${createEuglenaInfoParticle.meta.class} to euglena ${params.euglenaName}`
                 )
             );
@@ -84,6 +83,6 @@ export const createGene = dg<Impulse, CreateEuglenaInfoDependencies>(
         if (isParticleClass(saveEuglenaInfoResult, "Exception")) return saveEuglenaInfoResult;
 
         //return ACK
-        return cp<ACK>("ACK");
+        return ccp.ACK();
     }
 );
