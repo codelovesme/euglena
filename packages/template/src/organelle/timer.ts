@@ -7,5 +7,5 @@ export type Time = Particle<"Time", sys.type.Time>;
 
 export type Timer = AllInteractions<{
     in: [[ReadTime, Time], [SetTime, ACK]];
-    out: [];
+    out: [Time];
 }>;

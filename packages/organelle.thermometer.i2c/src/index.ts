@@ -1,10 +1,12 @@
-import { Sap } from "@euglena/core";
+import {  ccp, dco, Particle } from "@euglena/core";
 import { thermometer } from "@euglena/template";
 import i2c from "i2c-bus";
 
-let sap: { ic2Address: number; deviceAddress: number; interval: number };
+export type Sap = Particle<"Sap", { ic2Address: number; deviceAddress: number; interval: number }>;
 
-export default thermometer.v1.com<Sap<typeof sap>>({
+let sap: Sap["data"];
+
+export default dco<thermometer.Thermometer, Sap>({
     Sap: async (p) => {
         sap = p.data;
     },
@@ -34,9 +36,9 @@ export default thermometer.v1.com<Sap<typeof sap>>({
                     )
                     .catch(console.error);
             }, interval);
-            return cp.ACK();
-        } catch (e:any) {
-            return cp.Exception({ message: JSON.stringify(e) });
+            return ccp.ACK();
+        } catch (e: any) {
+            return ccp.Exception({ message: JSON.stringify(e) });
         }
     }
 });

@@ -6,3 +6,4 @@ export type ParticleStructure = {
 };
 
 export type AllInteractions<I extends ParticleStructure = ParticleStructure> = I;
+

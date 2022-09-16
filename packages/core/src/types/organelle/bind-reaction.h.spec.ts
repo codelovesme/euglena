@@ -3,7 +3,6 @@ import { Exception } from "../../utils";
 import { Particle } from "../particle.h";
 import { AllInteractions } from "./all-interactions.h";
 import { ComingParticleNameUnion } from "./in-out-particle.h";
-import { OrganelleTransmit } from "./organelle-receive.h";
 import { OrganelleReaction } from "./reaction.h";
 import { AssertSuper, AssertTrue, Equals } from "./utils";
 
@@ -39,7 +38,7 @@ type Bind = BindOrganelleReactions<COP>;
 //     Exception: (data: sys.type.Exception) => Exception;
 // };
 
-type T = OrganelleTransmit<Coc | Doc, CocResponse>;
+type T = (particle: Coc | Doc) => Promise<CocResponse>;
 
 export type Result = [
     AssertSuper<keyof Bind, "Aoc" | "Boc">,

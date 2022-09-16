@@ -15,11 +15,11 @@ export default dco<netClient.NetClient,Sap>({
         },
         { cp, t }
     ) => {
-        t(cp.Log({ message: `Particle got to sent ${JSON.stringify(particle.meta)}`, level: "Info" }));
+        t(cp("Log",{ message: `Particle got to sent ${JSON.stringify(particle.meta)}`, level: "Info" }));
         try {
             return (await http.post(`http://${host}:${port}`, particle)).data;
         } catch (e:any) {
-            return cp.Exception({ message: JSON.stringify(e) });
+            return cp("Exception",{ message: JSON.stringify(e) });
         }
     }
 });

@@ -1,15 +1,16 @@
-import { Sap, Particle, CreateOrganelleParticles, P } from "@euglena/core";
-import {ui} from "@euglena/template";
+import { Particle, dco, ACK, CreateParticleUnion, Exception, Log, ccp } from "@euglena/core";
+import { ui } from "@euglena/template";
 
 import React, { createContext } from "react";
 import ReactDOM from "react-dom";
 import { register, unregister } from "./serviceWorker";
 import { sys } from "cessnalib";
-import { OrganelleTransmit } from "@euglena/core/dist/organelle/organelle-receive.h";
+
+export type Sap = Particle<"Sap", { rootComponent: typeof App; serviceWorker: boolean }>;
 
 let App: React.FC<any>;
 export const ToolsContext = createContext({
-    t: {} as OrganelleTransmit<
+    t: {} as (particle: Coc | Doc) => Promise<CocResponse><
         | Particle<"ACK", undefined, {}>
         | Particle<"Exception", sys.type.Exception, {}>
         | Particle<
@@ -23,21 +24,10 @@ export const ToolsContext = createContext({
         | Particle<"Event">,
         void | Particle
     >,
-    cp: {} as CreateOrganelleParticles<{
-        ACK: P<undefined, {}>;
-        Exception: P<sys.type.Exception, {}>;
-        Log: P<
-            {
-                message: string;
-                level: "Error" | "Info" | "Warning";
-            },
-            {}
-        >;
-        Event: P<any, {}>;
-    }>
+    cp: {} as CreateParticleUnion<ACK | Exception | Log | ui.Event>;
 });
 
-export default ui.v1.com<Sap<{ rootComponent: typeof App; serviceWorker: boolean }>>({
+export default dco<ui.UI, Sap>({
     Sap: async (p) => {
         const { rootComponent, serviceWorker } = p.data;
         App = rootComponent;
@@ -48,6 +38,6 @@ export default ui.v1.com<Sap<{ rootComponent: typeof App; serviceWorker: boolean
             <ToolsContext.Provider value={{ t, cp }}>{App(props)}</ToolsContext.Provider>,
             document.getElementById("root")
         );
-        return cp.ACK();
+        return ccp.ACK();
     }
 });

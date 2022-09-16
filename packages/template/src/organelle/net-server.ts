@@ -1,5 +1,5 @@
 import { AllInteractions, Log, Particle } from "@euglena/core";
-import { GetAlive } from "../utils/particles";
+import { GetAlive, Particles } from "../utils/particles";
 
 export type Impulse = Particle<
     "Impulse",
@@ -12,5 +12,5 @@ export type Impulse = Particle<
 
 export type NetServer = AllInteractions<{
     in: [GetAlive];
-    out: [[Impulse, Impulse], Log];
+    out: [[Impulse, Particles], Log];
 }>;

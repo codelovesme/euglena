@@ -4,16 +4,15 @@ import { Interaction } from "./interaction.h";
 import { FindInteraction } from "./utils";
 
 export type TriggerParticleFromInteraction<I extends Interaction> = I extends Particle[] ? I[0] : I;
-export type ResponseParticleFromInteraction<I extends Interaction> = I extends [
-    Particle,
-    Particle
-]
-    ? I[1]
-    : never;
+export type ResponseParticleFromInteraction<I extends Interaction> = I extends [Particle, Particle] ? I[1] : never;
 
 export type ComingParticleNameUnion<COP extends AllInteractions> = TriggerParticleFromInteraction<
     COP["in"][number]
 >["meta"]["class"];
+
+export type ComingResponseParticles<COP extends AllInteractions> = ResponseParticleFromInteraction<
+    COP["in"][number]
+>;
 
 export type ComingResponseParticleNameUnion<COP extends AllInteractions> = ResponseParticleFromInteraction<
     COP["in"][number]
@@ -35,6 +34,10 @@ export type GoingParticleNameUnion<COP extends AllInteractions> = TriggerParticl
     COP["out"][number]
 >["meta"]["class"];
 
+export type GoingResponseParticles<COP extends AllInteractions> = ResponseParticleFromInteraction<
+    COP["out"][number]
+>;
+
 export type GoingResponseParticleNameUnion<COP extends AllInteractions> = ResponseParticleFromInteraction<
     COP["out"][number]
 >["meta"]["class"];
@@ -51,4 +54,16 @@ export type GoingResponseParticle<
     N extends GoingParticleNameUnion<COP> = GoingParticleNameUnion<COP>
 > = ResponseParticleFromInteraction<FindInteraction<COP["out"][number], N>>;
 
-import "./in-out-particle.h.spec"
+export type AllParticles<COP extends AllInteractions> =
+    | ComingParticles<COP>
+    | GoingParticles<COP>
+    | ComingResponseParticles<COP>
+    | GoingResponseParticles<COP>;
+
+export type AllParticleNameUnion<COP extends AllInteractions> =
+    | ComingParticleNameUnion<COP>
+    | GoingParticleNameUnion<COP>
+    | ComingResponseParticleNameUnion<COP>
+    | GoingResponseParticleNameUnion<COP>;
+
+import "./in-out-particle.h.spec";

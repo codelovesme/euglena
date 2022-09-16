@@ -10,7 +10,9 @@ import {
     ComingParticles,
     ComingParticle,
     GoingParticles,
-    GoingParticle
+    GoingParticle,
+    AllParticleNameUnion,
+    AllParticles
 } from "./in-out-particle.h";
 import { AssertSuper, AssertTrue, Equals } from "./utils";
 
@@ -25,6 +27,7 @@ type COP = AllInteractions<{
     in: [[Aoc, AocResponse], [Boc]];
     out: [[Coc, CocResponse], [Doc]];
 }>;
+
 export type Result = [
     AssertSuper<TriggerParticleFromInteraction<COP["in"][number]>, Aoc | Boc>,
     AssertSuper<Aoc | Boc, TriggerParticleFromInteraction<COP["in"][number]>>,
@@ -72,5 +75,11 @@ export type Result = [
     AssertTrue<Equals<GoingParticle<COP, "Doc">, Doc>>,
 
     AssertTrue<[Particle, Particle] extends Particle[] ? true : false>,
-    AssertTrue<[Particle] extends Particle[] ? true : false>
+    AssertTrue<[Particle] extends Particle[] ? true : false>,
+
+    AssertSuper<AllParticleNameUnion<COP>, "Aoc" | "Boc" | "Coc" | "Doc" | "CocResponse" | "AocResponse">,
+    AssertSuper<"Aoc" | "Boc" | "Coc" | "Doc" | "CocResponse" | "AocResponse", AllParticleNameUnion<COP>>,
+
+    AssertSuper<AllParticles<COP>, Aoc | Boc | Coc | Doc | CocResponse | AocResponse>,
+    AssertSuper<Aoc | Boc | Coc | Doc | CocResponse | AocResponse, AllParticles<COP>>
 ];

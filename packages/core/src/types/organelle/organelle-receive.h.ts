@@ -6,7 +6,3 @@ export interface OrganelleReceive<
 > {
     (particle: InComingParticle): Promise<OutGoingParticle>;
 }
-
-export interface OrganelleTransmit<P extends Particle = Particle, Resp extends Particle | void = Particle | void> {
-    (particle: P): Promise<Resp>;
-}

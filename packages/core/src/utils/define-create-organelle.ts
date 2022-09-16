@@ -10,9 +10,10 @@ import {
     OrganelleReceive,
     Particle
 } from "../types";
+import { cp } from "./particle";
 
-export const dco: DefineCreateOrganelle =
-    <COP extends AllInteractions, I extends Interaction>(
+export const dco:DefineCreateOrganelle =
+    <COP extends AllInteractions,I extends Interaction>(
         bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>
     ): CreateOrganelle<ComingParticles<COP>, ComingResponseParticle<COP>> =>
     <OrganelleName extends string>(params: {
@@ -25,7 +26,9 @@ export const dco: DefineCreateOrganelle =
         if (reaction) {
             const t = params?.transmit ? params?.transmit.bind(undefined, name as string) : undefined;
             return await reaction(particle, {
-                t: t ? (particle:Particle) => t(particle,"Nucleus") : undefined
+                t: t ? (particle: Particle) => t(particle, "Nucleus") : undefined,
+                cp: cp,
+                crp: cp
             });
         } else {
             // return cps.Log(
@@ -35,3 +38,4 @@ export const dco: DefineCreateOrganelle =
             console.error(`There is no reaction of ${name} for given particle ${JSON.stringify(particle.meta)}`);
         }
     };
+

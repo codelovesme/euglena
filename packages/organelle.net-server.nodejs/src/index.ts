@@ -1,19 +1,22 @@
 import * as http from "http";
-import { Sap, isParticle } from "@euglena/core";
-import { netServer, ccp, Particles } from "@euglena/template";
+import { cp, dco, isParticle, Particle } from "@euglena/core";
+import { netServer } from "@euglena/template";
+
+export type Sap = Particle<
+    "Sap",
+    {
+        port: number;
+        euglenaName: string;
+    }
+>;
 
 let server: http.Server;
 let sap: {
     port: number;
     euglenaName: string;
 };
-export default netServer.v1.com<
-    Sap<{
-        port: number;
-        euglenaName: string;
-    }>
->({
-    Sap: async ({ data }, { cp, t }) => {
+export default dco<netServer.NetServer, Sap>({
+    Sap: async ({ data }, { t }) => {
         sap = data;
         server = http.createServer((req, res) => {
             if (req.method == "POST") {
@@ -31,10 +34,10 @@ export default netServer.v1.com<
                     try {
                         const particle = JSON.parse(body);
                         if (isParticle(particle) && particle.meta.class === "Impulse") {
-                            const results = await t(particle as any) as Particles;
+                            const results = await t(particle as any);
                             res.end(
                                 JSON.stringify(
-                                    ccp.Impulse({
+                                    cp<netServer.Impulse>("Impulse", {
                                         particle: results.data[0],
                                         source: sap.euglenaName
                                     })
@@ -43,7 +46,7 @@ export default netServer.v1.com<
                         }
                     } catch (e: any) {
                         t(
-                            cp.Log({
+                            cp("Log", {
                                 message: `In ${"Net Server"} error occurred while receiving impulse Err: ${e.message}`,
                                 level: "Error"
                             })
@@ -60,7 +63,7 @@ export default netServer.v1.com<
     GetAlive: async (p, { t, cp }) => {
         server.listen(sap.port, () => {
             t(
-                cp.Log({
+                cp("Log", {
                     message: `Server running at ${sap.port}`,
                     level: "Info"
                 })

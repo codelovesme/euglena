@@ -1,4 +1,4 @@
-import {  Particle, AllInteractions, Log } from "@euglena/core";
+import {  Particle, AllInteractions, Log, ACK } from "@euglena/core";
 
 export type TransmitParticle = Particle<"TransmitParticle",{
     particle: Particle;
@@ -9,6 +9,6 @@ export type TransmitParticle = Particle<"TransmitParticle",{
 }>
 
 export type NetClient = AllInteractions<{
-    in:[TransmitParticle];
+    in:[[TransmitParticle,ACK]];
     out:[Log];
 }> 

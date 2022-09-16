@@ -43,7 +43,7 @@ export default dco<vacuole.Vacuole, Sap>({
     SaveParticle: async (p, { cp }) => {
         if (p.data instanceof Array) {
             particles = [...particles, ...p.data];
-            return cp.Metas(p.data.map((p) => p.meta));
+            cp("Meta",p.data.map((p) => p.meta));
         } else {
             const overridedParticles: Meta[] = [];
             const { query, count, particle } = p.data;
