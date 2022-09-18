@@ -1,6 +1,13 @@
-import { Sap } from "@euglena/core";
+import { dco, Particle } from "@euglena/core";
 import { webServer, Particles } from "@euglena/template";
 import express, { Express } from "express";
+
+export type Sap = Particle<
+    "Sap",
+    {
+        port: number;
+    }
+>;
 
 let app: Express;
 let sap: {
@@ -9,11 +16,7 @@ let sap: {
 const parsePathParams = (path: string): string[] => {
     return path.split("/:").slice(1);
 };
-export default webServer.v1.com<
-    Sap<{
-        port: number;
-    }>
->({
+export default dco<webServer.WebServer, Sap>({
     Sap: async ({ data }, { cp, t }) => {
         sap = data;
         app = express();
@@ -22,7 +25,7 @@ export default webServer.v1.com<
         const pathParams = parsePathParams(path);
         app[method](`${path}`, async (req, res) => {
             const resp = (await t(
-                cp.WebServerImpulse({
+                cp("WebServerImpulse",{
                     path,
                     method,
                     pathParams: pathParams
@@ -49,7 +52,6 @@ export default webServer.v1.com<
             )) as Particles;
             res.send(resp.data[0]);
         });
-        return cp.ACK();
     },
     GetAlive: async () => {
         app.listen(sap.port, () => console.log(`app listening at ${sap.port}`));

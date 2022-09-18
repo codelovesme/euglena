@@ -1,5 +1,5 @@
 import { sys } from "cessnalib";
-import { OrganelleTransmit, Particle } from "@euglena/core";
+import { Transmit, Particle } from "@euglena/core";
 import * as coreModule from "@euglena/core";
 import * as templateModule from "../../index";
 import * as cessnalib from "cessnalib";
@@ -33,7 +33,7 @@ export interface GeneReaction<TriggerParticle extends Particle = Particle, D ext
             /**
              * OrganelleTransmit
              */
-            t: OrganelleTransmit;
+            t: Transmit;
             /**
              *Send particle to specific organelle
              */
@@ -43,7 +43,7 @@ export interface GeneReaction<TriggerParticle extends Particle = Particle, D ext
                     Resp extends Particle | void = Particle | void
                 >(
                     particle: P
-                ) => ReturnType<OrganelleTransmit<P, Resp>>;
+                ) => ReturnType<Transmit<P, Resp>>;
             };
             /**
              * Specify the referenced organelle names

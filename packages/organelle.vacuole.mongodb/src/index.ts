@@ -1,31 +1,34 @@
-import { Sap,Particle } from "@euglena/core";
+import { Particle, dco } from "@euglena/core";
 import { vacuole } from "@euglena/template";
-import { js } from "cessnalib";
+import { js, sys } from "cessnalib";
 import { MongoClient, Db } from "mongodb";
 
-type VacuoleMongoDbSap = Sap<{
-    /**
-     * @deprecated since version 1.4.13
-     * Use @param uri instead
-     */
-    host: string;
-    /**
-     * @deprecated since version 1.4.13
-     * Use @param uri instead
-     */
-    port: number;
-    database: string;
+export type Sap = Particle<
+    "Sap",
+    {
+        /**
+         * @deprecated since version 1.4.13
+         * Use @param uri instead
+         */
+        host: string;
+        /**
+         * @deprecated since version 1.4.13
+         * Use @param uri instead
+         */
+        port: number;
+        database: string;
 
-    /**
-     * @example
-     * "mongodb://dbdevc2scdlvsm:<password>@dbdevc2scdlvsm.documents.azure.com:10255/?ssl=true"
-     */
-    uri?: string;
-}>;
+        /**
+         * @example
+         * "mongodb://dbdevc2scdlvsm:<password>@dbdevc2scdlvsm.documents.azure.com:10255/?ssl=true"
+         */
+        uri?: string;
+    }
+>;
 
 let db: Db;
-let sap: VacuoleMongoDbSap["data"];
-export default vacuole.v1.com<VacuoleMongoDbSap>({
+let sap: Sap["data"];
+export default dco<vacuole.Vacuole, Sap>({
     Sap: async (p) => {
         sap = p.data;
     },
@@ -35,11 +38,11 @@ export default vacuole.v1.com<VacuoleMongoDbSap>({
         try {
             await client.connect();
             db = client.db(database);
-            t(cp.Log({ message: "Db is Online", level: "Info" }));
-            return cp.ACK();
+            t(cp("Log", { message: "Db is Online", level: "Info" }));
+            return;
         } catch (err) {
-            t(cp.Log({ message: "Couldn't connect to db", level: "Error" }));
-            return cp.Exception({ message: JSON.stringify(err) });
+            t(cp("Log", { message: "Couldn't connect to db", level: "Error" }));
+            return cp("Exception", { message: JSON.stringify(err) });
         }
     },
     Hibernate: async () => {},
@@ -47,42 +50,47 @@ export default vacuole.v1.com<VacuoleMongoDbSap>({
         const { query } = p.data;
         try {
             const collection = db.collection<Particle>("particles");
-            const findResult = collection.find(js.Class.toDotNotation(query),{_id:0} as any);
-            return cp.Particles(await findResult.toArray());
+            const findResult = collection.find(js.Class.toDotNotation(query), { _id: 0 } as any);
+            return cp("Particles", await findResult.toArray());
         } catch (err) {
-            t(cp.Log({ message: "Couldn't connect to db", level: "Error" }));
-            return cp.Exception({ message: JSON.stringify(err) });
+            t(cp("Log", { message: "Couldn't connect to db", level: "Error" }));
+            return cp("Exception", { message: JSON.stringify(err) });
         }
     },
     SaveParticle: async (p, { cp }) => {
         return new Promise((resolve) => {
-            if (p.data instanceof Array) {
-                db.collection("particles").insertMany(p.data, (err) => {
-                    if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                    return resolve(cp.ACK());
+            const data = p.data;
+            if (data instanceof Array) {
+                db.collection("particles").insertMany(data, async (err, result) => {
+                    if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
+                    return resolve();
                 });
             } else {
-                const { query, particle, count } = p.data;
+                const { query, particle, count } = p.data as {
+                    particle: Particle;
+                    query?: sys.type.RecursivePartial<Particle>;
+                    count: vacuole.Count;
+                };
                 if (query) {
                     if (count === "all") {
                         return db
                             .collection("particles")
-                            .updateMany(js.Class.toDotNotation(query), particle, { upsert: true }, (err, doc) => {
-                                if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                                return resolve(cp.ACK());
+                            .updateMany(js.Class.toDotNotation(query), particle, { upsert: true }, async (err, doc) => {
+                                if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
+                                return resolve();
                             });
                     } else {
                         return db
                             .collection("particles")
                             .replaceOne(js.Class.toDotNotation(query), particle, { upsert: true }, (err, doc) => {
-                                if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                                return resolve(cp.ACK());
+                                if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
+                                return resolve();
                             });
                     }
                 } else {
                     return db.collection("particles").insertOne(particle, (err) => {
-                        if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                        return resolve(cp.ACK());
+                        if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
+                        return resolve();
                     });
                 }
             }
@@ -93,13 +101,13 @@ export default vacuole.v1.com<VacuoleMongoDbSap>({
             const { query, count } = p.data;
             if (count === "all") {
                 db.collection("particles").deleteMany(js.Class.toDotNotation(query), (err, doc) => {
-                    if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                    return resolve(cp.ACK());
+                    if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
+                    return resolve();
                 });
             } else {
                 db.collection("particles").deleteOne(js.Class.toDotNotation(query), (err, doc) => {
-                    if (err) return resolve(cp.Exception({ message: JSON.stringify(err) }));
-                    return resolve(cp.ACK());
+                    if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
+                    return resolve();
                 });
             }
         });

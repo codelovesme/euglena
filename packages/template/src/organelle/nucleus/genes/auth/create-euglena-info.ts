@@ -32,11 +32,11 @@ export const createGene = dg<Impulse, CreateEuglenaInfoDependencies>(
 
         //check session
         const checkSession: CheckSession = cp<CheckSession>("CheckSession", token);
-        const receiveParticle = createParticle<ReceiveParticle>("ReceiveParticle", {
+        const receiveParticle = cp<ReceiveParticle>("ReceiveParticle", {
             particle: checkSession,
             source: "Nucleus"
         });
-        const checkSessionResult = (await to.nucleus(receiveParticle)) as EuglenaInfoV2 | Exception;
+        const checkSessionResult = await to.nucleus(receiveParticle) as EuglenaInfoV2 | Exception;
         if (isParticleClass(checkSessionResult, "Exception")) return checkSessionResult;
 
         //check EuglenaInfo has ability to create EuglenaInfo

@@ -1,4 +1,4 @@
-import { Particle, Meta, Exception, dco } from "@euglena/core";
+import { Particle, Exception, dco } from "@euglena/core";
 import { vacuole } from "@euglena/template";
 import { js } from "cessnalib";
 
@@ -38,44 +38,36 @@ export default dco<vacuole.Vacuole, Sap>({
                 len++;
             }
         }
-        return cp.Particles(retVal);
+        return cp("Particles", retVal);
     },
     SaveParticle: async (p, { cp }) => {
         if (p.data instanceof Array) {
             particles = [...particles, ...p.data];
-            cp("Meta",p.data.map((p) => p.meta));
         } else {
-            const overridedParticles: Meta[] = [];
             const { query, count, particle } = p.data;
             if (query) {
                 let overrideCount = 0;
                 for (let i = 0; i < particles.length && (count === "all" || overrideCount < count); i++) {
                     if (js.Class.doesMongoCover(particles[i], query)) {
-                        overridedParticles.push(particles[i].meta);
                         particles[i] = particle;
                         overrideCount++;
                     }
                 }
             } else {
-                overridedParticles.push(particle.meta);
                 particles = [...particles, particle];
             }
-            return cp.Metas(overridedParticles);
         }
     },
     RemoveParticle: async (p, { cp }) => {
         const { query, count } = p.data;
-        const removedParticles: Meta[] = [];
         if (query) {
             let removeCount = 0;
             for (let i = 0; i < particles.length && (count === "all" || removeCount < count); i++) {
                 if (js.Class.doesMongoCover(particles[i], query)) {
-                    const removed = particles.splice(i--, 1)[0];
-                    removedParticles.push(removed.meta);
+                    particles.splice(i, 1);
                     removeCount++;
                 }
             }
         }
-        return cp.Metas(removedParticles);
     }
 });

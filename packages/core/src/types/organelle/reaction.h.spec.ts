@@ -8,7 +8,7 @@ import { ComingParticle, GoingParticle } from "./in-out-particle.h";
 import { OrganelleReaction } from "./reaction.h";
 
 // import { OrganelleReaction } from "./reaction.h";
-import { AssertSuper, AssertTrue, Equals } from "./utils";
+import { AssertNever, AssertSuper, AssertTrue, Equals } from "./utils";
 
 type Aoc = Particle<"Aoc", boolean>;
 type Boc = Particle<"Boc">;
@@ -80,8 +80,9 @@ type Reaction = OrganelleReaction<COP, "Aoc">;
             AssertSuper<(class_: "Coc", data: boolean, adds: any) => Coc, typeof cp>,
             AssertSuper<(class_: "Doc") => Doc, typeof cp>
         ] => [] as any;
-        t({} as Coc);
-        t({} as Doc);
+        async (): Promise<CocResponse> => await t({} as Coc);
+        const tt = await t({} as Doc);
+        (): AssertNever<typeof tt> => tt;
         switch ({} as number) {
             case 1:
                 return {} as AocResponse;

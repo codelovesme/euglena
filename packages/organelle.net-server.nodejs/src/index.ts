@@ -1,5 +1,5 @@
 import * as http from "http";
-import { cp, dco, isParticle, Particle } from "@euglena/core";
+import { dco, isParticle, Particle } from "@euglena/core";
 import { netServer } from "@euglena/template";
 
 export type Sap = Particle<
@@ -16,7 +16,7 @@ let sap: {
     euglenaName: string;
 };
 export default dco<netServer.NetServer, Sap>({
-    Sap: async ({ data }, { t }) => {
+    Sap: async ({ data }, { t,cp }) => {
         sap = data;
         server = http.createServer((req, res) => {
             if (req.method == "POST") {
@@ -37,7 +37,7 @@ export default dco<netServer.NetServer, Sap>({
                             const results = await t(particle as any);
                             res.end(
                                 JSON.stringify(
-                                    cp<netServer.Impulse>("Impulse", {
+                                    cp("Impulse", {
                                         particle: results.data[0],
                                         source: sap.euglenaName
                                     })

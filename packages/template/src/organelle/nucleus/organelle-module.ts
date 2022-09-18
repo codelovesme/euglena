@@ -2,13 +2,13 @@ import { js, sys } from "cessnalib";
 import { Nucleus } from "./create-organelle-module.h";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
 import {Particles} from "../../utils/particles";
-import { Particle, OrganelleTransmit, dco, cp, Exception } from "@euglena/core";
+import { Particle, Transmit, dco, cp, Exception } from "@euglena/core";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;
 
 const createReceive =
-    (t: OrganelleTransmit) =>
+    (t: Transmit) =>
     async (particle: Particle, source: string): Promise<Particle<string, unknown, {}>[]> => {
         //find which genes are matched with properties of the particle
         const triggerableReactions = new Array<{
@@ -98,7 +98,7 @@ const nucleusJs = dco<
         return cp<Particles>("Particles", result);
     },
     Sap: async (particle, { t }) => {
-        receive = createReceive(t as OrganelleTransmit);
+        receive = createReceive(t as Transmit);
         try {
             switch (particle.data.type) {
                 case "FileSystemPath":

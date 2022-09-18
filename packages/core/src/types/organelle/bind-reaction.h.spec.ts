@@ -38,7 +38,7 @@ type Bind = BindOrganelleReactions<COP>;
 //     Exception: (data: sys.type.Exception) => Exception;
 // };
 
-type T = (particle: Coc | Doc) => Promise<CocResponse>;
+type T = ((particle: Coc) => Promise<CocResponse>) & ((particle: Doc) => Promise<never>);
 
 export type Result = [
     AssertSuper<keyof Bind, "Aoc" | "Boc">,

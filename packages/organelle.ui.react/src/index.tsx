@@ -4,27 +4,13 @@ import { ui } from "@euglena/template";
 import React, { createContext } from "react";
 import ReactDOM from "react-dom";
 import { register, unregister } from "./serviceWorker";
-import { sys } from "cessnalib";
 
 export type Sap = Particle<"Sap", { rootComponent: typeof App; serviceWorker: boolean }>;
 
 let App: React.FC<any>;
 export const ToolsContext = createContext({
-    t: {} as (particle: Coc | Doc) => Promise<CocResponse><
-        | Particle<"ACK", undefined, {}>
-        | Particle<"Exception", sys.type.Exception, {}>
-        | Particle<
-              "Log",
-              {
-                  message: string;
-                  level: "Error" | "Info" | "Warning";
-              },
-              {}
-          >
-        | Particle<"Event">,
-        void | Particle
-    >,
-    cp: {} as CreateParticleUnion<ACK | Exception | Log | ui.Event>;
+    t: {} as (particle: Particle<any>) => Promise<Particle | void>,
+    cp: {} as CreateParticleUnion<ACK | Exception | Log | ui.Event>
 });
 
 export default dco<ui.UI, Sap>({

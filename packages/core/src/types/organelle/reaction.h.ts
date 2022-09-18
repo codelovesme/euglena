@@ -6,7 +6,9 @@ import {
     ComingParticle,
     GoingParticles,
     GoingResponseParticle,
-    ComingResponseParticle
+    ComingResponseParticle,
+    GoingParticle,
+    GoingParticleNameUnion
 } from "./in-out-particle.h";
 
 export type OrganelleReactionCreateParticle<
@@ -18,14 +20,13 @@ export type OrganelleReactionCreateParticle<
 
 type UnionToIntersection<T> = (T extends any ? (x: T) => any : never) extends (x: infer R) => any ? R : never;
 
-export type _OrganelleTransmit<COP extends AllInteractions, CPN extends ComingParticleNameUnion<COP>> = (
-    particle: GoingParticles<COP>
-) => Promise<GoingResponseParticle<COP> extends undefined ? void : GoingResponseParticle<COP, CPN>>;
-
-export type OrganelleTransmit<
-    COP extends AllInteractions,
-    CPN extends ComingParticleNameUnion<COP>
-> = UnionToIntersection<{ [P in CPN]: _OrganelleTransmit<COP, P> }[CPN]>;
+export type OrganelleTransmit<COP extends AllInteractions> = UnionToIntersection<
+    {
+        [P in GoingParticleNameUnion<COP>]: (
+            particle: GoingParticle<COP, P>
+        ) => Promise<GoingResponseParticle<COP> extends undefined ? void : GoingResponseParticle<COP, P>>;
+    }[GoingParticleNameUnion<COP>]
+>;
 
 export interface OrganelleReaction<COP extends AllInteractions, CPN extends ComingParticleNameUnion<COP>> {
     (
@@ -34,7 +35,7 @@ export interface OrganelleReaction<COP extends AllInteractions, CPN extends Comi
             /**
              * transmit
              */
-            t: OrganelleTransmit<COP,CPN>;
+            t: OrganelleTransmit<COP>;
             /**
              * createParticle
              */

@@ -24,6 +24,6 @@ export type Hibernate = Particle<"Hibernate">;
 export type GetAlive = Particle<"GetAlive">;
 
 export type Vacuole = AllInteractions<{
-    in: [[SaveParticle, Metas], [ReadParticle, Particle<"Particles", Particle[]>], RemoveParticle, GetAlive, Hibernate];
+    in: [SaveParticle, [ReadParticle, Particle<"Particles", Particle[]>], RemoveParticle, GetAlive, Hibernate];
     out: [Log, Exception];
 }>;
