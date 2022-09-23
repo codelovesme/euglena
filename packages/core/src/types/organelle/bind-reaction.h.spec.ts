@@ -1,5 +1,4 @@
 // import { sys } from "cessnalib";
-import { Exception } from "../../utils";
 import { Particle } from "../particle.h";
 import { AllInteractions } from "./all-interactions.h";
 import { ComingParticleNameUnion } from "./in-out-particle.h";
@@ -44,9 +43,9 @@ export type Result = [
     AssertSuper<keyof Bind, "Aoc" | "Boc">,
     AssertSuper<"Aoc" | "Boc", keyof Bind>,
 
-    AssertTrue<Equals<ReturnType<Bind["Aoc"]>, Promise<AocResponse | Exception>>>,
+    AssertTrue<Equals<ReturnType<Bind["Aoc"]>, Promise<AocResponse>>>,
     // AssertSuper<Bind["Aoc"], (particle: Aoc, { t, cp }: { t: T; cp: CP }) => Promise<AocResponse | Exception>>
-    AssertSuper<Bind["Aoc"], (particle: Aoc, { t }: { t: T }) => Promise<AocResponse | Exception>>
+    AssertSuper<Bind["Aoc"], (particle: Aoc, { t }: { t: T }) => Promise<AocResponse>>
 ];
 
 const abc = (t: Bind["Aoc"]) => t;

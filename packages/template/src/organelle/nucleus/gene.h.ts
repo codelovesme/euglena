@@ -1,5 +1,12 @@
 import { sys } from "cessnalib";
-import { Transmit, Particle } from "@euglena/core";
+import {
+    Particle,
+    AllInteractions,
+    UnionToIntersection,
+    ComingParticleNameUnion,
+    ComingParticle,
+    ComingResponseParticle
+} from "@euglena/core";
 import * as coreModule from "@euglena/core";
 import * as templateModule from "../../index";
 import * as cessnalib from "cessnalib";
@@ -8,24 +15,34 @@ export type TemplateModule = typeof templateModule;
 export type CoreModule = typeof coreModule;
 export type Cessnalib = typeof cessnalib;
 
-type _Organelles = {
-    [organelleName: string]: string;
-};
-export type Organelles<T extends _Organelles = _Organelles> = T & {
-    nucleus: "Nucleus";
-};
+type _Organelle = { [organelleName: string]: AllInteractions };
+export type Organelles<T extends _Organelle = _Organelle> = T;
 
-type _Parameters = {
-    [key: string]: string | number | boolean;
-};
+type _Parameters = { [key: string]: string | number | boolean };
 export type Parameters<T extends _Parameters = _Parameters> = T;
 
+export type Stringify<O extends Organelles> = { [P in keyof O]: string };
 export type Dependencies<O extends Organelles = Organelles, P extends Parameters = Parameters> = {
-    organelles: O;
+    organelles: Stringify<O>;
     parameters: P;
 };
 
-export interface GeneReaction<TriggerParticle extends Particle = Particle, D extends Dependencies = Dependencies> {
+export type GeneTransmitInner<O extends string, COP extends AllInteractions> = UnionToIntersection<
+    {
+        [P in ComingParticleNameUnion<COP>]: (
+            particle: ComingParticle<COP, P>,
+            organelleName: O
+        ) => Promise<ComingResponseParticle<COP> extends undefined ? void : ComingResponseParticle<COP, P>>;
+    }[ComingParticleNameUnion<COP>]
+>;
+
+export type GeneTransmit<T extends { [x: string]: AllInteractions }> = UnionToIntersection<
+    {
+        [P in keyof T]: GeneTransmitInner<Exclude<P, number | symbol>, T[P]>;
+    }[keyof T]
+>;
+
+export interface GeneReaction<TriggerParticle extends Particle, O extends Organelles, P extends Parameters> {
     (
         particle: TriggerParticle,
         source: string,
@@ -33,38 +50,32 @@ export interface GeneReaction<TriggerParticle extends Particle = Particle, D ext
             /**
              * OrganelleTransmit
              */
-            t: Transmit;
+            t: GeneTransmit<O>;
             /**
-             *Send particle to specific organelle
+             * Organelle names
              */
-            to: {
-                [P in keyof D["organelles"]]: <
-                    P extends Particle = Particle,
-                    Resp extends Particle | void = Particle | void
-                >(
-                    particle: P
-                ) => ReturnType<Transmit<P, Resp>>;
-            };
-            /**
-             * Specify the referenced organelle names
-             */
-            o: D["organelles"];
+            o: Stringify<O>;
             /**
              * Parameters
              */
-            params: D["parameters"];
+            params: P;
         }
     ): Promise<Particle | void>;
 }
 
-export type Gene<TriggerParticle extends Particle = Particle, D extends Dependencies = Dependencies> = Particle<
+export type Gene<
+    TriggerParticle extends Particle = Particle,
+    O extends Organelles = Organelles,
+    P extends Parameters = Parameters
+> = Particle<
     "Gene",
     {
         name: string;
         triggers: sys.type.RecursivePartial<TriggerParticle>;
-        reaction: GeneReaction<TriggerParticle, D>;
-        dependencies: D;
+        reaction: GeneReaction<TriggerParticle, O, P>;
+        dependencies: Dependencies<O, P>;
         override?: string;
+        expireAt?: number;
     }
 >;
 
@@ -77,10 +88,10 @@ export interface GeneOptionals {
     expireAt?: number;
 }
 export interface AddGene<ParticleUnion extends Particle> {
-    <TriggerParticle extends ParticleUnion>(
+    <TriggerParticle extends ParticleUnion, O extends Organelles, P extends Parameters>(
         name: string,
         triggers: sys.type.RecursivePartial<TriggerParticle>,
-        reaction: GeneReaction<TriggerParticle>,
+        reaction: GeneReaction<TriggerParticle, O, P>,
         geneOptionals?: GeneOptionals
     ): void;
 }

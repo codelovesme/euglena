@@ -1,4 +1,3 @@
-import { Exception } from "../../utils";
 import { AllInteractions } from "./all-interactions.h";
 import { CreateParticleUnion } from "./create-particle.h";
 import {
@@ -15,8 +14,8 @@ export type OrganelleReactionCreateParticle<
     COP extends AllInteractions,
     CPN extends ComingParticleNameUnion<COP>
 > = ComingResponseParticle<COP, CPN> extends never
-    ? CreateParticleUnion<GoingParticles<COP> | Exception>
-    : CreateParticleUnion<GoingParticles<COP> | ComingResponseParticle<COP, CPN> | Exception>;
+    ? CreateParticleUnion<GoingParticles<COP>>
+    : CreateParticleUnion<GoingParticles<COP> | ComingResponseParticle<COP, CPN>>;
 
 type UnionToIntersection<T> = (T extends any ? (x: T) => any : never) extends (x: infer R) => any ? R : never;
 
@@ -41,9 +40,7 @@ export interface OrganelleReaction<COP extends AllInteractions, CPN extends Comi
              */
             cp: OrganelleReactionCreateParticle<COP, CPN>;
         }
-    ): Promise<
-        Exception | (ComingResponseParticle<COP, CPN> extends undefined ? void : ComingResponseParticle<COP, CPN>)
-    >;
+    ): Promise<ComingResponseParticle<COP, CPN> extends undefined ? void : ComingResponseParticle<COP, CPN>>;
 }
 
 import "./reaction.h.spec";

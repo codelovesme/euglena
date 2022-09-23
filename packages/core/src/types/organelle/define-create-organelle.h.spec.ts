@@ -26,7 +26,6 @@ dco<COP, SapInteraction>({
             AssertTrue<Equals<typeof p, Aoc>>,
             AssertSuper<typeof t, OrganelleTransmit<Coc | Doc, CocResponse>>,
             AssertTrue<Equals<typeof p, Aoc>>,
-            AssertSuper<(class_: "Exception", data: sys.type.Exception) => Exception, typeof cp>,
             AssertSuper<(class_: "AocResponse", data: boolean) => AocResponse, typeof cp>,
             AssertSuper<(class_: "Coc", data: boolean, adds: any) => Coc, typeof cp>,
             AssertSuper<(class_: "Doc") => Doc, typeof cp>

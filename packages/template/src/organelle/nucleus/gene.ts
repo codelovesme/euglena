@@ -1,14 +1,28 @@
-import { AddGene, GeneOptionals, GeneReaction, CreateChromosome, Chromosome, Gene, Dependencies } from "./gene.h";
+import {
+    AddGene,
+    GeneOptionals,
+    GeneReaction,
+    CreateChromosome,
+    Chromosome,
+    Gene,
+    Dependencies,
+    Organelles,
+    Parameters
+} from "./gene.h";
 import { sys } from "cessnalib";
 import { Particle, createMeta, Meta, cp } from "@euglena/core";
 
 export const createChromosome: CreateChromosome = (bind: (addGene: AddGene<Particle>) => void): Chromosome => {
     const geneCluster: Chromosome = [];
     bind(
-        <TriggerParticle extends Particle = Particle>(
+        <
+            TriggerParticle extends Particle = Particle,
+            O extends Organelles = Organelles,
+            P extends Parameters = Parameters
+        >(
             name: string,
             triggers: sys.type.RecursivePartial<TriggerParticle>,
-            reaction: GeneReaction<TriggerParticle>,
+            reaction: GeneReaction<TriggerParticle, O, P>,
             adds?: GeneOptionals
         ) => {
             const meta: Meta<"Gene"> =
@@ -21,13 +35,13 @@ export const createChromosome: CreateChromosome = (bind: (addGene: AddGene<Parti
 };
 
 export const defineGene =
-    <P extends Particle, D extends Dependencies = Dependencies>(
+    <P extends Particle, O extends Organelles, P_ extends Parameters>(
         name: string,
         triggers: sys.type.RecursivePartial<P>,
-        reaction: GeneReaction<P, D>,
+        reaction: GeneReaction<P, O, P_>,
         override?: string
     ) =>
-    (dependencies: D): Gene<P,D> =>
+    (dependencies: Dependencies<O, P_>): Gene<P, O, P_> =>
         cp("Gene", {
             name,
             reaction,

@@ -1,4 +1,4 @@
-import { Particle, Exception, dco } from "@euglena/core";
+import { Particle, Exception, dco, ccp } from "@euglena/core";
 import { vacuole } from "@euglena/template";
 import { js } from "cessnalib";
 

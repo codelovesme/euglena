@@ -1,5 +1,5 @@
 import { AllInteractions, Log, Particle } from "@euglena/core";
-import { GetAlive, Particles } from "../utils/particles";
+import { GetAlive, Particles } from "../particle.h";
 import { Headers } from "./utils";
 
 export type AddRoute = Particle<

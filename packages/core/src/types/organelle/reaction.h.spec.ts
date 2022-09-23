@@ -1,6 +1,4 @@
 // import { Exception } from "../../utils";
-import { sys } from "cessnalib";
-import { Exception } from "../../utils";
 import { Meta, Particle } from "../particle.h";
 import { AllInteractions } from "./all-interactions.h";
 import { CreateParticle, CreateParticleWithoutClass } from "./create-particle.h";
@@ -16,9 +14,10 @@ type Coc = Particle<"Coc", boolean, { version: string }>;
 type Doc = Particle<"Doc">;
 type CocResponse = Particle<"CocResponse", boolean>;
 type AocResponse = Particle<"AocResponse", boolean>;
+type AocResponse2 = Particle<"AocResponse2", string>;
 
 type COP = AllInteractions<{
-    in: [[Aoc, AocResponse], [Boc]];
+    in: [[Aoc, AocResponse | AocResponse2], [Boc]];
     out: [[Coc, CocResponse], [Doc]];
 }>;
 
@@ -75,20 +74,18 @@ type Reaction = OrganelleReaction<COP, "Aoc">;
     async (p, { cp, t }) => {
         (): [
             AssertTrue<Equals<typeof p, Aoc>>,
-            AssertSuper<(class_: "Exception", data: sys.type.Exception) => Exception, typeof cp>,
             AssertSuper<(class_: "AocResponse", data: boolean) => AocResponse, typeof cp>,
+            AssertSuper<(class_: "AocResponse2", data: string) => AocResponse2, typeof cp>,
             AssertSuper<(class_: "Coc", data: boolean, adds: any) => Coc, typeof cp>,
             AssertSuper<(class_: "Doc") => Doc, typeof cp>
         ] => [] as any;
         async (): Promise<CocResponse> => await t({} as Coc);
         const tt = await t({} as Doc);
         (): AssertNever<typeof tt> => tt;
-        switch ({} as number) {
-            case 1:
-                return {} as AocResponse;
-            //Uncommet to check if it gets an error
-            // case 2: return {} as boolean;
-            default:
-                return {} as Exception;
+        switch({} as number){
+            case 2: return {} as AocResponse2;
+            //check if it fails when uncomment
+            // case 3: return {} as number;
+            default: return {} as AocResponse;
         }
     };

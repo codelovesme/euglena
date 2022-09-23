@@ -12,7 +12,7 @@ export type LogDependencies = Dependencies<LogOrganelles, LogParameters>;
 export const createGene = dg<Log, LogDependencies>(
     "Log",
     { meta: { class: "Log" } },
-    async (p, s, { to }) => {
-        return await to.logger(p);
+    async (p, s, { t }) => {
+        return await t(p,"logger");
     }
 );

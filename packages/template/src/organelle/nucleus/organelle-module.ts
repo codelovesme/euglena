@@ -1,8 +1,8 @@
 import { js, sys } from "cessnalib";
 import { Nucleus } from "./create-organelle-module.h";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
-import {Particles} from "../../utils/particles";
-import { Particle, Transmit, dco, cp, Exception } from "@euglena/core";
+import { Particle, Transmit, dco, cp, ccp, ACK } from "@euglena/core";
+import { Exception, Particles } from "../../particle.h";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;
@@ -66,15 +66,8 @@ const createReceive =
             promises = [
                 ...promises,
                 reaction(particle, source, {
-                    t: t,
+                    t: t as any,
                     o: dependencies.organelles,
-                    to: Object.keys(dependencies.organelles).reduce(
-                        (acc, curr) => ({
-                            ...acc,
-                            [curr]: (particle: Particle) => t(particle, dependencies.organelles[curr])
-                        }),
-                        {} as any
-                    ),
                     params: dependencies.parameters
                 })
             ];
@@ -89,7 +82,8 @@ const nucleusJs = dco<
         Particle<
             "Sap",
             { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }
-        >
+        >,
+        ACK | Exception
     ]
 >({
     ReceiveParticle: async (p) => {
@@ -110,7 +104,7 @@ const nucleusJs = dco<
                     genes = particle.data.genes;
                     break;
             }
-            return;
+            return ccp.ACK();
         } catch (error: any) {
             return cp<Exception>("Exception", new sys.type.Exception(error.message));
         }

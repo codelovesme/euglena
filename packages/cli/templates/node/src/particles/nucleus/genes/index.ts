@@ -7,7 +7,9 @@ import * as printHelloWorld from "./print-hello-world";
 export default [
   printHelloWorld.createGene({
     organelles: {
-      logger: loggerConsoleName,
+      logger: {
+        name: loggerConsoleName
+      },
       nucleus: nucleusJsName,
     },
     parameters: {},
