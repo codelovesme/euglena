@@ -1,5 +1,5 @@
 import { Particle, dco } from "@euglena/core";
-import { vacuole } from "@euglena/template";
+import { ccp, vacuole } from "@euglena/template";
 import { js, sys } from "cessnalib";
 import { MongoClient, Db } from "mongodb";
 
@@ -39,10 +39,10 @@ export default dco<vacuole.Vacuole, Sap>({
             await client.connect();
             db = client.db(database);
             t(cp("Log", { message: "Db is Online", level: "Info" }));
-            return;
+            return ccp("ACK");
         } catch (err) {
             t(cp("Log", { message: "Couldn't connect to db", level: "Error" }));
-            return cp("Exception", { message: JSON.stringify(err) });
+            return ccp("Exception", { message: JSON.stringify(err) });
         }
     },
     Hibernate: async () => {},
@@ -54,7 +54,7 @@ export default dco<vacuole.Vacuole, Sap>({
             return cp("Particles", await findResult.toArray());
         } catch (err) {
             t(cp("Log", { message: "Couldn't connect to db", level: "Error" }));
-            return cp("Exception", { message: JSON.stringify(err) });
+            return ccp("Exception", { message: JSON.stringify(err) });
         }
     },
     SaveParticle: async (p, { cp }) => {
@@ -62,8 +62,8 @@ export default dco<vacuole.Vacuole, Sap>({
             const data = p.data;
             if (data instanceof Array) {
                 db.collection("particles").insertMany(data, async (err, result) => {
-                    if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
-                    return resolve();
+                    if (err) return resolve(ccp("Exception", { message: JSON.stringify(err) }));
+                    return resolve(ccp("ACK"));
                 });
             } else {
                 const { query, particle, count } = p.data as {
@@ -76,21 +76,21 @@ export default dco<vacuole.Vacuole, Sap>({
                         return db
                             .collection("particles")
                             .updateMany(js.Class.toDotNotation(query), particle, { upsert: true }, async (err, doc) => {
-                                if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
-                                return resolve();
+                                if (err) return resolve(ccp("Exception", { message: JSON.stringify(err) }));
+                                return resolve(ccp("ACK"));
                             });
                     } else {
                         return db
                             .collection("particles")
                             .replaceOne(js.Class.toDotNotation(query), particle, { upsert: true }, (err, doc) => {
-                                if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
-                                return resolve();
+                                if (err) return resolve(ccp("Exception", { message: JSON.stringify(err) }));
+                                return resolve(ccp("ACK"));
                             });
                     }
                 } else {
                     return db.collection("particles").insertOne(particle, (err) => {
-                        if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
-                        return resolve();
+                        if (err) return resolve(ccp("Exception", { message: JSON.stringify(err) }));
+                        return resolve(ccp("ACK"));
                     });
                 }
             }
@@ -101,13 +101,13 @@ export default dco<vacuole.Vacuole, Sap>({
             const { query, count } = p.data;
             if (count === "all") {
                 db.collection("particles").deleteMany(js.Class.toDotNotation(query), (err, doc) => {
-                    if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
-                    return resolve();
+                    if (err) return resolve(ccp("Exception", { message: JSON.stringify(err) }));
+                    return resolve(ccp("ACK"));
                 });
             } else {
                 db.collection("particles").deleteOne(js.Class.toDotNotation(query), (err, doc) => {
-                    if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
-                    return resolve();
+                    if (err) return resolve(ccp("Exception", { message: JSON.stringify(err) }));
+                    return resolve(ccp("ACK"));
                 });
             }
         });

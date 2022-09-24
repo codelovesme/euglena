@@ -1,4 +1,5 @@
-import { AllInteractions, Log, Particle } from "@euglena/core";
+import { AllInteractions, Particle } from "@euglena/core";
+import { Log } from "../particle";
 
 export type Read = Particle<"Read">;
 

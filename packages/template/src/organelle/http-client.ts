@@ -1,4 +1,5 @@
-import { AllInteractions, Log, Particle } from "@euglena/core";
+import { AllInteractions, Particle } from "@euglena/core";
+import { Log } from "../particle";
 import { Headers } from "./utils";
 
 export type Namespace = "HttpClient";

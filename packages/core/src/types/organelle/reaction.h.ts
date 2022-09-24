@@ -19,7 +19,7 @@ export type OrganelleReactionCreateParticle<
 
 type UnionToIntersection<T> = (T extends any ? (x: T) => any : never) extends (x: infer R) => any ? R : never;
 
-export type OrganelleTransmit<COP extends AllInteractions> = UnionToIntersection<
+export type OrganelleTransmit<COP extends AllInteractions=AllInteractions> = UnionToIntersection<
     {
         [P in GoingParticleNameUnion<COP>]: (
             particle: GoingParticle<COP, P>

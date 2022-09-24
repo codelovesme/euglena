@@ -1,5 +1,5 @@
-import { Particle, dco, ACK, CreateParticleUnion, Exception, Log, ccp } from "@euglena/core";
-import { ui } from "@euglena/template";
+import { Particle, dco, CreateParticleUnion } from "@euglena/core";
+import { ui, ACK, Log, ccp } from "@euglena/template";
 
 import React, { createContext } from "react";
 import ReactDOM from "react-dom";
@@ -10,7 +10,7 @@ export type Sap = Particle<"Sap", { rootComponent: typeof App; serviceWorker: bo
 let App: React.FC<any>;
 export const ToolsContext = createContext({
     t: {} as (particle: Particle<any>) => Promise<Particle | void>,
-    cp: {} as CreateParticleUnion<ACK | Exception | Log | ui.Event>
+    cp: {} as CreateParticleUnion<ACK | Log | ui.Event>
 });
 
 export default dco<ui.UI, Sap>({
@@ -24,6 +24,6 @@ export default dco<ui.UI, Sap>({
             <ToolsContext.Provider value={{ t, cp }}>{App(props)}</ToolsContext.Provider>,
             document.getElementById("root")
         );
-        return ccp.ACK();
+        return ccp("ACK");
     }
 });

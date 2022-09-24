@@ -1,33 +1,32 @@
-import { Particle, Exception, dco, ccp } from "@euglena/core";
-import { vacuole } from "@euglena/template";
-import { js } from "cessnalib";
+import { Particle, dco } from "@euglena/core";
+import { vacuole, Exception, Sap as S, ACK, ccp } from "@euglena/template";
+import { js, sys } from "cessnalib";
 
 let particles: Particle[] = [];
 
-export type Sap = Particle<
-    "Sap",
+export type Sap = S<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }
 >;
 
-export default dco<vacuole.Vacuole, Sap>({
+export default dco<vacuole.Vacuole, [Sap, Exception | ACK]>({
     Sap: async (particle) => {
-        try {
-            switch (particle.data.type) {
-                case "FileSystemPath":
-                case "NodeModules":
-                case "Url":
+        switch (particle.data.type) {
+            case "FileSystemPath":
+            case "NodeModules":
+            case "Url":
+                try {
                     particles = require(particle.data.path).default;
-                    break;
-                case "InMemory":
-                    particles = particle.data.particles;
-                    break;
-            }
-            return;
-        } catch (error: any) {
-            return {} as Exception;
+                } catch (error) {
+                    return ccp("Exception", new sys.type.Exception((error as { message: string }).message));
+                }
+                break;
+            case "InMemory":
+                particles = particle.data.particles;
+                break;
         }
+        return ccp("ACK");
     },
-    GetAlive: async () => {},
+    GetAlive: async () => { return ccp("ACK")},
     Hibernate: async () => {},
     ReadParticle: async (p, { cp }) => {
         const { query, count } = p.data;
@@ -57,6 +56,7 @@ export default dco<vacuole.Vacuole, Sap>({
                 particles = [...particles, particle];
             }
         }
+        return ccp("ACK");
     },
     RemoveParticle: async (p, { cp }) => {
         const { query, count } = p.data;
@@ -69,5 +69,6 @@ export default dco<vacuole.Vacuole, Sap>({
                 }
             }
         }
+        return ccp("ACK");
     }
 });

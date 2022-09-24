@@ -1,5 +1,5 @@
-import { Particle, dco, ccp, CreateParticleUnion, ACK, Exception, Log } from "@euglena/core";
-import { ui } from "@euglena/template";
+import { Particle, dco, CreateParticleUnion } from "@euglena/core";
+import { ui, ccp, ACK, Exception, Log } from "@euglena/template";
 import { EventEmitter, Injectable } from "@angular/core";
 import { sys } from "cessnalib";
 
@@ -25,9 +25,9 @@ export default dco<ui.UI, Sap>({
     Render: async (p) => {
         if (sap.context.stateEmitter) {
             sap.context.stateEmitter.emit(p.data);
-            return ccp.ACK();
+            return ccp("ACK");
         } else {
-            return ccp.Exception(new sys.type.Exception("Organelle Angular is need its SAP"));
+            return ccp("Exception", new sys.type.Exception("Organelle Angular is need its SAP"));
         }
     }
 });

@@ -1,4 +1,5 @@
-import { AllInteractions, CreateOrganelle, Log, Particle } from "@euglena/core";
+import { AllInteractions, Particle } from "@euglena/core";
+import { Log, OrganelleInfo } from "../particle/particle.h";
 
 export type Namespace = "EndoplasmicReticulum";
 
@@ -7,22 +8,7 @@ export type TransmitParticle = Particle<
     { target: string; particle: Particle },
     { namespace: Namespace }
 >;
-export type OrganelleInfo = Particle<
-    "OrganelleInfo",
-    {
-        name: string;
-        location:
-            | {
-                  type: "FileSystemPath" | "NodeModules" | "Url";
-                  path: string;
-              }
-            | {
-                  type: "InMemory";
-                  organelle: CreateOrganelle;
-              };
-    },
-    { namespace: Namespace }
->;
+
 export type TransmitResponse = Particle<"TransmitResponse", Particle | void, { namespace: Namespace }>;
 export type EuglenaHasBeenBorn = Particle<"EuglenaHasBeenBorn", { namespace: Namespace }>;
 

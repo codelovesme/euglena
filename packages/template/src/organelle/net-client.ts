@@ -1,14 +1,18 @@
-import {  Particle, AllInteractions, Log, ACK } from "@euglena/core";
+import { Particle, AllInteractions } from "@euglena/core";
+import { ACK, Exception, Log } from "../particle";
 
-export type TransmitParticle = Particle<"TransmitParticle",{
-    particle: Particle;
-    target: {
-        host: string;
-        port: number;
-    };
-}>
+export type TransmitParticle = Particle<
+    "TransmitParticle",
+    {
+        particle: Particle;
+        target: {
+            host: string;
+            port: number;
+        };
+    }
+>;
 
 export type NetClient = AllInteractions<{
-    in:[[TransmitParticle,ACK]];
-    out:[Log];
-}> 
+    in: [[TransmitParticle, ACK | Exception]];
+    out: [Log];
+}>;

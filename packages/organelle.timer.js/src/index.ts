@@ -1,10 +1,10 @@
 import { sys } from "cessnalib";
-import { ccp, dco, Particle } from "@euglena/core";
-import { timer} from "@euglena/template";
+import { dco, Particle } from "@euglena/core";
+import { timer, ccp } from "@euglena/template";
 
 let time: sys.type.Time;
 
-export default dco<timer.Timer,Particle<"Sap",sys.type.Time>>({
+export default dco<timer.Timer, Particle<"Sap", sys.type.Time>>({
     Sap: async (sap, { t, cp }) => {
         time = sap.data;
         setInterval(() => {
@@ -35,12 +35,12 @@ export default dco<timer.Timer,Particle<"Sap",sys.type.Time>>({
                     }
                 }
             }
-            t(cp("Time",time));
+            t(cp("Time", time));
         }, 1000);
     },
-    ReadTime: async (p, { cp }) => cp("Time",time),
+    ReadTime: async (p, { cp }) => cp("Time", time),
     SetTime: async (p) => {
         time = p.data;
-        return ccp.ACK();
+        return ccp("ACK");
     }
 });

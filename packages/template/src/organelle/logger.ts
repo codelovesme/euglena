@@ -1,4 +1,5 @@
-import { ACK, AllInteractions, Log } from "@euglena/core";
+import { AllInteractions } from "@euglena/core";
+import { ACK, Log } from "../particle";
 
 export type Logger = AllInteractions<{
     in: [[Log, ACK]];

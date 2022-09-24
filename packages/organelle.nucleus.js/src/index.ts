@@ -1,8 +1,7 @@
 import { js, sys } from "cessnalib";
-import { Nucleus } from "./create-organelle-module.h";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
-import { Particle, Transmit, dco, cp, ccp, ACK } from "@euglena/core";
-import { Exception, Particles } from "../../particle.h";
+import { Particle, Transmit, dco, cp } from "@euglena/core";
+import { ACK, ccp, Exception, nucleus } from "@euglena/template";
 
 let genes: Gene[] = [];
 let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;
@@ -77,7 +76,7 @@ const createReceive =
     };
 
 const nucleusJs = dco<
-    Nucleus,
+    nucleus.Nucleus,
     [
         Particle<
             "Sap",
@@ -89,7 +88,7 @@ const nucleusJs = dco<
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         const result = await receive(particle, source);
-        return cp<Particles>("Particles", result);
+        return ccp("Particles", result);
     },
     Sap: async (particle, { t }) => {
         receive = createReceive(t as Transmit);
@@ -104,7 +103,7 @@ const nucleusJs = dco<
                     genes = particle.data.genes;
                     break;
             }
-            return ccp.ACK();
+            return ccp("ACK");
         } catch (error: any) {
             return cp<Exception>("Exception", new sys.type.Exception(error.message));
         }

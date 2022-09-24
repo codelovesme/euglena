@@ -26,15 +26,10 @@ export type Organelles = O<{
 
 export type Parameters = P<{}>;
 
-export const createGene = dg<Impulse, Organelles, Parameters>(
+export const createGene = dg<Authenticate, Organelles, Parameters>(
     "Authenticate",
-    {
-        meta: { class: "Impulse" },
-        data: { particle: { meta: { class: "Authenticate" } } }
-    },
-    async (impulse: Impulse, s, { t, o }) => {
-        const { euglenaName, password } = impulse.data.particle.data as Authenticate["data"];
-
+    { meta: { class: "Authenticate" } },
+    async ({ data: { euglenaName, password } }, s, { t, o }) => {
         /**
          * Check username and password is not empty
          */

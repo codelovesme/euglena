@@ -1,4 +1,5 @@
 import { AllInteractions, Particle } from "@euglena/core";
+import { Exception } from "../particle";
 
 export type Namespace = "Jwt";
 
@@ -15,14 +16,10 @@ export type DecryptedToken = Particle<
     { version: "2.0"; namespace: Namespace }
 >;
 export type EncryptedToken = Particle<"EncryptedToken", string, { namespace: Namespace }>;
-export type GenerateToken = Particle<
-    "GenerateToken",
-    DecryptedToken["data"],
-    { version: "2.0"; namespace: Namespace }
->;
+export type GenerateToken = Particle<"GenerateToken", DecryptedToken["data"], { version: "2.0"; namespace: Namespace }>;
 export type VerifyToken = Particle<"VerifyToken", string, { namespace: Namespace }>;
 
 export type JWT = AllInteractions<{
-    in: [[GenerateToken, EncryptedToken], [VerifyToken, DecryptedToken]];
+    in: [[GenerateToken, EncryptedToken], [VerifyToken, DecryptedToken | Exception]];
     out: [];
 }>;

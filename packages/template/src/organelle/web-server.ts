@@ -1,5 +1,5 @@
-import { AllInteractions, Log, Particle } from "@euglena/core";
-import { GetAlive, Particles } from "../particle.h";
+import { AllInteractions, Particle } from "@euglena/core";
+import { GetAlive, Log, Particles } from "../particle";
 import { Headers } from "./utils";
 
 export type AddRoute = Particle<
@@ -25,5 +25,5 @@ export type WebServerImpulse = Particle<
 
 export type WebServer = AllInteractions<{
     in: [GetAlive, AddRoute];
-    out: [[WebServerImpulse,Particles], Log];
+    out: [[WebServerImpulse, Particles], Log];
 }>;

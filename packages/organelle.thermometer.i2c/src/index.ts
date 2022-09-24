@@ -1,5 +1,5 @@
-import {  ccp, dco, Particle } from "@euglena/core";
-import { thermometer } from "@euglena/template";
+import {  dco, Particle } from "@euglena/core";
+import { ccp, thermometer } from "@euglena/template";
 import i2c from "i2c-bus";
 
 export type Sap = Particle<"Sap", { ic2Address: number; deviceAddress: number; interval: number }>;
@@ -36,9 +36,9 @@ export default dco<thermometer.Thermometer, Sap>({
                     )
                     .catch(console.error);
             }, interval);
-            return ccp.ACK();
+            return ccp("ACK");
         } catch (e: any) {
-            return ccp.Exception({ message: JSON.stringify(e) });
+            return ccp("Exception",{ message: JSON.stringify(e) });
         }
     }
 });

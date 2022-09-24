@@ -7,13 +7,6 @@ import {
     ComingParticle,
     ComingResponseParticle
 } from "@euglena/core";
-import * as coreModule from "@euglena/core";
-import * as templateModule from "../../index";
-import * as cessnalib from "cessnalib";
-
-export type TemplateModule = typeof templateModule;
-export type CoreModule = typeof coreModule;
-export type Cessnalib = typeof cessnalib;
 
 type _Organelle = { [organelleName: string]: AllInteractions };
 export type Organelles<T extends _Organelle = _Organelle> = T;
@@ -42,7 +35,7 @@ export type GeneTransmit<T extends { [x: string]: AllInteractions }> = UnionToIn
     }[keyof T]
 >;
 
-export interface GeneReaction<TriggerParticle extends Particle, O extends Organelles, P extends Parameters> {
+export interface GeneReaction<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles, P extends Parameters = Parameters> {
     (
         particle: TriggerParticle,
         source: string,
