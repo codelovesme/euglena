@@ -1,6 +1,6 @@
-import { AllInteractions, Particle, Meta } from "@euglena/core";
+import { AllInteractions, Meta, Particle } from "@euglena/core";
 import { sys } from "cessnalib";
-import { ACK, Exception, GetAlive, Log } from "../particle/particle.h";
+import { ACK, Exception, GetAlive, Log } from "../particle/common.h";
 
 export type Count = "all" | number;
 export type ReadParticle = Particle<

@@ -28,3 +28,6 @@ export type Sap<Data extends unknown = unknown> = Particle<"Sap", Data, { organe
 export type ACK = Particle<"ACK">;
 export type NACK = Particle<"NACK">;
 export type Log = Particle<"Log", { message: string; level: "Error" | "Info" | "Warning" }>;
+
+export type CommonParticle = ACK | NACK | Log | Exception | GetAlive | OrganelleInfo | Particles | Sap;
+

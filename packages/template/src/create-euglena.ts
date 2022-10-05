@@ -1,7 +1,7 @@
 import { cp, CreateOrganelle, OrganelleReceive, Particle } from "@euglena/core";
 import { TransmitParticle } from "./organelle/endoplasmic-reticulum";
 import { ReceiveParticle } from "./organelle/nucleus";
-import { OrganelleInfo, Sap } from "./particle/particle.h";
+import { OrganelleInfo, Sap } from "./particle/common.h";
 // import { endoplasmicReticulumJs, Sap } from "./organelle/endoplasmic-reticulum";
 
 const endoplasmicReticulumName = "EndoplasmicReticulum";

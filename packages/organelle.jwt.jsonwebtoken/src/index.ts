@@ -1,7 +1,10 @@
 import { sys } from "cessnalib";
 import { sign, verify } from "jsonwebtoken";
-import { ccp, jwt } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
 import { cp, dco, Particle } from "@euglena/core";
+
+import jwt = organelle.jwt;
+import ccp = particle.ccp;
 
 export type Sap = Particle<"Sap">;
 
@@ -24,7 +27,7 @@ const jwtJsonwebtoken = dco<jwt.JWT, Sap>({
             return cp<jwt.DecryptedToken>("DecryptedToken", decrypted, { namespace: "Jwt", version: "2.0" });
         } catch (e: any) {
             const exception = new sys.type.Exception("Not a valid token.");
-            return ccp("Exception",exception);
+            return ccp("Exception", exception);
         }
     }
 });

@@ -1,6 +1,13 @@
 import { Particle, dco } from "@euglena/core";
-import { vacuole, Exception, Sap as S, ACK, ccp } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
 import { js, sys } from "cessnalib";
+
+import vacuole = organelle.vacuole;
+import ccp = particle.ccp;
+import common = particle.common;
+import ACK = common.ACK;
+import Exception = common.Exception;
+import S = common.Sap;
 
 let particles: Particle[] = [];
 
@@ -26,7 +33,9 @@ export default dco<vacuole.Vacuole, [Sap, Exception | ACK]>({
         }
         return ccp("ACK");
     },
-    GetAlive: async () => { return ccp("ACK")},
+    GetAlive: async () => {
+        return ccp("ACK");
+    },
     Hibernate: async () => {},
     ReadParticle: async (p, { cp }) => {
         const { query, count } = p.data;

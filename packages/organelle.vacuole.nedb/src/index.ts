@@ -1,7 +1,10 @@
 import { dco, Particle } from "@euglena/core";
-import { ccp, vacuole } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
 import { js, sys } from "cessnalib";
 import Datastore from "nedb";
+
+import vacuole = organelle.vacuole;
+import ccp = particle.ccp;
 
 export type Sap = Particle<"Sap", { filename: string }>;
 

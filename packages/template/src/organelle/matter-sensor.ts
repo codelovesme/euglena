@@ -1,5 +1,5 @@
 import { AllInteractions, Particle } from "@euglena/core";
-import { Log } from "../particle";
+import { Log } from "../particle/common.h";
 
 export type Read = Particle<"Read">;
 

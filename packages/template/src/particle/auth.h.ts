@@ -1,5 +1,5 @@
 import { Particle } from "@euglena/core";
-import { DecryptedToken } from "../../../jwt";
+import { DecryptedToken } from "../organelle/jwt";
 
 export type EuglenaInfoV2 = Particle<
     "EuglenaInfo",
@@ -56,3 +56,5 @@ export type Permission = Particle<
         receiverEuglenaName: string;
     }
 >;
+
+export type AuthParticle = EuglenaInfoV2 | Session | Permission;

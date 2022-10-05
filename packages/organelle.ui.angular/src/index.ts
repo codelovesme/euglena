@@ -1,7 +1,14 @@
 import { Particle, dco, CreateParticleUnion } from "@euglena/core";
-import { ui, ccp, ACK, Exception, Log } from "@euglena/template";
+import { particle, organelle } from "@euglena/template";
 import { EventEmitter, Injectable } from "@angular/core";
 import { sys } from "cessnalib";
+
+import ui = organelle.ui;
+import ccp = particle.ccp;
+import common = particle.common;
+import ACK = common.ACK;
+import Exception = common.Exception;
+import Log = common.Log;
 
 export type Sap = Particle<"Sap", { context: Context<object> }>;
 

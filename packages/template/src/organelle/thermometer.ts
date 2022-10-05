@@ -1,5 +1,5 @@
 import { Particle, AllInteractions } from "@euglena/core";
-import { ACK, Exception, Log } from "../particle";
+import { ACK, Exception, Log } from "../particle/common.h";
 
 export type Listen = Particle<"Listen">;
 export type Temperature = Particle<"Temperature">;

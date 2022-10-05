@@ -1,6 +1,8 @@
 import { AllInteractions, Particle } from "@euglena/core";
-import { GetAlive, Log, Particles } from "../particle";
-import { Headers } from "./utils";
+import { GetAlive, Log, Particles } from "../particle/common.h";
+import { sys } from "cessnalib";
+
+import Headers = sys.type.Headers;
 
 export type AddRoute = Particle<
     "AddRoute",

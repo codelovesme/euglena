@@ -1,6 +1,8 @@
 import * as http from "http";
 import { dco, isParticle, Particle } from "@euglena/core";
-import { netServer } from "@euglena/template";
+import { organelle } from "@euglena/template";
+
+import netServer = organelle.netServer;
 
 export type Sap = Particle<
     "Sap",

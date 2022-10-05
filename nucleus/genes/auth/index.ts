@@ -1,5 +1,4 @@
 export * as checkSession from "./check-session";
 export * as checkPersmission from "./check-permission";
 export * as authenticate from "./authenticate";
-export * as particles from "./particles";
 export * as createEuglenaInfo from "./create-euglena-info";

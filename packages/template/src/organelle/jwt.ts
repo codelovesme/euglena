@@ -1,5 +1,5 @@
 import { AllInteractions, Particle } from "@euglena/core";
-import { Exception } from "../particle";
+import { Exception } from "../particle/common.h";
 
 export type Namespace = "Jwt";
 

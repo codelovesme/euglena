@@ -1,6 +1,8 @@
 import { cp, dco, Particle } from "@euglena/core";
-import { matterSensor } from "@euglena/template";
+import { organelle } from "@euglena/template";
 import Plantower from "plantower";
+
+import matterSensor = organelle.matterSensor;
 
 interface Value {
     value: number;

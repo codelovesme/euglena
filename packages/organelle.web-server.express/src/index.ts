@@ -1,6 +1,9 @@
 import { dco, Particle } from "@euglena/core";
-import { webServer, Particles } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
 import express, { Express } from "express";
+
+import webServer = organelle.webServer;
+import Particles = particle.common.Particles;
 
 export type Sap = Particle<
     "Sap",
@@ -25,7 +28,7 @@ export default dco<webServer.WebServer, Sap>({
         const pathParams = parsePathParams(path);
         app[method](`${path}`, async (req, res) => {
             const resp = (await t(
-                cp("WebServerImpulse",{
+                cp("WebServerImpulse", {
                     path,
                     method,
                     pathParams: pathParams

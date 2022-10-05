@@ -1,6 +1,9 @@
 import moment from "moment";
-import { ccp, logger } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
 import { dco, Particle } from "@euglena/core";
+
+import ccp = particle.ccp;
+import logger = organelle.logger;
 
 export type Sap = Particle<
     "Sap",

@@ -1,6 +1,8 @@
 import { AllInteractions, Particle } from "@euglena/core";
-import { Log } from "../particle";
-import { Headers } from "./utils";
+import { sys } from "cessnalib";
+import { Log } from "../particle/common.h";
+
+import Headers = sys.type.Headers;
 
 export type Namespace = "HttpClient";
 

@@ -1,6 +1,6 @@
 import { AllInteractions, Particle } from "@euglena/core";
 import { sys } from "cessnalib";
-import { ACK } from "../particle";
+import { ACK } from "../particle/common.h";
 
 export type ReadTime = Particle<"ReadTime">;
 export type SetTime = Particle<"SetTime", sys.type.Time>;

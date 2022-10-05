@@ -1,5 +1,5 @@
 import { AllInteractions, Particle } from "@euglena/core";
-import { ACK, Exception, Log } from "../particle";
+import { ACK, Exception, Log } from "../particle/common.h";
 
 export type Namespace = "GpsReceiver";
 

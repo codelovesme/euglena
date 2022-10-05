@@ -1,6 +1,8 @@
 import { cp, dco, Particle } from "@euglena/core";
-import { httpClient } from "@euglena/template";
+import { organelle } from "@euglena/template";
 import axios from "axios";
+
+import httpClient = organelle.httpClient;
 
 export type Sap = Particle<"Sap">;
 

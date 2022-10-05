@@ -1,7 +1,12 @@
 import { js, sys } from "cessnalib";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
 import { Particle, Transmit, dco, cp } from "@euglena/core";
-import { ACK, ccp, Exception, nucleus } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
+
+import ACK = particle.common.ACK;
+import ccp = particle.ccp;
+import Exception = particle.common.Exception;
+import nucleus = organelle.nucleus;
 
 let genes: Gene[] = [];
 let receive: (particle: Particle<string, unknown, {}>, source: string) => Promise<Particle<string, unknown, {}>[]>;
@@ -75,7 +80,7 @@ const createReceive =
         return allResults.filter((x) => x !== undefined) as Particle<string, unknown, {}>[];
     };
 
-const nucleusJs = dco<
+export default dco<
     nucleus.Nucleus,
     [
         Particle<
@@ -110,4 +115,5 @@ const nucleusJs = dco<
     }
 });
 
-export { nucleusJs };
+export * from "./gene";
+export * from "./gene.h";

@@ -12,6 +12,5 @@ export * as vacuole from "./vacuole";
 export * as webServer from "./web-server";
 export * as httpClient from "./http-client";
 export * as fs from "./fs";
-export * from "./utils";
 export * as jwt from "./jwt";
 export * as bcrypt from "./bcrypt";

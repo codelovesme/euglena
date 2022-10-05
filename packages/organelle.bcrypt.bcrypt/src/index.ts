@@ -1,6 +1,8 @@
 import { cp, dco, Particle } from "@euglena/core";
-import { bcrypt } from "@euglena/template";
+import { organelle } from "@euglena/template";
 import { hash, compare } from "bcrypt";
+
+import bcrypt = organelle.bcrypt;
 
 /**
  * 12
@@ -19,9 +21,9 @@ export default dco<bcrypt.Bcrypt, Sap>({
         saltRounds = p.data.saltRounds;
     },
     Hash: async ({ data: plainPassword }) => {
-        return cp<bcrypt.HashedPassword>("HashedPassword",await hash(plainPassword, saltRounds));
+        return cp<bcrypt.HashedPassword>("HashedPassword", await hash(plainPassword, saltRounds));
     },
     Compare: async ({ data: { plainPassword, hashedPassword } }) => {
-        return cp<bcrypt.CompareResult>("CompareResult",await compare(plainPassword, hashedPassword));
+        return cp<bcrypt.CompareResult>("CompareResult", await compare(plainPassword, hashedPassword));
     }
 });
