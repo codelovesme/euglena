@@ -18,7 +18,7 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "cessnalib": "^0.10.2",
+        "cessnalib": "^0.14.0",
         "gps": "^0.5.3",
         "serialport": "^9.0.0",
         "@types/serialport": "^8.0.1"

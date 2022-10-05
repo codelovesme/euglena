@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "bcrypt": "^4.0.1",
-        "cessnalib": "^0.10.2",
+        "cessnalib": "^0.14.0",
         "@types/bcrypt": "^3.0.0"
     },
     "peerDependencies": {

@@ -18,7 +18,7 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "cessnalib": "^0.10.2",
+        "cessnalib": "^0.14.0",
         "mongodb": "^4.7.0",
         "@types/mongodb": "~4.0.7"
     },
