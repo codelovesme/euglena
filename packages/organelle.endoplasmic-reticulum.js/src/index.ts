@@ -4,8 +4,8 @@ import { organelle, attachOrganelle, getOrganelles, particle } from "@euglena/te
 import endoplasmicReticulum = organelle.endoplasmicReticulum;
 import EndoplasmicReticulum = endoplasmicReticulum.EndoplasmicReticulum;
 import TransmitResponse = endoplasmicReticulum.TransmitResponse;
-import S = particle.common.Sap;
-import ccp = particle.ccp;
+import common = particle.common;
+import S = common.Sap;
 
 export type Sap = S<{ particles: Particle[]; reticulumReceive: OrganelleReceive }>;
 
@@ -21,7 +21,7 @@ export const endoplasmicReticulumJs = dco<EndoplasmicReticulum, [Sap]>({
         if (!organelleReceive)
             return cp<TransmitResponse>(
                 "TransmitResponse",
-                ccp("Log", { message: `Organelle ${target} has not been connected yet!`, level: "Error" })
+                common.cp("Log", { message: `Organelle ${target} has not been connected yet!`, level: "Error" })
             );
         const resp = await organelleReceive(particle);
         return cp<TransmitResponse>("TransmitResponse", resp);

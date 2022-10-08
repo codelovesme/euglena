@@ -3,7 +3,7 @@ import GPS from "gps";
 import { cp, dco, Particle } from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
-import ccp = particle.ccp;
+import common = particle.common;
 import gpsReceiver = organelle.gpsReceiver;
 
 export type Sap = Particle<"Sap", { path: string; interval: number }>;
@@ -56,10 +56,11 @@ export default dco<gpsReceiver.GpsReceiver, Sap>({
                     buffer = [];
                 }
             }, interval);
-            t(ccp("Log", { message: "Listening GPS", level: "Info" }));
-            return ccp("ACK");
+            t(common.cp("Log", { message: "Listening GPS", level: "Info" }));
+
+            return common.cp("ACK");
         } catch (e: any) {
-            return ccp("Exception", { message: JSON.stringify(e) });
+            return common.cp("Exception", { message: JSON.stringify(e) });
         }
     }
 });

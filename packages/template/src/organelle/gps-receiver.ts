@@ -1,7 +1,5 @@
-import { AllInteractions, Particle } from "@euglena/core";
-import { ACK, Exception, Log } from "../particle/common.h";
-
-export type Namespace = "GpsReceiver";
+import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { common } from "../particle";
 
 export type Coordinate = Particle<
     "Coordinate",
@@ -11,9 +9,12 @@ export type Coordinate = Particle<
     }
 >;
 
-export type Listen = Particle<"Listen", { namespace: Namespace }>;
+export type Listen = Particle<"Listen">;
 
 export type GpsReceiver = AllInteractions<{
-    in: [[Listen, ACK | Exception]];
-    out: [Coordinate, Log];
+    in: [[Listen, common.ACK | common.Exception]];
+    out: [Coordinate, common.Log];
 }>;
+
+export const createParticle = _cp as CreateParticleUnion<ComingParticles<GpsReceiver>>;
+export const cp = createParticle;

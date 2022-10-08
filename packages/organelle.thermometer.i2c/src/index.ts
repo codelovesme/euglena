@@ -2,7 +2,7 @@ import {  dco, Particle } from "@euglena/core";
 import { particle,organelle } from "@euglena/template";
 import i2c from "i2c-bus";
 
-import ccp = particle.ccp;
+import common = particle.common;
 import thermometer = organelle.thermometer;
 
 export type Sap = Particle<"Sap", { ic2Address: number; deviceAddress: number; interval: number }>;
@@ -39,9 +39,9 @@ export default dco<thermometer.Thermometer, Sap>({
                     )
                     .catch(console.error);
             }, interval);
-            return ccp("ACK");
+            return common.cp("ACK");
         } catch (e: any) {
-            return ccp("Exception",{ message: JSON.stringify(e) });
+            return common.cp("Exception",{ message: JSON.stringify(e) });
         }
     }
 });

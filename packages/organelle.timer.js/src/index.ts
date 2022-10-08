@@ -3,7 +3,7 @@ import { dco, Particle } from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import timer = organelle.timer;
-import ccp = particle.ccp;
+import common = particle.common;
 
 let time: sys.type.Time;
 
@@ -44,6 +44,6 @@ export default dco<timer.Timer, Particle<"Sap", sys.type.Time>>({
     ReadTime: async (p, { cp }) => cp("Time", time),
     SetTime: async (p) => {
         time = p.data;
-        return ccp("ACK");
+        return common.cp("ACK");
     }
 });

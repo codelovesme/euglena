@@ -1,6 +1,6 @@
-import { AllInteractions, Meta, Particle } from "@euglena/core";
 import { sys } from "cessnalib";
-import { ACK, Exception, GetAlive, Log } from "../particle/common.h";
+import { AllInteractions, Meta, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { common } from "../particle";
 
 export type Count = "all" | number;
 export type ReadParticle = Particle<
@@ -25,11 +25,14 @@ export type Hibernate = Particle<"Hibernate">;
 
 export type Vacuole = AllInteractions<{
     in: [
-        [SaveParticle, ACK | Exception],
-        [ReadParticle, Particle<"Particles", Particle[]> | Exception],
-        [RemoveParticle, ACK | Exception],
-        [GetAlive, ACK | Exception],
+        [SaveParticle, common.ACK | common.Exception],
+        [ReadParticle, Particle<"Particles", Particle[]> | common.Exception],
+        [RemoveParticle, common.ACK | common.Exception],
+        [common.GetAlive, common.ACK | common.Exception],
         Hibernate
     ];
-    out: [Log];
+    out: [common.Log];
 }>;
+
+export const createParticle = _cp as CreateParticleUnion<ComingParticles<Vacuole>>;
+export const cp = createParticle;

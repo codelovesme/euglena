@@ -1,7 +1,5 @@
-import { AllInteractions, Particle } from "@euglena/core";
-import { ACK, Exception, Log } from "../particle/common.h";
-
-export type Namespace = "Fs";
+import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { common } from "../particle";
 
 export type Encoding =
     | "ascii"
@@ -21,20 +19,21 @@ export type WriteFile = Particle<
         filePath: string;
         content: string;
         encoding?: Encoding;
-    },
-    { namespace: Namespace }
+    }
 >;
 export type ReadFile = Particle<
     "ReadFile",
     {
         filePath: string;
         encoding?: Encoding;
-    },
-    { namespace: Namespace }
+    }
 >;
-export type FileContent = Particle<"FileContent", string, { namespace: Namespace }>;
+export type FileContent = Particle<"FileContent", string>;
 
 export type FS = AllInteractions<{
-    in: [[ReadFile, FileContent | Exception], [WriteFile, Exception | ACK]];
-    out: [Log, ACK];
+    in: [[ReadFile, FileContent | common.Exception], [WriteFile, common.Exception | common.ACK]];
+    out: [common.Log, common.ACK];
 }>;
+
+export const createParticle = _cp as CreateParticleUnion<ComingParticles<FS>>;
+export const cp = createParticle;

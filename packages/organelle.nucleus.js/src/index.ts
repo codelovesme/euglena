@@ -4,7 +4,7 @@ import { Particle, Transmit, dco, cp } from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import ACK = particle.common.ACK;
-import ccp = particle.ccp;
+import common = particle.common;
 import Exception = particle.common.Exception;
 import nucleus = organelle.nucleus;
 
@@ -93,7 +93,7 @@ export default dco<
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         const result = await receive(particle, source);
-        return ccp("Particles", result);
+        return common.cp("Particles", result);
     },
     Sap: async (particle, { t }) => {
         receive = createReceive(t as Transmit);
@@ -108,7 +108,7 @@ export default dco<
                     genes = particle.data.genes;
                     break;
             }
-            return ccp("ACK");
+            return common.cp("ACK");
         } catch (error: any) {
             return cp<Exception>("Exception", new sys.type.Exception(error.message));
         }

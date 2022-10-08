@@ -2,7 +2,6 @@ import { Particle, dco, CreateParticleUnion } from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import ui = organelle.ui;
-import ccp = particle.ccp;
 import common = particle.common;
 import ACK = common.ACK;
 import Log = common.Log;
@@ -30,6 +29,6 @@ export default dco<ui.UI, Sap>({
             <ToolsContext.Provider value={{ t, cp }}>{App(props)}</ToolsContext.Provider>,
             document.getElementById("root")
         );
-        return ccp("ACK");
+        return common.cp("ACK");
     }
 });

@@ -1,5 +1,5 @@
-import { AllInteractions, Particle } from "@euglena/core";
-import { Log } from "../particle/common.h";
+import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { common } from "../particle";
 
 export type Read = Particle<"Read">;
 
@@ -14,5 +14,8 @@ export type Matter = Particle<
 
 export type MatterSensor = AllInteractions<{
     in: [[Read, Matter]];
-    out: [Log];
+    out: [common.Log];
 }>;
+
+export const createParticle = _cp as CreateParticleUnion<ComingParticles<MatterSensor>>;
+export const cp = createParticle;

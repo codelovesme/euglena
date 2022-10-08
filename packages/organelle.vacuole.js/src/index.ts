@@ -3,7 +3,6 @@ import { organelle, particle } from "@euglena/template";
 import { js, sys } from "cessnalib";
 
 import vacuole = organelle.vacuole;
-import ccp = particle.ccp;
 import common = particle.common;
 import ACK = common.ACK;
 import Exception = common.Exception;
@@ -24,17 +23,17 @@ export default dco<vacuole.Vacuole, [Sap, Exception | ACK]>({
                 try {
                     particles = require(particle.data.path).default;
                 } catch (error) {
-                    return ccp("Exception", new sys.type.Exception((error as { message: string }).message));
+                    return common.cp("Exception", new sys.type.Exception((error as { message: string }).message));
                 }
                 break;
             case "InMemory":
                 particles = particle.data.particles;
                 break;
         }
-        return ccp("ACK");
+        return common.cp("ACK");
     },
     GetAlive: async () => {
-        return ccp("ACK");
+        return common.cp("ACK");
     },
     Hibernate: async () => {},
     ReadParticle: async (p, { cp }) => {
@@ -65,7 +64,7 @@ export default dco<vacuole.Vacuole, [Sap, Exception | ACK]>({
                 particles = [...particles, particle];
             }
         }
-        return ccp("ACK");
+        return common.cp("ACK");
     },
     RemoveParticle: async (p, { cp }) => {
         const { query, count } = p.data;
@@ -78,6 +77,6 @@ export default dco<vacuole.Vacuole, [Sap, Exception | ACK]>({
                 }
             }
         }
-        return ccp("ACK");
+        return common.cp("ACK");
     }
 });

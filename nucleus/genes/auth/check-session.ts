@@ -1,4 +1,4 @@
-import { ccp, cp, Exception, isParticleClass, Particle } from "@euglena/core";
+import { common.cp, cp, Exception, isParticleClass, Particle } from "@euglena/core";
 import { sys } from "cessnalib";
 import { Particles } from "../../../../utils/particles";
 import { DecryptedToken, VerifyToken } from "../../../jwt";
@@ -44,11 +44,11 @@ export const createGeneCheckSession = dg<CheckSession, CheckSessionDependencies>
         const sessionParticle = readSessionResult.data[0] as Session;
 
         //check if there is session
-        if (!sessionParticle) return ccp.Exception(new sys.type.Exception("Not Authenticated"));
+        if (!sessionParticle) return common.cp.Exception(new sys.type.Exception("Not Authenticated"));
 
         //Check if session expired
         if (sessionParticle.data.decryptedToken.expireAt < new Date().getTime())
-            return ccp.Exception(new sys.type.Exception("Authorization token is expired"));
+            return common.cp.Exception(new sys.type.Exception("Authorization token is expired"));
 
         //Fetch user
         const fetchUser = cp<ReadParticle>("ReadParticle", {
@@ -61,10 +61,10 @@ export const createGeneCheckSession = dg<CheckSession, CheckSessionDependencies>
         const fetchUserResult = (await to.vacuole(fetchUser)) as Particles | Exception;
         if (isParticleClass(fetchUserResult, "Exception")) return fetchUserResult;
         const userParticle = fetchUserResult.data[0] as EuglenaInfoV2;
-        if (!userParticle) return ccp.Exception(new sys.type.Exception("There is no user related with this token"));
+        if (!userParticle) return common.cp.Exception(new sys.type.Exception("There is no user related with this token"));
 
         //check user is active
-        if (userParticle.data.status !== "Active") return ccp.Exception(new sys.type.Exception("User is not active"));
+        if (userParticle.data.status !== "Active") return common.cp.Exception(new sys.type.Exception("User is not active"));
 
         //return user
         return fetchUserResult;

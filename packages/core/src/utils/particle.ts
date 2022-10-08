@@ -1,4 +1,4 @@
-import { Meta, MetaAdditions, Particle } from "../types";
+import { FindParticle, Meta, MetaAdditions, Particle } from "../types";
 
 export function createMeta<Class extends string, Additions extends MetaAdditions = {}>(
     class_: Class,
@@ -13,7 +13,7 @@ export function createMeta<Class extends string, Additions extends MetaAdditions
 export function createParticle<P extends Particle>(
     class_: P["meta"]["class"],
     data?: P["data"],
-    adds?: Omit<P["meta"],"class">
+    adds?: Omit<P["meta"], "class">
 ): P {
     return {
         meta: createMeta(class_, adds as any),
@@ -33,7 +33,10 @@ export function isParticle(x: any): x is Particle {
     );
 }
 
-export function isParticleClass<Class extends string>(particle: Particle, class_: Class): particle is Particle<Class> {
+export function isParticleClass<ParticleUnion extends Particle, Class extends ParticleUnion["meta"]["class"]>(
+    particle: ParticleUnion,
+    class_: Class
+): particle is FindParticle<ParticleUnion, Class> {
     return particle.meta.class === class_;
 }
 

@@ -10,8 +10,6 @@ import jwt = organelle.jwt;
 import auth = particle.auth;
 import common = particle.common;
 
-const ccp = particle.ccp;
-
 export type Authenticate = Particle<
     "Authenticate",
     {
@@ -36,7 +34,7 @@ export const createGene = dg<Authenticate, Organelles, Parameters>(
          * Check username and password is not empty
          */
         if (!euglenaName || !password)
-            return ccp("Exception", new sys.type.Exception("Username and password can not be empty"));
+            return common.cp("Exception", new sys.type.Exception("Username and password can not be empty"));
 
         /**
          * Get user info
@@ -48,14 +46,14 @@ export const createGene = dg<Authenticate, Organelles, Parameters>(
         });
         const fetchEuglenaInfoResult = await t(fetchEuglenaInfo, "vacuole");
         if (isParticleClass(fetchEuglenaInfoResult, "Exception")) return fetchEuglenaInfoResult;
-        const euglenaInfo = fetchEuglenaInfoResult.data[0] as auth.EuglenaInfoV2;
-        if (!euglenaInfo) return ccp("Exception", new sys.type.Exception(`There is no user with ${euglenaName}`));
+        const euglenaInfo = fetchEuglenaInfoResult.data[0] as auth.EuglenaInfo;
+        if (!euglenaInfo) return common.cp("Exception", new sys.type.Exception(`There is no user with ${euglenaName}`));
 
         /**
          * Check user is active
          */
         if (euglenaInfo.data.status !== "Active")
-            return ccp("Exception", new sys.type.Exception(`This user is not Active.`));
+            return common.cp("Exception", new sys.type.Exception(`This user is not Active.`));
 
         /**
          * Compare Password
@@ -67,7 +65,7 @@ export const createGene = dg<Authenticate, Organelles, Parameters>(
         const encryptPasswordResult = (await t(encryptPassword, "bcrypt")) as bcrypt.CompareResult | common.Exception;
         if (isParticleClass(encryptPasswordResult, "Exception")) return encryptPasswordResult;
         if (!encryptPasswordResult.data)
-            return ccp("Exception", new sys.type.Exception("Username and password mismatch"));
+            return common.cp("Exception", new sys.type.Exception("Username and password mismatch"));
 
         /**
          * Generate Token
@@ -84,11 +82,9 @@ export const createGene = dg<Authenticate, Organelles, Parameters>(
             status: euglenaInfo.data.status
         };
         const generateToken = cp<jwt.GenerateToken>("GenerateToken", decryptedTokenData, {
-            version: "2.0",
-            namespace: "Jwt"
+            version: "2.0"
         });
         const generateTokenResult = await t(generateToken, "jwt");
-        if (isParticleClass(generateTokenResult, "Exception")) return generateTokenResult;
 
         /**
          * Insert session

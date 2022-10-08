@@ -1,7 +1,7 @@
 import { cp, CreateOrganelle, OrganelleReceive, Particle } from "@euglena/core";
 import { TransmitParticle } from "./organelle/endoplasmic-reticulum";
 import { ReceiveParticle } from "./organelle/nucleus";
-import { OrganelleInfo, Sap } from "./particle/common.h";
+import { common } from "./particle";
 // import { endoplasmicReticulumJs, Sap } from "./organelle/endoplasmic-reticulum";
 
 const endoplasmicReticulumName = "EndoplasmicReticulum";
@@ -11,7 +11,7 @@ const organelles: { [organelleName: string]: OrganelleReceive } = {};
 
 export const getOrganelles = () => organelles;
 
-export const reviveOrganelle = async ({ data }: OrganelleInfo) => {
+export const reviveOrganelle = async ({ data }: common.OrganelleInfo) => {
     let organelle: CreateOrganelle<Particle, void | Particle> | undefined;
     switch (data.location.type) {
         case "FileSystemPath":
@@ -33,7 +33,7 @@ export const reviveOrganelle = async ({ data }: OrganelleInfo) => {
     return organelle;
 };
 
-export const attachOrganelle = async (organelleInfo: OrganelleInfo, transmit: any): Promise<void> => {
+export const attachOrganelle = async (organelleInfo: common.OrganelleInfo, transmit: any): Promise<void> => {
     let createOrganelle = await reviveOrganelle(organelleInfo);
     const { data: organelleInfoData } = organelleInfo;
     if (createOrganelle) {
@@ -57,7 +57,7 @@ export const createEuglena = async (particles: Particle[]) => {
     /**
      * Attach organelles
      */
-    const organelleInfos = particles.filter((x) => x.meta.class === "OrganelleInfo") as OrganelleInfo[];
+    const organelleInfos = particles.filter((x) => x.meta.class === "OrganelleInfo") as common.OrganelleInfo[];
     for (const organelleInfo of organelleInfos) {
         await attachOrganelle(organelleInfo, transmit);
     }
@@ -68,7 +68,7 @@ export const createEuglena = async (particles: Particle[]) => {
     await Promise.all(
         Object.entries(organelles).map(async ([organelleName, organelleReceive]) => {
             const relatedSap = particles.find(
-                (x) => x.meta.class === "Sap" && (x as Sap).meta.organelleName === organelleName
+                (x) => x.meta.class === "Sap" && (x as common.Sap).meta.organelleName === organelleName
             );
             if (relatedSap) return await organelleReceive(relatedSap);
         })

@@ -4,7 +4,6 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { sys } from "cessnalib";
 
 import ui = organelle.ui;
-import ccp = particle.ccp;
 import common = particle.common;
 import ACK = common.ACK;
 import Exception = common.Exception;
@@ -32,9 +31,9 @@ export default dco<ui.UI, Sap>({
     Render: async (p) => {
         if (sap.context.stateEmitter) {
             sap.context.stateEmitter.emit(p.data);
-            return ccp("ACK");
+            return common.cp("ACK");
         } else {
-            return ccp("Exception", new sys.type.Exception("Organelle Angular is need its SAP"));
+            return common.cp("Exception", new sys.type.Exception("Organelle Angular is need its SAP"));
         }
     }
 });

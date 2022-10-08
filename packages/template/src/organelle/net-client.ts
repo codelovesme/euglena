@@ -1,5 +1,5 @@
-import { Particle, AllInteractions } from "@euglena/core";
-import { ACK, Exception, Log } from "../particle/common.h";
+import { Particle, AllInteractions, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { common } from "../particle";
 
 export type TransmitParticle = Particle<
     "TransmitParticle",
@@ -13,6 +13,9 @@ export type TransmitParticle = Particle<
 >;
 
 export type NetClient = AllInteractions<{
-    in: [[TransmitParticle, ACK | Exception]];
-    out: [Log];
+    in: [[TransmitParticle, common.ACK | common.Exception]];
+    out: [common.Log];
 }>;
+
+export const createParticle = _cp as CreateParticleUnion<ComingParticles<NetClient>>;
+export const cp = createParticle;

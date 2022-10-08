@@ -1,5 +1,5 @@
-import { AllInteractions, Particle } from "@euglena/core";
-import { GetAlive, Log, Particles } from "../particle/common.h";
+import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { common } from "../particle";
 import { sys } from "cessnalib";
 
 import Headers = sys.type.Headers;
@@ -26,6 +26,9 @@ export type WebServerImpulse = Particle<
 >;
 
 export type WebServer = AllInteractions<{
-    in: [GetAlive, AddRoute];
-    out: [[WebServerImpulse, Particles], Log];
+    in: [common.GetAlive, AddRoute];
+    out: [[WebServerImpulse, common.Particles], common.Log];
 }>;
+
+export const createParticle = _cp as CreateParticleUnion<ComingParticles<WebServer>>;
+export const cp = createParticle;

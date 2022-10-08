@@ -2,7 +2,7 @@ import { EuglenaInfoV2 } from "./particles";
 import { CheckSession } from "./check-session";
 import { CheckPermission } from "./check-permission";
 import { Hash, HashedPassword } from "../../../bcrypt";
-import { ACK, ccp, cp, createParticle, Exception, isParticleClass, Particle } from "@euglena/core";
+import { ACK, common.cp, cp, createParticle, Exception, isParticleClass, Particle } from "@euglena/core";
 import { Impulse } from "../../../net-server";
 import { dg } from "../../gene";
 import { Organelles as O, Parameters as P } from "../../gene.h";
@@ -54,7 +54,7 @@ export const createGene = dg<Impulse, Organelles, Parameters>(
         const checkPermissionResult = (await t(receiveParticle2,"nucleus")) as ACK | Exception;
         if (isParticleClass(checkPermissionResult, "Exception")) return checkPermissionResult;
         if (isParticleClass(checkPermissionResult, "NACK"))
-            return ccp.Exception(
+            return common.cp.Exception(
                 new sys.type.Exception(
                     `Euglena ${checkSessionResult.data.euglenaName} is no permission to send particle ${createEuglenaInfoParticle.meta.class} to euglena ${params.euglenaName}`
                 )
@@ -83,6 +83,6 @@ export const createGene = dg<Impulse, Organelles, Parameters>(
         if (isParticleClass(saveEuglenaInfoResult, "Exception")) return saveEuglenaInfoResult;
 
         //return ACK
-        return ccp.ACK();
+        return common.cp.ACK();
     }
 );

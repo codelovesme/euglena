@@ -1,18 +1,15 @@
-import { AllInteractions, Particle } from "@euglena/core";
+import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
 import { sys } from "cessnalib";
-import { Log } from "../particle/common.h";
+import { common } from "../particle";
 
 import Headers = sys.type.Headers;
-
-export type Namespace = "HttpClient";
 
 export type Get = Particle<
     "Get",
     {
         url: string;
         headers?: Headers;
-    },
-    { namespace: Namespace }
+    }
 >;
 
 export type Post = Particle<
@@ -21,8 +18,7 @@ export type Post = Particle<
         url: string;
         headers?: Headers;
         body: any;
-    },
-    { namespace: Namespace }
+    }
 >;
 
 export type Put = Particle<
@@ -31,8 +27,7 @@ export type Put = Particle<
         url: string;
         headers?: Headers;
         body: any;
-    },
-    { namespace: Namespace }
+    }
 >;
 
 export type Delete = Particle<
@@ -40,8 +35,7 @@ export type Delete = Particle<
     {
         url: string;
         headers?: Headers;
-    },
-    { namespace: Namespace }
+    }
 >;
 
 export type Response = Particle<
@@ -50,11 +44,13 @@ export type Response = Particle<
         headers?: Headers;
         body: any;
         status: number;
-    },
-    { namespace: Namespace }
+    }
 >;
 
 export type HttpClient = AllInteractions<{
     in: [[Get, Response], [Post, Response], [Put, Response], [Delete, Response]];
-    out: [Log];
+    out: [common.Log];
 }>;
+
+export const createParticle = _cp as CreateParticleUnion<ComingParticles<HttpClient>>;
+export const cp = createParticle;
