@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/gene.auth.authenticate",
+    "name": "@euglena/gene.auth.create-euglena-info",
     "domain": "codeloves.me",
     "version": "1.6.0",
     "main": "dist/index.js",

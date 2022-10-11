@@ -34,7 +34,7 @@ export const createChromosome: CreateChromosome = (bind: (addGene: AddGene<Parti
     return geneCluster;
 };
 
-export const defineGene =
+export const defineCreateGene =
     <P extends Particle, O extends Organelles, P_ extends Parameters>(
         name: string,
         triggers: sys.type.RecursivePartial<P>,
@@ -54,4 +54,4 @@ export const defineGene =
  * createChromosome
  */
 export const cc = createChromosome;
-export const dg = defineGene;
+export const dcg = defineCreateGene;

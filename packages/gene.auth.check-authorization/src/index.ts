@@ -1,20 +1,13 @@
 import { cp, isParticleClass, Particle } from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
-import { dg, Organelles as O, Parameters as P } from "@euglena/organelle.nucleus.js";
+import { dcg, Organelles, Parameters } from "@euglena/organelle.nucleus.js";
 
 import vacuole = organelle.vacuole;
 import jwt = organelle.jwt;
 
 import auth = particle.auth;
-import { common } from "@euglena/template/dist/particle";
-
-export type CheckPermission = Particle<
-    "CheckPermission",
-    {
-        sender: auth.EuglenaInfo;
-        particle: string;
-    }
->;
+import common = particle.common;
+import CheckAuthorization = auth.CheckAuthorization;
 
 export type Permission = Particle<
     "Permission",
@@ -38,20 +31,21 @@ export type Permission = Particle<
     }
 >;
 
-export type Organelles = O<{
-    vacuole: vacuole.Vacuole;
-    jwt: jwt.JWT;
-}>;
-
-export type Parameters = P<{
-    euglenaName: string;
-}>;
 /**
  * Checks if sender euglena can have permission to request specified particle to be considered from receiver euglena
  */
-export const createGeneCheckPermission = dg<CheckPermission, Organelles, Parameters>(
-    "Check Permission",
-    { meta: { class: "CheckPermission" } },
+export default dcg<
+    CheckAuthorization,
+    Organelles<{
+        vacuole: vacuole.Vacuole;
+        jwt: jwt.JWT;
+    }>,
+    Parameters<{
+        euglenaName: string;
+    }>
+>(
+    "Check Authorization",
+    { meta: { class: "CheckAuthorization" } },
     async ({ data: { particle: particleToCheck, sender } }, s, { t, params }) => {
         //Read permissons of the euglena
         const readPermissions = cp<vacuole.ReadParticle>("ReadParticle", {
