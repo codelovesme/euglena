@@ -26,11 +26,7 @@ export function assertNotParticle(particle: never, message: string): void {
 }
 
 export function isParticle(x: any): x is Particle {
-    return (
-        typeof x === "object" && typeof x.meta === "object" && typeof x.meta.class === "string"
-        // typeof x.meta.createdAt === "number" &&
-        // "data" in x
-    );
+    return typeof x === "object" && typeof x.meta === "object" && typeof x.meta.class === "string";
 }
 
 export function isParticleClass<ParticleUnion extends Particle, Class extends ParticleUnion["meta"]["class"]>(

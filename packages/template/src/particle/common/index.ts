@@ -5,6 +5,6 @@ export * from "./get-alive.h";
 export * from "./log.h";
 export * from "./nack.h";
 export * from "./organelle-info.h";
-export * from "./particles.h";
+export * from "./particles/particles.h";
 export * from "./sap.h";
 export * from "./create-particle";

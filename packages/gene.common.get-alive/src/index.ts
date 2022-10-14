@@ -1,35 +1,33 @@
-import { createParticle, Particle } from "@euglena/core";
+import { createParticle } from "@euglena/core";
 import { dcg, Organelles, Parameters } from "@euglena/organelle.nucleus.js";
 import { organelle, particle } from "@euglena/template";
 
 import nucleus = organelle.nucleus;
-import vacuole = organelle.vacuole;
 import common = particle.common;
 
-export type VacuoleGetAlive = Particle<"VacuoleGetAlive">;
-
 export default dcg<
-    VacuoleGetAlive,
+    common.GetAlive,
     Organelles<{
-        vacuole: vacuole.Vacuole;
+        [x: string]: any;
         nucleus: nucleus.Nucleus;
     }>,
     Parameters<{
         retryInterval?: number;
         retry: boolean;
+        organelleName: string;
     }>
 >(
-    "Vacuole Get Alive",
-    { meta: { class: "VacuoleGetAlive" } },
-    async (p, s, { t, o, params: { retry, retryInterval = 10000 } }) => {
+    "Get Alive",
+    { meta: { class: "GetAlive" } },
+    async (p, s, { t, o, params: { retry, retryInterval = 10000, organelleName } }) => {
         const getAlive = createParticle<common.GetAlive>("GetAlive");
-        const x = await t(getAlive, "vacuole");
+        const x = await t(getAlive, organelleName);
         if ((x as common.Exception).meta.class === "Exception") {
             if (retry) {
                 setTimeout(() => {
                     t(
                         nucleus.cp("ReceiveParticle", {
-                            particle: { meta: { class: "VacuoleGetAlive" }, data: null },
+                            particle: { meta: { class: "GetAlive" }, data: null },
                             source: o.nucleus
                         }),
                         "nucleus"

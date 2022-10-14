@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/gene.common.vacuole-get-alive",
+    "name": "@euglena/gene.common.get-alive",
     "domain": "codeloves.me",
     "version": "1.6.0",
     "main": "dist/index.js",

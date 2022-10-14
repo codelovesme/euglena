@@ -62,5 +62,13 @@ export default dcg<
                 `Euglena ${checkSessionResult.data.euglenaName} is no permission to send particle ${operation.meta.class} to euglena ${params.euglenaName}`
             )
         );
-    return common.cp("ACK");
+
+    /**
+     * Send the particle in the impulse to nucleus
+     */
+    const receiveParticle3 = nucleus.cp("ReceiveParticle", {
+        particle: operation,
+        source: o.nucleus
+    });
+    return await t(receiveParticle3, "nucleus");
 });
