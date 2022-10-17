@@ -4,10 +4,12 @@ import { dcg, Organelles, Parameters } from "@euglena/organelle.nucleus.js";
 
 import vacuole = organelle.vacuole;
 import jwt = organelle.jwt;
+import nucleus = organelle.nucleus;
 
 import auth = particle.auth;
 import common = particle.common;
-import CheckAuthorization = auth.CheckAuthorization;
+import AuthenticatedImpulse = auth.AuthenticatedImpulse;
+import { sys } from "cessnalib";
 
 export type Permission = Particle<
     "Permission",
@@ -35,18 +37,19 @@ export type Permission = Particle<
  * Checks if sender euglena can have permission to request specified particle to be considered from receiver euglena
  */
 export default dcg<
-    CheckAuthorization,
+    AuthenticatedImpulse,
     Organelles<{
         vacuole: vacuole.Vacuole;
         jwt: jwt.JWT;
+        nucleus: nucleus.Nucleus;
     }>,
     Parameters<{
         euglenaName: string;
     }>
 >(
     "Check Authorization",
-    { meta: { class: "CheckAuthorization" } },
-    async ({ data: { particle: particleToCheck, sender } }, s, { t, params }) => {
+    { meta: { class: "AuthenticatedImpulse" } },
+    async ({ data: { particle: particleToCheck, sender } }, s, { t, params, o }) => {
         //Read permissons of the euglena
         const readPermissions = cp<vacuole.ReadParticle>("ReadParticle", {
             count: "all",
@@ -62,8 +65,17 @@ export default dcg<
                 "role" in permission.data.sender
                     ? sender.data.roles.includes(permission.data.sender.role)
                     : permission.data.sender.euglenaName == sender.data.euglenaName;
-            if (relatedPermission && permission.data.particles.includes(particleToCheck)) return common.cp("ACK");
+            if (relatedPermission && permission.data.particles.includes(particleToCheck.meta.class)) {
+                /**
+                 * Send the particle in the impulse to nucleus
+                 */
+                const receiveParticle3 = nucleus.cp("ReceiveParticle", {
+                    particle: particleToCheck,
+                    source: o.nucleus
+                });
+                return await t(receiveParticle3, "nucleus");
+            }
         }
-        return common.cp("NACK");
+        return common.cp("Exception",new sys.type.Exception("Operation is unauthorized"));
     }
 );

@@ -5,24 +5,28 @@ import { dcg, Organelles, Parameters } from "@euglena/organelle.nucleus.js";
 
 import vacuole = organelle.vacuole;
 import jwt = organelle.jwt;
+import netServer = organelle.netServer;
+import nucleus = organelle.nucleus;
 
 import auth = particle.auth;
 import common = particle.common;
 
-import CheckAuthentication = auth.CheckAuthentication;
+import Impulse = netServer.Impulse;
 
 /**
  * Checks if the token valid and session is there
  * Then returns user
  */
 export default dcg<
-    CheckAuthentication,
+    Impulse,
     Organelles<{
         jwt: jwt.JWT;
         vacuole: vacuole.Vacuole;
+        nucleus: nucleus.Nucleus;
     }>,
     Parameters<{}>
->("Check session", { meta: { class: "CheckAuthentication" } }, async ({ data: token }, s, { t }) => {
+>("Check session", { meta: { class: "Impulse" } }, async (p, s, { t, o }) => {
+    const token = p.data.token;
     //Check if token exists
     if (!token) return common.cp("Exception", new sys.type.Exception("There is no token"));
 
@@ -67,6 +71,14 @@ export default dcg<
     if (userParticle.data.status !== "Active")
         return common.cp("Exception", new sys.type.Exception("User is not active"));
 
-    //return user
-    return fetchUserResult;
+    //throw authenticated impulse
+    const authenticatedImpulse = auth.cp("AuthenticatedImpulse", {
+        particle: p.data.particle,
+        sender: userParticle
+    });
+    const receiveParticle = nucleus.cp("ReceiveParticle", {
+        particle: authenticatedImpulse,
+        source: o.nucleus
+    });
+    return await t(receiveParticle, "nucleus");
 });

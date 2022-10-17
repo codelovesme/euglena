@@ -93,7 +93,7 @@ export default dco<
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         const result = await receive(particle, source);
-        return common.cp("Particles", result);
+        return common.flatten(common.cp("Particles", result));
     },
     Sap: async (particle, { t }) => {
         receive = createReceive(t as Transmit);
