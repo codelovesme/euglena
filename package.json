@@ -10,9 +10,9 @@
         "cleanDependencies": "rm -r node_modules && npx lerna run cleanDependencies",
         "cleanDist": "npx lerna run cleanDist",
         "publishNPM": "npx lerna publish from-package --no-verify-access -y",
-        "versionPatch": "npx lerna version patch --force-publish -y && ./scripts/update-euglena-deps.js patch",
-        "versionMinor": "npx lerna version minor --force-publish -y && ./scripts/update-euglena-deps.js minor",
-        "versionMajor": "npx lerna version major --force-publish -y && ./scripts/update-euglena-deps.js major",
+        "versionPatch": "./scripts/update-euglena-deps.js patch && npx lerna version patch --force-publish -y",
+        "versionMinor": "./scripts/update-euglena-deps.js minor && npx lerna version minor --force-publish -y",
+        "versionMajor": "./scripts/update-euglena-deps.js major && npx lerna version major --force-publish -y",
         "linkDependencies":"./scripts/link.sh",
         "linkDependenciesWithCessnalib":"./scripts/link.sh 1",
         "unlinkDependencies":"rm -r ~/.config/yarn/link/@euglena"
