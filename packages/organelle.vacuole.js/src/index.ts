@@ -6,11 +6,10 @@ import vacuole = organelle.vacuole;
 import common = particle.common;
 import ACK = common.ACK;
 import Exception = common.Exception;
-import S = common.Sap;
 
 let particles: Particle[] = [];
 
-export type Sap = S<
+export type Sap = common.Sap<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }
 >;
 

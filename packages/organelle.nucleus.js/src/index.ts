@@ -1,6 +1,6 @@
 import { js, sys } from "cessnalib";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
-import { Particle, Transmit, dco, cp } from "@euglena/core";
+import { Particle, Transmit, dco, cp, isParticleClass } from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import ACK = particle.common.ACK;
@@ -80,20 +80,31 @@ const createReceive =
         return allResults.filter((x) => x !== undefined) as Particle<string, unknown, {}>[];
     };
 
-export default dco<
-    nucleus.Nucleus,
-    [
-        Particle<
-            "Sap",
-            { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }
-        >,
-        ACK | Exception
-    ]
->({
+type ExtendedParticles = Particle<
+    common.Particles["meta"]["class"],
+    common.Particles["data"],
+    { cause: string }
+>;
+
+const cause = "80cd13f3-f560-4e86-a0a5-1b7c0259cf9c";
+
+const flatten = (particles: ExtendedParticles): Particle[] => {
+    return particles.meta.cause === cause ? particles.data : [particles];
+};
+
+export type Sap = common.Sap<
+    { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }
+>;
+
+export default dco<nucleus.Nucleus, [Sap, ACK | Exception]>({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         const result = await receive(particle, source);
-        return common.flatten(common.cp("Particles", result));
+        const particleArr = result.reduce((acc, curr) => {
+            const result = isParticleClass(curr, "Particles") ? flatten(curr) : [curr];
+            return [...acc, ...result];
+        }, [] as Particle[]);
+        return cp<ExtendedParticles>("Particles", particleArr, { cause }) as common.Particles;
     },
     Sap: async (particle, { t }) => {
         receive = createReceive(t as Transmit);
