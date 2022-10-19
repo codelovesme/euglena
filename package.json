@@ -15,7 +15,8 @@
         "versionMajor": "npx lerna version major --force-publish -y",
         "linkDependencies":"./scripts/link.sh",
         "linkDependenciesWithCessnalib":"./scripts/link.sh 1",
-        "unlinkDependencies":"rm -r ~/.config/yarn/link/@euglena"
+        "unlinkDependencies":"rm -r ~/.config/yarn/link/@euglena",
+        "updateEuglenaVersions":"./scripts/update-euglena-versions.js"
     },
     "prettier": {
         "printWidth": 120,
