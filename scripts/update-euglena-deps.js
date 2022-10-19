@@ -29,11 +29,26 @@ const getAllFiles = (dir, fileName, forbiddenFolders=[]) => {
     return files;
 }
 
-const directory = argv[2];
-const version = argv[3];
+const directory = "./packages";
+const updateType = argv[2];
 
 console.log("Updating euglena related dependency versions");
 console.log(`Directory working in: ${directory}`)
+
+const packageCore = join(directory,"core","package.json");
+const corePackageJson= JSON.parse(readFileSync(packageCore));
+let version = corePackageJson.version;
+
+const [major,minor,patch] = version.split(".");
+switch (updateType) {
+    case "major": version = `${Number(major)+1}.0.0`; break;
+    case "minor": version = `${major}.${Number(minor)+1}.0`; break;
+    case "patch": version = `${major}.${minor}.${Number(patch)+1}`; break;
+    default: 
+        console.log(`Unknown version update type ${updateType}`);
+        return 1;
+}
+console.log(`Update type: ${updateType}`);
 console.log(`Version to set: ${version}`)
 console.log("Finding package.json files")
 const files = getAllFiles(directory,"package.json",["node_modules"]);
