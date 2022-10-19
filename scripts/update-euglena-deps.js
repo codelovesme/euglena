@@ -69,7 +69,7 @@ for(const file of files) {
         const dependenciesArr = ["dependencies","peerDependencies","devDependencies"]; 
         const newPackageJson = updateAllRelatedDependencies(packageJson, dependenciesArr);
         console.log(`Writing file ${file}`);
-        writeFileSync(file, beautify(JSON.stringify(newPackageJson)));
+        writeFileSync(file, beautify(newPackageJson,null,4,0));
     } catch(e) {
         console.log(`Error occurred while working on ${file} error: ${e.message}`);
     }
