@@ -86,12 +86,6 @@ type ExtendedParticles = Particle<
     { cause: string }
 >;
 
-const cause = "80cd13f3-f560-4e86-a0a5-1b7c0259cf9c";
-
-const flatten = (particles: ExtendedParticles): Particle[] => {
-    return particles.meta.cause === cause ? particles.data : [particles];
-};
-
 export type Sap = common.Sap<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }
 >;
@@ -100,11 +94,7 @@ export default dco<nucleus.Nucleus, [Sap, ACK | Exception]>({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         const result = await receive(particle, source);
-        const particleArr = result.reduce((acc, curr) => {
-            const result = isParticleClass(curr, "Particles") ? flatten(curr) : [curr];
-            return [...acc, ...result];
-        }, [] as Particle[]);
-        return cp<ExtendedParticles>("Particles", particleArr, { cause }) as common.Particles;
+        return cp<ExtendedParticles>("Particles", result) as common.Particles;
     },
     Sap: async (particle, { t }) => {
         receive = createReceive(t as Transmit);

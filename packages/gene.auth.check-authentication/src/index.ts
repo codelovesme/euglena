@@ -25,7 +25,7 @@ export default dcg<
         nucleus: nucleus.Nucleus;
     }>,
     Parameters<{}>
->("Check session", { meta: { class: "Impulse" } }, async (p, s, { t, o }) => {
+>("Authentication", { meta: { class: "Impulse" } }, async (p, s, { t, o }) => {
     const token = p.data.token;
     //Check if token exists
     if (!token) return common.cp("Exception", new sys.type.Exception("There is no token"));
@@ -76,9 +76,9 @@ export default dcg<
         particle: p.data.particle,
         sender: userParticle
     });
-    const receiveParticle = nucleus.cp("ReceiveParticle", {
+    const nucleusParticleReceive = nucleus.cp("ReceiveParticle", {
         particle: authenticatedImpulse,
         source: o.nucleus
     });
-    return await t(receiveParticle, "nucleus");
+    return await t(nucleusParticleReceive, "nucleus");
 });

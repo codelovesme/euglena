@@ -90,6 +90,10 @@ Caution:
 
 TODO :
 
+-   Define a path to data driven approach 
+    - data driven organelles accepts particle recognizing them as how genes do (mongodb like query approach) rather than giving just class name
+    - rest or history would need to be carried through organelles, genes, etc... to identify the process and the actions to be
+    - functional approach also needs to be supported as it is 
 -   Tell about gene override
 -   In the near future There will be a store under euglena.codeloves.me/store to expose organelle implementations and
     genes
