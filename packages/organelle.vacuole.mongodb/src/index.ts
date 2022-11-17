@@ -9,23 +9,13 @@ import common = particle.common;
 export type Sap = Particle<
     "Sap",
     {
-        /**
-         * @deprecated since version 1.4.13
-         * Use @param uri instead
-         */
-        host: string;
-        /**
-         * @deprecated since version 1.4.13
-         * Use @param uri instead
-         */
-        port: number;
         database: string;
 
         /**
          * @example
          * "mongodb://dbdevc2scdlvsm:<password>@dbdevc2scdlvsm.documents.azure.com:10255/?ssl=true"
          */
-        uri?: string;
+        uri: string;
     }
 >;
 
@@ -36,8 +26,8 @@ export default dco<vacuole.Vacuole, Sap>({
         sap = p.data;
     },
     GetAlive: async (p, { cp, t }) => {
-        const { host, port, database, uri } = sap;
-        const client = new MongoClient(uri ? uri : `mongodb://${host}:${port}`);
+        const { database, uri } = sap;
+        const client = new MongoClient(uri);
         try {
             await client.connect();
             db = client.db(database);
@@ -64,7 +54,7 @@ export default dco<vacuole.Vacuole, Sap>({
         return new Promise((resolve) => {
             const data = p.data;
             if (data instanceof Array) {
-                db.collection("particles").insertMany(data, async (err:any, result:any) => {
+                db.collection("particles").insertMany(data, async (err: any, result: any) => {
                     if (err) return resolve(common.cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(common.cp("ACK"));
                 });
@@ -91,7 +81,7 @@ export default dco<vacuole.Vacuole, Sap>({
                             });
                     }
                 } else {
-                    return db.collection("particles").insertOne(particle, (err:any) => {
+                    return db.collection("particles").insertOne(particle, (err: any) => {
                         if (err) return resolve(common.cp("Exception", { message: JSON.stringify(err) }));
                         return resolve(common.cp("ACK"));
                     });
@@ -103,12 +93,12 @@ export default dco<vacuole.Vacuole, Sap>({
         return new Promise((resolve) => {
             const { query, count } = p.data;
             if (count === "all") {
-                db.collection("particles").deleteMany(js.Class.toDotNotation(query), (err:any, doc:any) => {
+                db.collection("particles").deleteMany(js.Class.toDotNotation(query), (err: any, doc: any) => {
                     if (err) return resolve(common.cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(common.cp("ACK"));
                 });
             } else {
-                db.collection("particles").deleteOne(js.Class.toDotNotation(query), (err:any, doc:any) => {
+                db.collection("particles").deleteOne(js.Class.toDotNotation(query), (err: any, doc: any) => {
                     if (err) return resolve(common.cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(common.cp("ACK"));
                 });
