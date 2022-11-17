@@ -15,6 +15,8 @@ cd ./packages/core
 yarn link
 cd ../template
 yarn link
+cd ../organelle.nucleus.js
+yarn link
 cd ..
 
 # # tie links
