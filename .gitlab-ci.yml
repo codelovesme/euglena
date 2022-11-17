@@ -51,6 +51,7 @@ compile:
   needs:
     - setup
   script:
+    - yarn linkDependencies
     - yarn compile
   artifacts:
     paths:
