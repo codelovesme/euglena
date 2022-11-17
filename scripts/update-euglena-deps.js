@@ -2,7 +2,7 @@
 const { argv } = require("node:process");
 const { join } = require("path");
 const { readdirSync,readFileSync, statSync, writeFileSync } = require("fs");
-import { execSync } from "child_process";
+const { execSync } = require("child_process");
 
 execSync(`npm i json-beautify`);
 const beautify = require("json-beautify");
