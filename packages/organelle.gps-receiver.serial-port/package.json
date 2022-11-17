@@ -24,8 +24,8 @@
         "serialport": "^9.0.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^2.3.1",
-        "@euglena/template": "^2.3.1"
+        "@euglena/core": "^2.0.0",
+        "@euglena/template": "^2.0.0"
     },
     "files": [
         "dist"

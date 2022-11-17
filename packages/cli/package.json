@@ -17,8 +17,8 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "@euglena/core": "^1.6.0",
-        "@euglena/template": "^1.6.0",
+        "@euglena/core": "^2.0.0",
+        "@euglena/template": "^2.0.0",
         "child_process": "^1.0.2",
         "commander": "^7.2.0",
         "json-beautify": "^1.1.1"

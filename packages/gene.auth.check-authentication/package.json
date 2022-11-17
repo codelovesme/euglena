@@ -21,9 +21,9 @@
         "cessnalib": "^0.14.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^2.3.1",
-        "@euglena/organelle.nucleus.js": "^2.3.1",
-        "@euglena/template": "^2.3.1"
+        "@euglena/core": "^2.0.0",
+        "@euglena/organelle.nucleus.js": "^2.0.0",
+        "@euglena/template": "^2.0.0"
     },
     "files": [
         "dist"

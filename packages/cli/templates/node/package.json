@@ -12,17 +12,17 @@
     "scripts": {
         "compile": "tsc -p .",
         "cleanDist": "if [ -d dist ]; then rm -rf dist; fi",
-        "cleanDependencies":"if [ -d node_modules ]; then rm -rf dist; fi",
-        "clean":"npm run cleanDependencies && npm run cleanDist",
+        "cleanDependencies": "if [ -d node_modules ]; then rm -rf dist; fi",
+        "clean": "npm run cleanDependencies && npm run cleanDist",
         "start": "node dist/bin/index.js",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
         "cessnalib": "^0.14.0",
-        "@euglena/core": "^1.6.0",
-        "@euglena/template": "^1.6.0",
-        "@euglena/organelle.vacuole.js": "^1.6.0",
-        "@euglena/organelle.logger.console": "^1.6.0"
+        "@euglena/core": "^2.0.0",
+        "@euglena/template": "^2.0.0",
+        "@euglena/organelle.vacuole.js": "^2.0.0",
+        "@euglena/organelle.logger.console": "^2.0.0"
     },
     "devDependencies": {
         "typescript": "^4.7.4"
