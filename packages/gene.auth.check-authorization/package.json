@@ -22,12 +22,12 @@
         "@euglena/organelle.nucleus.js":""
     },
     "peerDependencies": {
-        "@euglena/core": "^1.7.0",
-        "@euglena/template": "^1.7.0"
+        "@euglena/core": "^1.6.0",
+        "@euglena/template": "^1.6.0"
     },
     "devDependencies": {
-        "@euglena/core": "^1.7.0",
-        "@euglena/template": "^1.7.0"
+        "@euglena/core": "^1.6.0",
+        "@euglena/template": "^1.6.0"
     },
     "files": [
         "dist"
