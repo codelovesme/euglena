@@ -96,3 +96,4 @@ for(const file of files) {
     }
 }
 
+execSync(`rm -rf tmp`);
