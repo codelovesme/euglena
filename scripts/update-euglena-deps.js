@@ -4,8 +4,8 @@ const { join } = require("path");
 const { readdirSync,readFileSync, statSync, writeFileSync } = require("fs");
 const { execSync } = require("child_process");
 
-execSync(`npm i -g json-beautify`);
-const beautify = require("json-beautify");
+execSync(`npm --prefix tmp install json-beautify`);
+const beautify = require("../tmp/node_modules/json-beautify");
 
 /**
  * TODO: Move this function into cessanlib.nodejs
