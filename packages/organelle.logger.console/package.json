@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.logger.console",
     "domain": "codeloves.me",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -22,8 +22,8 @@
         "moment": "^2.24.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.6.0",
-        "@euglena/template": "^1.6.0"
+        "@euglena/core": "^2.3.1",
+        "@euglena/template": "^2.3.1"
     },
     "files": [
         "dist"

@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.jwt.jsonwebtoken",
     "domain": "codeloves.me",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -18,13 +18,13 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
+        "@types/jsonwebtoken": "^8.3.9",
         "cessnalib": "^0.14.0",
-        "jsonwebtoken": "^8.1.0",
-        "@types/jsonwebtoken": "^8.3.9"
+        "jsonwebtoken": "^8.1.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.6.0",
-        "@euglena/template": "^1.6.0"
+        "@euglena/core": "^2.3.1",
+        "@euglena/template": "^2.3.1"
     },
     "files": [
         "dist"

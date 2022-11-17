@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.ui.angular",
     "domain": "codeloves.me",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -21,12 +21,12 @@
         "cessnalib": "^0.14.0"
     },
     "peerDependencies": {
-        "@angular/core":"~11.2.12",
-        "@euglena/template": "^1.6.0",
-        "@euglena/core": "^1.6.0"
+        "@angular/core": "~11.2.12",
+        "@euglena/core": "^2.3.1",
+        "@euglena/template": "^2.3.1"
     },
     "devDependencies": {
-        "@angular/core":"~11.2.12"
+        "@angular/core": "~11.2.12"
     },
     "files": [
         "dist"

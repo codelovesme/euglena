@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.gps-receiver.serial-port",
     "domain": "codeloves.me",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -18,14 +18,14 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
+        "@types/serialport": "^8.0.1",
         "cessnalib": "^0.14.0",
         "gps": "^0.5.3",
-        "serialport": "^9.0.0",
-        "@types/serialport": "^8.0.1"
+        "serialport": "^9.0.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.6.0",
-        "@euglena/template": "^1.6.0"
+        "@euglena/core": "^2.3.1",
+        "@euglena/template": "^2.3.1"
     },
     "files": [
         "dist"

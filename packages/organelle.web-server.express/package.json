@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.web-server.express",
     "domain": "codeloves.me",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -18,13 +18,13 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
+        "@types/express": "^4.17.8",
         "cessnalib": "^0.14.0",
-        "express": "^4.17.1",
-        "@types/express": "^4.17.8"
+        "express": "^4.17.1"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.6.0",
-        "@euglena/template": "^1.6.0"
+        "@euglena/core": "^2.3.1",
+        "@euglena/template": "^2.3.1"
     },
     "files": [
         "dist"

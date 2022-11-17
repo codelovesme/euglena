@@ -1,7 +1,7 @@
 {
     "name": "@euglena/gene.auth.check-authentication",
     "domain": "codeloves.me",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -21,9 +21,9 @@
         "cessnalib": "^0.14.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^1.6.0",
-        "@euglena/template": "^1.6.0",
-        "@euglena/organelle.nucleus.js":"^1.6.0"
+        "@euglena/core": "^2.3.1",
+        "@euglena/organelle.nucleus.js": "^2.3.1",
+        "@euglena/template": "^2.3.1"
     },
     "files": [
         "dist"
