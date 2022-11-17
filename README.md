@@ -91,7 +91,8 @@ Caution:
 TODO :
 
 -   Define a path to data driven approach 
-    - data driven organelles accepts particle recognizing them as how genes do (mongodb like query approach) rather than giving just class name
+    - data driven organelles accepts particle recognizing them as how genes do (mongodb like query approach) rather than giving just class name ?
+      -> mongodb like detection for organelles is not necessary - the organelles needs to be generic and the only remaining detection point is class name
     - rest or history would need to be carried through organelles, genes, etc... to identify the process and the actions to be
     - functional approach also needs to be supported as it is 
 -   Tell about gene override
