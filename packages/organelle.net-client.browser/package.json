@@ -25,10 +25,6 @@
         "@euglena/core": "^2.3.1",
         "@euglena/template": "^2.3.1"
     },
-    "devDependencies": {
-        "@euglena/core": "^2.3.1",
-        "@euglena/template": "^2.3.1"
-    },
     "files": [
         "dist"
     ]
