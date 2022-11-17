@@ -1,3 +1,9 @@
+Mandatory organelles: 
+* Endoplasmic reticulum 
+* Nucleus
+
+These two organelle comes default when create an euglena application. We still need to supply SAP for Nucleus.
+
 
 [@euglena/organelle.bcrypt.bcrypt](../packages/organelle.bcrypt.bcrypt/README.md)
 

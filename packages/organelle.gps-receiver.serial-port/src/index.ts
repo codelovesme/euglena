@@ -1,16 +1,22 @@
 import SerialPort from "serialport";
 import GPS from "gps";
-import { gpsReceiver, Sap } from "@euglena/core";
+import { cp, dco, Particle } from "@euglena/core";
+import { organelle, particle } from "@euglena/template";
+
+import common = particle.common;
+import gpsReceiver = organelle.gpsReceiver;
+
+export type Sap = Particle<"Sap", { path: string; interval: number }>;
 
 let gps: any;
-let sap: { path: string; interval: number };
 let buffer: Array<{ lat: number; lng: number }> = [];
+let sap: Sap["data"];
 
-export default gpsReceiver.v1.com<Sap<typeof sap>>({
+export default dco<gpsReceiver.GpsReceiver, Sap>({
     Sap: async (p) => {
         sap = p.data;
     },
-    Listen: async (p, { t, cp }) => {
+    Listen: async (p, { t }) => {
         try {
             gps = new GPS();
             const { path, interval } = sap;
@@ -46,13 +52,15 @@ export default gpsReceiver.v1.com<Sap<typeof sap>>({
             setInterval(() => {
                 const result = avg(buffer);
                 if (result) {
-                    t(cp.Coordinate(result));
+                    t(cp<gpsReceiver.Coordinate>("Coordinate", result));
                     buffer = [];
                 }
             }, interval);
-            return cp.Log({ message: "Listening GPS", level: "Info" });
-        } catch (e) {
-            return cp.Exception({ message: JSON.stringify(e) });
+            t(common.cp("Log", { message: "Listening GPS", level: "Info" }));
+
+            return common.cp("ACK");
+        } catch (e: any) {
+            return common.cp("Exception", { message: JSON.stringify(e) });
         }
     }
 });

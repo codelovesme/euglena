@@ -1,28 +1,39 @@
-import { vacuole, Sap, Particle, Meta } from "@euglena/core";
-import { js } from "cessnalib";
+import { Particle, dco } from "@euglena/core";
+import { organelle, particle } from "@euglena/template";
+import { js, sys } from "cessnalib";
+
+import vacuole = organelle.vacuole;
+import common = particle.common;
+import ACK = common.ACK;
+import Exception = common.Exception;
 
 let particles: Particle[] = [];
-export default vacuole.v1.com<
-    Sap<{ path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }>
->({
-    Sap: async (particle, { cp }) => {
-        try {
-            switch (particle.data.type) {
-                case "FileSystemPath":
-                case "NodeModules":
-                case "Url":
+
+export type Sap = common.Sap<
+    { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }
+>;
+
+export default dco<vacuole.Vacuole, [Sap, Exception | ACK]>({
+    Sap: async (particle) => {
+        switch (particle.data.type) {
+            case "FileSystemPath":
+            case "NodeModules":
+            case "Url":
+                try {
                     particles = require(particle.data.path).default;
-                    break;
-                case "InMemory":
-                    particles = particle.data.particles;
-                    break;
-            }
-            return cp.ACK();
-        } catch (error) {
-            return cp.Exception(error.message);
+                } catch (error) {
+                    return common.cp("Exception", new sys.type.Exception((error as { message: string }).message));
+                }
+                break;
+            case "InMemory":
+                particles = particle.data.particles;
+                break;
         }
+        return common.cp("ACK");
     },
-    GetAlive: async () => {},
+    GetAlive: async () => {
+        return common.cp("ACK");
+    },
     Hibernate: async () => {},
     ReadParticle: async (p, { cp }) => {
         const { query, count } = p.data;
@@ -33,44 +44,38 @@ export default vacuole.v1.com<
                 len++;
             }
         }
-        return cp.Particles(retVal);
+        return cp("Particles", retVal);
     },
     SaveParticle: async (p, { cp }) => {
         if (p.data instanceof Array) {
             particles = [...particles, ...p.data];
-            return cp.Metas(p.data.map((p) => p.meta));
         } else {
-            const overridedParticles: Meta[] = [];
             const { query, count, particle } = p.data;
             if (query) {
                 let overrideCount = 0;
                 for (let i = 0; i < particles.length && (count === "all" || overrideCount < count); i++) {
                     if (js.Class.doesMongoCover(particles[i], query)) {
-                        overridedParticles.push(particles[i].meta);
                         particles[i] = particle;
                         overrideCount++;
                     }
                 }
             } else {
-                overridedParticles.push(particle.meta);
                 particles = [...particles, particle];
             }
-            return cp.Metas(overridedParticles);
         }
+        return common.cp("ACK");
     },
     RemoveParticle: async (p, { cp }) => {
         const { query, count } = p.data;
-        const removedParticles: Meta[] = [];
         if (query) {
             let removeCount = 0;
             for (let i = 0; i < particles.length && (count === "all" || removeCount < count); i++) {
                 if (js.Class.doesMongoCover(particles[i], query)) {
-                    const removed = particles.splice(i--, 1)[0];
-                    removedParticles.push(removed.meta);
+                    particles.splice(i, 1);
                     removeCount++;
                 }
             }
         }
-        return cp.Metas(removedParticles);
+        return common.cp("ACK");
     }
 });

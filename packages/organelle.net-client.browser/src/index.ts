@@ -1,6 +1,12 @@
-import { netClient, Sap } from "@euglena/core";
+import { dco, Particle } from "@euglena/core";
+import { particle, organelle } from "@euglena/template";
 
-export default netClient.v1.com<Sap<undefined>>({
+import common = particle.common;
+import netClient = organelle.netClient;
+
+export type Sap = Particle<"Sap">;
+
+export default dco<netClient.NetClient, Sap>({
     Sap: async () => {},
     TransmitParticle: async (
         {
@@ -9,17 +15,17 @@ export default netClient.v1.com<Sap<undefined>>({
                 target: { host, port }
             }
         },
-        { cp, t }
+        { t }
     ) => {
-        t(cp.Log({ message: `Particle got to sent ${JSON.stringify(particle.meta)}`, level: "Info" }));
+        t(common.cp("Log", { message: `Particle got to sent ${JSON.stringify(particle.meta)}`, level: "Info" }));
         try {
             const resp = await fetch(`http://${host}:${port}`, {
                 method: "POST",
                 body: JSON.stringify(particle)
             });
             return resp.json();
-        } catch (e) {
-            return cp.Exception({ message: JSON.stringify(e) });
+        } catch (e: any) {
+            return common.cp("Exception", { message: JSON.stringify(e) });
         }
     }
 });

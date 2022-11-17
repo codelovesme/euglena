@@ -1,18 +1,24 @@
 import * as http from "http";
-import { netServer, Sap, isParticle, Particles, ccp } from "@euglena/core";
+import { dco, isParticle, Particle } from "@euglena/core";
+import { organelle } from "@euglena/template";
+
+import netServer = organelle.netServer;
+
+export type Sap = Particle<
+    "Sap",
+    {
+        port: number;
+        euglenaName: string;
+    }
+>;
 
 let server: http.Server;
 let sap: {
     port: number;
     euglenaName: string;
 };
-export default netServer.v1.com<
-    Sap<{
-        port: number;
-        euglenaName: string;
-    }>
->({
-    Sap: async ({ data }, { cp, t }) => {
+export default dco<netServer.NetServer, Sap>({
+    Sap: async ({ data }, { t,cp }) => {
         sap = data;
         server = http.createServer((req, res) => {
             if (req.method == "POST") {
@@ -22,7 +28,7 @@ export default netServer.v1.com<
                     // Too much POST data, kill the connection!
                     if (body.length > 1e6) req.socket.destroy();
                 });
-                req.on("end", () => {
+                req.on("end", async () => {
                     res.writeHead(200, {
                         "Content-Type": "application/json",
                         "Access-Control-Allow-Origin": "*"
@@ -30,38 +36,36 @@ export default netServer.v1.com<
                     try {
                         const particle = JSON.parse(body);
                         if (isParticle(particle) && particle.meta.class === "Impulse") {
-                            t(particle as any).then((resp: any) => {
-                                const results: Particles = resp;
-                                res.end(
-                                    JSON.stringify(
-                                        ccp.Impulse({
-                                            particle: results.data[0],
-                                            source: sap.euglenaName
-                                        })
-                                    )
-                                );
-                            });
+                            const results = await t(particle as any);
+                            res.end(
+                                JSON.stringify(
+                                    cp("Impulse", {
+                                        particle: results.data[0],
+                                        source: sap.euglenaName
+                                    })
+                                )
+                            );
                         }
-                    } catch (e) {
+                    } catch (e: any) {
                         t(
-                            cp.Log({
+                            cp("Log", {
                                 message: `In ${"Net Server"} error occurred while receiving impulse Err: ${e.message}`,
                                 level: "Error"
                             })
                         );
-                        return res.end("Inccorect particle format!");
+                        res.end("Inccorect particle format!");
                     }
                 });
             } else if (req.method == "GET") {
                 res.writeHead(200, { "Content-Type": "text/plain" });
-                return res.end("Only POST method accepted!");
+                res.end("Only POST method accepted!");
             }
         });
     },
     GetAlive: async (p, { t, cp }) => {
         server.listen(sap.port, () => {
             t(
-                cp.Log({
+                cp("Log", {
                     message: `Server running at ${sap.port}`,
                     level: "Info"
                 })

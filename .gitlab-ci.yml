@@ -35,6 +35,7 @@ setup:
   stage: setup
   script:
     - yarn install --frozen-lockfile
+    - yarn linkDependencies
   artifacts:
     paths:
       - node_modules/
@@ -50,6 +51,7 @@ compile:
   needs:
     - setup
   script:
+    - yarn linkDependencies
     - yarn compile
   artifacts:
     paths:

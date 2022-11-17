@@ -22,7 +22,7 @@
         "rxjs": "~6.6.0",
         "tslib": "^2.0.0",
         "zone.js": "~0.11.3",
-        "@euglena/core": "^1.2.22",
+        "@euglena/core": "^1.6.0",
         "@euglena/organelle.vacuole.js": "^1.2.22",
         "@euglena/organelle.logger.console": "^1.2.22",
         "@euglena/organelle.ui.angular": "^1.2.22",
@@ -45,6 +45,6 @@
         "protractor": "~7.0.0",
         "ts-node": "~8.3.0",
         "tslint": "~6.1.0",
-        "typescript": "~4.1.5"
+        "typescript": "^4.7.4"
     }
 }

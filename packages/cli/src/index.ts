@@ -4,6 +4,7 @@ import * as path from "path";
 import { program } from "commander";
 import { mkdirSync } from "fs";
 import { execSync } from "child_process";
+import { ce } from "@euglena/template";
 
 const packageJson = require("../package.json");
 
@@ -31,7 +32,7 @@ const main = () => {
         .action((name: string, { type }: { type: string }) => {
             if (!types.includes(type)) throw "Unknown application type!";
 
-            const templateFolder = path.join(__dirname, "../dist/templates", type);
+            const templateFolder = path.join(__dirname, "../templates", type);
 
             console.log(`Creating directory ${name}`);
             mkdirSync(name);
@@ -51,6 +52,16 @@ const main = () => {
                 execSync(`find ${name} -type f -exec sed -i '.bak' 's/must_be_replaced/${name}/g' {} +`);
             }
         });
+    program
+        .command("run <path>")
+        .alias("r")
+        .description("Initialize a euglena instance using a particles package")
+        .action(async (path_: string) => {
+            const particlesModule = require(path.join(process.cwd(), path_));
+            const particles = "default" in particlesModule ? particlesModule.default : particlesModule;
+            ce(particles);
+        });
+
     program.parse(process.argv);
 };
 

@@ -14,20 +14,20 @@
         "cleanDist": "if [ -d dist ]; then rm -rf dist; fi",
         "cleanDependencies":"if [ -d node_modules ]; then rm -rf dist; fi",
         "clean":"npm run cleanDependencies && npm run cleanDist",
-        "start": "node dist/index.js",
+        "start": "node dist/bin/index.js",
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "cessnalib": "^0.9.0",
-        "@euglena/core": "^1.2.22",
-        "@euglena/organelle.vacuole.js": "^1.2.22",
-        "@euglena/organelle.logger.console": "^1.2.22"
+        "cessnalib": "^0.14.0",
+        "@euglena/core": "^1.6.0",
+        "@euglena/template": "^1.6.0",
+        "@euglena/organelle.vacuole.js": "^1.6.0",
+        "@euglena/organelle.logger.console": "^1.6.0"
     },
     "devDependencies": {
-        "typescript": "^3.9.2",
-        "@types/node": "^13.11.0"
+        "typescript": "^4.7.4"
     },
     "bin": {
-        "must_be_replaced": "dist/index.js"
+        "must_be_replaced": "dist/bin/index.js"
     }
 }
