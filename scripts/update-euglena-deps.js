@@ -4,7 +4,7 @@ const { join } = require("path");
 const { readdirSync,readFileSync, statSync, writeFileSync } = require("fs");
 const { execSync } = require("child_process");
 
-execSync(`npm i json-beautify`);
+execSync(`npm i -g json-beautify`);
 const beautify = require("json-beautify");
 
 /**
