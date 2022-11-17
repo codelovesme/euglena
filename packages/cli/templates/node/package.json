@@ -21,8 +21,8 @@
         "cessnalib": "^0.14.0",
         "@euglena/core": "^1.6.0",
         "@euglena/template": "^1.6.0",
-        "@euglena/organelle.vacuole.js": "^1.7.0",
-        "@euglena/organelle.logger.console": "^1.7.0"
+        "@euglena/organelle.vacuole.js": "^1.6.0",
+        "@euglena/organelle.logger.console": "^1.6.0"
     },
     "devDependencies": {
         "typescript": "^4.7.4"
