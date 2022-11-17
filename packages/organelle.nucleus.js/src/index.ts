@@ -1,6 +1,6 @@
 import { js, sys } from "cessnalib";
 import { Dependencies, Gene, GeneReaction } from "./gene.h";
-import { Particle, Transmit, dco, cp, isParticleClass } from "@euglena/core";
+import { Particle, Transmit, dco, cp } from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import ACK = particle.common.ACK;

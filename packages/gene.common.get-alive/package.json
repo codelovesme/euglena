@@ -18,12 +18,12 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "cessnalib": "^0.14.0",
-        "@euglena/organelle.nucleus.js":""
+        "cessnalib": "^0.14.0"
     },
     "peerDependencies": {
         "@euglena/core": "^1.6.0",
-        "@euglena/template": "^1.6.0"
+        "@euglena/template": "^1.6.0",
+        "@euglena/organelle.nucleus.js":"^1.6.0"
     },
     "files": [
         "dist"

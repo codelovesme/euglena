@@ -64,7 +64,7 @@ export default dco<vacuole.Vacuole, Sap>({
         return new Promise((resolve) => {
             const data = p.data;
             if (data instanceof Array) {
-                db.collection("particles").insertMany(data, async (err, result) => {
+                db.collection("particles").insertMany(data, async (err:any, result:any) => {
                     if (err) return resolve(common.cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(common.cp("ACK"));
                 });
@@ -91,7 +91,7 @@ export default dco<vacuole.Vacuole, Sap>({
                             });
                     }
                 } else {
-                    return db.collection("particles").insertOne(particle, (err) => {
+                    return db.collection("particles").insertOne(particle, (err:any) => {
                         if (err) return resolve(common.cp("Exception", { message: JSON.stringify(err) }));
                         return resolve(common.cp("ACK"));
                     });
@@ -103,12 +103,12 @@ export default dco<vacuole.Vacuole, Sap>({
         return new Promise((resolve) => {
             const { query, count } = p.data;
             if (count === "all") {
-                db.collection("particles").deleteMany(js.Class.toDotNotation(query), (err, doc) => {
+                db.collection("particles").deleteMany(js.Class.toDotNotation(query), (err:any, doc:any) => {
                     if (err) return resolve(common.cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(common.cp("ACK"));
                 });
             } else {
-                db.collection("particles").deleteOne(js.Class.toDotNotation(query), (err, doc) => {
+                db.collection("particles").deleteOne(js.Class.toDotNotation(query), (err:any, doc:any) => {
                     if (err) return resolve(common.cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(common.cp("ACK"));
                 });

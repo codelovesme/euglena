@@ -1,30 +1,29 @@
 #!/bin/bash
 set –e
 
-function compile {
-  yarn compile
+compile() {
+  yarn --cwd $1 compile
   result=$?
   [[ $result != 0 ]] && exit $result
 }
 
-cd packages/core
-echo "compile core"
-compile
+cd packages
 
-cd ../template
+echo "compile core"
+compile core
+
 echo "compile template"
-compile
-cd ..
+compile template
 
 problems=()
 for entry in *; do
-  cd $entry
   echo "compile $entry"
-  compile
+  compile $entry
   # problems+=( $entry )
   echo "---------------"
-  cd ..
 done
+
+cd ..
 
 # #print result
 # [[ ${#problems[@]} != 0 ]] && echo "There are problems with those packages:" || echo "All is well !"
