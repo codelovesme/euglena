@@ -15,6 +15,9 @@ compile core
 echo "compile template"
 compile template
 
+echo "compile organelle.nucleus.js"
+compile organelle.nucleus.js
+
 problems=()
 for entry in *; do
   echo "compile $entry"
