@@ -22,8 +22,8 @@
         "plantower": "^1.1.10"
     },
     "peerDependencies": {
-        "@euglena/core": "^2.1.0",
-        "@euglena/template": "^2.1.0"
+        "@euglena/core": "^2.2.0",
+        "@euglena/template": "^2.2.0"
     },
     "files": [
         "dist"
