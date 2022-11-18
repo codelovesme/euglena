@@ -16,10 +16,10 @@
         "cessnalib": "^0.14.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^2.0.0"
+        "@euglena/core": "^2.1.0"
     },
     "devDependencies": {
-        "@euglena/core": "^2.0.0"
+        "@euglena/core": "^2.1.0"
     },
     "files": [
         "dist"
