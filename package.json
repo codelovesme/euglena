@@ -9,7 +9,7 @@
         "clean": "rm -r node_modules && npx lerna run clean",
         "cleanDependencies": "rm -r node_modules && npx lerna run cleanDependencies",
         "cleanDist": "npx lerna run cleanDist",
-        "publishNPM": "npx lerna publish from-package --no-verify-access -y",
+        "publishNPM": "npx lerna publish from-package -y",
         "versionPatch": "./scripts/update-euglena-deps.js patch &&  git add ./**/package.json  && git commit -m 'Update euglena related dependencies' && npx lerna version patch --force-publish -y",
         "versionMinor": "./scripts/update-euglena-deps.js minor &&  git add ./**/package.json  && git commit -m 'Update euglena related dependencies' && npx lerna version minor --force-publish -y",
         "versionMajor": "./scripts/update-euglena-deps.js major &&  git add ./**/package.json  && git commit -m 'Update euglena related dependencies' && npx lerna version major --force-publish -y",
@@ -34,7 +34,7 @@
         "endOfLine": "lf"
     },
     "dependencies": {
-        "lerna":"^4.0.0",
+        "lerna":"^6.0.2",
         "typescript": "^4.7.4",
         "yarn": "~1.22.10",
         "jest":"^28.1.3",
