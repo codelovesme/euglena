@@ -36,5 +36,8 @@
     ],
     "bin": {
         "euglena": "dist/index.js"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
