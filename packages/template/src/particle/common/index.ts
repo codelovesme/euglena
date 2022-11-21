@@ -8,3 +8,5 @@ export * from "./organelle-info.h";
 export * from "./particles";
 export * from "./sap.h";
 export * from "./create-particle";
+export * from "./euglena-name.h"
+export * from "./revive-organelle.h"

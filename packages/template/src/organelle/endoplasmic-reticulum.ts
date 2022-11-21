@@ -7,7 +7,7 @@ export type TransmitResponse = Particle<"TransmitResponse", Particle | void>;
 export type EuglenaHasBeenBorn = Particle<"EuglenaHasBeenBorn">;
 
 export type EndoplasmicReticulum = AllInteractions<{
-    in: [[TransmitParticle, TransmitResponse], common.OrganelleInfo];
+    in: [[TransmitParticle, any], common.OrganelleInfo];
     out: [common.Log, EuglenaHasBeenBorn];
 }>;
 

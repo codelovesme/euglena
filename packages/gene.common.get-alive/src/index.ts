@@ -1,39 +1,41 @@
-import { createParticle } from "@euglena/core";
-import { dcg, Organelles, Parameters } from "@euglena/organelle.nucleus.js";
+import { isParticleClass } from "@euglena/core";
+import { dcg } from "@euglena/organelle.nucleus.js";
 import { organelle, particle } from "@euglena/template";
 
 import nucleus = organelle.nucleus;
+import logger = organelle.logger;
 import common = particle.common;
 
+import ACK = common.ACK;
+import Exception = common.Exception;
+import ReviveOrganelle = common.ReviveOrganelle;
+
 export default dcg<
-    common.GetAlive,
-    Organelles<{
-        [x: string]: any;
+    ReviveOrganelle,
+    {
         nucleus: nucleus.Nucleus;
-    }>,
-    Parameters<{
-        retryInterval?: number;
-        retry: boolean;
-        organelleName: string;
-    }>
->(
-    "Get Alive",
-    { meta: { class: "GetAlive" } },
-    async (p, s, { t, o, params: { retry, retryInterval = 10000, organelleName } }) => {
-        const getAlive = createParticle<common.GetAlive>("GetAlive");
-        const x = await t(getAlive, organelleName);
-        if ((x as common.Exception).meta.class === "Exception") {
-            if (retry) {
-                setTimeout(() => {
+        logger: logger.Logger;
+    }
+>("ReviveOrganelle", { meta: { class: "ReviveOrganelle" } }, async (p, s, { t, o }) => {
+    const getAlive = particle.common.cp("GetAlive");
+    const x = (await t(getAlive as any, p.data.organelleName as any)) as unknown as ACK | Exception;
+    if (isParticleClass(x, "Exception")) {
+        let counter = 0;
+        if (p.data.retryCount > counter) {
+            const interval = setInterval(async () => {
+                const resp = (await t(getAlive as any, p.data.organelleName as any)) as unknown as ACK | Exception;
+                if (isParticleClass(resp, "Exception")) {
                     t(
-                        nucleus.cp("ReceiveParticle", {
-                            particle: { meta: { class: "GetAlive" }, data: null },
-                            source: o.nucleus
+                        particle.common.cp("Log", {
+                            message: `The organelle ${p.data.organelleName} couldn't get alive`,
+                            level: "Info"
                         }),
-                        "nucleus"
+                        "logger"
                     );
-                }, retryInterval);
-            }
+                } else {
+                    clearInterval(interval);
+                }
+            }, p.data.retryInterval);
         }
     }
-);
+});

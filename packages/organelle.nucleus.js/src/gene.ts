@@ -1,57 +1,26 @@
-import {
-    AddGene,
-    GeneOptionals,
-    GeneReaction,
-    CreateChromosome,
-    Chromosome,
-    Gene,
-    Dependencies,
-    Organelles,
-    Parameters
-} from "./gene.h";
-import { sys } from "cessnalib";
-import { Particle, createMeta, Meta, cp } from "@euglena/core";
+import { CreateChromosome, Chromosome, DefineCreateGene, CreateGene, Gene } from "./gene.h";
+import { cp } from "@euglena/core";
 
-export const createChromosome: CreateChromosome = (bind: (addGene: AddGene<Particle>) => void): Chromosome => {
-    const geneCluster: Chromosome = [];
-    bind(
-        <
-            TriggerParticle extends Particle = Particle,
-            O extends Organelles = Organelles,
-            P extends Parameters = Parameters
-        >(
-            name: string,
-            triggers: sys.type.RecursivePartial<TriggerParticle>,
-            reaction: GeneReaction<TriggerParticle, O, P>,
-            adds?: GeneOptionals
-        ) => {
-            const meta: Meta<"Gene"> =
-                adds && adds.expireAt ? createMeta("Gene", { expireAt: adds.expireAt }) : createMeta("Gene");
-            const data: any = { name, triggers, reaction, override: adds?.override };
-            geneCluster.push({ meta, data });
-        }
-    );
-    return geneCluster;
+export const createGene: CreateGene = (name, triggers, reaction, organelles, override) =>
+    cp<Gene>("Gene", {
+        name,
+        triggers,
+        reaction: reaction as any,
+        organelles,
+        override
+    });
+
+export const createChromosome: CreateChromosome = (bind) => {
+    const chromosome: Chromosome = [];
+    bind((name, triggers, reaction, organelles, override) => {
+        chromosome.push(createGene(name, triggers, reaction, organelles, override));
+    });
+    return chromosome;
 };
 
-export const defineCreateGene =
-    <P extends Particle, O extends Organelles, P_ extends Parameters>(
-        name: string,
-        triggers: sys.type.RecursivePartial<P>,
-        reaction: GeneReaction<P, O, P_>,
-        override?: string
-    ) =>
-    (dependencies: Dependencies<O, P_>): Gene<P, O, P_> =>
-        cp("Gene", {
-            name,
-            reaction,
-            triggers,
-            override,
-            dependencies
-        });
+export const defineCreateGene: DefineCreateGene = (name, triggers, reaction, override) => (organelles) =>
+    createGene(name, triggers, reaction, organelles, override);
 
-/**
- * createChromosome
- */
+export const cg = createGene;
 export const cc = createChromosome;
 export const dcg = defineCreateGene;

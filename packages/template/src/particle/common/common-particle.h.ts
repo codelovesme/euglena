@@ -6,5 +6,17 @@ import { GetAlive } from "./get-alive.h";
 import { OrganelleInfo } from "./organelle-info.h";
 import { Particles } from "./particles/particles.h";
 import { Sap } from "./sap.h";
+import { EuglenaName } from "./euglena-name.h";
+import { ReviveOrganelle } from "./revive-organelle.h";
 
-export type CommonParticle = ACK | NACK | Log | Exception | GetAlive | OrganelleInfo | Particles | Sap;
+export type CommonParticle =
+    | ACK
+    | NACK
+    | Log
+    | Exception
+    | GetAlive
+    | OrganelleInfo
+    | Particles
+    | Sap
+    | EuglenaName
+    | ReviveOrganelle;
