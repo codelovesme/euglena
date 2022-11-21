@@ -18,14 +18,14 @@ export const dco: DefineCreateOrganelle =
     ): CreateOrganelle<ComingParticles<COP>, ComingResponseParticle<COP>> =>
     <OrganelleName extends string>(params: {
         name: OrganelleName;
-        transmit?: (sourceOrganelle: string, particle: Particle, targetOrganelle?: string) => Promise<Particle | void>;
+        transmit?: (particle: Particle) => Promise<Particle | void>;
     }): OrganelleReceive<ComingParticles<COP>, ComingResponseParticle<COP>> =>
     async (particle) => {
         const name = params.name;
         let reaction: any = (bindReactions as any)[(particle as any).meta.class] as any;
         if (reaction) {
             return await reaction(particle, {
-                t: (particle: Particle) => params.transmit?.(name, particle, "Nucleus"),
+                t: params.transmit,
                 cp: cp
             });
         } else {

@@ -1,7 +1,7 @@
 import { sys } from "cessnalib";
 import { isParticleClass } from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
-import { dcg, Organelles, Parameters } from "@euglena/organelle.nucleus.js";
+import { dcg } from "@euglena/organelle.nucleus.js";
 
 import vacuole = organelle.vacuole;
 import jwt = organelle.jwt;
@@ -19,12 +19,11 @@ import Impulse = netServer.Impulse;
  */
 export default dcg<
     Impulse,
-    Organelles<{
+    {
         jwt: jwt.JWT;
         vacuole: vacuole.Vacuole;
         nucleus: nucleus.Nucleus;
-    }>,
-    Parameters<{}>
+    }
 >("Authentication", { meta: { class: "Impulse" } }, async (p, s, { t, o }) => {
     const token = p.data.token;
     //Check if token exists

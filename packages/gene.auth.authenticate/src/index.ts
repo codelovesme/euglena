@@ -1,6 +1,6 @@
 import { cp, isParticleClass, Particle } from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
-import { dcg, Organelles, Parameters } from "@euglena/organelle.nucleus.js";
+import { dcg } from "@euglena/organelle.nucleus.js";
 import { sys } from "cessnalib";
 
 import vacuole = organelle.vacuole;
@@ -20,12 +20,11 @@ export type Authenticate = Particle<
 
 export default dcg<
     Authenticate,
-    Organelles<{
+    {
         vacuole: vacuole.Vacuole;
         bcrypt: bcrypt.Bcrypt;
         jwt: jwt.JWT;
-    }>,
-    Parameters<{}>
+    }
 >("Authenticate", { meta: { class: "Authenticate" } }, async ({ data: { euglenaName, password } }, s, { t, o }) => {
     /**
      * Check username and password is not empty

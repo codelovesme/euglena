@@ -1,5 +1,7 @@
-import { cp, CreateOrganelle, OrganelleReceive, Particle } from "@euglena/core";
-import { TransmitParticle } from "./organelle/endoplasmic-reticulum";
+import { cp, CreateOrganelle, isParticleClass, OrganelleReceive, Particle, Transmit } from "@euglena/core";
+import { sys } from "cessnalib";
+import { nucleus } from "./organelle";
+import { EuglenaHasBeenBorn } from "./organelle/endoplasmic-reticulum";
 import { ReceiveParticle } from "./organelle/nucleus";
 import { common } from "./particle";
 // import { endoplasmicReticulumJs, Sap } from "./organelle/endoplasmic-reticulum";
@@ -33,7 +35,10 @@ export const reviveOrganelle = async ({ data }: common.OrganelleInfo) => {
     return organelle;
 };
 
-export const attachOrganelle = async (organelleInfo: common.OrganelleInfo, transmit: any): Promise<void> => {
+export const attachOrganelle = async (
+    organelleInfo: common.OrganelleInfo,
+    transmit: (particle: Particle) => Promise<Particle | void>
+): Promise<void> => {
     let createOrganelle = await reviveOrganelle(organelleInfo);
     const { data: organelleInfoData } = organelleInfo;
     if (createOrganelle) {
@@ -42,15 +47,15 @@ export const attachOrganelle = async (organelleInfo: common.OrganelleInfo, trans
     }
 };
 
-const transmit = async (source: string, particle: Particle, target?: string) => {
-    if (!target) {
-        target = nucleusName;
-        particle = cp<ReceiveParticle>("ReceiveParticle", { particle, source });
+export const transmit: Transmit = async (particle: Particle, target: string) => {
+    console.log(`Info - Transmitting particle: ${particle.meta.class} to ${target}`);
+    const organelleReceive: OrganelleReceive = organelles[target];
+    if (!organelleReceive) {
+        return common.cp("Exception", new sys.type.Exception(`Organelle ${target} has not been connected yet!`));
     }
-    const resp = (await organelles[endoplasmicReticulumName]!(
-        cp<TransmitParticle>("TransmitParticle", { particle, target: target! })
-    )) as Particle<string, Particle> | void;
-    return resp ? resp.data : undefined;
+    //Triggers recursive calls
+    // t(common.cp("Log", { message: `Transmitting ${JSON.stringify(particle.meta)} to ${target}`, level: "Info" }));
+    return await organelleReceive(particle);
 };
 
 export const createEuglena = async (particles: Particle[]) => {
@@ -59,12 +64,14 @@ export const createEuglena = async (particles: Particle[]) => {
      */
     const organelleInfos = particles.filter((x) => x.meta.class === "OrganelleInfo") as common.OrganelleInfo[];
     for (const organelleInfo of organelleInfos) {
-        await attachOrganelle(organelleInfo, transmit);
+        await attachOrganelle(organelleInfo, async (particle: Particle) => {
+            particle = cp<ReceiveParticle>("ReceiveParticle", { particle, source: organelleInfo.data.name });
+            return transmit(particle, nucleusName);
+        });
     }
     /**
      * Send their saps
      */
-
     await Promise.all(
         Object.entries(organelles).map(async ([organelleName, organelleReceive]) => {
             const relatedSap = particles.find(
@@ -76,7 +83,15 @@ export const createEuglena = async (particles: Particle[]) => {
     /**
      * Initial Organelles atttached let roll
      */
-    // t(cp<EuglenaHasBeenBorn>("EuglenaHasBeenBorn"));
+    const euglenaHasBeenBorn = cp<EuglenaHasBeenBorn>("EuglenaHasBeenBorn");
+    const resp = await transmit(
+        nucleus.cp("ReceiveParticle", {
+            particle: euglenaHasBeenBorn,
+            source: endoplasmicReticulumName
+        }),
+        nucleusName
+    );
+    if (resp && isParticleClass(resp, "Exception")) throw resp;
 };
 
 /**

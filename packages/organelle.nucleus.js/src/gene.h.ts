@@ -5,20 +5,12 @@ import {
     UnionToIntersection,
     ComingParticleNameUnion,
     ComingParticle,
-    ComingResponseParticle
+    ComingResponseParticle,
 } from "@euglena/core";
 
-type _Organelle = { [organelleName: string]: AllInteractions };
-export type Organelles<T extends _Organelle = _Organelle> = T;
-
-type _Parameters = { [key: string]: string | number | boolean };
-export type Parameters<T extends _Parameters = _Parameters> = T;
+export type Organelles = Record<string, AllInteractions>;
 
 export type Stringify<O extends Organelles> = { [P in keyof O]: string };
-export type Dependencies<O extends Organelles = Organelles, P extends Parameters = Parameters> = {
-    organelles: Stringify<O>;
-    parameters: P;
-};
 
 export type GeneTransmitInner<O extends string, COP extends AllInteractions> = UnionToIntersection<
     {
@@ -29,13 +21,13 @@ export type GeneTransmitInner<O extends string, COP extends AllInteractions> = U
     }[ComingParticleNameUnion<COP>]
 >;
 
-export type GeneTransmit<T extends { [x: string]: AllInteractions }> = UnionToIntersection<
+export type GeneTransmit<O extends Organelles> = UnionToIntersection<
     {
-        [P in keyof T]: GeneTransmitInner<Exclude<P, number | symbol>, T[P]>;
-    }[keyof T]
+        [P in keyof O]: GeneTransmitInner<Exclude<P, number | symbol>, O[P]>;
+    }[keyof O]
 >;
 
-export interface GeneReaction<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles, P extends Parameters = Parameters> {
+export interface GeneReaction<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles> {
     (
         particle: TriggerParticle,
         source: string,
@@ -48,43 +40,46 @@ export interface GeneReaction<TriggerParticle extends Particle = Particle, O ext
              * Organelle names
              */
             o: Stringify<O>;
-            /**
-             * Parameters
-             */
-            params: P;
         }
     ): Promise<Particle | void>;
 }
 
-export type Gene<
-    TriggerParticle extends Particle = Particle,
-    O extends Organelles = Organelles,
-    P extends Parameters = Parameters
-> = Particle<
+export type Gene<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles> = Particle<
     "Gene",
     {
         name: string;
         triggers: sys.type.RecursivePartial<TriggerParticle>;
-        reaction: GeneReaction<TriggerParticle, O, P>;
-        dependencies: Dependencies<O, P>;
+        reaction: GeneReaction<TriggerParticle, O>;
+        organelles: Stringify<O>;
         override?: string;
-        expireAt?: number;
     }
 >;
 
-export interface Chromosome extends Array<Gene> {}
-export interface CreateChromosome {
-    (bind: (addGene: AddGene<Particle>) => void): Chromosome;
-}
-export interface GeneOptionals {
-    override?: string;
-    expireAt?: number;
-}
-export interface AddGene<ParticleUnion extends Particle> {
-    <TriggerParticle extends ParticleUnion, O extends Organelles, P extends Parameters>(
-        name: string,
-        triggers: sys.type.RecursivePartial<TriggerParticle>,
-        reaction: GeneReaction<TriggerParticle, O, P>,
-        geneOptionals?: GeneOptionals
-    ): void;
-}
+export type Chromosome = Gene[];
+
+export type CreateGene = <P extends Particle, O extends Organelles>(
+    name: string,
+    triggers: sys.type.RecursivePartial<P>,
+    reaction: GeneReaction<P, O>,
+    organelles: Stringify<O>,
+    override?: string
+) => Gene;
+
+export type CreateChromosome = (
+    bind: (
+        addGene: <P extends Particle, O extends Organelles>(
+            name: string,
+            triggers: sys.type.RecursivePartial<P>,
+            reaction: GeneReaction<P, O>,
+            organelles: Stringify<O>,
+            override?: string | undefined
+        ) => void
+    ) => void
+) => Chromosome;
+
+export type DefineCreateGene = <P extends Particle, O extends Organelles>(
+    name: string,
+    triggers: sys.type.RecursivePartial<P>,
+    reaction: GeneReaction<P, O>,
+    override?: string
+) => (organelles: Stringify<O>) => Gene;

@@ -1,6 +1,6 @@
 import { cp, isParticleClass, Particle } from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
-import { dcg, Organelles, Parameters } from "@euglena/organelle.nucleus.js";
+import { dcg } from "@euglena/organelle.nucleus.js";
 
 import vacuole = organelle.vacuole;
 import jwt = organelle.jwt;
@@ -38,22 +38,33 @@ export type Permission = Particle<
  */
 export default dcg<
     AuthenticatedImpulse,
-    Organelles<{
+    {
         vacuole: vacuole.Vacuole;
         jwt: jwt.JWT;
         nucleus: nucleus.Nucleus;
-    }>,
-    Parameters<{
-        euglenaName: string;
-    }>
+    }
 >(
     "Check Authorization",
     { meta: { class: "AuthenticatedImpulse" } },
-    async ({ data: { particle: particleToCheck, sender } }, s, { t, params, o }) => {
+    async ({ data: { particle: particleToCheck, sender } }, s, { t, o }) => {
+        //read euglenaName
+        const readEuglenaName = vacuole.cp("ReadParticle", {
+            query: { meta: { class: "EuglenaName" } },
+            count: 1
+        });
+        const readEuglenaNameResult = await t(readEuglenaName, "vacuole");
+        if (isParticleClass(readEuglenaNameResult, "Exception")) return readEuglenaNameResult;
+        const euglenaNameParticle = particle.common.getParticle(readEuglenaNameResult, "EuglenaName");
+        if (!euglenaNameParticle)
+            return particle.common.cp(
+                "Exception",
+                new sys.type.Exception(`There is no EuglenaName stored in ${o.vacuole}`)
+            );
+        const euglenaName = euglenaNameParticle.data;
         //Read permissons of the euglena
         const readPermissions = cp<vacuole.ReadParticle>("ReadParticle", {
             count: "all",
-            query: { meta: { class: "Permission" }, data: { receiverEuglenaName: params.euglenaName } }
+            query: { meta: { class: "Permission" }, data: { receiverEuglenaName: euglenaName } }
         });
         const readPermissionsResult = await t(readPermissions, "vacuole");
         if (isParticleClass(readPermissionsResult, "Exception")) return readPermissionsResult;
@@ -76,6 +87,6 @@ export default dcg<
                 return await t(receiveParticle3, "nucleus");
             }
         }
-        return common.cp("Exception",new sys.type.Exception("Operation is unauthorized"));
+        return common.cp("Exception", new sys.type.Exception("Operation is unauthorized"));
     }
 );

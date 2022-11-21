@@ -8,7 +8,8 @@ export default [
   printHelloWorld.createGene({
     organelles: {
       logger: {
-        name: loggerConsoleName
+        name: loggerConsoleName,
+        allInteractions: 
       },
       nucleus: nucleusJsName,
     },
