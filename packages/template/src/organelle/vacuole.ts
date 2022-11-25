@@ -3,23 +3,23 @@ import { AllInteractions, Meta, Particle, cp as _cp, ComingParticles, CreatePart
 import { common } from "../particle";
 
 export type Count = "all" | number;
-export type ReadParticle = Particle<
+export type ReadParticle<P extends Particle = Particle> = Particle<
     "ReadParticle",
     {
-        query: sys.type.RecursivePartial<Particle>;
+        query: sys.type.RecursivePartial<P>;
         count: Count;
     }
 >;
-export type SaveParticle = Particle<
+export type SaveParticle<P extends Particle = Particle> = Particle<
     "SaveParticle",
     | {
-          particle: Particle;
-          query?: sys.type.RecursivePartial<Particle>;
+          particle: P;
+          query?: sys.type.RecursivePartial<P>;
           count: Count;
       }
-    | Particle[]
+    | P[]
 >;
-export type RemoveParticle = Particle<"RemoveParticle", { query: sys.type.RecursivePartial<Particle>; count: Count }>;
+export type RemoveParticle<P extends Particle = Particle> = Particle<"RemoveParticle", { query: sys.type.RecursivePartial<P>; count: Count }>;
 export type Metas = Particle<"Metas", Meta[]>;
 export type Hibernate = Particle<"Hibernate">;
 
