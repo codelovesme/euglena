@@ -1,14 +1,13 @@
-import { endoplasmicReticulum } from "@euglena/template";
-import logger from "@euglena/organelle.logger.consol";
-import { cp } from "@euglena/core";
+import { organelle } from "@euglena/template";
+import endoplasmicReticulumJs from "@euglena/organelle.endoplasmic-reticulum.js";
 
 export const name = "EndoplasmicReticulum";
 export const particles = [
-  cp<endoplasmicReticulum.OrganelleInfo>("OrganelleInfo",{
+  organelle.endoplasmicReticulum.cp("OrganelleInfo", {
     name: name,
     location: {
       type: "InMemory",
-      organelle: logger,
+      organelle: endoplasmicReticulumJs,
     },
   }),
 ];

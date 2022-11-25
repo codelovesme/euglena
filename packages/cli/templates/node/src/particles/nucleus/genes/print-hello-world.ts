@@ -1,17 +1,18 @@
-import { cp, Log } from "@euglena/core";
-import { nucleus, endoplasmicReticulum, logger } from "@euglena/template";
+import { particle, organelle } from "@euglena/template";
+import { dcg } from "@euglena/organelle.nucleus.js";
 
-export type PrintHelloWorldOrganelles = nucleus.Organelles<{
-    logger: { name: string; allInteractions: logger.Logger };
-}>;
+import logger = organelle.logger;
+import EuglenaHasBeenBorn = organelle.endoplasmicReticulum.EuglenaHasBeenBorn;
 
-export type PrintHelloWorld = nucleus.Dependencies<PrintHelloWorldOrganelles>;
-
-export const createGene = nucleus.dg<endoplasmicReticulum.EuglenaHasBeenBorn, PrintHelloWorld>(
+const createGene = dcg<EuglenaHasBeenBorn, { logger: logger.Logger }>(
     "Print Hello World",
     { meta: { class: "EuglenaHasBeenBorn" } },
-    async (p, s, { to }) => {
-        const log = cp<Log>("Log", { message: "Hello World", level: "Info" });
-        return await to("logger",log);
+    async (p, s, { t }) => {
+        const log = particle.common.cp("Log", { message: "Hello World", level: "Info" });
+        return await t(log, "logger");
     }
 );
+
+export {
+    createGene
+}
