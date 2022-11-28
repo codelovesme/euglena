@@ -1,12 +1,16 @@
 import SerialPort from "serialport";
 import GPS from "gps";
-import { cp, dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import common = particle.common;
 import gpsReceiver = organelle.gpsReceiver;
+import Particle = core.particle.Particle;
 
-export type Sap = particle.Particle<"Sap", { path: string; interval: number }>;
+const cp = core.particle.cp;
+const dco = core.organelle.dco;
+
+export type Sap = Particle<"Sap", { path: string; interval: number }>;
 
 let gps: any;
 let buffer: Array<{ lat: number; lng: number }> = [];

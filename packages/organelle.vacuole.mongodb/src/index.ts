@@ -1,12 +1,15 @@
-import { Particle, dco } from "@euglena/core";
+import * as core from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
 import { js, sys } from "cessnalib";
 import { MongoClient, Db } from "mongodb";
 
 import vacuole = organelle.vacuole;
 import common = particle.common;
+import Particle = core.particle.Particle;
 
-export type Sap = particle.Particle<
+const dco = core.organelle.dco;
+
+export type Sap = Particle<
     "Sap",
     {
         database: string;

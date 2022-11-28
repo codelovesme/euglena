@@ -1,11 +1,14 @@
 import moment from "moment";
 import { organelle, particle } from "@euglena/template";
-import { dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 
 import common = particle.common;
 import logger = organelle.logger;
+import Particle = core.particle.Particle;
 
-export type Sap = particle.Particle<
+const dco = core.organelle.dco;
+
+export type Sap = Particle<
     "Sap",
     {
         test: boolean;

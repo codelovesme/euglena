@@ -1,10 +1,14 @@
-import { Particle, dco, CreateParticleUnion } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import ui = organelle.ui;
 import common = particle.common;
 import ACK = common.ACK;
 import Log = common.Log;
+import Particle = core.particle.Particle;
+import CreateParticleUnion = core.particle.CreateParticleUnion;
+
+const dco = core.organelle.dco;
 
 import React, { createContext } from "react";
 import ReactDOM from "react-dom";

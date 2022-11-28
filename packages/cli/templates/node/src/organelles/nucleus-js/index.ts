@@ -1,4 +1,4 @@
-import { cp } from "@euglena/core";
+import * as core from "@euglena/core";
 import { particle } from "@euglena/template";
 import nucleusJs, { Sap } from "@euglena/organelle.nucleus.js";
 import genes from "./genes";
@@ -12,7 +12,7 @@ export const particles = [
             organelle: nucleusJs
         }
     }),
-    cp<Sap>(
+    core.particle.cp<Sap>(
         "Sap",
         {
             type: "InMemory",

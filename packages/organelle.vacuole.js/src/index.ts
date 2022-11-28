@@ -1,4 +1,4 @@
-import { Particle, dco } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 import { js, sys } from "cessnalib";
 
@@ -6,6 +6,9 @@ import vacuole = organelle.vacuole;
 import common = particle.common;
 import ACK = common.ACK;
 import Exception = common.Exception;
+import Particle = core.particle.Particle;
+
+const dco = core.organelle.dco;
 
 let particles: Particle[] = [];
 

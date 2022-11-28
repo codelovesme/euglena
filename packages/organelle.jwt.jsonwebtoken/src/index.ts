@@ -1,12 +1,16 @@
 import { sys } from "cessnalib";
 import { sign, verify } from "jsonwebtoken";
 import { organelle, particle } from "@euglena/template";
-import { cp, dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 
 import jwt = organelle.jwt;
 import common = particle.common;
+import Particle = core.particle.Particle;
 
-export type Sap = particle.Particle<"Sap">;
+const cp = core.particle.cp;
+const dco = core.organelle.dco;
+
+export type Sap = Particle<"Sap">;
 
 const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
 

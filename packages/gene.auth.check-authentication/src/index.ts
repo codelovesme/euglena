@@ -1,5 +1,5 @@
 import { sys } from "cessnalib";
-import { isParticleClass } from "@euglena/core";
+import * as core from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
 import { dcg } from "@euglena/organelle.nucleus.js";
 
@@ -12,6 +12,8 @@ import auth = particle.auth;
 import common = particle.common;
 
 import Impulse = netServer.Impulse;
+
+const isParticleClass = core.particle.isParticleClass;
 
 /**
  * Checks if the token valid and session is there

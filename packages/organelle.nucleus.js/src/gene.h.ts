@@ -1,12 +1,12 @@
-import { sys } from "cessnalib";
-import {
-    Particle,
-    OrganelleInteractions,
-    UnionToIntersection,
-    ComingParticleNameUnion,
-    ComingParticle,
-    ComingResponseParticle
-} from "@euglena/core";
+import { sys, ts } from "cessnalib";
+import { particle, organelle } from "@euglena/core";
+
+import Particle = particle.Particle;
+import OrganelleInteractions = organelle.OrganelleInteractions;
+import IntersectionFromUnion = ts.IntersectionFromUnion;
+import ComingParticleNameUnion = organelle.ComingParticleNameUnion;
+import ComingParticle = organelle.ComingParticle;
+import ComingResponseParticle = organelle.ComingResponseParticle;
 
 export type Organelles = Record<string, OrganelleInteractions>;
 
@@ -14,7 +14,7 @@ export type extendOrganelles<I extends Organelles> = I;
 
 export type Stringify<O extends Organelles> = { [P in keyof O]: string };
 
-export type GeneTransmitInner<O extends string, COP extends OrganelleInteractions> = UnionToIntersection<
+export type GeneTransmitInner<O extends string, COP extends OrganelleInteractions> = IntersectionFromUnion<
     {
         [P in ComingParticleNameUnion<COP>]: (
             particle: ComingParticle<COP, P>,
@@ -23,7 +23,7 @@ export type GeneTransmitInner<O extends string, COP extends OrganelleInteraction
     }[ComingParticleNameUnion<COP>]
 >;
 
-export type GeneTransmit<O extends Organelles> = UnionToIntersection<
+export type GeneTransmit<O extends Organelles> = IntersectionFromUnion<
     {
         [P in keyof O]: GeneTransmitInner<Exclude<P, number | symbol>, O[P]>;
     }[keyof O]

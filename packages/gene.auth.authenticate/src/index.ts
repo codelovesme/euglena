@@ -1,6 +1,6 @@
-import { cp, isParticleClass, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
-import { dcg } from "@euglena/organelle.nucleus.js";
+import {dcg} from "@euglena/organelle.nucleus.js";
 import { sys } from "cessnalib";
 
 import vacuole = organelle.vacuole;
@@ -10,7 +10,12 @@ import jwt = organelle.jwt;
 import auth = particle.auth;
 import common = particle.common;
 
-export type Authenticate = particle.Particle<
+import Particle = core.particle.Particle;
+
+const cp = core.particle.cp;
+const isParticleClass = core.particle.isParticleClass;
+
+export type Authenticate = Particle<
     "Authenticate",
     {
         euglenaName: string;

@@ -1,9 +1,12 @@
 import { sys } from "cessnalib";
-import { dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import timer = organelle.timer;
 import common = particle.common;
+import Particle = core.particle.Particle;
+
+const dco = core.organelle.dco;
 
 let time: sys.type.Time;
 

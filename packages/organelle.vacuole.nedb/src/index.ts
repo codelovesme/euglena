@@ -1,12 +1,15 @@
-import { dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 import { js, sys } from "cessnalib";
 import Datastore from "nedb";
 
 import vacuole = organelle.vacuole;
 import common = particle.common;
+import Particle = core.particle.Particle;
 
-export type Sap = particle.Particle<"Sap", { filename: string }>;
+const dco = core.organelle.dco;
+
+export type Sap = Particle<"Sap", { filename: string }>;
 
 let db: Datastore;
 let sap: Sap["data"];

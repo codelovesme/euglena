@@ -1,12 +1,16 @@
 import { js, sys } from "cessnalib";
 import { Gene, GeneReaction, Organelles, Stringify } from "./gene.h";
-import { Particle, dco, cp } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle, particle, transmit } from "@euglena/template";
 
 import ACK = particle.common.ACK;
 import common = particle.common;
 import Exception = particle.common.Exception;
 import nucleus = organelle.nucleus;
+import Particle = core.particle.Particle;
+
+const dco = core.organelle.dco;
+const cp = core.particle.cp;
 
 let genes: Gene[] = [];
 
@@ -60,7 +64,7 @@ const receive = async (particle: Particle, source: string): Promise<Particle<str
         promises = [
             ...promises,
             reaction(particle, source, {
-                t: async (particle: Particle, target: string) => await transmit(particle, organelles[target]) as any,
+                t: async (particle: Particle, target: string) => (await transmit(particle, organelles[target])) as any,
                 o: organelles
             })
         ];
@@ -69,7 +73,11 @@ const receive = async (particle: Particle, source: string): Promise<Particle<str
     return allResults.filter((x) => x !== undefined) as Particle<string, unknown, {}>[];
 };
 
-type ExtendedParticles = particle.Particle<common.Particles["meta"]["class"], common.Particles["data"], { cause: string }>;
+type ExtendedParticles = Particle<
+    common.Particles["meta"]["class"],
+    common.Particles["data"],
+    { cause: string }
+>;
 
 export type Sap = common.Sap<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }

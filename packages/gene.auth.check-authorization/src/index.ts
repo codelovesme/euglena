@@ -1,4 +1,5 @@
-import { cp, isParticleClass } from "@euglena/core";
+import { sys } from "cessnalib";
+import * as core from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
 import { dcg } from "@euglena/organelle.nucleus.js";
 
@@ -10,7 +11,9 @@ import auth = particle.auth;
 import common = particle.common;
 import AuthenticatedImpulse = auth.AuthenticatedImpulse;
 import Permission = auth.Permission;
-import { sys } from "cessnalib";
+
+const cp = core.particle.cp;
+const isParticleClass = core.particle.isParticleClass;
 
 /**
  * Checks if sender euglena can have permission to request specified particle to be considered from receiver euglena

@@ -1,8 +1,8 @@
 import { CreateChromosome, Chromosome, DefineCreateGene, CreateGene, Gene } from "./gene.h";
-import { cp } from "@euglena/core";
+import { particle } from "@euglena/core";
 
 export const createGene: CreateGene = (name, triggers, reaction, organelles, override) =>
-    cp<Gene>("Gene", {
+    particle.cp<Gene>("Gene", {
         name,
         triggers,
         reaction: reaction as any,
