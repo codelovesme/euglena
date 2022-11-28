@@ -6,7 +6,7 @@ import Datastore from "nedb";
 import vacuole = organelle.vacuole;
 import common = particle.common;
 
-export type Sap = Particle<"Sap", { filename: string }>;
+export type Sap = particle.Particle<"Sap", { filename: string }>;
 
 let db: Datastore;
 let sap: Sap["data"];

@@ -9,7 +9,7 @@ import ACK = common.ACK;
 import Exception = common.Exception;
 import Log = common.Log;
 
-export type Sap = Particle<"Sap", { context: Context<object> }>;
+export type Sap = particle.Particle<"Sap", { context: Context<object> }>;
 
 @Injectable()
 export class Context<State extends object> {

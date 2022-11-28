@@ -1,6 +1,6 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 
-export type EuglenaInfo = Particle<
+export type EuglenaInfo = particle.Particle<
     "EuglenaInfo",
     {
         euglenaName: string;

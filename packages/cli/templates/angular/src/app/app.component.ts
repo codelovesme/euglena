@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Injectable, Input } from "@angular/core";
 import { contextProvider } from "./context";
 import { Context } from "@euglena/organelle.ui.angular";
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 import { State } from "src/euglena/state";
 import { Subscription, timer } from "rxjs";
 import { ChangeDetectorRef } from "@angular/core";
 
-type Render = Particle<"Render", State>;
+type Render = particle.Particle<"Render", State>;
 
 @Injectable()
 export class MyService {

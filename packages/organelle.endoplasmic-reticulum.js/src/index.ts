@@ -6,10 +6,10 @@ import EndoplasmicReticulum = endoplasmicReticulum.EndoplasmicReticulum;
 import common = particle.common;
 import Sap = common.Sap;
 
-export default dco<EndoplasmicReticulum, [Sap]>({
+export default dco<EndoplasmicReticulum, Sap>({
     Sap: async (p) => {},
     OrganelleInfo: async (particle, { t }) => {
-        attachOrganelle(particle, t as (particle: Particle) => Promise<Particle | void>);
+        return await attachOrganelle(particle, t as (particle: Particle) => Promise<Particle | void>);
     },
     TransmitParticle: async (p) => {
         return await transmit(p.data.particle, p.data.target);

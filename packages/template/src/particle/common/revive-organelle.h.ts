@@ -1,6 +1,6 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 
-export type ReviveOrganelle = Particle<
+export type ReviveOrganelle = particle.Particle<
     "ReviveOrganelle",
     {
         retryInterval?: number;

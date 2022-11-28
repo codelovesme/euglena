@@ -6,7 +6,7 @@ import { MongoClient, Db } from "mongodb";
 import vacuole = organelle.vacuole;
 import common = particle.common;
 
-export type Sap = Particle<
+export type Sap = particle.Particle<
     "Sap",
     {
         database: string;

@@ -1,10 +1,13 @@
-import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
 import { sys } from "cessnalib";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
 
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import CreateParticleUnion = particle.CreateParticleUnion;
 import Headers = sys.type.Headers;
 
-export type Get = Particle<
+export type Get = particle.Particle<
     "Get",
     {
         url: string;
@@ -12,7 +15,7 @@ export type Get = Particle<
     }
 >;
 
-export type Post = Particle<
+export type Post = particle.Particle<
     "Post",
     {
         url: string;
@@ -21,7 +24,7 @@ export type Post = Particle<
     }
 >;
 
-export type Put = Particle<
+export type Put = particle.Particle<
     "Put",
     {
         url: string;
@@ -30,7 +33,7 @@ export type Put = Particle<
     }
 >;
 
-export type Delete = Particle<
+export type Delete = particle.Particle<
     "Delete",
     {
         url: string;
@@ -38,7 +41,7 @@ export type Delete = Particle<
     }
 >;
 
-export type Response = Particle<
+export type Response = particle.Particle<
     "Response",
     {
         headers?: Headers;
@@ -47,10 +50,10 @@ export type Response = Particle<
     }
 >;
 
-export type HttpClient = AllInteractions<{
+export type HttpClient = extendOrganelleInteractions<{
     in: [[Get, Response], [Post, Response], [Put, Response], [Delete, Response]];
     out: [common.Log];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<HttpClient>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<HttpClient>>;
 export const cp = createParticle;

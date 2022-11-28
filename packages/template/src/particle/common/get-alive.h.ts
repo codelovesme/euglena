@@ -1,3 +1,3 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 
-export type GetAlive = Particle<"GetAlive">;
+export type GetAlive = particle.Particle<"GetAlive">;

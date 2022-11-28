@@ -1,7 +1,7 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 import { EuglenaInfo } from "./euglena-info.h";
 
-export type CheckAuthorization = Particle<
+export type CheckAuthorization = particle.Particle<
     "CheckAuthorization",
     {
         sender: EuglenaInfo;

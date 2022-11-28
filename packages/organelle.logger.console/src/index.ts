@@ -5,7 +5,7 @@ import { dco, Particle } from "@euglena/core";
 import common = particle.common;
 import logger = organelle.logger;
 
-export type Sap = Particle<
+export type Sap = particle.Particle<
     "Sap",
     {
         test: boolean;

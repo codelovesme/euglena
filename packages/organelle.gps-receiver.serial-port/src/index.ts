@@ -6,7 +6,7 @@ import { organelle, particle } from "@euglena/template";
 import common = particle.common;
 import gpsReceiver = organelle.gpsReceiver;
 
-export type Sap = Particle<"Sap", { path: string; interval: number }>;
+export type Sap = particle.Particle<"Sap", { path: string; interval: number }>;
 
 let gps: any;
 let buffer: Array<{ lat: number; lng: number }> = [];

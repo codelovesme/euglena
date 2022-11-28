@@ -3,7 +3,7 @@ import { loggerConsoleName, uiAngular } from "../constants";
 import { State } from "../state";
 import { sys } from "cessnalib";
 
-type Time = Particle<"Time", sys.type.Time>;
+type Time = particle.Particle<"Time", sys.type.Time>;
 
 const now: sys.type.Time = sys.type.StaticTools.Time.fromJavascriptDate(new Date());
 

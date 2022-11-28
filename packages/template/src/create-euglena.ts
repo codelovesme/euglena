@@ -1,10 +1,14 @@
-import { cp, CreateOrganelle, isParticleClass, OrganelleReceive, Particle, Transmit } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { sys } from "cessnalib";
 import { nucleus } from "./organelle";
 import { EuglenaHasBeenBorn } from "./organelle/endoplasmic-reticulum";
 import { ReceiveParticle } from "./organelle/nucleus";
 import { common } from "./particle";
-// import { endoplasmicReticulumJs, Sap } from "./organelle/endoplasmic-reticulum";
+
+import CreateOrganelle = organelle.CreateOrganelle;
+import OrganelleReceive = organelle.OrganelleReceive;
+import Transmit = organelle.Transmit;
+import Particle = particle.Particle;
 
 const endoplasmicReticulumName = "EndoplasmicReticulum";
 const nucleusName = "Nucleus";
@@ -24,7 +28,7 @@ export const reviveOrganelle = async ({ data }: common.OrganelleInfo) => {
 
                 //t(cp.Info(`${organelle.name} attached to the body.`, "Info"));
             } catch (e: any) {
-                console.log(`Error - While attaching ${data.name} : ${e.message}`);
+                console.log(`Error - While reviving organelle ${data.name} : ${e.message}`);
                 //t(cp.Info(organelleInfoData.name + " " + e.message, "Error"));
             }
             break;
@@ -64,9 +68,9 @@ export const createEuglena = async (particles: Particle[]) => {
      */
     const organelleInfos = particles.filter((x) => x.meta.class === "OrganelleInfo") as common.OrganelleInfo[];
     for (const organelleInfo of organelleInfos) {
-        await attachOrganelle(organelleInfo, async (particle: Particle) => {
-            particle = cp<ReceiveParticle>("ReceiveParticle", { particle, source: organelleInfo.data.name });
-            return transmit(particle, nucleusName);
+        await attachOrganelle(organelleInfo, async (p: Particle) => {
+            p = particle.cp<ReceiveParticle>("ReceiveParticle", { particle: p, source: organelleInfo.data.name });
+            return await transmit(p, nucleusName);
         });
     }
     /**
@@ -83,7 +87,7 @@ export const createEuglena = async (particles: Particle[]) => {
     /**
      * Initial Organelles atttached let roll
      */
-    const euglenaHasBeenBorn = cp<EuglenaHasBeenBorn>("EuglenaHasBeenBorn");
+    const euglenaHasBeenBorn = particle.cp<EuglenaHasBeenBorn>("EuglenaHasBeenBorn");
     const resp = await transmit(
         nucleus.cp("ReceiveParticle", {
             particle: euglenaHasBeenBorn,
@@ -91,7 +95,7 @@ export const createEuglena = async (particles: Particle[]) => {
         }),
         nucleusName
     );
-    if (resp && isParticleClass(resp, "Exception")) throw resp;
+    if (resp && particle.isParticleClass(resp, "Exception")) throw resp;
 };
 
 /**

@@ -5,7 +5,7 @@ import express, { Express } from "express";
 import webServer = organelle.webServer;
 import Particles = particle.common.Particles;
 
-export type Sap = Particle<
+export type Sap = particle.Particle<
     "Sap",
     {
         port: number;

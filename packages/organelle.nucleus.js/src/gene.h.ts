@@ -1,18 +1,20 @@
 import { sys } from "cessnalib";
 import {
     Particle,
-    AllInteractions,
+    OrganelleInteractions,
     UnionToIntersection,
     ComingParticleNameUnion,
     ComingParticle,
-    ComingResponseParticle,
+    ComingResponseParticle
 } from "@euglena/core";
 
-export type Organelles = Record<string, AllInteractions>;
+export type Organelles = Record<string, OrganelleInteractions>;
+
+export type extendOrganelles<I extends Organelles> = I;
 
 export type Stringify<O extends Organelles> = { [P in keyof O]: string };
 
-export type GeneTransmitInner<O extends string, COP extends AllInteractions> = UnionToIntersection<
+export type GeneTransmitInner<O extends string, COP extends OrganelleInteractions> = UnionToIntersection<
     {
         [P in ComingParticleNameUnion<COP>]: (
             particle: ComingParticle<COP, P>,
@@ -44,7 +46,7 @@ export interface GeneReaction<TriggerParticle extends Particle = Particle, O ext
     ): Promise<Particle | void>;
 }
 
-export type Gene<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles> = Particle<
+export type Gene<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles> = particle.Particle<
     "Gene",
     {
         name: string;

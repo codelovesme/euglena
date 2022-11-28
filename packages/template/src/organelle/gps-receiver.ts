@@ -1,7 +1,11 @@
-import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
 
-export type Coordinate = Particle<
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import CreateParticleUnion = particle.CreateParticleUnion;
+
+export type Coordinate = particle.Particle<
     "Coordinate",
     {
         lat: number;
@@ -9,12 +13,12 @@ export type Coordinate = Particle<
     }
 >;
 
-export type Listen = Particle<"Listen">;
+export type Listen = particle.Particle<"Listen">;
 
-export type GpsReceiver = AllInteractions<{
+export type GpsReceiver = extendOrganelleInteractions<{
     in: [[Listen, common.ACK | common.Exception]];
     out: [Coordinate, common.Log];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<GpsReceiver>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<GpsReceiver>>;
 export const cp = createParticle;

@@ -4,7 +4,7 @@ import { organelle } from "@euglena/template";
 
 import netServer = organelle.netServer;
 
-export type Sap = Particle<
+export type Sap = particle.Particle<
     "Sap",
     {
         port: number;

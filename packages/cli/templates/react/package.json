@@ -8,6 +8,8 @@
         "@euglena/organelle.timer.js": "^2.5.0",
         "@euglena/organelle.ui.react": "^2.5.0",
         "@euglena/organelle.vacuole.js": "^2.5.0",
+        "@euglena/organelle.endoplasmic-reticulum.js": "^2.5.0",
+        "@euglena/organelle.nucleus.js": "^2.5.0",
         "immutable": "^4.0.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
@@ -27,7 +29,7 @@
         "@types/styled-components": "^5.1.0",
         "prettier": "^1.16.4",
         "react-scripts": "3.4.0",
-        "typescript": "^4.7.4"
+        "typescript": "^4.9.3"
     },
     "scripts": {
         "start": "react-scripts start",

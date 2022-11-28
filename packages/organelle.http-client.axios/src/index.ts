@@ -4,7 +4,7 @@ import axios from "axios";
 
 import httpClient = organelle.httpClient;
 
-export type Sap = Particle<"Sap">;
+export type Sap = particle.Particle<"Sap">;
 
 const capitalizeWord = (string: string) => {
     return string[0].toUpperCase() + string.slice(1);

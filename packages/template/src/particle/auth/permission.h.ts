@@ -1,6 +1,6 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 
-export type Permission = Particle<
+export type Permission = particle.Particle<
     "Permission",
     {
         /**

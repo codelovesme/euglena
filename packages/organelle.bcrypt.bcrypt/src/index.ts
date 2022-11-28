@@ -9,7 +9,7 @@ import bcrypt = organelle.bcrypt;
  */
 let saltRounds: string | number;
 
-export type Sap = Particle<
+export type Sap = particle.Particle<
     "Sap",
     {
         saltRounds: string | number;

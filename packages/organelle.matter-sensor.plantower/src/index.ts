@@ -48,7 +48,7 @@ let sap: {
 };
 let plantower: any;
 
-export type Sap = Particle<"Sap", typeof sap>;
+export type Sap = particle.Particle<"Sap", typeof sap>;
 
 export default dco<matterSensor.MatterSensor, Sap>({
     Sap: async (p) => {

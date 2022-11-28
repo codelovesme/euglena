@@ -1,10 +1,11 @@
 import { getParticle } from "./particles";
 import { Particles } from "./particles.h";
 import { ACK } from "../ack.h";
-import { AssertTrue, cp, Equals } from "@euglena/core";
+import { particle } from "@euglena/core";
+import { ts } from "cessnalib";
 
-const particles = cp<Particles>("Particles",[]);
+const particles = particle.cp<Particles>("Particles", []);
 
-const particle = getParticle<ACK>(particles, "ACK");
+const p = getParticle<ACK>(particles, "ACK");
 
-(): true => true as AssertTrue<Equals<Exclude<typeof particle, undefined>, ACK>>;
+(): true => true as ts.test.AssertTrue<ts.test.Equals<Exclude<typeof p, undefined>, ACK>>;

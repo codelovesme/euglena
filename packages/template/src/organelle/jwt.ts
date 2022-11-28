@@ -1,7 +1,11 @@
-import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
 
-export type DecryptedToken = Particle<
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import CreateParticleUnion = particle.CreateParticleUnion;
+
+export type DecryptedToken = particle.Particle<
     "DecryptedToken",
     {
         euglenaName: string;
@@ -13,14 +17,14 @@ export type DecryptedToken = Particle<
     },
     { version: "2.0"; }
 >;
-export type EncryptedToken = Particle<"EncryptedToken", string>;
-export type GenerateToken = Particle<"GenerateToken", DecryptedToken["data"], { version: "2.0"; }>;
-export type VerifyToken = Particle<"VerifyToken", string>;
+export type EncryptedToken = particle.Particle<"EncryptedToken", string>;
+export type GenerateToken = particle.Particle<"GenerateToken", DecryptedToken["data"], { version: "2.0"; }>;
+export type VerifyToken = particle.Particle<"VerifyToken", string>;
 
-export type JWT = AllInteractions<{
+export type JWT = extendOrganelleInteractions<{
     in: [[GenerateToken, EncryptedToken], [VerifyToken, DecryptedToken | common.Exception]];
     out: [];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<JWT>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<JWT>>;
 export const cp = createParticle;

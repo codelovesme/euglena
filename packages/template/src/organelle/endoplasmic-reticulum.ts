@@ -1,15 +1,18 @@
-import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
 
-export type TransmitParticle = Particle<"TransmitParticle", { target: string; particle: Particle }>;
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import Particle = particle.Particle;
+import CreateParticleUnion = particle.CreateParticleUnion;
 
-export type TransmitResponse = Particle<"TransmitResponse", Particle | void>;
-export type EuglenaHasBeenBorn = Particle<"EuglenaHasBeenBorn">;
-
-export type EndoplasmicReticulum = AllInteractions<{
+export type TransmitParticle = particle.Particle<"TransmitParticle", { target: string; particle: Particle }>;
+export type TransmitResponse = particle.Particle<"TransmitResponse", Particle | void>;
+export type EuglenaHasBeenBorn = particle.Particle<"EuglenaHasBeenBorn">;
+export type EndoplasmicReticulum = extendOrganelleInteractions<{
     in: [[TransmitParticle, any], common.OrganelleInfo];
     out: [common.Log, EuglenaHasBeenBorn];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<EndoplasmicReticulum>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<EndoplasmicReticulum>>;
 export const cp = createParticle;

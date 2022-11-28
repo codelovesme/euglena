@@ -4,7 +4,7 @@ import { particle, organelle } from "@euglena/template";
 import common = particle.common;
 import netClient = organelle.netClient;
 
-export type Sap = Particle<"Sap">;
+export type Sap = particle.Particle<"Sap">;
 
 export default dco<netClient.NetClient, Sap>({
     Sap: async () => {},

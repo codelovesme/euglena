@@ -2,33 +2,42 @@
 # yarn lockfile v1
 
 
-"@euglena/core@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@euglena/core/-/core-2.4.0.tgz#6b4af4cb63971777996b411b8e169d4ae75a7f63"
-  integrity sha512-sTxsELy6WIINnlQM7CWbJgB77YSkg+tdZELJxD0kbq4sjKxt+6D041irN19gphudGPDsLxiVvkwZWH4/uAnuNg==
+"@euglena/core@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@euglena/core/-/core-2.5.0.tgz#721c0d7fa3789770492386fe6b12e3015b04891c"
+  integrity sha512-YP1CP6e/ffONJDVXuDONqps3IPDWgaMIppj4RH0R0bpWRSH2iIO2b3JU5V+t9L02yeT0S3xHZG2CKNsyFrzxrg==
   dependencies:
     cessnalib "^0.14.0"
 
-"@euglena/organelle.logger.console@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.logger.console/-/organelle.logger.console-2.4.0.tgz#7f1663edc723d8d3b340752440aa609605f9bd4b"
-  integrity sha512-cLfZ8XqvLAbZ/1mRbUUabTX/PiuKGAppbMCexaiov8FrdHsn71HZhVkzI4SymhmH/W4xU6wTdlWSUp+pD7gBbQ==
+"@euglena/organelle.logger.console@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.logger.console/-/organelle.logger.console-2.5.0.tgz#7a5cffccfbb23d0c82a7645488828f4768260f0a"
+  integrity sha512-uDyRljMvrpD8d2wmDFsQvpiFlXXuOGGnnGPiEGp16/qUb/V97glEgT9YOPdsZ0tDdFtUZpksbrrfL7gfe6OaeA==
   dependencies:
     cessnalib "^0.14.0"
     moment "^2.24.0"
 
-"@euglena/organelle.vacuole.js@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.vacuole.js/-/organelle.vacuole.js-2.4.0.tgz#8c0186eb92ae5053f6fba838a3995bed692adbf3"
-  integrity sha512-I51F+6g6rk2q75gEGah6RHbhPTc608B1bOztbOvUit+RrtPiWfVsIm3zAmaBGv4wpC42daNQqYoxApliDOYhew==
+"@euglena/organelle.nucleus.js@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.nucleus.js/-/organelle.nucleus.js-2.5.0.tgz#6c761fad21e1523600b7174a01d902c59cc59d1f"
+  integrity sha512-o56FJyw4VzOq+FmRAnTCrtTbAYC7t7brVpii75XR4Fr6oep3sXCvevOU97r8IM+VA3vZo6yrj7hppuW4KVQUWw==
+  dependencies:
+    cessnalib "^0.14.0"
+    moment "^2.24.0"
+
+"@euglena/organelle.vacuole.js@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.vacuole.js/-/organelle.vacuole.js-2.5.0.tgz#cdf8cdb9855c8c12c170c00622dac9d686fd7af9"
+  integrity sha512-vnpAvoqTEQ5d5bDxNTOGiB8PrjiR6THYqw7QGiIpsbUJT4UOF6+ufQqZkLkFUsUvVZfXb7hWNHucNguZSoBMVw==
   dependencies:
     cessnalib "^0.14.0"
 
-"@euglena/template@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@euglena/template/-/template-2.4.0.tgz#441e1ff2365ed980f59f8183994a4a426d074116"
-  integrity sha512-E4vkBiWPhD9uzThKbeLV19EfZKvnMNaLQwwfFMZPYLGTQ4ASAp3WDmfXFjr72zGOKOmEIV2/1+CcY3AoEL3B4g==
+"@euglena/template@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@euglena/template/-/template-2.5.0.tgz#77aa7a3d30123a2401dd2994dcb2b519b0e024c4"
+  integrity sha512-J6FqC1Nqcls/S64bhn6hOD+FSW+H7gqja8qP5KPlciuCNhsY96CIPG+CttIg1LzPlPDkfB1k8BZVPTySO5hJpw==
   dependencies:
+    "@euglena/core" "^2.5.0"
     cessnalib "^0.14.0"
 
 cessnalib@^0.14.0:

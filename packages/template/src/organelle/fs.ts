@@ -1,5 +1,9 @@
-import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
+
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import CreateParticleUnion = particle.CreateParticleUnion;
 
 export type Encoding =
     | "ascii"
@@ -13,7 +17,7 @@ export type Encoding =
     | "binary"
     | "hex";
 
-export type WriteFile = Particle<
+export type WriteFile = particle.Particle<
     "WriteFile",
     {
         filePath: string;
@@ -21,19 +25,19 @@ export type WriteFile = Particle<
         encoding?: Encoding;
     }
 >;
-export type ReadFile = Particle<
+export type ReadFile = particle.Particle<
     "ReadFile",
     {
         filePath: string;
         encoding?: Encoding;
     }
 >;
-export type FileContent = Particle<"FileContent", string>;
+export type FileContent = particle.Particle<"FileContent", string>;
 
-export type FS = AllInteractions<{
+export type FS = extendOrganelleInteractions<{
     in: [[ReadFile, FileContent | common.Exception], [WriteFile, common.Exception | common.ACK]];
     out: [common.Log, common.ACK];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<FS>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<FS>>;
 export const cp = createParticle;

@@ -11,7 +11,7 @@ import nucleus = organelle.nucleus;
 let genes: Gene[] = [];
 
 const receive = async (particle: Particle, source: string): Promise<Particle<string, unknown, {}>[]> => {
-    console.log(`Received particle ${particle.meta.class} inside the Nucleus`);
+    console.log(`Info - Received particle ${particle.meta.class} inside the Nucleus`);
 
     //find which genes are matched with properties of the particle
     const triggerableReactions = new Array<{
@@ -69,7 +69,7 @@ const receive = async (particle: Particle, source: string): Promise<Particle<str
     return allResults.filter((x) => x !== undefined) as Particle<string, unknown, {}>[];
 };
 
-type ExtendedParticles = Particle<common.Particles["meta"]["class"], common.Particles["data"], { cause: string }>;
+type ExtendedParticles = particle.Particle<common.Particles["meta"]["class"], common.Particles["data"], { cause: string }>;
 
 export type Sap = common.Sap<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }

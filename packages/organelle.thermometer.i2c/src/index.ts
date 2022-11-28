@@ -5,7 +5,7 @@ import i2c from "i2c-bus";
 import common = particle.common;
 import thermometer = organelle.thermometer;
 
-export type Sap = Particle<"Sap", { ic2Address: number; deviceAddress: number; interval: number }>;
+export type Sap = particle.Particle<"Sap", { ic2Address: number; deviceAddress: number; interval: number }>;
 
 let sap: Sap["data"];
 

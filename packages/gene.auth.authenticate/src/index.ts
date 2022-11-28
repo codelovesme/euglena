@@ -10,7 +10,7 @@ import jwt = organelle.jwt;
 import auth = particle.auth;
 import common = particle.common;
 
-export type Authenticate = Particle<
+export type Authenticate = particle.Particle<
     "Authenticate",
     {
         euglenaName: string;

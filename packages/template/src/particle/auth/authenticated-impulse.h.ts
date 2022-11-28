@@ -1,7 +1,10 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 import { EuglenaInfo } from "./euglena-info.h";
 
-export type AuthenticatedImpulse = Particle<"AuthenticatedImpulse", {
-    particle:Particle,
-    sender: EuglenaInfo
-}>;
+export type AuthenticatedImpulse = particle.Particle<
+    "AuthenticatedImpulse",
+    {
+        particle: particle.Particle;
+        sender: EuglenaInfo;
+    }
+>;

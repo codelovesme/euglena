@@ -4,7 +4,7 @@ import http from "axios";
 
 import netClient = organelle.netClient;
 
-export type Sap = Particle<"Sap">;
+export type Sap = particle.Particle<"Sap">;
 
 export default dco<netClient.NetClient,Sap>({
     Sap: async () => {},
