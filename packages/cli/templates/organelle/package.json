@@ -4,7 +4,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
-    "license": "GPL v2",
+    "license": "GPL-2.0",
     "scripts": {
         "compile": "tsc -p .",
         "cleanDist": "if [ -d dist ]; then rm -rf dist; fi",

@@ -1,8 +1,7 @@
 import { Particle, nucleusJs as nucleus } from '@euglena/core';
 import react from '@euglena/organelle.ui.react';
 import timer from '@euglena/organelle.timer.js';
-import { timerJsName, uiReactName } from '../constants';
-import chromosome from '../chromosome';
+import chromosome from '../genes';
 import { sys } from 'cessnalib';
 import rootComponent from "../../components/app";
 

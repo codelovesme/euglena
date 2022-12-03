@@ -1,10 +1,10 @@
 import * as core from "@euglena/core";
-import { particle } from "@euglena/template";
+import { particle, helpers } from "@euglena/template";
 import nucleusJs, { Sap } from "@euglena/organelle.nucleus.js";
-import genes from "./genes";
+import genes from "../genes";
 
-export const name = "Nucleus";
-export const particles = [
+const name = "Nucleus";
+export default helpers.organelle.createOrganelleConfig(name, [
     particle.common.cp("OrganelleInfo", {
         name: name,
         location: {
@@ -20,4 +20,4 @@ export const particles = [
         },
         { organelleName: name }
     )
-];
+]);

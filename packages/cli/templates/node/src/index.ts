@@ -1,8 +1,8 @@
-import { endoplasmicReticulumJs, loggerConsole, nucleusJs, vacuoleJs } from "./organelles";
+import { reticulum, logger, nucleus, vacuole } from "./organelles";
 
 export default [
-    ...endoplasmicReticulumJs.particles,
-    ...loggerConsole.particles,
-    ...nucleusJs.particles,
-    ...vacuoleJs.particles
+    ...reticulum.particles,
+    ...logger.particles,
+    ...nucleus.particles,
+    ...vacuole.particles
 ];

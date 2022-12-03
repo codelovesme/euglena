@@ -47,6 +47,13 @@ cessnalib@^0.14.0:
   dependencies:
     sift "^3.3.5"
 
+cessnalib@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.15.0.tgz#26c2f007a8bc421a87d9b53987e30d452e55481c"
+  integrity sha512-RWjSPJ4yfEp1YCcY7gj7vOp+UML55gy04lD/I1N5CbwY0QqS1yj5CtswWjn+iXV2TYgyhs8gBE7Ovl+emJB9Xg==
+  dependencies:
+    sift "^3.3.5"
+
 moment@^2.24.0:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
@@ -57,7 +64,7 @@ sift@^3.3.5:
   resolved "https://registry.yarnpkg.com/sift/-/sift-3.3.12.tgz#4f5cdf16af3db32afa04ab25297b0e20ad98294a"
   integrity sha512-Sn1XNVAlP5w7BJVk3IPM9Mz3PKf9XDasMTFF++5Z8ThPVRVvmJL5s4QGbLxKvOe1O77caevcwEyuBU3k1jF/hw==
 
-typescript@^4.7.4:
+typescript@^4.9.3:
   version "4.9.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.3.tgz#3aea307c1746b8c384435d8ac36b8a2e580d85db"
   integrity sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==

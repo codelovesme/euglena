@@ -1,13 +1,18 @@
-import { logger, Sap } from "@euglena/core";
+import * as core from "@euglena/core";
+import * as template from "@euglena/template";
 
-export default logger.v1.com<
-    Sap<{
-        test: boolean;
-    }>
->({
-    Sap: async (particle) => {},
-    Log: async (particle, { cp, t }) => {
-        console.log(`${particle.data.level} - ${particle.data.message}`);
-        t(cp.ACK());
+type Sap = template.particle.common.Sap<{
+    printLevel: boolean;
+}>;
+
+let config: Sap["data"];
+
+export default core.organelle.dco<template.organelle.logger.Logger, Sap>({
+    Sap: async (p) => {
+        config = p.data;
+    },
+    Log: async (p, { cp, t }) => {
+        console.log(config.printLevel ? `${p.data.level} - ${p.data.message}` : p.data.message);
+        return cp("ACK");
     }
 });

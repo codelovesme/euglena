@@ -3,7 +3,7 @@
     "domain": "codeloves.me",
     "version": "2.5.0",
     "private": false,
-    "license": "GPL v2",
+    "license": "GPL-2.0",
     "main": "dist/index.js",
     "author": {
         "name": "Fedai Kaya",

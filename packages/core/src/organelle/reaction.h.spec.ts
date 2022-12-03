@@ -79,15 +79,19 @@ type Reaction = OrganelleReaction<COP, "Aoc">;
             AssertSuper<(class_: "AocResponse", data: boolean) => AocResponse, typeof cp>,
             AssertSuper<(class_: "AocResponse2", data: string) => AocResponse2, typeof cp>,
             AssertSuper<(class_: "Coc", data: boolean, adds: any) => Coc, typeof cp>,
-            AssertSuper<(class_: "Doc") => Doc, typeof cp>
+            AssertSuper<(class_: "Doc") => Doc, typeof cp>,
+            AssertSuper<(particle: Coc) => Promise<CocResponse>, typeof t>,
+            AssertSuper<(particle: Doc) => Promise<void>, typeof t>
         ] => [] as any;
         async (): Promise<CocResponse> => await t({} as Coc);
         const tt = await t({} as Doc);
         (): AssertNever<typeof tt> => tt;
-        switch({} as number){
-            case 2: return {} as AocResponse2;
+        switch ({} as number) {
+            case 2:
+                return {} as AocResponse2;
             //check if it fails when uncomment
             // case 3: return {} as number;
-            default: return {} as AocResponse;
+            default:
+                return {} as AocResponse;
         }
     };
