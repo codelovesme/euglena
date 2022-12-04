@@ -3,11 +3,10 @@ import { particle, organelle } from "@euglena/template";
 
 import common = particle.common;
 import netClient = organelle.netClient;
-import Particle = core.particle.Particle;
 
 const dco = core.organelle.dco;
 
-export type Sap = Particle<"Sap">;
+export type Sap = particle.common.Sap;
 
 export default dco<netClient.NetClient, Sap>({
     Sap: async () => {},

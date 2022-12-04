@@ -5,11 +5,10 @@ import Datastore from "nedb";
 
 import vacuole = organelle.vacuole;
 import common = particle.common;
-import Particle = core.particle.Particle;
 
 const dco = core.organelle.dco;
 
-export type Sap = Particle<"Sap", { filename: string }>;
+export type Sap = particle.common.Sap<{ filename: string }>;
 
 let db: Datastore;
 let sap: Sap["data"];
@@ -62,13 +61,15 @@ export default dco<vacuole.Vacuole, Sap>({
                             particle,
                             { upsert: true, multi: true },
                             (err, doc) => {
-                                if (err) return resolve(common.cp("Exception", new sys.type.Exception(JSON.stringify(err))));
+                                if (err)
+                                    return resolve(common.cp("Exception", new sys.type.Exception(JSON.stringify(err))));
                                 return resolve(common.cp("ACK"));
                             }
                         );
                     } else {
                         return db.update(js.Class.toDotNotation(query), particle, { upsert: true }, (err, doc) => {
-                            if (err) return resolve(common.cp("Exception", new sys.type.Exception(JSON.stringify(err))));
+                            if (err)
+                                return resolve(common.cp("Exception", new sys.type.Exception(JSON.stringify(err))));
                             return resolve(common.cp("ACK"));
                         });
                     }

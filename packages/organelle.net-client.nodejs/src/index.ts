@@ -1,13 +1,12 @@
 import * as core from "@euglena/core";
-import { organelle } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
 import http from "axios";
 
 import netClient = organelle.netClient;
-import Particle = core.particle.Particle;
 
 const dco = core.organelle.dco;
 
-export type Sap = Particle<"Sap">;
+export type Sap = particle.common.Sap;
 
 export default dco<netClient.NetClient,Sap>({
     Sap: async () => {},

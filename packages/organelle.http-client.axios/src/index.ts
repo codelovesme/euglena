@@ -1,14 +1,13 @@
 import * as core from "@euglena/core";
-import { organelle } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
 import axios from "axios";
 
 import httpClient = organelle.httpClient;
-import Particle = core.particle.Particle;
 
 const cp = core.particle.cp;
 const dco = core.organelle.dco;
 
-export type Sap = Particle<"Sap">;
+export type Sap = particle.common.Sap<{ path: string; interval: number }>;
 
 const capitalizeWord = (string: string) => {
     return string[0].toUpperCase() + string.slice(1);

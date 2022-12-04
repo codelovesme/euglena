@@ -4,14 +4,8 @@ import { organelle, particle } from "@euglena/template";
 
 import common = particle.common;
 import logger = organelle.logger;
-import Particle = core.particle.Particle;
 
-export type Sap = Particle<
-    "Sap",
-    {
-        test: boolean;
-    }
->;
+export type Sap = particle.common.Sap;
 
 export default core.organelle.dco<logger.Logger, Sap>({
     Sap: async (particle) => {},

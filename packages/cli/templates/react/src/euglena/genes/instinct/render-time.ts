@@ -1,7 +1,7 @@
 import * as core from "@euglena/core";
 import * as template from "@euglena/template";
 import { dcg } from "@euglena/organelle.nucleus.js";
-import { State } from "../../state";
+import { State } from "../../../state";
 
 import Time = template.organelle.timer.Time;
 
