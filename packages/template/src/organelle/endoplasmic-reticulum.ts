@@ -8,10 +8,10 @@ import CreateParticleUnion = particle.CreateParticleUnion;
 
 export type TransmitParticle = particle.Particle<"TransmitParticle", { target: string; particle: Particle }>;
 export type TransmitResponse = particle.Particle<"TransmitResponse", Particle | void>;
-export type EuglenaHasBeenBorn = particle.Particle<"EuglenaHasBeenBorn">;
+
 export type EndoplasmicReticulum = extendOrganelleInteractions<{
     in: [[TransmitParticle, any], common.OrganelleInfo];
-    out: [common.Log, EuglenaHasBeenBorn];
+    out: [common.Log, common.EuglenaHasBeenBorn];
 }>;
 
 export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<EndoplasmicReticulum>>;

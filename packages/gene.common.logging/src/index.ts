@@ -6,7 +6,7 @@ export default dcg<
     particle.common.Log,
     {
         logger: organelle.logger.Logger;
-    } 
+    }
 >("Log", { meta: { class: "Log" } }, async (p, s, { t }) => {
     return await t(p, "logger");
 });

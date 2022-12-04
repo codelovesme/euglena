@@ -23,7 +23,7 @@ export type GeneTransmitInner<O extends string, COP extends OrganelleInteraction
     }[ComingParticleNameUnion<COP>]
 >;
 
-export type GeneTransmit<O extends Organelles> = IntersectionFromUnion<
+export type GeneTransmit<O extends Organelles = Organelles> = IntersectionFromUnion<
     {
         [P in keyof O]: GeneTransmitInner<Exclude<P, number | symbol>, O[P]>;
     }[keyof O]

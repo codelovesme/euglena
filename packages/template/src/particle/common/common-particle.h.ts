@@ -8,6 +8,7 @@ import { Particles } from "./particles/particles.h";
 import { Sap } from "./sap.h";
 import { EuglenaName } from "./euglena-name.h";
 import { ReviveOrganelle } from "./revive-organelle.h";
+import { EuglenaHasBeenBorn } from "./euglena-has-been-born.h";
 
 export type CommonParticle =
     | ACK
@@ -19,4 +20,5 @@ export type CommonParticle =
     | Particles
     | Sap
     | EuglenaName
-    | ReviveOrganelle;
+    | ReviveOrganelle
+    | EuglenaHasBeenBorn;

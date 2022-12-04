@@ -1,8 +1,9 @@
-import { organelle, helpers } from "@euglena/template";
+import { organelle, util } from "@euglena/template";
 import logger from "@euglena/organelle.logger.console";
 
 const name = "Logger";
-export default helpers.organelle.createOrganelleConfig(name,[
+export default util.createOrganelleConfig(
+    name,
     organelle.endoplasmicReticulum.cp("OrganelleInfo", {
         name: name,
         location: {
@@ -10,4 +11,4 @@ export default helpers.organelle.createOrganelleConfig(name,[
             organelle: logger
         }
     })
-]);
+);

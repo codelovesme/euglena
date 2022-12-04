@@ -110,3 +110,4 @@ export default dco<nucleus.Nucleus, [Sap, ACK | Exception]>({
 
 export * from "./gene";
 export * from "./gene.h";
+export * as util from "./util";

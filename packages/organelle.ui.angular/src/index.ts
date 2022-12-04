@@ -14,7 +14,7 @@ import CreateParticleUnion = core.particle.CreateParticleUnion;
 
 const dco = core.organelle.dco;
 
-export type Sap = Particle<"Sap", { context: Context<object> }>;
+export type Sap = particle.common.Sap<{ context: Context<object> }>;
 
 @Injectable()
 export class Context<State extends object> {

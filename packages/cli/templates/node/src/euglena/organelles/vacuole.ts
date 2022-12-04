@@ -1,10 +1,11 @@
 import * as core from "@euglena/core";
 import * as template from "@euglena/template";
-import vacuole from "@euglena/organelle.vacuole.js";
-import vacuoleJsParticles from "../particles";
+import vacuole, { Sap } from "@euglena/organelle.vacuole.js";
+import particles from "../particles";
 
 const name = "Vacuole";
-export default template.helpers.organelle.createOrganelleConfig(name, [
+export default template.util.createOrganelleConfig(
+    name,
     template.particle.common.cp("OrganelleInfo", {
         name: name,
         location: {
@@ -12,8 +13,8 @@ export default template.helpers.organelle.createOrganelleConfig(name, [
             organelle: vacuole
         }
     }),
-    core.particle.cp("Sap", {
+    core.particle.cp<Sap>("Sap", {
         type: "InMemory",
-        particles: vacuoleJsParticles
+        particles: particles
     })
-]);
+);

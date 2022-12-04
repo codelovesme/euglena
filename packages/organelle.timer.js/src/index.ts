@@ -4,11 +4,10 @@ import { organelle, particle } from "@euglena/template";
 
 import timer = organelle.timer;
 import common = particle.common;
-import Particle = core.particle.Particle;
 
 let time: sys.type.Time;
 
-export type Sap = Particle<"Sap", sys.type.Time>;
+export type Sap = particle.common.Sap<sys.type.Time>;
 
 export default core.organelle.dco<timer.Timer, Sap>({
     Sap: async (sap, { t, cp }) => {

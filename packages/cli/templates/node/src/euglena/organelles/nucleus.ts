@@ -1,15 +1,16 @@
 import * as core from "@euglena/core";
-import { particle, helpers } from "@euglena/template";
-import nucleusJs, { Sap } from "@euglena/organelle.nucleus.js";
+import { particle, util } from "@euglena/template";
+import nucleus, { Sap } from "@euglena/organelle.nucleus.js";
 import genes from "../genes";
 
 const name = "Nucleus";
-export default helpers.organelle.createOrganelleConfig(name, [
+export default util.createOrganelleConfig(
+    name,
     particle.common.cp("OrganelleInfo", {
         name: name,
         location: {
             type: "InMemory",
-            organelle: nucleusJs
+            organelle: nucleus
         }
     }),
     core.particle.cp<Sap>(
@@ -18,6 +19,8 @@ export default helpers.organelle.createOrganelleConfig(name, [
             type: "InMemory",
             genes: genes
         },
-        { organelleName: name }
+        {
+            organelleName: name
+        }
     )
-]);
+);

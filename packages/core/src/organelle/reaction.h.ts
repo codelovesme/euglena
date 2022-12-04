@@ -18,7 +18,7 @@ export type OrganelleReactionCreateParticle<
     ? CreateParticleUnion<GoingParticles<COP>>
     : CreateParticleUnion<GoingParticles<COP> | ComingResponseParticle<COP, CPN>>;
 
-export type OrganelleTransmit<COP extends OrganelleInteractions> = ts.IntersectionFromUnion<
+export type OrganelleTransmit<COP extends OrganelleInteractions = OrganelleInteractions> = ts.IntersectionFromUnion<
     {
         [P in GoingParticleNameUnion<COP>]: (
             particle: GoingParticle<COP, P>

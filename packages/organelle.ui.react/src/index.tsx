@@ -8,7 +8,7 @@ import ui = organelle.ui;
 import common = particle.common;
 import Particle = core.particle.Particle;
 
-export type Sap = Particle<"Sap", { rootComponent: typeof App; serviceWorker: boolean }>;
+export type Sap = particle.common.Sap<{ rootComponent: typeof App; serviceWorker: boolean }>;
 
 let App: React.FC<any>;
 export const ToolsContext = createContext({

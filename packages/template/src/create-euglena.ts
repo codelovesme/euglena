@@ -1,7 +1,6 @@
 import { particle, organelle } from "@euglena/core";
 import { sys } from "cessnalib";
 import { nucleus } from "./organelle";
-import { EuglenaHasBeenBorn } from "./organelle/endoplasmic-reticulum";
 import { ReceiveParticle } from "./organelle/nucleus";
 import { common } from "./particle";
 
@@ -87,7 +86,7 @@ export const createEuglena = async (particles: Particle[]) => {
     /**
      * Initial Organelles atttached let roll
      */
-    const euglenaHasBeenBorn = particle.cp<EuglenaHasBeenBorn>("EuglenaHasBeenBorn");
+    const euglenaHasBeenBorn = particle.cp<common.EuglenaHasBeenBorn>("EuglenaHasBeenBorn");
     const resp = await transmit(
         nucleus.cp("ReceiveParticle", {
             particle: euglenaHasBeenBorn,
