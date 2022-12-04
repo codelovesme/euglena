@@ -1,7 +1,12 @@
-import { Particle, AllInteractions, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
 
-export type TransmitParticle = Particle<
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import Particle = particle.Particle;
+import CreateParticleUnion = particle.CreateParticleUnion;
+
+export type TransmitParticle = particle.Particle<
     "TransmitParticle",
     {
         particle: Particle;
@@ -12,10 +17,10 @@ export type TransmitParticle = Particle<
     }
 >;
 
-export type NetClient = AllInteractions<{
+export type NetClient = extendOrganelleInteractions<{
     in: [[TransmitParticle, common.ACK | common.Exception]];
     out: [common.Log];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<NetClient>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<NetClient>>;
 export const cp = createParticle;

@@ -1,4 +1,4 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 import { sys } from "cessnalib";
 
-export type Exception = Particle<"Exception", sys.type.Exception>;
+export type Exception = particle.Particle<"Exception", sys.type.Exception>;

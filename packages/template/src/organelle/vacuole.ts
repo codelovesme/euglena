@@ -1,16 +1,21 @@
 import { sys } from "cessnalib";
-import { AllInteractions, Meta, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
 
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import Particle = particle.Particle;
+import CreateParticleUnion = particle.CreateParticleUnion;
+
 export type Count = "all" | number;
-export type ReadParticle<P extends Particle = Particle> = Particle<
+export type ReadParticle<P extends Particle = Particle> = particle.Particle<
     "ReadParticle",
     {
         query: sys.type.RecursivePartial<P>;
         count: Count;
     }
 >;
-export type SaveParticle<P extends Particle = Particle> = Particle<
+export type SaveParticle<P extends Particle = Particle> = particle.Particle<
     "SaveParticle",
     | {
           particle: P;
@@ -19,11 +24,11 @@ export type SaveParticle<P extends Particle = Particle> = Particle<
       }
     | P[]
 >;
-export type RemoveParticle<P extends Particle = Particle> = Particle<"RemoveParticle", { query: sys.type.RecursivePartial<P>; count: Count }>;
-export type Metas = Particle<"Metas", Meta[]>;
-export type Hibernate = Particle<"Hibernate">;
+export type RemoveParticle<P extends Particle = Particle> = particle.Particle<"RemoveParticle", { query: sys.type.RecursivePartial<P>; count: Count }>;
+export type Metas = particle.Particle<"Metas", particle.Meta[]>;
+export type Hibernate = particle.Particle<"Hibernate">;
 
-export type Vacuole = AllInteractions<{
+export type Vacuole = extendOrganelleInteractions<{
     in: [
         [SaveParticle, common.ACK | common.Exception],
         [ReadParticle, Particle<"Particles", Particle[]> | common.Exception],
@@ -34,5 +39,5 @@ export type Vacuole = AllInteractions<{
     out: [common.Log];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<Vacuole>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<Vacuole>>;
 export const cp = createParticle;

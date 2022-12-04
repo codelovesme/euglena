@@ -5,8 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Banner } from './banner/banner';
 
-import '../euglena';
-
 @NgModule({
   declarations: [AppComponent, Banner],
   imports: [BrowserModule, AppRoutingModule],

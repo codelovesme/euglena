@@ -1,18 +1,20 @@
-import { sys } from "cessnalib";
-import {
-    Particle,
-    AllInteractions,
-    UnionToIntersection,
-    ComingParticleNameUnion,
-    ComingParticle,
-    ComingResponseParticle,
-} from "@euglena/core";
+import { sys, ts } from "cessnalib";
+import { particle, organelle } from "@euglena/core";
 
-export type Organelles = Record<string, AllInteractions>;
+import Particle = particle.Particle;
+import OrganelleInteractions = organelle.OrganelleInteractions;
+import IntersectionFromUnion = ts.IntersectionFromUnion;
+import ComingParticleNameUnion = organelle.ComingParticleNameUnion;
+import ComingParticle = organelle.ComingParticle;
+import ComingResponseParticle = organelle.ComingResponseParticle;
+
+export type Organelles = Record<string, OrganelleInteractions>;
+
+export type extendOrganelles<I extends Organelles> = I;
 
 export type Stringify<O extends Organelles> = { [P in keyof O]: string };
 
-export type GeneTransmitInner<O extends string, COP extends AllInteractions> = UnionToIntersection<
+export type GeneTransmitInner<O extends string, COP extends OrganelleInteractions> = IntersectionFromUnion<
     {
         [P in ComingParticleNameUnion<COP>]: (
             particle: ComingParticle<COP, P>,
@@ -21,7 +23,7 @@ export type GeneTransmitInner<O extends string, COP extends AllInteractions> = U
     }[ComingParticleNameUnion<COP>]
 >;
 
-export type GeneTransmit<O extends Organelles> = UnionToIntersection<
+export type GeneTransmit<O extends Organelles = Organelles> = IntersectionFromUnion<
     {
         [P in keyof O]: GeneTransmitInner<Exclude<P, number | symbol>, O[P]>;
     }[keyof O]
@@ -44,7 +46,7 @@ export interface GeneReaction<TriggerParticle extends Particle = Particle, O ext
     ): Promise<Particle | void>;
 }
 
-export type Gene<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles> = Particle<
+export type Gene<TriggerParticle extends Particle = Particle, O extends Organelles = Organelles> = particle.Particle<
     "Gene",
     {
         name: string;

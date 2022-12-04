@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-import { ce } from "@euglena/template";
-import particles from "../index";
+import { ce, particle } from "@euglena/template";
+import particles from "../euglena";
 
-ce(particles);
+ce(particles).catch((err: particle.common.Exception) => {
+    console.error(`Error - ${err.data.message}`);
+});

@@ -36,7 +36,7 @@ export class Banner {
     return this._radius * this.scale;
   }
 
-  private interval;
+  private interval: any;
 
   private readonly defaultCanvasWidth = 1530;
   private readonly defaultCanvasHeight = 220;
@@ -55,7 +55,7 @@ export class Banner {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event) {
+  onResize() {
     clearInterval(this.interval);
     this.resize();
     this.draw(...this.characters);
@@ -82,7 +82,7 @@ export class Banner {
       height: this.canvasSize.height - 2 * this.borderWidth,
     };
   }
-  scale;
+  scale: number;
   resize() {
     const innerWidth = window.innerWidth - 10 - 2 * this.margin; /*buffer*/
     this.scale =
@@ -105,7 +105,7 @@ export class Banner {
     }));
   }
   ngAfterViewInit(): void {
-    this.ctx = this.canvas.nativeElement.getContext('2d');
+    this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.resize();
     this.draw(...this.characters);
   }
@@ -123,7 +123,6 @@ export class Banner {
     };
     this.ctx.fillStyle = 'red';
     this.interval = setInterval(() => {
-      const { width, height } = this.canvas.nativeElement;
       const x =
         this.borderWidth + Math.floor(Math.random() * this.printableSize.width);
       const y =

@@ -2,9 +2,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
@@ -13,21 +15,19 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
-    "module": "es2020",
-    "lib": ["es2018", "dom"],
-    "paths": {
-      "@angular/common": ["node_modules/@angular/common"],
-      "@angular/compiler": ["node_modules/@angular/compiler"],
-      "@angular/platform-browser": ["node_modules/@angular/platform-browser"],
-      "rxjs": ["node_modules/rxjs"],
-      "rxjs/operators": ["node_modules/rxjs/operators"]
-    }
+    "target": "ES2022",
+    "module": "ES2022",
+    "useDefineForClassFields": false,
+    "lib": [
+      "ES2022",
+      "dom"
+    ]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "files": ["src/main.ts"]
 }

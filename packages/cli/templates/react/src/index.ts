@@ -1,4 +1,15 @@
-import { ce } from "@euglena/core";
-import particles from "./euglena/particles";
+import { ce, particle } from "@euglena/template";
+import { logger, nucleus, reticulum, timer, ui, vacuole } from "./organelles";
 
-ce(particles);
+const particles = [
+    ...reticulum.particles,
+    ...logger.particles,
+    ...nucleus.particles,
+    ...vacuole.particles,
+    ...timer.particles,
+    ...ui.particles
+];
+
+ce(particles).catch((err: particle.common.Exception) => {
+    console.error(`Error - ${err.data.message}`);
+});

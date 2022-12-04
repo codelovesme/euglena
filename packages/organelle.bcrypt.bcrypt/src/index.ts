@@ -1,8 +1,12 @@
-import { cp, dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle } from "@euglena/template";
 import { hash, compare } from "bcrypt";
 
 import bcrypt = organelle.bcrypt;
+import Particle = core.particle.Particle;
+
+const cp = core.particle.cp;
+const dco = core.organelle.dco;
 
 /**
  * 12

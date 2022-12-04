@@ -1,3 +1,4 @@
+import * as core from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
 import { dcg } from "@euglena/organelle.nucleus.js";
 
@@ -7,7 +8,9 @@ import common = particle.common;
 import vacuole = organelle.vacuole;
 import bcrypt = organelle.bcrypt;
 import nucleus = organelle.nucleus;
-import { createParticle, isParticleClass } from "@euglena/core";
+
+const createParticle = core.particle.createParticle;
+const isParticleClass = core.particle.isParticleClass;
 
 export default dcg<
     CreateEuglenaInfo,

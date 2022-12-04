@@ -1,7 +1,7 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 import { DecryptedToken } from "../../organelle/jwt";
 
-export type Session = Particle<
+export type Session = particle.Particle<
     "Session",
     {
         encryptedToken: string;

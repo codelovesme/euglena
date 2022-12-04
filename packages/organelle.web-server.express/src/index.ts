@@ -1,9 +1,12 @@
-import { dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 import express, { Express } from "express";
 
 import webServer = organelle.webServer;
 import Particles = particle.common.Particles;
+import Particle = core.particle.Particle;
+
+const dco = core.organelle.dco;
 
 export type Sap = Particle<
     "Sap",

@@ -1,3 +1,3 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 
-export type Particles = Particle<"Particles", Particle[]>;
+export type Particles = particle.Particle<"Particles", particle.Particle[]>;

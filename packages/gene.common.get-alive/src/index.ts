@@ -1,4 +1,4 @@
-import { isParticleClass } from "@euglena/core";
+import * as core from "@euglena/core";
 import { dcg } from "@euglena/organelle.nucleus.js";
 import { organelle, particle } from "@euglena/template";
 
@@ -9,6 +9,8 @@ import common = particle.common;
 import ACK = common.ACK;
 import Exception = common.Exception;
 import ReviveOrganelle = common.ReviveOrganelle;
+
+const isParticleClass = core.particle.isParticleClass;
 
 export default dcg<
     ReviveOrganelle,

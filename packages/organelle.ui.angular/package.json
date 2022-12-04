@@ -5,7 +5,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
-    "license": "GPL v2",
+    "license": "GPL-2.0",
     "author": {
         "name": "Fedai Kaya",
         "email": "codelovesme@gmail.com"
@@ -18,15 +18,15 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "cessnalib": "^0.14.0"
+        "cessnalib": "^0.15.0"
     },
     "peerDependencies": {
-        "@angular/core": "~11.2.12",
+        "@angular/core": "^15.0.2",
         "@euglena/core": "^2.5.0",
         "@euglena/template": "^2.5.0"
     },
     "devDependencies": {
-        "@angular/core": "~11.2.12"
+        "@angular/core": "^15.0.2"
     },
     "files": [
         "dist"

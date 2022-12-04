@@ -1,3 +1,3 @@
-import { Particle } from "@euglena/core";
+import { particle } from "@euglena/core";
 
-export type ACK = Particle<"ACK">;
+export type ACK = particle.Particle<"ACK">;

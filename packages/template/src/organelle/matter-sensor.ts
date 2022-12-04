@@ -1,9 +1,13 @@
-import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
 
-export type Read = Particle<"Read">;
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import CreateParticleUnion = particle.CreateParticleUnion;
 
-export type Matter = Particle<
+export type Read = particle.Particle<"Read">;
+
+export type Matter = particle.Particle<
     "Matter",
     Array<{
         pm: number;
@@ -12,10 +16,10 @@ export type Matter = Particle<
     }>
 >;
 
-export type MatterSensor = AllInteractions<{
+export type MatterSensor = extendOrganelleInteractions<{
     in: [[Read, Matter]];
     out: [common.Log];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<MatterSensor>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<MatterSensor>>;
 export const cp = createParticle;

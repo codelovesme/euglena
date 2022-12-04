@@ -3,7 +3,7 @@
     "domain": "codeloves.me",
     "version": "2.5.0",
     "private": false,
-    "license": "GPL v2",
+    "license": "GPL-2.0",
     "main": "dist/index.js",
     "author": {
         "name": "Fedai Kaya",
@@ -22,7 +22,7 @@
         "json-beautify": "^1.1.1"
     },
     "devDependencies": {
-        "typescript": "^4.7.4"
+        "typescript": "^4.9.3"
     },
     "files": [
         "dist"

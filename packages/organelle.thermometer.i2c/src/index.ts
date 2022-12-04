@@ -1,9 +1,12 @@
-import {  dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { particle,organelle } from "@euglena/template";
 import i2c from "i2c-bus";
 
 import common = particle.common;
 import thermometer = organelle.thermometer;
+import Particle = core.particle.Particle;
+
+const dco = core.organelle.dco;
 
 export type Sap = Particle<"Sap", { ic2Address: number; deviceAddress: number; interval: number }>;
 

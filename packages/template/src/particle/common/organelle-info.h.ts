@@ -1,6 +1,6 @@
-import { CreateOrganelle, Particle } from "@euglena/core";
+import { organelle, particle } from "@euglena/core";
 
-export type OrganelleInfo = Particle<
+export type OrganelleInfo = particle.Particle<
     "OrganelleInfo",
     {
         name: string;
@@ -11,7 +11,7 @@ export type OrganelleInfo = Particle<
               }
             | {
                   type: "InMemory";
-                  organelle: CreateOrganelle;
+                  organelle: organelle.CreateOrganelle;
               };
     }
 >;

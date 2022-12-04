@@ -1,13 +1,17 @@
-import { Particle, AllInteractions, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
+import { particle, organelle } from "@euglena/core";
 import { common } from "../particle";
 
-export type Listen = Particle<"Listen">;
-export type Temperature = Particle<"Temperature">;
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import CreateParticleUnion = particle.CreateParticleUnion;
 
-export type Thermometer = AllInteractions<{
+export type Listen = particle.Particle<"Listen">;
+export type Temperature = particle.Particle<"Temperature">;
+
+export type Thermometer = extendOrganelleInteractions<{
     in: [[Listen, common.ACK | common.Exception]];
     out: [Temperature, common.Log];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<Thermometer>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<Thermometer>>;
 export const cp = createParticle;

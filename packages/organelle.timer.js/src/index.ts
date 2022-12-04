@@ -1,5 +1,5 @@
 import { sys } from "cessnalib";
-import { dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { organelle, particle } from "@euglena/template";
 
 import timer = organelle.timer;
@@ -7,7 +7,9 @@ import common = particle.common;
 
 let time: sys.type.Time;
 
-export default dco<timer.Timer, Particle<"Sap", sys.type.Time>>({
+export type Sap = particle.common.Sap<sys.type.Time>;
+
+export default core.organelle.dco<timer.Timer, Sap>({
     Sap: async (sap, { t, cp }) => {
         time = sap.data;
         setInterval(() => {

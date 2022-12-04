@@ -1,10 +1,13 @@
-import { AllInteractions, Particle, cp as _cp, ComingParticles, CreateParticleUnion } from "@euglena/core";
-import { common } from "../particle";
 import { sys } from "cessnalib";
+import { particle, organelle } from "@euglena/core";
+import { common } from "../particle";
 
+import ComingParticles = organelle.ComingParticles;
+import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
+import CreateParticleUnion = particle.CreateParticleUnion;
 import Headers = sys.type.Headers;
 
-export type AddRoute = Particle<
+export type AddRoute = particle.Particle<
     "AddRoute",
     {
         method: "get" | "post" | "put" | "delete";
@@ -13,7 +16,7 @@ export type AddRoute = Particle<
     }
 >;
 
-export type WebServerImpulse = Particle<
+export type WebServerImpulse = particle.Particle<
     "WebServerImpulse",
     {
         path: string;
@@ -25,10 +28,10 @@ export type WebServerImpulse = Particle<
     }
 >;
 
-export type WebServer = AllInteractions<{
+export type WebServer = extendOrganelleInteractions<{
     in: [common.GetAlive, AddRoute];
     out: [[WebServerImpulse, common.Particles], common.Log];
 }>;
 
-export const createParticle = _cp as CreateParticleUnion<ComingParticles<WebServer>>;
+export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<WebServer>>;
 export const cp = createParticle;

@@ -1,10 +1,14 @@
-import { cp, dco, Particle } from "@euglena/core";
+import * as core from "@euglena/core";
 import { particle, organelle } from "@euglena/template";
 import * as fs from "fs";
 import { sys } from "cessnalib";
 
 import fsOrganelle = organelle.fs;
 import common = particle.common;
+import Particle = core.particle.Particle;
+
+const cp = core.particle.cp;
+const dco = core.organelle.dco;
 
 export type Sap = Particle<"Sap">;
 
