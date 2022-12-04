@@ -16,10 +16,10 @@
         "cessnalib": "^0.15.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^3.0.0"
+        "@euglena/core": "^3.0.1"
     },
     "devDependencies": {
-        "@euglena/core": "^3.0.0",
+        "@euglena/core": "^3.0.1",
         "typescript": "^4.9.3"
     },
     "files": [

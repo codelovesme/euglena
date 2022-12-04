@@ -21,8 +21,8 @@
         "cessnalib": "^0.15.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^3.0.0",
-        "@euglena/template": "^3.0.0",
+        "@euglena/core": "^3.0.1",
+        "@euglena/template": "^3.0.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
