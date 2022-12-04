@@ -6,11 +6,11 @@ import timer = organelle.timer;
 import common = particle.common;
 import Particle = core.particle.Particle;
 
-const dco = core.organelle.dco;
-
 let time: sys.type.Time;
 
-export default dco<timer.Timer, Particle<"Sap", sys.type.Time>>({
+export type Sap = Particle<"Sap", sys.type.Time>;
+
+export default core.organelle.dco<timer.Timer, Sap>({
     Sap: async (sap, { t, cp }) => {
         time = sap.data;
         setInterval(() => {

@@ -1,6 +1,10 @@
-import { sys } from 'cessnalib';
+import { sys } from "cessnalib";
+import { particle } from "@euglena/core";
 
-export interface State {
-  title: string;
-  time: sys.type.Time;
-}
+export type State = particle.Particle<
+    "State",
+    {
+        title: string;
+        time: sys.type.Time;
+    } | undefined
+>;

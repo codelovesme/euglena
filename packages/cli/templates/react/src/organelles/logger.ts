@@ -3,12 +3,12 @@ import logger from '@euglena/organelle.logger.console';
 
 const name = "Logger";
 
-export default helpers.createOrganelleConfig(name,[
+export default helpers.organelle.createOrganelleConfig(name,[
     particle.common.cp("OrganelleInfo",{
         name: name,
         location: {
           type: 'InMemory',
-          organelle: logger,
+          organelle: logger as any,
         },
     })
 ])

@@ -19,7 +19,8 @@
         "@euglena/core": "^2.5.0"
     },
     "devDependencies": {
-        "@euglena/core": "^2.5.0"
+        "@euglena/core": "^2.5.0",
+        "typescript": "^4.9.3"
     },
     "files": [
         "dist"

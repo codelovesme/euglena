@@ -4,7 +4,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
-    "license": "No License",
+    "license": "UNLICENSED",
     "author": {
         "name": "",
         "email": "example@example.com"

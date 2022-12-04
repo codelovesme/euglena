@@ -1,4 +1,10 @@
-import instincts from './instincts';
-import events from './events';
+import renderTime from "./instinct/render-time";
+import ui from "../organelles/ui";
 
-export default [...instincts, ...events];
+const organelles = {
+    ui: ui.name
+}
+
+export default [
+    renderTime(organelles)
+];
