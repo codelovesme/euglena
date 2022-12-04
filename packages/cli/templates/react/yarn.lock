@@ -1205,65 +1205,65 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@euglena/core@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@euglena/core/-/core-2.5.0.tgz#721c0d7fa3789770492386fe6b12e3015b04891c"
-  integrity sha512-YP1CP6e/ffONJDVXuDONqps3IPDWgaMIppj4RH0R0bpWRSH2iIO2b3JU5V+t9L02yeT0S3xHZG2CKNsyFrzxrg==
+"@euglena/core@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@euglena/core/-/core-3.0.0.tgz#34d8f79df1e8e0dd068457b0cdfef09c1a6582c4"
+  integrity sha512-w4sTCBOfqWX1eG/2U0pbxOEPFgaRdLMb9TnROGBKrPokM7w/GLCF8exF5Lto0odJwkyLIc45s7yxwW4qx3AizA==
   dependencies:
-    cessnalib "^0.14.0"
+    cessnalib "^0.15.0"
 
-"@euglena/organelle.endoplasmic-reticulum.js@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.endoplasmic-reticulum.js/-/organelle.endoplasmic-reticulum.js-2.5.0.tgz#fa4d8bd1085304a0e6eca11245801c19cc986f0f"
-  integrity sha512-77ByX9xAPy2SEZcoHkNAWWDVWjmo+84mIWuLjlcAvdLiD4bmmwHAX7OdQUS5Sxl8/jQQYlsPUinFfombgaLB3A==
+"@euglena/organelle.endoplasmic-reticulum.js@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.endoplasmic-reticulum.js/-/organelle.endoplasmic-reticulum.js-3.0.0.tgz#82d408f900751e2efffd9168da4fcf0244a5ab5b"
+  integrity sha512-wU7GN74RWjUpr+omwdEu4gjM+Qf6/+pxGBHrSjgCcE34MoxkRvhk+3JvQmsKsOEsxZ4RENvkGY9NrTd+Qrg+4Q==
   dependencies:
-    cessnalib "^0.14.0"
+    cessnalib "^0.15.0"
     moment "^2.24.0"
 
-"@euglena/organelle.logger.console@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.logger.console/-/organelle.logger.console-2.5.0.tgz#7a5cffccfbb23d0c82a7645488828f4768260f0a"
-  integrity sha512-uDyRljMvrpD8d2wmDFsQvpiFlXXuOGGnnGPiEGp16/qUb/V97glEgT9YOPdsZ0tDdFtUZpksbrrfL7gfe6OaeA==
+"@euglena/organelle.logger.console@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.logger.console/-/organelle.logger.console-3.0.0.tgz#42c31faa09ca1a534feb22f8d56e498d2010f825"
+  integrity sha512-Ew7cCorSyyPZ1HAnhk0agTxxKRw5V+fSW00IBCyY+2nVb4IZdKOzpwuOMFaO3woyQGzy5KedE2ctfWQzmiMW9A==
   dependencies:
-    cessnalib "^0.14.0"
+    cessnalib "^0.15.0"
     moment "^2.24.0"
 
-"@euglena/organelle.nucleus.js@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.nucleus.js/-/organelle.nucleus.js-2.5.0.tgz#6c761fad21e1523600b7174a01d902c59cc59d1f"
-  integrity sha512-o56FJyw4VzOq+FmRAnTCrtTbAYC7t7brVpii75XR4Fr6oep3sXCvevOU97r8IM+VA3vZo6yrj7hppuW4KVQUWw==
+"@euglena/organelle.nucleus.js@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.nucleus.js/-/organelle.nucleus.js-3.0.0.tgz#44d8342f1b23328ffb228b18dfb4c3f16cc79674"
+  integrity sha512-XNEwmUc2MvtxoQQf6JHKzNgGmUkDtzfBNoEKBB6bNu16k58Z8fcuiRvIqx6vkUoHWzFONZB0ECWqh2Wba7XoSA==
   dependencies:
-    cessnalib "^0.14.0"
+    cessnalib "^0.15.0"
     moment "^2.24.0"
 
-"@euglena/organelle.timer.js@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.timer.js/-/organelle.timer.js-2.5.0.tgz#96dee3fea09c0b8f35b9f15d400171dc67913fc5"
-  integrity sha512-Teyuq9gcyo2PQtdBfuj7Kk6eosfBvZS1Bhdor1gXhMZjT2x4NurPCDSFsmKPB/Djg6LnlEyAGtslTPqHpVsBGg==
+"@euglena/organelle.timer.js@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.timer.js/-/organelle.timer.js-3.0.0.tgz#9695dac9d5304ad1ecba15e72a681b911a11b8f3"
+  integrity sha512-ELvvsmfJZuizH5VWCoBynhZdM8ms+UkMhVPWNpVrsa360YPwuDQy/5lUdFlBlj4JgI4biKd7UVw7hidGe6XLbQ==
   dependencies:
-    cessnalib "^0.14.0"
+    cessnalib "^0.15.0"
 
-"@euglena/organelle.ui.react@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.ui.react/-/organelle.ui.react-2.5.0.tgz#673f1186e79b99a1a042d488aa3a50009310f71f"
-  integrity sha512-QDR4pOsC2lAypJthArG1cps2uaFiOXvDk3HHcoxVaupuHwFQVXn9ErIuo3QjabctG4z+OLy3KEsV48ucIpNJDQ==
+"@euglena/organelle.ui.react@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.ui.react/-/organelle.ui.react-3.0.0.tgz#b22ec6a37ac620e6456cef1d4fdad4c0f3e21344"
+  integrity sha512-cos2I2qje676xVbc6eEiBoVl+1nDiqd2AQjC41ZFlqdM17m1ZyAKUQ1cHiLMFG0+VxUW332YwdC1bw0yIFYiBw==
   dependencies:
-    cessnalib "^0.14.0"
+    cessnalib "^0.15.0"
 
-"@euglena/organelle.vacuole.js@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.vacuole.js/-/organelle.vacuole.js-2.5.0.tgz#cdf8cdb9855c8c12c170c00622dac9d686fd7af9"
-  integrity sha512-vnpAvoqTEQ5d5bDxNTOGiB8PrjiR6THYqw7QGiIpsbUJT4UOF6+ufQqZkLkFUsUvVZfXb7hWNHucNguZSoBMVw==
+"@euglena/organelle.vacuole.js@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.vacuole.js/-/organelle.vacuole.js-3.0.0.tgz#13ff89a333309fb7813b9d45ffbb8c847fb1b1ad"
+  integrity sha512-uTWe/mmC2hplLlWaSI2M3FU7wFBFvYfwVo7UmS3+XcQpmnMYJU7Y9M36LkFqgM5zGeIih/zSPMtv2NBLIOMRug==
   dependencies:
-    cessnalib "^0.14.0"
+    cessnalib "^0.15.0"
 
-"@euglena/template@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@euglena/template/-/template-2.5.0.tgz#77aa7a3d30123a2401dd2994dcb2b519b0e024c4"
-  integrity sha512-J6FqC1Nqcls/S64bhn6hOD+FSW+H7gqja8qP5KPlciuCNhsY96CIPG+CttIg1LzPlPDkfB1k8BZVPTySO5hJpw==
+"@euglena/template@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@euglena/template/-/template-3.0.0.tgz#86479b332b9d21cdcd0b4717cb4e3760df6e330a"
+  integrity sha512-4jyf2dv+WVn0vv/PltWNSgMFYG9VpTVBIMuOgX0TqBFWHsUUZDsvrszrTG3Y0MPkrY0n7gfVhvSucntqZm0Mfg==
   dependencies:
-    "@euglena/core" "^2.5.0"
-    cessnalib "^0.14.0"
+    "@euglena/core" "^3.0.0"
+    cessnalib "^0.15.0"
 
 "@humanwhocodes/config-array@^0.11.6":
   version "0.11.7"
@@ -3085,10 +3085,10 @@ case-sensitive-paths-webpack-plugin@^2.4.0:
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.4.0.tgz#db64066c6422eed2e08cc14b986ca43796dbc6d4"
   integrity sha512-roIFONhcxog0JSSWbvVAh3OocukmSgpqOH6YpMkCvav/ySIV3JKg4Dc8vYtQjYi/UxpNE36r/9v+VqTQqgkYmw==
 
-cessnalib@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.14.0.tgz#52c8357f1d9a833cbfa05f771a179d51291d8842"
-  integrity sha512-WKWG+3xAzJSl+L+NkyRdj2G3XXEIuMpN3O6o4syhcXP3RBGWA5F4kZNHSjdw4ll/fJ8Kqz90y3+xT5W/KU+A/A==
+cessnalib@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.15.0.tgz#26c2f007a8bc421a87d9b53987e30d452e55481c"
+  integrity sha512-RWjSPJ4yfEp1YCcY7gj7vOp+UML55gy04lD/I1N5CbwY0QqS1yj5CtswWjn+iXV2TYgyhs8gBE7Ovl+emJB9Xg==
   dependencies:
     sift "^3.3.5"
 
@@ -3619,9 +3619,9 @@ debug@^3.2.7:
     ms "^2.1.1"
 
 decimal.js@^10.2.1:
-  version "10.4.2"
-  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.4.2.tgz#0341651d1d997d86065a2ce3a441fbd0d8e8b98e"
-  integrity sha512-ic1yEvwT6GuvaYwBLLY6/aFFgjZdySKTE8en/fkU3QICTmRtgtSlFn0u0BXN06InZwtfCelR7j8LRiDI/02iGA==
+  version "10.4.3"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.4.3.tgz#1044092884d245d1b7f65725fa4ad4c6f781cc23"
+  integrity sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==
 
 dedent@^0.7.0:
   version "0.7.0"

@@ -5,12 +5,11 @@ import { sys } from "cessnalib";
 
 import fsOrganelle = organelle.fs;
 import common = particle.common;
-import Particle = core.particle.Particle;
 
 const cp = core.particle.cp;
 const dco = core.organelle.dco;
 
-export type Sap = Particle<"Sap">;
+export type Sap = particle.common.Sap;
 
 const _fsOrganelle = dco<fsOrganelle.FS, Sap>({
     Sap: async (p) => {},

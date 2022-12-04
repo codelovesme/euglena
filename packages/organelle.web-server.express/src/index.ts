@@ -4,16 +4,12 @@ import express, { Express } from "express";
 
 import webServer = organelle.webServer;
 import Particles = particle.common.Particles;
-import Particle = core.particle.Particle;
 
 const dco = core.organelle.dco;
 
-export type Sap = Particle<
-    "Sap",
-    {
-        port: number;
-    }
->;
+export type Sap = particle.common.Sap<{
+    port: number;
+}>;
 
 let app: Express;
 let sap: {

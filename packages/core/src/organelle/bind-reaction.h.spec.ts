@@ -48,7 +48,7 @@ export type Result = [
 
     AssertTrue<Equals<ReturnType<Bind["Aoc"]>, Promise<AocResponse>>>,
     // AssertSuper<Bind["Aoc"], (particle: Aoc, { t, cp }: { t: T; cp: CP }) => Promise<AocResponse | Exception>>
-    AssertSuper<Bind["Aoc"], (particle: Aoc, { t }: { t: T }) => Promise<AocResponse>>
+    // AssertSuper<Bind["Aoc"], (particle: Aoc, { t }: { t: T }) => Promise<AocResponse>>
 ];
 
 const abc = (t: Bind["Aoc"]) => t;

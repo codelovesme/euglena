@@ -1,7 +1,7 @@
 import * as core from "@euglena/core";
 import { util, particle } from "@euglena/template";
 import ui, { Sap } from "@euglena/organelle.ui.react";
-import rootComponent from "../components/app";
+import rootComponent from "../../components/app";
 
 const name = "UI";
 

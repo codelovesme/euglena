@@ -3,11 +3,11 @@ import { organelle, attachOrganelle, particle, transmit } from "@euglena/templat
 
 import endoplasmicReticulum = organelle.endoplasmicReticulum;
 import EndoplasmicReticulum = endoplasmicReticulum.EndoplasmicReticulum;
-import common = particle.common;
-import Sap = common.Sap;
 import Particle = core.particle.Particle;
 
 const dco = core.organelle.dco;
+
+export type Sap = particle.common.Sap;
 
 export default dco<EndoplasmicReticulum, Sap>({
     Sap: async (p) => {},

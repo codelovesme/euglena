@@ -5,12 +5,11 @@ import * as core from "@euglena/core";
 
 import jwt = organelle.jwt;
 import common = particle.common;
-import Particle = core.particle.Particle;
 
 const cp = core.particle.cp;
 const dco = core.organelle.dco;
 
-export type Sap = Particle<"Sap">;
+export type Sap = particle.common.Sap;
 
 const secret: string = "92f119fe-e5c5-46fc-a8d5-814c17aea307";
 

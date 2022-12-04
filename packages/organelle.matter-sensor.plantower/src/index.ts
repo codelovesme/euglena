@@ -1,9 +1,8 @@
 import * as core from "@euglena/core";
-import { organelle } from "@euglena/template";
+import { organelle, particle } from "@euglena/template";
 import Plantower from "plantower";
 
 import matterSensor = organelle.matterSensor;
-import Particle = core.particle.Particle;
 
 const cp = core.particle.cp;
 const dco = core.organelle.dco;
@@ -52,7 +51,7 @@ let sap: {
 };
 let plantower: any;
 
-export type Sap = Particle<"Sap", typeof sap>;
+export type Sap = particle.common.Sap<typeof sap>;
 
 export default dco<matterSensor.MatterSensor, Sap>({
     Sap: async (p) => {

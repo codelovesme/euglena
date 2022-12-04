@@ -9,8 +9,7 @@ import Particle = core.particle.Particle;
 
 const dco = core.organelle.dco;
 
-export type Sap = Particle<
-    "Sap",
+export type Sap = particle.common.Sap<
     {
         database: string;
 
