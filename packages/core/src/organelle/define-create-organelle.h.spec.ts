@@ -1,5 +1,6 @@
 import { ts } from "cessnalib";
 import { Particle } from "../particle";
+import { CreateOrganelle } from "./create-organelle.h";
 import { dco } from "./define-create-organelle";
 import { extendOrganelleInteractions } from "./organelle-interactions.h";
 
@@ -21,7 +22,7 @@ type COP = extendOrganelleInteractions<{
 
 type SapInteraction = [Particle<"Sap", { a: string; b: number }>];
 
-dco<COP, SapInteraction>({
+export const createOrganelle:CreateOrganelle = dco<COP, SapInteraction>({
     Sap: async (p) => {},
     Aoc: async (p, { t, cp }) => {
         true as unknown as [
