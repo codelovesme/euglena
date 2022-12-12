@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.web-server.express",
     "domain": "codeloves.me",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
