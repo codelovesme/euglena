@@ -22,8 +22,8 @@
         "i2c-bus": "^5.1.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^3.0.1",
-        "@euglena/template": "^3.0.1"
+        "@euglena/core": "^3.0.2",
+        "@euglena/template": "^3.0.2"
     },
     "files": [
         "dist"
