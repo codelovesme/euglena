@@ -3092,6 +3092,13 @@ cessnalib@^0.15.0:
   dependencies:
     sift "^3.3.5"
 
+cessnalib@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.16.0.tgz#768df978437328600c03eff94ec41ab8c5e4ce79"
+  integrity sha512-bAr8CSvRZgxlP7h9m+lcyaL3OOscqhTf4hBzYtl0PeMj9xT3+G7MNVOMNMqFzWzL8wcRoqMn5NbOe5hUklh1Uw==
+  dependencies:
+    sift "^3.3.5"
+
 chalk@^2.0.0, chalk@^2.4.1:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"

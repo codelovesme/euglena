@@ -6,8 +6,9 @@ import { common } from "./particle";
 
 import CreateOrganelle = organelle.CreateOrganelle;
 import OrganelleReceive = organelle.OrganelleReceive;
-import Transmit = organelle.Transmit;
 import Particle = particle.Particle;
+
+type Transmit = (particle: particle.Particle) => Promise<particle.Particle>;
 
 const endoplasmicReticulumName = "EndoplasmicReticulum";
 const nucleusName = "Nucleus";
@@ -17,7 +18,7 @@ const organelles: { [organelleName: string]: OrganelleReceive } = {};
 export const getOrganelles = () => organelles;
 
 export const reviveOrganelle = async ({ data }: common.OrganelleInfo) => {
-    let organelle: CreateOrganelle<Particle, void | Particle> | undefined;
+    let organelle: CreateOrganelle | undefined = undefined;
     switch (data.location.type) {
         case "FileSystemPath":
         case "NodeModules":
@@ -38,19 +39,21 @@ export const reviveOrganelle = async ({ data }: common.OrganelleInfo) => {
     return organelle;
 };
 
-export const attachOrganelle = async (
-    organelleInfo: common.OrganelleInfo,
-    transmit: (particle: Particle) => Promise<Particle | void>
-): Promise<void> => {
+export const attachOrganelle = async (organelleInfo: common.OrganelleInfo, transmit: Transmit): Promise<void> => {
     let createOrganelle = await reviveOrganelle(organelleInfo);
     const { data: organelleInfoData } = organelleInfo;
     if (createOrganelle) {
-        organelles[organelleInfoData.name] = await createOrganelle({ name: organelleInfoData.name, transmit });
-        console.log(`Info - ${organelleInfoData.name} attached to the body.`);
+        const revivedOrganelle = await createOrganelle({ name: organelleInfoData.name, transmit });
+        if (revivedOrganelle) {
+            organelles[organelleInfoData.name] = revivedOrganelle;
+            console.log(`Info - ${organelleInfoData.name} attached to the body.`);
+        } else {
+            throw `Error - ${organelleInfoData.name} can not be revived.`;
+        }
     }
 };
 
-export const transmit: Transmit = async (particle: Particle, target: string) => {
+export const transmit = async (particle: Particle, target: string) => {
     console.log(`Info - Transmitting particle: ${particle.meta.class} to ${target}`);
     const organelleReceive: OrganelleReceive = organelles[target];
     if (!organelleReceive) {
@@ -80,7 +83,7 @@ export const createEuglena = async (particles: Particle[]) => {
             const relatedSap = particles.find(
                 (x) => x.meta.class === "Sap" && (x as common.Sap).meta.organelleName === organelleName
             );
-            if (relatedSap) return await organelleReceive(relatedSap);
+            if (relatedSap) await organelleReceive(relatedSap);
         })
     );
     /**

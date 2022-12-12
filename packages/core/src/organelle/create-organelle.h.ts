@@ -1,10 +1,17 @@
-import { Particle } from "../particle";
+import { OrganelleInteractions } from "./organelle-interactions.h";
 import { OrganelleReceive } from "./organelle-receive.h";
+import { OrganelleTransmit } from "./reaction.h";
+import { ComingParticles, ComingResponseParticle } from "./in-out-particle.h";
+import { getClass, Particle } from "../particle";
+import { ts } from "cessnalib";
 
-export type CreateOrganelle<
-    InComingParticle extends Particle = Particle,
-    OutGoingParticle extends Particle | void = Particle | void
-> = <OrganelleName extends string>(params: {
+export type CreateOrganelle<COP extends OrganelleInteractions = OrganelleInteractions> = <
+    OrganelleName extends string
+>(params: {
     name: OrganelleName;
-    transmit: (particle: Particle) => Promise<Particle | void>;
-}) => OrganelleReceive<InComingParticle, OutGoingParticle>;
+    transmit: OrganelleTransmit<COP>;
+}) => ts.UnionToIntersection<
+    ComingParticles<COP> extends infer P extends Particle
+        ? OrganelleReceive<P, ComingResponseParticle<COP, getClass<P>>>
+        : never
+>;

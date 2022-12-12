@@ -2,11 +2,7 @@ import { Particle } from "../particle";
 
 export interface OrganelleReceive<
     InComingParticle extends Particle = Particle,
-    OutGoingParticle extends Particle | void = Particle | void
+    ComingResponseParticle extends Particle | never = Particle
 > {
-    (particle: InComingParticle): Promise<OutGoingParticle>;
-}
-
-export interface Transmit<P extends Particle = Particle, Resp extends Particle | void = Particle | void> {
-    (particle: P, target: string): Promise<Resp>;
+    (particle: InComingParticle): Promise<ComingResponseParticle extends never ? void : ComingResponseParticle>;
 }

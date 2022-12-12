@@ -1,15 +1,13 @@
-import { util, particle } from "@euglena/template";
-import reticulum from "@euglena/organelle.endoplasmic-reticulum.js";
+import { particle } from "@euglena/template";
+import endoplasmicReticulum from "@euglena/organelle.endoplasmic-reticulum.js";
+import { organelles } from "../constants";
 
-const name = "EndoplasmicReticulum";
-
-export default util.createOrganelleConfig(
-    name,
+export default [
     particle.common.cp("OrganelleInfo", {
-        name: name,
+        name: organelles.endoplasmicReticulum,
         location: {
             type: "InMemory",
-            organelle: reticulum as any
+            organelle: endoplasmicReticulum
         }
     })
-);
+];
