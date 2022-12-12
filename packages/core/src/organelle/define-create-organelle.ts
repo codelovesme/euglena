@@ -11,7 +11,7 @@ import { OrganelleTransmit } from "./reaction.h";
 export const dco: DefineCreateOrganelle =
     <COP extends OrganelleInteractions, I extends Interaction>(
         bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>
-    ): CreateOrganelle<COP> =>
+    ): CreateOrganelle =>
     (<OrganelleName extends string>(params: {
         name: OrganelleName;
         transmit?: OrganelleTransmit<COP>;

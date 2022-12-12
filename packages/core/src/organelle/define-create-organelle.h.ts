@@ -10,6 +10,6 @@ export type InsertSapIntoParticles<COP extends OrganelleInteractions, I extends 
 
 export type DefineCreateOrganelle = <COP extends OrganelleInteractions, I extends Interaction>(
     bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>
-) => CreateOrganelle<COP>;
+) => CreateOrganelle;
 
 import "./define-create-organelle.h.spec";

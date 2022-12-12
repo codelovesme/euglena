@@ -6,3 +6,4 @@ export type OrganelleInteractions = {
 };
 
 export type extendOrganelleInteractions<I extends OrganelleInteractions> = I;
+

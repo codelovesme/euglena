@@ -9,7 +9,7 @@ export default [
         name: organelles.ui,
         location: {
             type: "InMemory",
-            organelle: ui as any
+            organelle: ui
         }
     }),
     core.particle.cp<Sap>(
