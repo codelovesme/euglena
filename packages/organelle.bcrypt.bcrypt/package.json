@@ -20,7 +20,7 @@
     "dependencies": {
         "@types/bcrypt": "^3.0.0",
         "bcrypt": "^4.0.1",
-        "cessnalib": "^0.15.0"
+        "cessnalib": "^0.16.0"
     },
     "peerDependencies": {
         "@euglena/core": "^3.0.1",

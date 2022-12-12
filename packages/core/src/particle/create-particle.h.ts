@@ -17,9 +17,8 @@ export type CreateParticleWithoutClass<P extends Particle> = ts.test.EqualsAny<P
     ? (data: P["data"]) => P
     : (data: P["data"], adds: Omit<P["meta"], "class">) => P;
 
-export type UnionToIntersection<T> = (T extends any ? (x: T) => any : never) extends (x: infer R) => any ? R : never;
 
-export type CreateParticleUnion<ParticleUnion extends Particle> = UnionToIntersection<
+export type CreateParticleUnion<ParticleUnion extends Particle> = ts.UnionToIntersection<
     ParticleUnion extends infer P extends Particle ? CreateParticle<P> : never
 >;
 

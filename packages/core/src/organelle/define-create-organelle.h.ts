@@ -1,7 +1,6 @@
 import { OrganelleInteractions } from "./organelle-interactions.h";
 import { BindOrganelleReactions } from "./bind-reaction.h";
 import { CreateOrganelle } from "./create-organelle.h";
-import { ComingParticles, ComingResponseParticle } from "./in-out-particle.h";
 import { Interaction } from "./interaction.h";
 
 export type InsertSapIntoParticles<COP extends OrganelleInteractions, I extends Interaction> = {
@@ -11,6 +10,6 @@ export type InsertSapIntoParticles<COP extends OrganelleInteractions, I extends 
 
 export type DefineCreateOrganelle = <COP extends OrganelleInteractions, I extends Interaction>(
     bindReactions: BindOrganelleReactions<InsertSapIntoParticles<COP, I>>
-) => CreateOrganelle<ComingParticles<COP>, ComingResponseParticle<COP>>;
+) => CreateOrganelle<COP>;
 
 import "./define-create-organelle.h.spec";

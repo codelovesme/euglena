@@ -1,13 +1,12 @@
 import * as core from "@euglena/core";
-import { util, particle } from "@euglena/template";
+import { particle } from "@euglena/template";
 import ui, { Sap } from "@euglena/organelle.ui.angular";
 import { context } from "../../app/context";
-const name = "UI";
+import { organelles } from "../constants";
 
-export default util.createOrganelleConfig(
-    name,
+export default [
     particle.common.cp("OrganelleInfo", {
-        name: name,
+        name: organelles.ui,
         location: {
             type: "InMemory",
             organelle: ui
@@ -18,6 +17,6 @@ export default util.createOrganelleConfig(
         {
             context
         },
-        { organelleName: name }
+        { organelleName: organelles.ui }
     )
-);
+];

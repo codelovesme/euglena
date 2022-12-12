@@ -1,18 +1,20 @@
 import * as core from "@euglena/core";
-import { util, particle } from "@euglena/template";
+import { particle } from "@euglena/template";
 import ui, { Sap } from "@euglena/organelle.ui.react";
 import rootComponent from "../../components/app";
+import { organelles } from "../constants";
 
-const name = "UI";
-
-export default util.createOrganelleConfig(
-    name,
+export default [
     particle.common.cp("OrganelleInfo", {
-        name: name,
+        name: organelles.ui,
         location: {
             type: "InMemory",
             organelle: ui as any
         }
     }),
-    core.particle.cp<Sap>("Sap", { rootComponent: rootComponent, serviceWorker: false }, { organelleName: name })
-);
+    core.particle.cp<Sap>(
+        "Sap",
+        { rootComponent: rootComponent, serviceWorker: false },
+        { organelleName: organelles.ui }
+    )
+];

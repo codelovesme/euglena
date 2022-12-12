@@ -85,3 +85,5 @@ export type DefineCreateGene = <P extends Particle, O extends Organelles>(
     reaction: GeneReaction<P, O>,
     override?: string
 ) => (organelles: Stringify<O>) => Gene;
+
+import "./gene.h.spec";
