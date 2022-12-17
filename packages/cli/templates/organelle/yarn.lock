@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@euglena/core@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@euglena/core/-/core-3.0.0.tgz#34d8f79df1e8e0dd068457b0cdfef09c1a6582c4"
-  integrity sha512-w4sTCBOfqWX1eG/2U0pbxOEPFgaRdLMb9TnROGBKrPokM7w/GLCF8exF5Lto0odJwkyLIc45s7yxwW4qx3AizA==
+"@euglena/core@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@euglena/core/-/core-3.0.3.tgz#c424e7a826d1712957c14d4e52d1919f0c6b7353"
+  integrity sha512-fJeyWPvP81Ke0nnZIL0P3knfVTFHMt1a1RdSdPchwQ3pf5E8U+luZCdwFAncSX0k1xwJ8AlDffoMT5yOnwk9iQ==
   dependencies:
-    cessnalib "^0.15.0"
+    cessnalib "^0.16.0"
 
-cessnalib@^0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.15.0.tgz#26c2f007a8bc421a87d9b53987e30d452e55481c"
-  integrity sha512-RWjSPJ4yfEp1YCcY7gj7vOp+UML55gy04lD/I1N5CbwY0QqS1yj5CtswWjn+iXV2TYgyhs8gBE7Ovl+emJB9Xg==
+cessnalib@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.16.0.tgz#768df978437328600c03eff94ec41ab8c5e4ce79"
+  integrity sha512-bAr8CSvRZgxlP7h9m+lcyaL3OOscqhTf4hBzYtl0PeMj9xT3+G7MNVOMNMqFzWzL8wcRoqMn5NbOe5hUklh1Uw==
   dependencies:
     sift "^3.3.5"
 
