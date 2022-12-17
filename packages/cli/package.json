@@ -1,7 +1,7 @@
 {
     "name": "@euglena/cli",
     "domain": "codeloves.me",
-    "version": "3.0.3",
+    "version": "3.0.4",
     "private": false,
     "license": "GPL-2.0",
     "main": "dist/index.js",
@@ -17,7 +17,7 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "@euglena/template": "^3.0.3",
+        "@euglena/template": "^3.0.4",
         "child_process": "^1.0.2",
         "commander": "^7.2.0",
         "json-beautify": "^1.1.1"
