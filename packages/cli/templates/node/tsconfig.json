@@ -17,9 +17,10 @@
         "sourceMap": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "declaration": true,
+        "declaration": false,
         "outDir": "dist",
-        "incremental": true
+        "incremental": true,
+        "strictFunctionTypes":true
     },
     "files": ["src/bin/index.ts"]
 }

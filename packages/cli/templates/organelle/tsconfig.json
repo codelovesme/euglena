@@ -1,7 +1,26 @@
 {
-    "extends": "../../tsconfig.json",
+    "version": "3.4.1",
     "compilerOptions": {
-        "outDir": "dist"
-    },
-    "files": ["src/index.ts"]
+        "module": "commonjs",
+        "lib": ["es2018"],
+        "types": ["node"],
+        "target": "es5",
+        "skipLibCheck": true,
+        "strictNullChecks": true,
+        "strict": true,
+        "alwaysStrict": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "declaration": true,
+        "outDir": "dist",
+        "incremental": true,
+        "strictFunctionTypes":true
+    }
 }

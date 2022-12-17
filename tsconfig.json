@@ -16,10 +16,12 @@
         "noUnusedLocals": true,
         "experimentalDecorators": true,
         "sourceMap": true,
+        "declarationMap":true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "declaration": true,
         "outDir": "dist",
-        "incremental": true
+        "incremental": true,
+        "strictFunctionTypes":true
     }
 }

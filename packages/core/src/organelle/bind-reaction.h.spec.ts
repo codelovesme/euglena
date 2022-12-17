@@ -1,5 +1,5 @@
 import { ts } from "cessnalib";
-import { Particle } from "../particle";
+import { Meta, Particle } from "../particle";
 import { extendOrganelleInteractions, OrganelleInteractions } from "./organelle-interactions.h";
 import { ComingParticleNameUnion } from "./in-out-particle.h";
 import { OrganelleReaction } from "./reaction.h";
@@ -26,19 +26,21 @@ type COP = extendOrganelleInteractions<{
 
 type Bind = BindOrganelleReactions<COP>;
 
-// type CP = {
-//     Coc: (
-//         data: boolean,
-//         adds: {
-//             version: string;
-//         }
-//     ) => Coc;
-//     Doc: () => Doc;
-// } & {
-//     AocResponse: (data: boolean) => AocResponse;
-// } & {
-//     Exception: (data: sys.type.Exception) => Exception;
-// };
+type CP = ((class_: "AocResponse", data: boolean) => AocResponse) &
+    ((
+        class_: "Coc",
+        data: boolean,
+        adds: Omit<
+            Meta<
+                "Coc",
+                {
+                    version: string;
+                }
+            >,
+            "class"
+        >
+    ) => Coc) &
+    ((class_: "Doc") => Doc);
 
 type T = ((particle: Coc) => Promise<CocResponse>) & ((particle: Doc) => Promise<never>);
 
@@ -47,25 +49,21 @@ export type Result = [
     AssertSuper<"Aoc" | "Boc", keyof Bind>,
 
     AssertTrue<Equals<ReturnType<Bind["Aoc"]>, Promise<AocResponse>>>,
-    // AssertSuper<Bind["Aoc"], (particle: Aoc, { t, cp }: { t: T; cp: CP }) => Promise<AocResponse | Exception>>
-    // AssertSuper<Bind["Aoc"], (particle: Aoc, { t }: { t: T }) => Promise<AocResponse>>
+    AssertSuper<Bind["Aoc"], (particle: Aoc, { t, cp }: { t: T; cp: CP }) => Promise<AocResponse>>
 ];
 
 const abc = (t: Bind["Aoc"]) => t;
 
-// abc(async (p, { t, cp }) => {
-//     true as unknown as [
-//         AssertTrue<Equals<typeof p, Aoc>>,
-//         AssertTrue<Equals<typeof t, T>>,
-//         AssertTrue<Equals<typeof cp, CP>>
-//     ];
-//     return {} as AocResponse;
-// });
-
-abc(async (p, { t }) => {
+abc(async (p, { t, cp }) => {
     true as unknown as [
         AssertTrue<Equals<typeof p, Aoc>>,
         AssertTrue<Equals<typeof t, T>>,
+        AssertTrue<Equals<typeof cp, CP>>
     ];
+    return {} as AocResponse;
+});
+
+abc(async (p, { t }) => {
+    true as unknown as [AssertTrue<Equals<typeof p, Aoc>>, AssertTrue<Equals<typeof t, T>>];
     return {} as AocResponse;
 });
