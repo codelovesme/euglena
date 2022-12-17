@@ -3,6 +3,7 @@ import { Particle } from "../particle";
 import { CreateOrganelle } from "./create-organelle.h";
 import { dco } from "./define-create-organelle";
 import { extendOrganelleInteractions } from "./organelle-interactions.h";
+import { OrganelleTransmit } from "./reaction.h";
 
 import AssertTrue = ts.test.AssertTrue;
 import Equals = ts.test.Equals;
@@ -27,7 +28,7 @@ export const createOrganelle:CreateOrganelle = dco<COP, SapInteraction>({
     Aoc: async (p, { t, cp }) => {
         true as unknown as [
             AssertTrue<Equals<typeof p, Aoc>>,
-            // AssertSuper<typeof t, OrganelleTransmit<Coc, CocResponse>>,
+            AssertSuper<typeof t, OrganelleTransmit<COP>>,
             AssertTrue<Equals<typeof p, Aoc>>,
             AssertSuper<(class_: "AocResponse", data: boolean) => AocResponse, typeof cp>,
             AssertSuper<(class_: "Coc", data: boolean, adds: any) => Coc, typeof cp>,

@@ -21,7 +21,7 @@ const receive = async (particle: Particle, source: string): Promise<Particle<str
     const triggerableReactions = new Array<{
         index: number;
         triggers: string[];
-        reaction: GeneReaction;
+        reaction: GeneReaction<Particle, Organelles>;
         organelles: Stringify<Organelles>;
     }>();
     for (let i = 0; i < genes.length; i++) {
@@ -37,7 +37,7 @@ const receive = async (particle: Particle, source: string): Promise<Particle<str
         }
     }
     //get rid of overridden reactions
-    const reactions = Array<[GeneReaction, Stringify<Organelles>]>();
+    const reactions = Array<[GeneReaction<Particle, Organelles>, Stringify<Organelles>]>();
     const names = Array<string>();
     for (let tr of triggerableReactions) {
         let doTrigger = true;
@@ -73,11 +73,7 @@ const receive = async (particle: Particle, source: string): Promise<Particle<str
     return allResults.filter((x) => x !== undefined) as Particle<string, unknown, {}>[];
 };
 
-type ExtendedParticles = Particle<
-    common.Particles["meta"]["class"],
-    common.Particles["data"],
-    { cause: string }
->;
+type ExtendedParticles = Particle<common.Particles["meta"]["class"], common.Particles["data"], { cause: string }>;
 
 export type Sap = common.Sap<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }
