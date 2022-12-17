@@ -19,7 +19,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "strictFunctionTypes":true
+    "strictFunctionTypes":true,
+    "sourceMap": true,
+    "declaration": false
   },
   "include": [
     "src"
