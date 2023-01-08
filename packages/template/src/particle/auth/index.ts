@@ -4,4 +4,4 @@ export * from "./permission.h";
 export * from "./session.h";
 export * from "./create-euglena-info.h";
 export * from "./check-authorization.h";
-export * from "./pulse";
+export * from "./pulse.h";
