@@ -1,3 +1,5 @@
 import { particle } from "@euglena/core";
 
-export type Particles = particle.Particle<"Particles", particle.Particle[]>;
+import Particle = particle.Particle;
+
+export type Particles<T extends Particle = Particle> = particle.Particle<"Particles", T[]>;

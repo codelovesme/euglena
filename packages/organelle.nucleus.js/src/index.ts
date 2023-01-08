@@ -64,7 +64,10 @@ const receive = async (particle: Particle, source: string): Promise<Particle<str
         promises = [
             ...promises,
             reaction(particle, source, {
-                t: async (particle: Particle, target: string) => (await transmit(particle, organelles[target])) as any,
+                t: async (particle: Particle, target: string) => {
+                    console.log(`Info - Transmitting particle: ReadParticle to organelle named ${target} in gene`);
+                    return (await transmit(particle, organelles[target])) as any
+                },
                 o: organelles
             })
         ];

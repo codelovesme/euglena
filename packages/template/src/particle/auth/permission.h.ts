@@ -17,7 +17,8 @@ export type Permission = particle.Particle<
                    */
                   role: string;
               }
-            | { euglenaName: string };
+            | { euglenaName: string }
+            | "*";
         receiverEuglenaName: string;
     }
 >;

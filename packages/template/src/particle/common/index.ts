@@ -1,6 +1,6 @@
 export * from "./ack.h";
 export * from "./common-particle.h";
-export * from "./exception.h";
+export * from "./exception";
 export * from "./get-alive.h";
 export * from "./log.h";
 export * from "./nack.h";
