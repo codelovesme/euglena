@@ -35,7 +35,9 @@ export default dcg<
     "Authenticate",
     { meta: { class: "Pulse" }, data: { particle: { meta: { class: "Authenticate" } } } },
     async (pulse, s, { t, o }) => {
-        const { data: { euglenaName, password } } = pulse.data.particle;
+        const {
+            data: { euglenaName, password }
+        } = pulse.data.particle;
         /**
          * Check username and password is not empty
          */
@@ -93,6 +95,19 @@ export default dcg<
         const generateTokenResult = await t(generateToken, "jwt");
 
         /**
+         * Remove old sessions
+         */
+        const removeSessions = cp<vacuole.RemoveParticle>("RemoveParticle", {
+            count: "all",
+            query: {
+                meta: { class: "Session" },
+                data: { decryptedToken: { euglenaName: decryptedTokenData.euglenaName } }
+            }
+        });
+        const removeSessionsResult = await t(removeSessions, "vacuole");
+        if (isParticleClass(removeSessionsResult, "Exception")) return removeSessionsResult;
+
+        /**
          * Insert session
          */
         const session: auth.Session = cp("Session", {
@@ -104,7 +119,7 @@ export default dcg<
             particle: session,
             query: {
                 meta: { class: "Session" },
-                data: { euglenaName }
+                data: { decryptedToken: { euglenaName } }
             }
         });
         const saveSessionResult = await t(saveSession, "vacuole");
