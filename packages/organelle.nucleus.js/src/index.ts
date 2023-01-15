@@ -14,7 +14,7 @@ const cp = core.particle.cp;
 
 let genes: Gene[] = [];
 
-const receive = async (particle: Particle, source: string): Promise<Particle<string, unknown, {}>[]> => {
+const receive = async (particle: Particle, source: string) => {
     console.log(`Info - Received particle ${particle.meta.class} inside the Nucleus`);
 
     //find which genes are matched with properties of the particle
@@ -73,10 +73,9 @@ const receive = async (particle: Particle, source: string): Promise<Particle<str
         ];
     }
     const allResults = await Promise.all(promises);
-    return allResults.filter((x) => x !== undefined) as Particle<string, unknown, {}>[];
+    const result =  allResults.filter((x) => x !== undefined) as Particle[];
+    return cp<common.Particles>("Particles", result);
 };
-
-type ExtendedParticles = Particle<common.Particles["meta"]["class"], common.Particles["data"], { cause: string }>;
 
 export type Sap = common.Sap<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }
@@ -85,8 +84,7 @@ export type Sap = common.Sap<
 export default dco<nucleus.Nucleus, [Sap, ACK | Exception]>({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
-        const result = await receive(particle, source);
-        return cp<ExtendedParticles>("Particles", result) as common.Particles;
+        return await receive(particle, source);
     },
     Sap: async (particle) => {
         try {

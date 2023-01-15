@@ -1,3 +1,5 @@
 {
-    "deno.enable": false
+    "workbench.editorAssociations":{
+        "*.svg":"hediet.vscode-drawio-text"
+    }
 }

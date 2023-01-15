@@ -40,7 +40,7 @@ export default dco<netServer.NetServer, Sap>({
                             res.end(
                                 JSON.stringify(
                                     cp("Impulse", {
-                                        particle: results.data[0],
+                                        particle: results,
                                         source: sap.euglenaName
                                     })
                                 )

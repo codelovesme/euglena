@@ -103,6 +103,7 @@ TODO :
     desire. When off no log except logger organelle printing. This means no internal prints.
 -   Sample project creation video for all types; node, react,angular,organelle
 -   Organelles are needed to be explained. Also organelle impls are needed to be explained in their specific README
+-   Data validation: Just accpet the particle into euglena if this particle is allowed with Permissions. Afterwards validate the particle data structure wise. And drop extra fields if it has. 
 
 ### Packages
 

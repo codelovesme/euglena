@@ -11,3 +11,5 @@ export * from "./create-particle";
 export * from "./euglena-name.h";
 export * from "./revive-organelle.h";
 export * from "./euglena-has-been-born.h";
+export * from "./get-api.h";
+export * from "./api.h";

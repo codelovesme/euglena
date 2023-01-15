@@ -4,5 +4,13 @@ import { Session } from "./session.h";
 import { CheckAuthorization } from "./check-authorization.h";
 import { Pulse } from "./pulse.h";
 import { CreateEuglenaInfo } from "./create-euglena-info.h";
+import { GetMyApi } from "./get-my-api.h";
 
-export type AuthParticle = EuglenaInfo | Session | Permission | CheckAuthorization | CreateEuglenaInfo | Pulse;
+export type AuthParticle =
+    | EuglenaInfo
+    | Session
+    | Permission
+    | CheckAuthorization
+    | CreateEuglenaInfo
+    | Pulse
+    | GetMyApi;
