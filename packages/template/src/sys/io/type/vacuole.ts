@@ -1,11 +1,12 @@
 import { sys } from "cessnalib";
 import { particle, organelle } from "@euglena/core";
-import { common } from "../particle";
 
 import ComingParticles = organelle.ComingParticles;
 import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
 import Particle = particle.Particle;
 import CreateParticleUnion = particle.CreateParticleUnion;
+import { ACK } from "../ack.particle.h";
+import { Exception } from "../exception";
 
 export type Count = "all" | number;
 export type ReadParticle<P extends Particle = Particle> = particle.Particle<
@@ -30,13 +31,13 @@ export type Hibernate = particle.Particle<"Hibernate">;
 
 export type Vacuole = extendOrganelleInteractions<{
     in: [
-        [SaveParticle, common.ACK | common.Exception],
-        [ReadParticle, Particle<"Particles", Particle[]> | common.Exception],
-        [RemoveParticle, common.ACK | common.Exception],
-        [common.GetAlive, common.ACK | common.Exception],
+        [SaveParticle, ACK | Exception],
+        [ReadParticle, Particle<"Particles", Particle[]> | Exception],
+        [RemoveParticle, ACK | Exception],
+        [GetAlive, ACK | Exception],
         Hibernate
     ];
-    out: [common.Log];
+    out: [Log];
 }>;
 
 export const createParticle = particle.cp as CreateParticleUnion<ComingParticles<Vacuole>>;

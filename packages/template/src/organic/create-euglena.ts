@@ -1,7 +1,7 @@
 import { particle, organelle } from "@euglena/core";
 import { sys } from "cessnalib";
 import { nucleus } from "./organelle";
-import { ReceiveParticle } from "./organelle/nucleus";
+import { ReceiveParticle } from "./common/logic/nucleus";
 import { common } from "./particle";
 
 import CreateOrganelle = organelle.CreateOrganelle;

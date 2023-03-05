@@ -6,14 +6,7 @@ import extendOrganelleInteractions = organelle.extendOrganelleInteractions;
 import Particle = particle.Particle;
 import CreateParticleUnion = particle.CreateParticleUnion;
 
-export type Impulse = particle.Particle<
-    "Impulse",
-    {
-        particle: Particle;
-        source: string;
-        token?: string;
-    }
->;
+
 
 export type NetServer = extendOrganelleInteractions<{
     in: [common.GetAlive];

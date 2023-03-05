@@ -1,5 +1,5 @@
 import * as core from "@euglena/core";
-import { Exception } from "./exception.h";
+import { Exception } from "./exception.particle.h";
 
 import Particle = core.particle.Particle;
 
