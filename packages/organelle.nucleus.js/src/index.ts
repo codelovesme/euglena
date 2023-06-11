@@ -1,18 +1,7 @@
-import { js, sys } from "cessnalib";
-import { Gene, GeneReaction, Organelles, Stringify } from "./gene.h";
-import * as core from "@euglena/core";
-import { organelle, particle, transmit } from "@euglena/template";
-
-import ACK = particle.common.ACK;
-import common = particle.common;
-import Exception = particle.common.Exception;
-import nucleus = organelle.nucleus;
-import Particle = core.particle.Particle;
-
-const dco = core.organelle.dco;
-const cp = core.particle.cp;
-
-let genes: Gene[] = [];
+import { Particle, cp, dco } from "@euglena/core";
+import { cell, type } from "@euglena/template";
+import * as cessnalib from "cessnalib";
+let genes: cell.genetics.Gene[] = [];
 
 const receive = async (particle: Particle, source: string) => {
     console.log(`Info - Received particle ${particle.meta.class} inside the Nucleus`);
@@ -21,12 +10,12 @@ const receive = async (particle: Particle, source: string) => {
     const triggerableReactions = new Array<{
         index: number;
         triggers: string[];
-        reaction: GeneReaction<Particle, Organelles>;
-        organelles: Stringify<Organelles>;
+        reaction: cell.genetics.GeneReaction<Particle, cell.genetics.Organelles>;
+        organelles: cell.genetics.Stringify<cell.genetics.Organelles>;
     }>();
     for (let i = 0; i < genes.length; i++) {
         let triggers: any = genes[i].data.triggers;
-        if (js.Class.doesMongoCover(particle, triggers)) {
+        if (cessnalib.js.Class.doesMongoCover(particle, triggers)) {
             const reaction = genes[i].data.reaction;
             triggerableReactions.push({
                 index: i,
@@ -37,7 +26,7 @@ const receive = async (particle: Particle, source: string) => {
         }
     }
     //get rid of overridden reactions
-    const reactions = Array<[GeneReaction<Particle, Organelles>, Stringify<Organelles>]>();
+    const reactions = Array<[cell.genetics.GeneReaction<Particle, cell.genetics.Organelles>, cell.genetics.Stringify<cell.genetics.Organelles>]>();
     const names = Array<string>();
     for (let tr of triggerableReactions) {
         let doTrigger = true;
@@ -46,7 +35,7 @@ const receive = async (particle: Particle, source: string) => {
             //if it is the same object, do nothing
             if (tr.index === tr2.index) continue;
             //then if triggers of tr2 does not contain triggers of tr, do nothing
-            if (!sys.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers)) continue;
+            if (!cessnalib.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers)) continue;
             //then check if tr2 overrides tr
             doTrigger = genes[tr2.index].data.override !== genes[tr.index].data.name;
         }
@@ -66,22 +55,22 @@ const receive = async (particle: Particle, source: string) => {
             reaction(particle, source, {
                 t: async (particle: Particle, target: string) => {
                     console.log(`Info - Transmitting particle: ReadParticle to organelle aliased ${target} in gene`);
-                    return (await transmit(particle, organelles[target])) as any
+                    return (await cell.transmit(particle, organelles[target])) as any
                 },
                 o: organelles
             })
         ];
     }
     const allResults = await Promise.all(promises);
-    const result =  allResults.filter((x) => x !== undefined) as Particle[];
-    return cp<common.Particles>("Particles", result);
+    const result = allResults.filter((x) => x !== undefined) as Particle[];
+    return cp<type.Particles>("Particles", result);
 };
 
-export type Sap = common.Sap<
-    { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: Gene[]; type: "InMemory" }
+export type Sap = cell.organelle.Sap<
+    { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: cell.genetics.Gene[]; type: "InMemory" }
 >;
 
-export default dco<nucleus.Nucleus, [Sap, ACK | Exception]>({
+export default dco<cell.genetics.Nucleus, [Sap, type.ACK | type.Exception]>({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         return await receive(particle, source);
@@ -98,13 +87,12 @@ export default dco<nucleus.Nucleus, [Sap, ACK | Exception]>({
                     genes = particle.data.genes;
                     break;
             }
-            return common.cp("ACK");
+            return cp("ACK") as type.ACK;
         } catch (error: any) {
-            return cp<Exception>("Exception", new sys.type.Exception(error.message));
+            return cp<type.Exception>("Exception", new cessnalib.type.Exception(error.message));
         }
+    },
+    GetGenes: async () => {
+        return cp<type.Particles>("Particles", genes) as any;
     }
 });
-
-export * from "./gene";
-export * from "./gene.h";
-export * as util from "./util";

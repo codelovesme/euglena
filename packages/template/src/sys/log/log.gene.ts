@@ -1,9 +1,8 @@
-import "@euglena/core";
-import { dcg } from "@euglena/organelle.nucleus.js";
-import { Log } from "./log.particle.h";
-import { Logger } from "./logger.organelle";
+import { genetics } from "../../cell"
+import { Log } from "./log.par.h";
+import { Logger } from "./logger.org.h";
 
-export default dcg<
+export default genetics.dcg<
     Log,
     {
         logger: Logger;

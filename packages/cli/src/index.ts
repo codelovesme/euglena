@@ -4,7 +4,7 @@ import * as path from "path";
 import { program } from "commander";
 import { mkdirSync } from "fs";
 import { execSync } from "child_process";
-import { ce } from "@euglena/template";
+import { cell } from "@euglena/template";
 
 const packageJson = require("../package.json");
 
@@ -59,7 +59,7 @@ const main = () => {
         .action(async (path_: string) => {
             const particlesModule = require(path.join(process.cwd(), path_));
             const particles = "default" in particlesModule ? particlesModule.default : particlesModule;
-            ce(particles);
+            cell.ce(particles);
         });
 
     program.parse(process.argv);

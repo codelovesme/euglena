@@ -1,14 +1,14 @@
 import { organelle } from "@euglena/template";
-import endoplasmicReticulum from "@euglena/organelle.endoplasmic-reticulum.js";
+import reticulum from "@euglena/organelle.reticulum.js";
 
 import { organelles } from "../constants";
 
 export default [
-    organelle.endoplasmicReticulum.cp("OrganelleInfo", {
-        name: organelles.endoplasmicReticulum,
+    organelle.reticulum.cp("OrganelleInfo", {
+        name: organelles.reticulum,
         location: {
             type: "InMemory",
-            organelle: endoplasmicReticulum
+            organelle: reticulum
         }
     })
 ];

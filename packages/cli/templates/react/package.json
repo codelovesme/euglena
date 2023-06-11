@@ -9,7 +9,7 @@
         "@euglena/organelle.timer.js": "^3.0.3",
         "@euglena/organelle.ui.react": "^3.0.3",
         "@euglena/organelle.vacuole.js": "^3.0.3",
-        "@euglena/organelle.endoplasmic-reticulum.js": "^3.0.3",
+        "@euglena/organelle.reticulum.js": "^3.0.3",
         "@euglena/organelle.nucleus.js": "^3.0.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "@euglena/core": "^3.0.4",
-        "cessnalib": "^0.16.0"
+        "cessnalib": "^0.17.0"
     },
     "files": [
         "dist"

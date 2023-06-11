@@ -1,13 +1,8 @@
-import * as core from "@euglena/core";
-import { organelle, particle } from "@euglena/template";
+import { dco } from "@euglena/core";
+import { cell, sys, type } from "@euglena/template";
 import express, { Express } from "express";
 
-import webServer = organelle.webServer;
-import Particles = particle.common.Particles;
-
-const dco = core.organelle.dco;
-
-export type Sap = particle.common.Sap<{
+export type Sap = cell.organelle.Sap<{
     port: number;
 }>;
 
@@ -18,7 +13,7 @@ let sap: {
 const parsePathParams = (path: string): string[] => {
     return path.split("/:").slice(1);
 };
-export default dco<webServer.WebServer, Sap>({
+export default dco<sys.io.net.http.HttpServer, Sap>({
     Sap: async ({ data }, { cp, t }) => {
         sap = data;
         app = express();
@@ -32,26 +27,26 @@ export default dco<webServer.WebServer, Sap>({
                     method,
                     pathParams: pathParams
                         ? pathParams.reduce(
-                              (acc, curr) => ({
-                                  ...acc,
-                                  [curr]: req.params[curr]
-                              }),
-                              {}
-                          )
+                            (acc, curr) => ({
+                                ...acc,
+                                [curr]: req.params[curr]
+                            }),
+                            {}
+                        )
                         : {},
                     queryParams: queryParams
                         ? queryParams.reduce(
-                              (acc, curr) => ({
-                                  ...acc,
-                                  [curr]: req.query[curr]
-                              }),
-                              {}
-                          )
+                            (acc, curr) => ({
+                                ...acc,
+                                [curr]: req.query[curr]
+                            }),
+                            {}
+                        )
                         : {},
                     body: req.body,
                     headers: req.headers
                 })
-            )) as Particles;
+            )) as type.Particles;
             res.send(resp.data[0]);
         });
     },

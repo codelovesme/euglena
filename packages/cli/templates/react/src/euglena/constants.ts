@@ -1,6 +1,6 @@
 export const organelles = {
     bcrypt: "Bcrypt",
-    endoplasmicReticulum: "EndoplasmicReticulum",
+    reticulum: "Reticulum",
     jwt: "JWT",
     logger: "Logger",
     netServer: "NetServer",

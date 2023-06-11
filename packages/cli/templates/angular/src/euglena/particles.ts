@@ -1,3 +1,3 @@
-import { particle } from "@euglena/core";
+import { cp } from "@euglena/core";
 
-export default [particle.cp("EuglenaName", "must_be_replaced")];
+export default [cp("EuglenaName", "must_be_replaced")];

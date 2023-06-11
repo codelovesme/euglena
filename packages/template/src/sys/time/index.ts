@@ -1,2 +1,5 @@
-export * as timer from "./timer.organelle";
-export * from "./time.particle.h";
+export * from "./read-time.par.h";
+export * from "./set-time.par.h";
+export * from "./time.par.h";
+export * from "./timer.org.h";
+export * from "./timer.org.u";

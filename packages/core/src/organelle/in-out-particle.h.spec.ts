@@ -1,19 +1,19 @@
 import { ts } from "cessnalib";
 import { Particle } from "../particle";
-import { extendOrganelleInteractions } from "./organelle-interactions.h";
+import { createOrganelleInteractions } from "./organelle-interactions.h";
 import {
     TriggerParticleFromInteraction,
     ResponseParticleFromInteraction,
     ComingParticleNameUnion,
-    ComingResponseParticleNameUnion,
+    ComingParticleResponseNameUnion,
     GoingParticleNameUnion,
-    GoingResponseParticleNameUnion,
-    ComingParticles,
+    GoingParticleResponseNameUnion,
+    ComingParticleUnion,
     ComingParticle,
-    GoingParticles,
+    GoingParticleUnion,
     GoingParticle,
     AllParticleNameUnion,
-    AllParticles
+    AllParticleUnion
 } from "./in-out-particle.h";
 
 import AssertTrue = ts.test.AssertTrue;
@@ -27,7 +27,7 @@ type Doc = Particle<"Doc", boolean>;
 type CocResponse = Particle<"CocResponse", boolean>;
 type AocResponse = Particle<"AocResponse", boolean>;
 
-type COP = extendOrganelleInteractions<{
+type COP = createOrganelleInteractions<{
     in: [[Aoc, AocResponse], [Boc]];
     out: [[Coc, CocResponse], [Doc]];
 }>;
@@ -48,17 +48,17 @@ export type Result = [
     AssertSuper<ComingParticleNameUnion<COP>, "Aoc" | "Boc">,
     AssertSuper<"Aoc" | "Boc", ComingParticleNameUnion<COP>>,
 
-    AssertSuper<ComingResponseParticleNameUnion<COP>, "AocResponse">,
-    AssertSuper<"AocResponse", ComingResponseParticleNameUnion<COP>>,
+    AssertSuper<ComingParticleResponseNameUnion<COP>, "AocResponse">,
+    AssertSuper<"AocResponse", ComingParticleResponseNameUnion<COP>>,
 
     AssertSuper<GoingParticleNameUnion<COP>, "Coc" | "Doc">,
     AssertSuper<"Coc" | "Doc", GoingParticleNameUnion<COP>>,
 
-    AssertSuper<GoingResponseParticleNameUnion<COP>, "CocResponse">,
-    AssertSuper<"CocResponse", GoingResponseParticleNameUnion<COP>>,
+    AssertSuper<GoingParticleResponseNameUnion<COP>, "CocResponse">,
+    AssertSuper<"CocResponse", GoingParticleResponseNameUnion<COP>>,
 
-    AssertSuper<ComingParticles<COP>, Aoc | Boc>,
-    AssertSuper<Aoc | Boc, ComingParticles<COP>>,
+    AssertSuper<ComingParticleUnion<COP>, Aoc | Boc>,
+    AssertSuper<Aoc | Boc, ComingParticleUnion<COP>>,
 
     AssertSuper<ComingParticle<COP, "Aoc">, Aoc>,
     AssertTrue<Equals<ComingParticle<COP, "Aoc">, Aoc>>,
@@ -66,8 +66,8 @@ export type Result = [
     AssertSuper<ComingParticle<COP, "Boc">, Boc>,
     AssertTrue<Equals<ComingParticle<COP, "Boc">, Boc>>,
 
-    AssertSuper<GoingParticles<COP>, Coc | Doc>,
-    AssertSuper<Coc | Doc, GoingParticles<COP>>,
+    AssertSuper<GoingParticleUnion<COP>, Coc | Doc>,
+    AssertSuper<Coc | Doc, GoingParticleUnion<COP>>,
 
     AssertSuper<GoingParticle<COP, "Coc">, Coc>,
     AssertTrue<Equals<GoingParticle<COP, "Coc">, Coc>>,
@@ -84,6 +84,6 @@ export type Result = [
     AssertSuper<AllParticleNameUnion<COP>, "Aoc" | "Boc" | "Coc" | "Doc" | "CocResponse" | "AocResponse">,
     AssertSuper<"Aoc" | "Boc" | "Coc" | "Doc" | "CocResponse" | "AocResponse", AllParticleNameUnion<COP>>,
 
-    AssertSuper<AllParticles<COP>, Aoc | Boc | Coc | Doc | CocResponse | AocResponse>,
-    AssertSuper<Aoc | Boc | Coc | Doc | CocResponse | AocResponse, AllParticles<COP>>
+    AssertSuper<AllParticleUnion<COP>, Aoc | Boc | Coc | Doc | CocResponse | AocResponse>,
+    AssertSuper<Aoc | Boc | Coc | Doc | CocResponse | AocResponse, AllParticleUnion<COP>>
 ];

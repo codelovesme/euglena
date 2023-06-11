@@ -1,5 +1,5 @@
 export const organelles = {
-    endoplasmicReticulum: "EndoplasmicReticulum",
+    reticulum: "Reticulum",
     logger: "Logger",
     nucleus: "Nucleus",
     vacuole: "Vacuole",

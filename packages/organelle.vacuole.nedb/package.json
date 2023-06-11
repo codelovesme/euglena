@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "@types/nedb": "~1.8.9",
-        "cessnalib": "^0.16.0",
+        "cessnalib": "^0.17.0",
         "nedb": "^1.8.0"
     },
     "peerDependencies": {

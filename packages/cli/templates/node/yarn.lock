@@ -9,9 +9,9 @@
   dependencies:
     cessnalib "^0.16.0"
 
-"@euglena/organelle.endoplasmic-reticulum.js@^3.0.3":
+"@euglena/organelle.reticulum.js@^3.0.3":
   version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@euglena/organelle.endoplasmic-reticulum.js/-/organelle.endoplasmic-reticulum.js-3.0.3.tgz#1e16f7b78c9228d2a16f23c0bdf0d23cf9ebfc53"
+  resolved "https://registry.yarnpkg.com/@euglena/organelle.reticulum.js/-/organelle.reticulum.js-3.0.3.tgz#1e16f7b78c9228d2a16f23c0bdf0d23cf9ebfc53"
   integrity sha512-RT62QOuQOMkpZK3HiPDBPq3bXRUSPCjM6jq8n+DtCfKVBNqI6m5guueWjT8e7kZBLep1pdu+rWZc11gLJkPN1w==
   dependencies:
     cessnalib "^0.16.0"
