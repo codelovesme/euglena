@@ -1,31 +1,23 @@
-import * as core from "@euglena/core";
-import { particle, organelle } from "@euglena/template";
+import * as cessnalib from "cessnalib";
+import { cp, dco } from "@euglena/core";
+import { cell, sys, type } from "@euglena/template";
 import * as fs from "fs";
-import { sys } from "cessnalib";
 
-import fsOrganelle = organelle.fs;
-import common = particle.common;
-
-const cp = core.particle.cp;
-const dco = core.organelle.dco;
-
-export type Sap = particle.common.Sap;
-
-const _fsOrganelle = dco<fsOrganelle.FS, Sap>({
-    Sap: async (p) => {},
+const _fsOrganelle = dco<sys.io.store.fs.FS, cell.organelle.Sap>({
+    Sap: async (p) => { },
     ReadFile: ({ data: { filePath, encoding } }) => {
         return new Promise((resolve) => {
             fs.readFile(filePath, encoding, (err, data) => {
-                if (err) return resolve(common.cp("Exception", new sys.type.Exception(JSON.stringify(err))));
-                return resolve(cp<fsOrganelle.FileContent>("FileContent", data as string));
+                if (err) return resolve(cp<type.Exception>("Exception", new cessnalib.type.Exception(JSON.stringify(err))));
+                return resolve(cp<sys.io.store.fs.FileContent>("FileContent", data as string));
             });
         });
     },
     WriteFile: ({ data: { filePath, content, encoding } }) => {
         return new Promise((resolve) => {
             fs.writeFile(filePath, content, { encoding }, (err) => {
-                if (err) return resolve(common.cp("Exception", new sys.type.Exception(JSON.stringify(err))));
-                return resolve(common.cp("ACK"));
+                if (err) return resolve(cp<type.Exception>("Exception", new cessnalib.type.Exception(JSON.stringify(err))));
+                return resolve(cp<type.ACK>("ACK"));
             });
         });
     }

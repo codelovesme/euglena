@@ -1,9 +1,8 @@
-import { TransmitParticle } from "./transmit-particle.par.h";
 import { Log } from "../../../log";
-import { createOrganelleInteractions } from "@euglena/core";
-import { ACK, Exception } from "../../../../type";
+import { Particle, createOrganelleInteractions } from "@euglena/core";
+import { Impulse } from "./impulse.par.h";
 
 export type NetClient = createOrganelleInteractions<{
-    in: [[TransmitParticle, ACK | Exception]];
+    in: [[Impulse, Particle]];
     out: [Log];
 }>;

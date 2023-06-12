@@ -6,3 +6,4 @@ export * from "./particles.par.h";
 export * from "./particles.par.u";
 export * from "./boolean.par.h";
 export * from "./string.par.h";
+export * from "../env/geo/coordinate.par.h";

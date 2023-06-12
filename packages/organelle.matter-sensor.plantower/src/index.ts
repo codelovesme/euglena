@@ -1,11 +1,6 @@
-import * as core from "@euglena/core";
-import { organelle, particle } from "@euglena/template";
-import Plantower from "plantower";
-
-import matterSensor = organelle.matterSensor;
-
-const cp = core.particle.cp;
-const dco = core.organelle.dco;
+import { cp, dco } from "@euglena/core";
+import { cell, sys } from "@euglena/template";
+import  Plantower from "plantower";
 
 interface Value {
     value: number;
@@ -51,16 +46,16 @@ let sap: {
 };
 let plantower: any;
 
-export type Sap = particle.common.Sap<typeof sap>;
+export type Sap = cell.organelle.Sap<typeof sap>;
 
-export default dco<matterSensor.MatterSensor, Sap>({
+export default dco<sys.io.sensor.MatterSensor, Sap>({
     Sap: async (p) => {
         sap = p.data;
         plantower = new Plantower(sap.model, sap.path);
     },
     Read: async (p) => {
         const result: Result = await plantower.read();
-        return cp<matterSensor.Matter>("Matter", [
+        return cp<sys.io.sensor.Matter>("Matter", [
             { pm: 1, type: "Normal", value: result["concentration_pm1.0_normal"].value },
             { pm: 2.5, type: "Normal", value: result["concentration_pm2.5_normal"].value },
             { pm: 10, type: "Normal", value: result["concentration_pm10_normal"].value },

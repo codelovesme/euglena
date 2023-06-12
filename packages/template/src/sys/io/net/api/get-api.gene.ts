@@ -1,17 +1,11 @@
 import { cp } from "@euglena/core";
-import { genetics } from "../../../../cell";
+import { genetics, getEuglenaName } from "../../../../cell";
 import { isException } from "../../../../type";
 import { Log, Logger } from "../../../log";
 import { vacuole } from "../../store";
-import { Pulse } from "../auth";
-import { createGetEuglenaName } from "../bare/handle-impulse.gene";
+import { Permission, Pulse, getSenderPermissions } from "../auth";
 import { GetApi } from "./get-api.par.h";
 import { Api } from "./api.par.h";
-import { vacuole } from "../../store";
-
-const getSenderPermissions = (sender: string) => {
-    return
-}
 
 export default genetics.dcg<
     Pulse<GetApi>,
@@ -25,24 +19,17 @@ export default genetics.dcg<
     "Get Api",
     { meta: { class: "Pulse" }, data: { particle: { meta: { class: "GetApi" } } } },
     async (p, s, { t, o }) => {
-        const getEuglenaName = createGetEuglenaName(t, { alias: "temporaryVacuole", name: o.temporaryVacuole });
         //read euglenaName
-        const euglenaName = await getEuglenaName();
+        const euglenaName = await getEuglenaName(t, "temporaryVacuole");
         if (isException(euglenaName)) return euglenaName;
 
         //log euglenaName
         await t(cp<Log>("Log", { message: `EuglenaName: ${euglenaName.data}`, level: "Info" }), "logger");
 
         //Read permissons of the euglena
-        t(cp<vacuole.ReadParticle>("ReadParticle",{
-            count:"all",
-            query: {}
-        }), o.permanentVacuole)
-        const permissions = await getSenderPermissions(p.data.sender);
+        const permissions = await getSenderPermissions(t, "permanentVacuole", euglenaName, p.data.sender);
         if (isException(permissions)) return permissions;
-        return cp<Api>(
-            "Api",
-            permissions.data.reduce((acc, curr) => [...acc, ...curr.data.particles], [] as Particle[])
-        );
+        const allowedParticles = permissions.data.reduce((acc, curr) => [...acc, ...(curr as Permission).data.particles], [] as string[])
+        return cp<Api>("Api", allowedParticles);
     }
 );

@@ -1,29 +1,20 @@
-import * as core from "@euglena/core";
-import {  } from "@euglena/template";
+import { dco, cp } from "@euglena/core";
+import { cell, sys, type } from "@euglena/template";
 import http from "axios";
 
-import netClient = organelle.netClient;
+let destination: string;
 
-const dco = core.organelle.dco;
-
-export type Sap = particle.common.Sap;
-
-export default dco<netClient.NetClient,Sap>({
-    Sap: async () => {},
-    TransmitParticle: async (
-        {
-            data: {
-                particle,
-                target: { host, port }
-            }
-        },
-        { cp, t }
-    ) => {
-        t(cp("Log",{ message: `Particle got to sent ${JSON.stringify(particle.meta)}`, level: "Info" }));
+export default dco<sys.io.net.bare.NetClient, cell.organelle.Sap<{
+    destination: string
+}>>({
+    Sap: async (p) => { destination = p.data.destination },
+    Impulse: async (impulse, { cp: _cp, t }) => {
+        t(_cp("Log", { message: `Particle got to sent ${JSON.stringify(impulse.data.particle.meta)}`, level: "Info" }));
         try {
-            return (await http.post(`http://${host}:${port}`, particle)).data;
-        } catch (e:any) {
-            return cp("Exception",{ message: JSON.stringify(e) });
+            const response = await http.post(destination, impulse);
+            return response.data;
+        } catch (e: any) {
+            return cp<type.Exception>("Exception", { message: JSON.stringify(e) });
         }
     }
 });

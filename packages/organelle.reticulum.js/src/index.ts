@@ -1,19 +1,12 @@
-import * as core from "@euglena/core";
-import { organelle, attachOrganelle, particle, transmit } from "@euglena/template";
+import { OrganelleTransmit, dco } from "@euglena/core";
+import { cell } from "@euglena/template";
 
-import reticulum = organelle.reticulum;
-import Reticulum = reticulum.Reticulum;
-
-const dco = core.organelle.dco;
-
-export type Sap = particle.common.Sap;
-
-export default dco<Reticulum, Sap>({
+export default dco<cell.organelle.Reticulum, cell.organelle.Sap>({
     Sap: async (p) => {},
     OrganelleInfo: async (particle, { t }) => {
-        return await attachOrganelle(particle, t as unknown as core.organelle.OrganelleTransmit);
+        return await cell.attachOrganelle(particle, t as unknown as OrganelleTransmit);
     },
     TransmitParticle: async (p) => {
-        return await transmit(p.data.particle, p.data.target);
+        return await cell.transmit(p.data.particle, p.data.target);
     }
 });

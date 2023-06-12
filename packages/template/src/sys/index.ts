@@ -1,6 +1,5 @@
 export * as io from "./io";
 export * as log from "./log";
-export * as time from "./time";
 export * as crypt from "./crypt";
 export * from "./get-package.par.h";
 export * from "./lib.org.h";

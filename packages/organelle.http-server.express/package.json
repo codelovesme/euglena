@@ -1,5 +1,5 @@
 {
-    "name": "@euglena/organelle.web-server.express",
+    "name": "@euglena/organelle.http-server.express",
     "domain": "codeloves.me",
     "version": "3.0.4",
     "main": "dist/index.js",

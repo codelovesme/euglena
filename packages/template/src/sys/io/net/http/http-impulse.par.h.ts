@@ -4,13 +4,13 @@ import { Particle } from "@euglena/core";
 import Headers = type.Headers;
 
 export type HttpImpulse = Particle<
-    "WebServerImpulse",
+    "HttpImpulse",
     {
         path: string;
         method: "get" | "post" | "put" | "delete";
-        queryParams: object;
-        pathParams: object;
-        headers?: Headers;
+        queryParams: Record<string,string>;
+        pathParams: Record<string,string>;
+        headers: Headers;
         body: object;
     }
 >;

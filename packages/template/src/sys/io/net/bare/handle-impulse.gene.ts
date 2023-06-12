@@ -1,30 +1,15 @@
 import * as cessnalib from "cessnalib";
 import { cp, isParticleClass } from "@euglena/core";
-import { EuglenaName } from "../../../../cell";
+import { getEuglenaName } from "../../../../cell";
 import { vacuole } from "../../store";
 import { Logger } from "../../../log";
 import { Exception, Particles, getFirstParticle, isException } from "../../../../type";
 import { genetics } from "../../../../cell";
 import { Impulse } from "./impulse.par.h";
 import { Decrypt, Encryptor } from "../../../crypt";
-import { EuglenaInfo, Permission, Pulse, Session } from "../auth";
+import { EuglenaInfo, Permission, Pulse, Session, getSenderPermissions } from "../auth";
 
-export const createGetEuglenaName = (transmit: any, vacuole: { alias: string; name: string }) => async () => {
-    const readEuglenaName = cp<vacuole.ReadParticle>("ReadParticle", {
-        query: { meta: { class: "EuglenaName" } },
-        count: 1
-    });
-    const euglenaNames = (await transmit(readEuglenaName, vacuole.alias)) as Particles<EuglenaName> | Exception;
-    if (isException(euglenaNames)) return euglenaNames;
-    const euglenaName = getFirstParticle(euglenaNames);
-    if (!euglenaName) {
-        return cp<Exception>(
-            "Exception",
-            new cessnalib.type.Exception(`There is no EuglenaName stored in ${vacuole.name}`)
-        );
-    }
-    return euglenaName;
-};
+
 
 export default genetics.dcg<
     Impulse,
@@ -37,30 +22,10 @@ export default genetics.dcg<
     }
 >("Handle impulse", { meta: { class: "Impulse" } }, async (p, s, { t, o }) => {
     const { particle, token } = p.data;
-    const getEuglenaName = createGetEuglenaName(t, { alias: "temporaryVacuole", name: o.temporaryVacuole });
-
-    const euglenaName = await getEuglenaName();
+    const euglenaName = await getEuglenaName(t, "temporaryVacuole");
     if (isException(euglenaName)) return euglenaName;
 
     //#region function definitions
-    const getSenderPermissions = async (sender?: EuglenaInfo) => {
-        const getPermissions = cp<vacuole.ReadParticle>("ReadParticle", {
-            query: { meta: { class: "Permission" }, data: { receiverEuglenaName: euglenaName.data } },
-            count: 1
-        });
-        const permissions = (await t(getPermissions, "permanentVacuole")) as Particles<Permission> | Exception;
-        if (isException(permissions)) return permissions;
-        //Check if sender is permitted
-        const senderPermissionsData = permissions.data.filter(
-            (permission) =>
-                permission.data.sender === "*" ||
-                (sender &&
-                    ("role" in permission.data.sender
-                        ? sender.data.roles.includes(permission.data.sender.role)
-                        : permission.data.sender.euglenaName == sender.data.euglenaName))
-        );
-        return cp<Particles>("Particles", senderPermissionsData) as Particles<Permission>;
-    };
     const releaseParticle = async (sender?: EuglenaInfo) => {
         const releaseParticle = cp<genetics.ReceiveParticle>("ReceiveParticle", {
             particle: cp<Pulse>("Pulse", {
@@ -123,7 +88,7 @@ export default genetics.dcg<
     }
 
     //Read permissons of the euglena
-    const senderPermissions = await getSenderPermissions(sender);
+    const senderPermissions = await getSenderPermissions(t, "permanentVacuole", euglenaName, sender);
     if (isException(senderPermissions)) return senderPermissions;
 
     //Check if sender is permitted

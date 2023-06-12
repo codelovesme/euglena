@@ -22,7 +22,7 @@ export default dco<sys.io.net.http.HttpServer, Sap>({
         const pathParams = parsePathParams(path);
         app[method](`${path}`, async (req, res) => {
             const resp = (await t(
-                cp("WebServerImpulse", {
+                cp("HttpImpulse", {
                     path,
                     method,
                     pathParams: pathParams
