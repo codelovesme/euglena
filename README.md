@@ -142,3 +142,8 @@ If it is a folder containing particle and / or organelle definitions and / or ot
     import * as klm from "./klm"
 
 ![folder-module-structure](docs/folder-module-structure.svg)
+
+## Release Notes
+### 4.0.0
+
+Namespace refactoring, replacing 
