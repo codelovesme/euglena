@@ -1,18 +1,20 @@
 import { cp, createParticle, isParticleClass } from "@euglena/core";
-import { genetics } from "../../../../cell";
 import { Encrypt, Encryptor, Hash } from "../../../crypt";
 import { vacuole } from "../../store";
 import { CreateEuglenaInfo } from "./create-euglena-info.par.h";
 import { EuglenaInfo } from "./euglena-info.par.h";
-import { ACK, Exception } from "../../../../type";
+import { Exception } from "../../../../exception.par.h";
+import { ACK } from "../../../../ack.par.h";
+import { dcg } from "../../../../cell/genetics/gene.u";
+import { Nucleus } from "../../../../cell/genetics/nucleus.org.h";
 
 
-export default genetics.dcg<
+export default dcg<
     CreateEuglenaInfo,
     {
         vacuole: vacuole.Vacuole;
         bcrypt: Encryptor;
-        nucleus: genetics.Nucleus;
+        nucleus: Nucleus;
     }
 >("Create EuglenaInfo", { meta: { class: "CreateEuglenaInfo" } }, async (p, s, { t, o }) => {
     //encrypt given new euglena password

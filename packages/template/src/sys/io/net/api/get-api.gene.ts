@@ -1,11 +1,12 @@
 import { cp } from "@euglena/core";
 import { genetics, getEuglenaName } from "../../../../cell";
-import { isException } from "../../../../type";
-import { Log, Logger } from "../../../log";
 import { vacuole } from "../../store";
 import { Permission, Pulse, getSenderPermissions } from "../auth";
 import { GetApi } from "./get-api.par.h";
 import { Api } from "./api.par.h";
+import { Logger } from "../../../../log/logger.org.h";
+import { isException } from "../../../../exception.par.u";
+import { Log } from "../../../../log/log.par.h";
 
 export const createGeneGetApi = genetics.dcg<
     Pulse<GetApi>,

@@ -2,23 +2,27 @@ import * as cessnalib from "cessnalib";
 import { cp, isParticleClass } from "@euglena/core";
 import { getEuglenaName } from "../../../../cell";
 import { vacuole } from "../../store";
-import { Logger } from "../../../log";
-import { Exception, Particles, getFirstParticle, isException } from "../../../../type";
-import { genetics } from "../../../../cell";
 import { Impulse } from "./impulse.par.h";
 import { Decrypt, Encryptor } from "../../../crypt";
-import { EuglenaInfo, Permission, Pulse, Session, getSenderPermissions } from "../auth";
+import { EuglenaInfo, Pulse, Session, getSenderPermissions } from "../auth";
+import { Logger } from "../../../../log/logger.org.h";
+import { isException } from "../../../../exception.par.u";
+import { Particles } from "../../../../particles.par.h";
+import { Exception } from "../../../../exception.par.h";
+import { dcg } from "../../../../cell/genetics/gene.u";
+import { Nucleus } from "../../../../cell/genetics/nucleus.org.h";
+import { ReceiveParticle } from "../../../../cell/genetics/receive-particle.par.h";
 
 
 
-export default genetics.dcg<
+export default dcg<
     Impulse,
     {
         logger: Logger;
         jwt: Encryptor;
         permanentVacuole: vacuole.Vacuole;
         temporaryVacuole: vacuole.Vacuole;
-        nucleus: genetics.Nucleus;
+        nucleus: Nucleus;
     }
 >("Handle impulse", { meta: { class: "Impulse" } }, async (p, s, { t, o }) => {
     const { particle, token } = p.data;
@@ -27,7 +31,7 @@ export default genetics.dcg<
 
     //#region function definitions
     const releaseParticle = async (sender?: EuglenaInfo) => {
-        const releaseParticle = cp<genetics.ReceiveParticle>("ReceiveParticle", {
+        const releaseParticle = cp<ReceiveParticle>("ReceiveParticle", {
             particle: cp<Pulse>("Pulse", {
                 sender: sender,
                 particle: particle
