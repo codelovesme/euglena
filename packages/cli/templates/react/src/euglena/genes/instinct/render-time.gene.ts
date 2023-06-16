@@ -1,8 +1,8 @@
+import { cp } from "@euglena/core";
 import { cell, env, sys } from "@euglena/template";
 import { State } from "../../../state";
 
 import Time = env.time.Time;
-import { cp } from "@euglena/core";
 
 export default cell.genetics.dcg<Time, { ui: sys.io.ui.UI }>(
     "When time changed",

@@ -1,14 +1,11 @@
-import { particle, organelle } from "@euglena/template";
-import { dcg } from "@euglena/organelle.nucleus.js";
+import { cp } from "@euglena/core";
+import { cell, log } from "@euglena/template";
 
-import logger = organelle.logger;
-import EuglenaHasBeenBorn = particle.common.EuglenaHasBeenBorn;
-
-export default dcg<EuglenaHasBeenBorn, { logger: logger.Logger }>(
+export default cell.genetics.dcg<cell.EuglenaHasBeenBorn, { logger: log.Logger }>(
     "Print Hello World",
     { meta: { class: "EuglenaHasBeenBorn" } },
     async (p, s, { t }) => {
-        const log = particle.common.cp("Log", { message: "Hello World", level: "Info" });
+        const log = cp<log.Log>("Log", { message: "Hello World", level: "Info" });
         return await t(log, "logger");
     }
 );

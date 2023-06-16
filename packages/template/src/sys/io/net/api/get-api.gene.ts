@@ -7,7 +7,7 @@ import { Permission, Pulse, getSenderPermissions } from "../auth";
 import { GetApi } from "./get-api.par.h";
 import { Api } from "./api.par.h";
 
-export default genetics.dcg<
+export const createGeneGetApi = genetics.dcg<
     Pulse<GetApi>,
     {
         permanentVacuole: vacuole.Vacuole;

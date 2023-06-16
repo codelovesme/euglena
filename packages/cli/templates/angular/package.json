@@ -23,6 +23,8 @@
         "@euglena/organelle.timer.js": "^3.0.3",
         "@euglena/organelle.ui.angular": "^3.0.3",
         "@euglena/organelle.vacuole.js": "^3.0.3",
+        "@euglena/organelle.reticulum.js":"^3.0.3",
+        "@euglena/organelle.nucleus.js":"^3.0.3",
         "cessnalib": "^0.18.0",
         "rxjs": "~7.5.0",
         "tslib": "^2.3.0",

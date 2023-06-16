@@ -1,18 +1,18 @@
-import * as core from "@euglena/core";
-import { particle } from "@euglena/template";
-import timer, { Sap } from "@euglena/organelle.timer.js";
 import { sys } from "cessnalib";
+import { cp } from "@euglena/core";
+import { cell } from "@euglena/template";
+import timer, { Sap } from "@euglena/organelle.timer.js";
 import { organelles } from "../constants";
 
-const now: sys.type.Time = sys.type.StaticTools.Time.fromJavascriptDate(new Date());
+const now: sys.Time = sys.StaticTools.Time.fromJavascriptDate(new Date());
 
 export default [
-    particle.common.cp("OrganelleInfo", {
+    cp<cell.organelle.OrganelleInfo>("OrganelleInfo", {
         name: organelles.timer,
         location: {
             type: "InMemory",
             organelle: timer
         }
     }),
-    core.particle.cp<Sap>("Sap", now, { organelleName: organelles.timer })
+    cp<Sap>("Sap", now, { organelleName: organelles.timer })
 ];

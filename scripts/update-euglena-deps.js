@@ -80,10 +80,10 @@ const updateAllRelatedDependencies = (packageJson, dependenciesArr) => dependenc
 
 console.log("Start updating...")
 for(const file of files) {
-    if(file.startsWith("packages/cli/")){
-        console.log(`Ignoring ${file}`);
-        continue;
-    }
+    // if(file.startsWith("packages/cli/")){
+    //     console.log(`Ignoring ${file}`);
+    //     continue;
+    // }
     console.log(`Start working on ${file}`);
     try{
         const jsonString = readFileSync(file);

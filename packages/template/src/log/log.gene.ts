@@ -2,7 +2,7 @@ import { genetics } from "../cell"
 import { Log } from "./log.par.h";
 import { Logger } from "./logger.org.h";
 
-export default genetics.dcg<
+export const createGeneLog = genetics.dcg<
     Log,
     {
         logger: Logger;

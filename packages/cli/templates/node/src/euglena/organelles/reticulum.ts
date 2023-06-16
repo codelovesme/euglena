@@ -1,10 +1,10 @@
-import { organelle } from "@euglena/template";
+import { cp } from "@euglena/core";
+import { cell } from "@euglena/template";
 import reticulum from "@euglena/organelle.reticulum.js";
-
 import { organelles } from "../constants";
 
 export default [
-    organelle.reticulum.cp("OrganelleInfo", {
+    cp<cell.organelle.OrganelleInfo>("OrganelleInfo", {
         name: organelles.reticulum,
         location: {
             type: "InMemory",

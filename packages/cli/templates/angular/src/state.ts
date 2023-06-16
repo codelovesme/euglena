@@ -5,6 +5,6 @@ export type State = Particle<
     "State",
     {
         title: string;
-        time: type.Time;
+        time: sys.Time;
     } | undefined
 >;
