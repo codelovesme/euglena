@@ -1,6 +1,6 @@
 import * as cessnalib from "cessnalib";
 import { cp, dco } from "@euglena/core";
-import { cell, sys, type } from "@euglena/template";
+import { cell, createException, sys } from "@euglena/template";
 import axios from "axios";
 
 import http = sys.io.net.http;
@@ -48,7 +48,7 @@ const _http = dco<http.HttpClient, cell.organelle.Sap<{
         } else if (method === "post" || method === "put") {
             resp = await axios[method](url, body, { headers });
         } else {
-            return type.createException("Exception", new cessnalib.type.Exception(`Unknown Http method: ${method}`))
+            return createException("Exception", new cessnalib.sys.Exception(`Unknown Http method: ${method}`))
         }
         return cp<http.Response>("Response", {
             body: resp.data,

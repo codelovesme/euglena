@@ -2,8 +2,10 @@ import { cp } from "@euglena/core";
 import { vacuole } from "../../store";
 import { EuglenaName, genetics } from "../../../../cell";
 import { EuglenaInfo } from "./euglena-info.par.h";
-import { Exception, Particles, isException } from "../../../../type";
 import { Permission } from "./permission.par.h";
+import { Particles } from "../../../../particles.par.h";
+import { Exception } from "../../../../exception.par.h";
+import { isException } from "../../../../exception.par.u";
 
 export const getSenderPermissions = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole }>, VacuoleName extends Exclude<keyof O, symbol | number>>(
     t: any,

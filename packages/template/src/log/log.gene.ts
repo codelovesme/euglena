@@ -1,4 +1,4 @@
-import { genetics } from "../../cell"
+import { genetics } from "../cell"
 import { Log } from "./log.par.h";
 import { Logger } from "./logger.org.h";
 

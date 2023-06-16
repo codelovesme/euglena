@@ -1,10 +1,10 @@
 import * as cessnalib from "cessnalib";
 import { cp, dco } from "@euglena/core";
-import { cell, env, type } from "@euglena/template";
+import { ACK, cell, env } from "@euglena/template";
 
-let time: cessnalib.type.Time;
+let time: cessnalib.sys.Time;
 
-export type Sap = cell.organelle.Sap<cessnalib.type.Time>;
+export type Sap = cell.organelle.Sap<cessnalib.sys.Time>;
 
 export default dco<env.time.Timer, Sap>({
     Sap: async (sap, { t, cp }) => {
@@ -43,6 +43,6 @@ export default dco<env.time.Timer, Sap>({
     ReadTime: async (p, { cp }) => cp("Time", time),
     SetTime: async (p) => {
         time = p.data;
-        return cp<type.ACK>("ACK");
+        return cp<ACK>("ACK");
     }
 });

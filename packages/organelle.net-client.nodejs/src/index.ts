@@ -1,5 +1,5 @@
 import { dco, cp } from "@euglena/core";
-import { cell, sys, type } from "@euglena/template";
+import { Exception, cell, sys } from "@euglena/template";
 import http from "axios";
 
 let destination: string;
@@ -14,7 +14,7 @@ export default dco<sys.io.net.bare.NetClient, cell.organelle.Sap<{
             const response = await http.post(destination, impulse);
             return response.data;
         } catch (e: any) {
-            return cp<type.Exception>("Exception", { message: JSON.stringify(e) });
+            return cp<Exception>("Exception", { message: JSON.stringify(e) });
         }
     }
 });

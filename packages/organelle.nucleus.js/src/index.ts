@@ -1,5 +1,5 @@
 import { Particle, cp, dco } from "@euglena/core";
-import { cell, type } from "@euglena/template";
+import { ACK, Exception, Particles, cell } from "@euglena/template";
 import * as cessnalib from "cessnalib";
 let genes: cell.genetics.Gene[] = [];
 
@@ -35,7 +35,7 @@ const receive = async (particle: Particle, source: string) => {
             //if it is the same object, do nothing
             if (tr.index === tr2.index) continue;
             //then if triggers of tr2 does not contain triggers of tr, do nothing
-            if (!cessnalib.type.StaticTools.Array.containsArray(tr2.triggers, tr.triggers)) continue;
+            if (!cessnalib.sys.StaticTools.Array.containsArray(tr2.triggers, tr.triggers)) continue;
             //then check if tr2 overrides tr
             doTrigger = genes[tr2.index].data.override !== genes[tr.index].data.name;
         }
@@ -63,14 +63,14 @@ const receive = async (particle: Particle, source: string) => {
     }
     const allResults = await Promise.all(promises);
     const result = allResults.filter((x) => x !== undefined) as Particle[];
-    return cp<type.Particles>("Particles", result);
+    return cp<Particles>("Particles", result);
 };
 
 export type Sap = cell.organelle.Sap<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { genes: cell.genetics.Gene[]; type: "InMemory" }
 >;
 
-export default dco<cell.genetics.Nucleus, [Sap, type.ACK | type.Exception]>({
+export default dco<cell.genetics.Nucleus, [Sap, ACK | Exception]>({
     ReceiveParticle: async (p) => {
         const { particle, source } = p.data;
         return await receive(particle, source);
@@ -87,12 +87,12 @@ export default dco<cell.genetics.Nucleus, [Sap, type.ACK | type.Exception]>({
                     genes = particle.data.genes;
                     break;
             }
-            return cp("ACK") as type.ACK;
+            return cp("ACK") as ACK;
         } catch (error: any) {
-            return cp<type.Exception>("Exception", new cessnalib.type.Exception(error.message));
+            return cp<Exception>("Exception", new cessnalib.sys.Exception(error.message));
         }
     },
     GetGenes: async () => {
-        return cp<type.Particles>("Particles", genes) as any;
+        return cp<Particles>("Particles", genes) as any;
     }
 });

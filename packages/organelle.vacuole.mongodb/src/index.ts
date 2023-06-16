@@ -57,7 +57,7 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
             } else {
                 const { query, particle, count } = p.data as {
                     particle: Particle;
-                    query?: cessnalib.type.RecursivePartial<Particle>;
+                    query?: cessnalib.sys.RecursivePartial<Particle>;
                     count: sys.io.store.vacuole.Count;
                 };
                 if (query) {

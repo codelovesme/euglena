@@ -1,5 +1,5 @@
 import { ComingParticle, ComingParticleNameUnion, ComingParticleResponse, OrganelleInteractions, Particle } from "@euglena/core";
-import { type,ts } from "cessnalib";
+import { sys, ts } from "cessnalib";
 
 import IntersectionFromUnion = ts.IntersectionFromUnion;
 
@@ -46,7 +46,7 @@ export type Gene<TriggerParticle extends Particle = Particle, O extends Organell
     "Gene",
     {
         name: string;
-        triggers: type.RecursivePartial<TriggerParticle>;
+        triggers: sys.RecursivePartial<TriggerParticle>;
         reaction: GeneReaction<TriggerParticle, O>;
         organelles: Stringify<O>;
         override?: string;
@@ -57,7 +57,7 @@ export type Chromosome = Gene[];
 
 export type CreateGene = <P extends Particle, O extends Organelles>(
     name: string,
-    triggers: type.RecursivePartial<P>,
+    triggers: sys.RecursivePartial<P>,
     reaction: GeneReaction<P, O>,
     organelles: Stringify<O>,
     override?: string
@@ -67,7 +67,7 @@ export type CreateChromosome = (
     bind: (
         addGene: <P extends Particle, O extends Organelles>(
             name: string,
-            triggers: type.RecursivePartial<P>,
+            triggers: sys.RecursivePartial<P>,
             reaction: GeneReaction<P, O>,
             organelles: Stringify<O>,
             override?: string | undefined
@@ -77,7 +77,7 @@ export type CreateChromosome = (
 
 export type DefineCreateGene = <P extends Particle, O extends Organelles>(
     name: string,
-    triggers: type.RecursivePartial<P>,
+    triggers: sys.RecursivePartial<P>,
     reaction: GeneReaction<P, O>,
     override?: string
 ) => (organelles: Stringify<O>) => Gene;

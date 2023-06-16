@@ -1,4 +1,4 @@
-import { Log } from "../../../log";
+import { Log } from "../../../../log";
 import { Particle, createOrganelleInteractions } from "@euglena/core";
 import { Impulse } from "./impulse.par.h";
 

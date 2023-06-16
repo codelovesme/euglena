@@ -2,8 +2,9 @@ import { cp, isParticleClass } from "@euglena/core";
 import { log } from "../../sys";
 import { Nucleus, dcg } from "../genetics"
 import { GetAlive } from "./get-alive.par.h";
-import { ACK, Exception } from "../../type";
 import { ReviveOrganelle } from "./revive-organelle.par.h"
+import { ACK } from "../../ack.par.h";
+import { Exception } from "../../exception.par.h";
 
 export default dcg<
     ReviveOrganelle,

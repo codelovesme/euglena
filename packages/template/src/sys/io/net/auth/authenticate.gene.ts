@@ -33,7 +33,7 @@ export default cell.genetics.dcg<
          * Check username and password is not empty
          */
         if (!euglenaName || !password)
-            return cp("Exception", new cessnalib.type.Exception("Username and password can not be empty"));
+            return cp("Exception", new cessnalib.sys.Exception("Username and password can not be empty"));
 
         /**
          * Get user info
@@ -46,13 +46,13 @@ export default cell.genetics.dcg<
         const fetchEuglenaInfoResult = await t(fetchEuglenaInfo, "vacuole");
         if (isParticleClass(fetchEuglenaInfoResult, "Exception")) return fetchEuglenaInfoResult;
         const euglenaInfo = fetchEuglenaInfoResult.data[0] as EuglenaInfo;
-        if (!euglenaInfo) return cp("Exception", new cessnalib.type.Exception(`There is no user with ${euglenaName}`));
+        if (!euglenaInfo) return cp("Exception", new cessnalib.sys.Exception(`There is no user with ${euglenaName}`));
 
         /**
          * Check user is active
          */
         if (euglenaInfo.data.status !== "Active")
-            return cp("Exception", new cessnalib.type.Exception(`This user is not Active.`));
+            return cp("Exception", new cessnalib.sys.Exception(`This user is not Active.`));
 
         /**
          * Compare Password
@@ -64,14 +64,14 @@ export default cell.genetics.dcg<
         const encryptPasswordResult = (await t(comparePassword, "bcrypt")) as Boolean | Exception;
         if (isParticleClass(encryptPasswordResult, "Exception")) return encryptPasswordResult;
         if (!encryptPasswordResult.data)
-            return cp("Exception", new cessnalib.type.Exception("Username and password mismatch"));
+            return cp("Exception", new cessnalib.sys.Exception("Username and password mismatch"));
 
         /**
          * Generate Token
          */
         const createdAt = new Date().getTime();
         const expireAt =
-            createdAt + cessnalib.type.StaticTools.TimeSpan.toUnixTimestamp(new cessnalib.type.TimeSpan(1, 1, 1, 1, 1));
+            createdAt + cessnalib.sys.StaticTools.TimeSpan.toUnixTimestamp(new cessnalib.sys.TimeSpan(1, 1, 1, 1, 1));
         const decryptedToken: Session["data"]["decryptedToken"] = {
             euglenaName: euglenaName,
             createdAt,

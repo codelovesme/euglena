@@ -1,5 +1,5 @@
 import { cp, dco } from "@euglena/core";
-import { cell, sys, type } from "@euglena/template";
+import { Exception, Boolean, cell, sys } from "@euglena/template";
 import { compare, hash } from "bcrypt";
 
 let saltRounds: string | number;
@@ -16,11 +16,11 @@ export default dco<sys.crypt.Encryptor, Sap>({
         return cp<sys.crypt.Hash>("Hash", await hash(data, saltRounds));
     },
     Decrypt: async () => {
-        return cp<type.Exception>("Exception", {
+        return cp<Exception>("Exception", {
             message: "Not supported!",
         });
     },
     Compare: async ({ data: { plain, hash } }) => {
-        return cp<type.Boolean>("Boolean", await compare(plain.data, hash.data));
+        return cp<Boolean>("Boolean", await compare(plain.data, hash.data));
     }
 });

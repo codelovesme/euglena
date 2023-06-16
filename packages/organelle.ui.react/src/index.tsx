@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { register, unregister } from "./serviceWorker";
 
 import { Particle, cp, dco } from "@euglena/core";
-import { cell, sys, type } from "@euglena/template";
+import { ACK, cell, sys } from "@euglena/template";
 
 export type Sap = cell.organelle.Sap<{ rootComponent: typeof App; serviceWorker: boolean }>;
 
@@ -36,6 +36,6 @@ export default dco<sys.io.ui.UI, Sap>({
     },
     Render: async ({ data }) => {
         setState(data);
-        return cp<type.ACK>("ACK");
+        return cp<ACK>("ACK");
     }
 });

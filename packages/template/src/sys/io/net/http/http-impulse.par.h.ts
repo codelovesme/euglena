@@ -1,7 +1,7 @@
-import { type } from "cessnalib";
+import { sys } from "cessnalib";
 import { Particle } from "@euglena/core";
 
-import Headers = type.Headers;
+import Headers = sys.Headers;
 
 export type HttpImpulse = Particle<
     "HttpImpulse",

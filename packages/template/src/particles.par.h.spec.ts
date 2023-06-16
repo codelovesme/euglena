@@ -1,8 +1,8 @@
 import { ts } from "cessnalib";
 import { cp } from "@euglena/core";
-import { ACK } from "./ack.par.h";
 import { Particles } from "./particles.par.h";
 import { getParticle } from "./particles.par.u";
+import { ACK } from "./ack.par.h";
 
 const particles = cp<Particles>("Particles", []);
 

@@ -17,7 +17,7 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
             db = new Datastore({ filename, autoload: true });
             return cp("ACK");
         } catch (e: any) {
-            return cp("Exception", new cessnalib.type.Exception("Error occurred while initializing the Datastore"));
+            return cp("Exception", new cessnalib.sys.Exception("Error occurred while initializing the Datastore"));
         }
     },
     Hibernate: async () => { },
@@ -25,7 +25,7 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
         return new Promise((resolve) => {
             const { query } = p.data;
             db.find(cessnalib.js.Class.toDotNotation(query), (err: Error, doc: Array<any>) => {
-                if (err) return resolve(cp("Exception", new cessnalib.type.Exception(JSON.stringify(err))));
+                if (err) return resolve(cp("Exception", new cessnalib.sys.Exception(JSON.stringify(err))));
                 if (doc instanceof Array)
                     return resolve(
                         cp(
@@ -36,7 +36,7 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
                             })
                         )
                     );
-                return resolve(cp("Exception", new cessnalib.type.Exception("Db returns non array result")));
+                return resolve(cp("Exception", new cessnalib.sys.Exception("Db returns non array result")));
             });
         });
     },
@@ -44,7 +44,7 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
         return new Promise((resolve) => {
             if (p.data instanceof Array) {
                 db.insert(p.data, (err) => {
-                    if (err) return resolve(cp("Exception", new cessnalib.type.Exception(JSON.stringify(err))));
+                    if (err) return resolve(cp("Exception", new cessnalib.sys.Exception(JSON.stringify(err))));
                     return resolve(cp("ACK"));
                 });
             } else {
@@ -57,20 +57,20 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
                             { upsert: true, multi: true },
                             (err, doc) => {
                                 if (err)
-                                    return resolve(cp("Exception", new cessnalib.type.Exception(JSON.stringify(err))));
+                                    return resolve(cp("Exception", new cessnalib.sys.Exception(JSON.stringify(err))));
                                 return resolve(cp("ACK"));
                             }
                         );
                     } else {
                         return db.update(cessnalib.js.Class.toDotNotation(query), particle, { upsert: true }, (err, doc) => {
                             if (err)
-                                return resolve(cp("Exception", new cessnalib.type.Exception(JSON.stringify(err))));
+                                return resolve(cp("Exception", new cessnalib.sys.Exception(JSON.stringify(err))));
                             return resolve(cp("ACK"));
                         });
                     }
                 } else {
                     return db.insert(particle, (err) => {
-                        if (err) return resolve(cp("Exception", new cessnalib.type.Exception(JSON.stringify(err))));
+                        if (err) return resolve(cp("Exception", new cessnalib.sys.Exception(JSON.stringify(err))));
                         return resolve(cp("ACK"));
                     });
                 }
@@ -82,11 +82,11 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
             const { query, count } = p.data;
             if (count === "all") {
                 db.remove(cessnalib.js.Class.toDotNotation(query), { multi: true }, (err, doc) => {
-                    if (err) return resolve(cp("Exception", new cessnalib.type.Exception(JSON.stringify(err))));
+                    if (err) return resolve(cp("Exception", new cessnalib.sys.Exception(JSON.stringify(err))));
                     return resolve(cp("ACK"));
                 });
             } else {
-                resolve(cp("Exception", new cessnalib.type.Exception("Not yet implemented")));
+                resolve(cp("Exception", new cessnalib.sys.Exception("Not yet implemented")));
             }
         });
     }

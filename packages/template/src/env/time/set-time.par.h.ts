@@ -1,4 +1,4 @@
-import { type } from "cessnalib";
+import { sys } from "cessnalib";
 import { Particle } from "@euglena/core";
 
-export type SetTime = Particle<"SetTime", type.Time>;
+export type SetTime = Particle<"SetTime", sys.Time>;

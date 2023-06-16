@@ -2,10 +2,11 @@ import { SaveParticle } from "./save-particle.par.h";
 import { RemoveParticle } from "./remove-particle.par.h";
 import { ReadParticle } from "./read-particle.par.h";
 import { Hibernate } from "./hibernate.par.h";
-import { Log } from "../../../log";
+import { Log } from "../../../../log";
 import { Particle, createOrganelleInteractions } from "@euglena/core";
-import { ACK, Exception } from "../../../../type";
 import { organelle } from "../../../../cell";
+import { Exception } from "../../../../exception.par.h";
+import { ACK } from "../../../../ack.par.h";
 
 export type Vacuole = createOrganelleInteractions<{
     in: [

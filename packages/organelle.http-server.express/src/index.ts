@@ -1,5 +1,5 @@
 import { dco } from "@euglena/core";
-import { cell, sys, type } from "@euglena/template";
+import { Particles, cell, sys } from "@euglena/template";
 import express, { Express } from "express";
 
 export type Sap = cell.organelle.Sap<{
@@ -46,7 +46,7 @@ export default dco<sys.io.net.http.HttpServer, Sap>({
                     body: req.body,
                     headers: req.headers
                 })
-            )) as type.Particles;
+            )) as Particles;
             res.send(resp.data[0]);
         });
     },

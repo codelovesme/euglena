@@ -1,11 +1,11 @@
 import { Particle } from "@euglena/core";
-import { type } from "cessnalib";
+import { sys } from "cessnalib";
 import { Count } from "./count.h";
 
 export type ReadParticle<P extends Particle = Particle> = Particle<
     "ReadParticle",
     {
-        query: type.RecursivePartial<P>;
+        query: sys.RecursivePartial<P>;
         count: Count;
     }
 >;

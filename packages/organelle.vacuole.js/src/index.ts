@@ -1,6 +1,6 @@
 import * as cessnalib from "cessnalib";
 import { Particle, cp, dco } from "@euglena/core";
-import { cell, sys, type } from "@euglena/template";
+import { ACK, Exception, cell, sys } from "@euglena/template";
 
 let particles: Particle[] = [];
 
@@ -8,7 +8,7 @@ export type Sap = cell.organelle.Sap<
     { path: string; type: "FileSystemPath" | "NodeModules" | "Url" } | { particles: Particle[]; type: "InMemory" }
 >;
 
-export default dco<sys.io.store.vacuole.Vacuole, [Sap, type.Exception | type.ACK]>({
+export default dco<sys.io.store.vacuole.Vacuole, [Sap, Exception | ACK]>({
     Sap: async (particle) => {
         switch (particle.data.type) {
             case "FileSystemPath":
@@ -17,17 +17,17 @@ export default dco<sys.io.store.vacuole.Vacuole, [Sap, type.Exception | type.ACK
                 try {
                     particles = require(particle.data.path).default;
                 } catch (error) {
-                    return cp<type.Exception>("Exception", new cessnalib.type.Exception((error as { message: string }).message));
+                    return cp<Exception>("Exception", new cessnalib.sys.Exception((error as { message: string }).message));
                 }
                 break;
             case "InMemory":
                 particles = particle.data.particles;
                 break;
         }
-        return cp<type.ACK>("ACK");
+        return cp<ACK>("ACK");
     },
     GetAlive: async () => {
-        return cp<type.ACK>("ACK");
+        return cp<ACK>("ACK");
     },
     Hibernate: async () => { },
     ReadParticle: async (p, { cp }) => {
@@ -58,7 +58,7 @@ export default dco<sys.io.store.vacuole.Vacuole, [Sap, type.Exception | type.ACK
                 particles = [...particles, particle];
             }
         }
-        return cp<type.ACK>("ACK");
+        return cp<ACK>("ACK");
     },
     RemoveParticle: async (p) => {
         const { query, count } = p.data;
@@ -71,6 +71,6 @@ export default dco<sys.io.store.vacuole.Vacuole, [Sap, type.Exception | type.ACK
                 }
             }
         }
-        return cp<type.ACK>("ACK");
+        return cp<ACK>("ACK");
     }
 });

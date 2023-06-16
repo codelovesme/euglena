@@ -2,7 +2,7 @@ import { cp } from "@euglena/core";
 import { GeneTransmit, Organelles } from "./genetics";
 import { io } from "../sys";
 import { EuglenaName } from "./euglena-name.par.h";
-import { Exception } from "../type";
+import { Exception } from "../exception.par.h";
 
 export const getEuglenaName = async <O extends Organelles, V extends Exclude<keyof O, symbol | number>>(
     t: any,

@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "@types/serialport": "^8.0.1",
-        "cessnalib": "^0.17.0",
+        "cessnalib": "^0.18.0",
         "gps": "^0.5.3",
         "serialport": "^9.0.0"
     },

@@ -60,11 +60,11 @@ export default genetics.dcg<
 
         //check if there is session
         if (!sessionParticle)
-            return cp<Exception>("Exception", new cessnalib.type.Exception("Not Authenticated"));
+            return cp<Exception>("Exception", new cessnalib.sys.Exception("Not Authenticated"));
 
         //Check if session expired
         if (sessionParticle.data.decryptedToken.expireAt < new Date().getTime())
-            return cp<Exception>("Exception", new cessnalib.type.Exception("Authorization token is expired"));
+            return cp<Exception>("Exception", new cessnalib.sys.Exception("Authorization token is expired"));
 
         //Fetch user
         const fetchUser = cp<vacuole.ReadParticle>("ReadParticle", {
@@ -80,11 +80,11 @@ export default genetics.dcg<
         if (!sender)
             return cp<Exception>(
                 "Exception",
-                new cessnalib.type.Exception("There is no user related with this token")
+                new cessnalib.sys.Exception("There is no user related with this token")
             );
         //check user is active
         if (sender.data.status !== "Active")
-            return cp<Exception>("Exception", new cessnalib.type.Exception("User is not active"));
+            return cp<Exception>("Exception", new cessnalib.sys.Exception("User is not active"));
     }
 
     //Read permissons of the euglena
@@ -97,5 +97,5 @@ export default genetics.dcg<
             return await releaseParticle(sender);
         }
     }
-    return cp<Exception>("Exception", new cessnalib.type.Exception("Operation is unauthorized"));
+    return cp<Exception>("Exception", new cessnalib.sys.Exception("Operation is unauthorized"));
 });

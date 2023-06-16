@@ -1,6 +1,6 @@
 import SerialPort from "serialport";
 import GPS from "gps";
-import { cell, env, sys, type } from "@euglena/template";
+import { ACK, Exception, cell, env, sys } from "@euglena/template";
 import { cp, dco } from "@euglena/core";
 
 export type Sap = cell.organelle.Sap<{ path: string; interval: number }>;
@@ -55,9 +55,9 @@ export default dco<sys.io.sensor.GpsReceiver, Sap>({
             }, interval);
             t(cp<sys.log.Log>("Log", { message: "Listening GPS", level: "Info" }));
 
-            return cp<type.ACK>("ACK");
+            return cp<ACK>("ACK");
         } catch (e: any) {
-            return cp<type.Exception>("Exception", { message: JSON.stringify(e) });
+            return cp<Exception>("Exception", { message: JSON.stringify(e) });
         }
     }
 });
