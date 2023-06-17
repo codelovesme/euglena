@@ -1,7 +1,6 @@
 {
     "npmClient": "npm",
     "verifyAccess": false,
-    "useWorkspaces": true,
     "packages": [
         "packages/*"
     ],
