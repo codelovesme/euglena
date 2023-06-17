@@ -5,5 +5,5 @@ export * from "./reticulum.org.u";
 export * from "./sap.par.h";
 export * from "./transmit-particle.par.h";
 export * from "./transmit-response.par.h";
-export * from "./revive-organelle.par.h";
 export * from "./revive-organelle.gene";
+export * from "./revive-organelle.par.h";
