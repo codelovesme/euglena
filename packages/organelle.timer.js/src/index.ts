@@ -1,15 +1,12 @@
-import { sys } from "cessnalib";
-import * as core from "@euglena/core";
-import { organelle, particle } from "@euglena/template";
+import * as cessnalib from "cessnalib";
+import { cp, dco } from "@euglena/core";
+import { ACK, cell, env } from "@euglena/template";
 
-import timer = organelle.timer;
-import common = particle.common;
+let time: cessnalib.sys.Time;
 
-let time: sys.type.Time;
+export type Sap = cell.organelle.Sap<cessnalib.sys.Time>;
 
-export type Sap = particle.common.Sap<sys.type.Time>;
-
-export default core.organelle.dco<timer.Timer, Sap>({
+export default dco<env.time.Timer, Sap>({
     Sap: async (sap, { t, cp }) => {
         time = sap.data;
         setInterval(() => {
@@ -46,6 +43,6 @@ export default core.organelle.dco<timer.Timer, Sap>({
     ReadTime: async (p, { cp }) => cp("Time", time),
     SetTime: async (p) => {
         time = p.data;
-        return common.cp("ACK");
+        return cp<ACK>("ACK");
     }
 });

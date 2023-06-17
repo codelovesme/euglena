@@ -3209,10 +3209,10 @@ caniuse-lite@^1.0.30001400:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001431.tgz#e7c59bd1bc518fae03a4656be442ce6c4887a795"
   integrity sha512-zBUoFU0ZcxpvSt9IU66dXVT/3ctO1cy4y9cscs1szkPlcWb6pasYM144GqrUygUbT+k7cmUCW61cvskjcv0enQ==
 
-cessnalib@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.16.0.tgz#768df978437328600c03eff94ec41ab8c5e4ce79"
-  integrity sha512-bAr8CSvRZgxlP7h9m+lcyaL3OOscqhTf4hBzYtl0PeMj9xT3+G7MNVOMNMqFzWzL8wcRoqMn5NbOe5hUklh1Uw==
+cessnalib@^0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.18.0.tgz#e165ce9a19e2a7977deb209435dd85b26d9e859d"
+  integrity sha512-wfyCS2KT+elNjhqNz79A8J3yqY2ZGgQK03VNE+qFZeeIiGbClIghL3u/NX1fseBXi+uKaT6/gHjarTxrSTf6Cw==
   dependencies:
     sift "^3.3.5"
 

@@ -1,4 +1,5 @@
-import { ce } from '@euglena/template';
+import { cell } from "@euglena/template";
+
 import { logger, nucleus, reticulum, timer, ui, vacuole } from "./organelles";
 
 const particles = [
@@ -10,4 +11,4 @@ const particles = [
     ...ui
 ];
 
-ce(particles);
+cell.ce(particles);

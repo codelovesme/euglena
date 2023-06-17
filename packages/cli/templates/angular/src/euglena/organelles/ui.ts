@@ -1,18 +1,18 @@
-import * as core from "@euglena/core";
-import { particle } from "@euglena/template";
 import ui, { Sap } from "@euglena/organelle.ui.angular";
 import { context } from "../../app/context";
 import { organelles } from "../constants";
+import { cp } from "@euglena/core";
+import { cell } from "@euglena/template";
 
 export default [
-    particle.common.cp("OrganelleInfo", {
+    cp<cell.organelle.OrganelleInfo>("OrganelleInfo", {
         name: organelles.ui,
         location: {
             type: "InMemory",
             organelle: ui
         }
     }),
-    core.particle.cp<Sap>(
+    cp<Sap>(
         "Sap",
         {
             context

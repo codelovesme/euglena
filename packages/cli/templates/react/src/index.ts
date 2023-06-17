@@ -1,6 +1,6 @@
-import { ce, particle } from "@euglena/template";
+import { Exception, cell } from "@euglena/template";
 import particles from "./euglena";
 
-ce(particles).catch((err: particle.common.Exception) => {
+cell.ce(particles).catch((err: Exception) => {
     console.error(`Error - ${err.data.message}`);
 });

@@ -2,7 +2,7 @@ import { cp } from "../particle";
 import { BindOrganelleReactions } from "./bind-reaction.h.spec";
 import { CreateOrganelle } from "./create-organelle.h";
 import { DefineCreateOrganelle, InsertSapIntoParticles } from "./define-create-organelle.h";
-import { ComingParticles, ComingResponseParticle } from "./in-out-particle.h";
+import { ComingParticleUnion, ComingParticleResponse } from "./in-out-particle.h";
 import { Interaction } from "./interaction.h";
 import { OrganelleInteractions } from "./organelle-interactions.h";
 import { OrganelleReceive } from "./organelle-receive.h";
@@ -15,7 +15,7 @@ export const dco: DefineCreateOrganelle =
     (<OrganelleName extends string>(params: {
         name: OrganelleName;
         transmit?: OrganelleTransmit<COP>;
-    }): OrganelleReceive<ComingParticles<COP>, ComingResponseParticle<COP>> =>
+    }): OrganelleReceive<ComingParticleUnion<COP>, ComingParticleResponse<COP>> =>
     async (particle) => {
         const name = params.name;
         let reaction: any = (bindReactions as any)[(particle as any).meta.class] as any;

@@ -18,13 +18,13 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "cessnalib": "^0.16.0",
+        "cessnalib": "^0.18.0",
         "@euglena/core": "^3.0.3",
         "@euglena/template": "^3.0.3",
         "@euglena/organelle.vacuole.js": "^3.0.3",
         "@euglena/organelle.logger.console": "^3.0.3",
         "@euglena/organelle.nucleus.js": "^3.0.3",
-        "@euglena/organelle.endoplasmic-reticulum.js": "^3.0.3"
+        "@euglena/organelle.reticulum.js": "^3.0.3"
     },
     "devDependencies": {
         "typescript": "^4.9.4"

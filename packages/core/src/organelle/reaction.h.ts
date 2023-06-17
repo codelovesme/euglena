@@ -4,9 +4,9 @@ import { CreateParticleUnion } from "../particle";
 import {
     ComingParticleNameUnion,
     ComingParticle,
-    GoingParticles,
-    GoingResponseParticle,
-    ComingResponseParticle,
+    GoingParticleUnion,
+    GoingParticleResponse,
+    ComingParticleResponse,
     GoingParticle,
     GoingParticleNameUnion
 } from "./in-out-particle.h";
@@ -14,15 +14,15 @@ import {
 export type OrganelleReactionCreateParticle<
     COP extends OrganelleInteractions,
     CPN extends ComingParticleNameUnion<COP>
-> = ComingResponseParticle<COP, CPN> extends never
-    ? CreateParticleUnion<GoingParticles<COP>>
-    : CreateParticleUnion<GoingParticles<COP> | ComingResponseParticle<COP, CPN>>;
+> = ComingParticleResponse<COP, CPN> extends never
+    ? CreateParticleUnion<GoingParticleUnion<COP>>
+    : CreateParticleUnion<GoingParticleUnion<COP> | ComingParticleResponse<COP, CPN>>;
 
 export type OrganelleTransmit<COP extends OrganelleInteractions = OrganelleInteractions> = ts.IntersectionFromUnion<
     {
         [P in GoingParticleNameUnion<COP>]: (
             particle: GoingParticle<COP, P>
-        ) => Promise<GoingResponseParticle<COP> extends undefined ? void : GoingResponseParticle<COP, P>>;
+        ) => Promise<GoingParticleResponse<COP> extends undefined ? void : GoingParticleResponse<COP, P>>;
     }[GoingParticleNameUnion<COP>]
 >;
 
@@ -39,7 +39,7 @@ export interface OrganelleReaction<COP extends OrganelleInteractions, CPN extend
              */
             cp: OrganelleReactionCreateParticle<COP, CPN>;
         }
-    ): Promise<ComingResponseParticle<COP, CPN> extends undefined ? void : ComingResponseParticle<COP, CPN>>;
+    ): Promise<ComingParticleResponse<COP, CPN> extends undefined ? void : ComingParticleResponse<COP, CPN>>;
 }
 
 import "./reaction.h.spec";

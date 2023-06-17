@@ -1,6 +1,6 @@
 import { ts } from "cessnalib";
 import { Meta, Particle } from "../particle";
-import { extendOrganelleInteractions } from "./organelle-interactions.h";
+import { createOrganelleInteractions } from "./organelle-interactions.h";
 import { CreateParticle, CreateParticleWithoutClass } from "../particle/create-particle.h";
 import { ComingParticle, GoingParticle } from "./in-out-particle.h";
 import { OrganelleReaction } from "./reaction.h";
@@ -18,7 +18,7 @@ type CocResponse = Particle<"CocResponse", boolean>;
 type AocResponse = Particle<"AocResponse", boolean>;
 type AocResponse2 = Particle<"AocResponse2", string>;
 
-type COP = extendOrganelleInteractions<{
+type COP = createOrganelleInteractions<{
     in: [[Aoc, AocResponse | AocResponse2], [Boc]];
     out: [[Coc, CocResponse], [Doc]];
 }>;

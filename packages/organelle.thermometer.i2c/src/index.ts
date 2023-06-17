@@ -1,17 +1,12 @@
-import * as core from "@euglena/core";
-import { particle, organelle } from "@euglena/template";
+import { dco } from "@euglena/core";
+import { cell, sys } from "@euglena/template";
 import i2c from "i2c-bus";
 
-import common = particle.common;
-import thermometer = organelle.thermometer;
-
-const dco = core.organelle.dco;
-
-export type Sap = particle.common.Sap<{ ic2Address: number; deviceAddress: number; interval: number }>;
+export type Sap = cell.organelle.Sap<{ ic2Address: number; deviceAddress: number; interval: number }>;
 
 let sap: Sap["data"];
 
-export default dco<thermometer.Thermometer, Sap>({
+export default dco<sys.io.sensor.Thermometer, Sap>({
     Sap: async (p) => {
         sap = p.data;
     },
@@ -41,9 +36,9 @@ export default dco<thermometer.Thermometer, Sap>({
                     )
                     .catch(console.error);
             }, interval);
-            return common.cp("ACK");
+            return cp("ACK");
         } catch (e: any) {
-            return common.cp("Exception", { message: JSON.stringify(e) });
+            return cp("Exception", { message: JSON.stringify(e) });
         }
     }
 });

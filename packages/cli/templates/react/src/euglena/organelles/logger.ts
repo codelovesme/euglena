@@ -1,9 +1,10 @@
-import { particle } from "@euglena/template";
 import logger from "@euglena/organelle.logger.console";
 import { organelles } from "../constants";
+import { cp } from "@euglena/core";
+import { cell } from "@euglena/template";
 
 export default [
-  particle.common.cp("OrganelleInfo", {
+  cp<cell.organelle.OrganelleInfo>("OrganelleInfo", {
     name: organelles.logger,
     location: {
       type: "InMemory",

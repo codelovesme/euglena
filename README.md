@@ -103,6 +103,7 @@ TODO :
     desire. When off no log except logger organelle printing. This means no internal prints.
 -   Sample project creation video for all types; node, react,angular,organelle
 -   Organelles are needed to be explained. Also organelle impls are needed to be explained in their specific README
+-   Data validation: Just accpet the particle into euglena if this particle is allowed with Permissions. Afterwards validate the particle data structure wise. And drop extra fields if it has. 
 
 ### Packages
 
@@ -128,3 +129,16 @@ TODO :
 | ------------- | ------------------- | --------------------- | ---------------------- | -------------------- |
 |1.4.4          |es5                  |12 or higher           |11.2.12                 |17.0.2                |
 |3.0.0          |es5                  |18.10 or higher        |15.0.2                  |18.2.0                |
+
+## Import strategy
+
+If it is a particle / organelle file or folder named abc.particle or def.organelle then import statement in the folder index.ts file will be like shown below.
+
+    import * from abc
+    import * from def
+
+If it is a folder containing particle and / or organelle definitions and / or other modules then import statement in the parent folder will be like shown below. And it is being called module
+
+    import * as klm from "./klm"
+
+![folder-module-structure](docs/folder-module-structure.svg)

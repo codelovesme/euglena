@@ -1,13 +1,9 @@
-import * as core from "@euglena/core";
-import { organelle, particle } from "@euglena/template";
+import * as cessnalib from "cessnalib";
+import { cp, dco } from "@euglena/core";
+import { cell, createException, sys } from "@euglena/template";
 import axios from "axios";
 
-import httpClient = organelle.httpClient;
-
-const cp = core.particle.cp;
-const dco = core.organelle.dco;
-
-export type Sap = particle.common.Sap<{ path: string; interval: number }>;
+import http = sys.io.net.http;
 
 const capitalizeWord = (string: string) => {
     return string[0].toUpperCase() + string.slice(1);
@@ -15,45 +11,46 @@ const capitalizeWord = (string: string) => {
 const capitalizeHeaders = (headers: { [x: string]: string }) => {
     return Object.keys(headers).reduce((acc, key) => ({ ...acc, [capitalizeWord(key)]: headers[key] }), {});
 };
-const _httpClient = dco<httpClient.HttpClient, Sap>({
-    Sap: async () => {},
-    Get: async (p) => {
-        const {
-            data: { url, headers }
-        } = p;
-        const resp = await axios.get(url, { headers });
-        return cp<httpClient.Response>("Response", {
-            body: resp.data,
-            headers: capitalizeHeaders(resp.headers),
-            status: resp.status
-        });
+let destination: string;
+const parsePathParams = (path: string): string[] => {
+    return path.split("/:").slice(1);
+};
+const _http = dco<http.HttpClient, cell.organelle.Sap<{
+    /**
+     * host:port pair
+     */
+    destination: string
+}>>({
+    Sap: async (p) => {
+        destination = p.data.destination;
     },
-    Post: async (p) => {
+    HttpImpulse: async (p) => {
         const {
-            data: { url, headers, body }
+            data: { path, headers, body, method, pathParams, queryParams }
         } = p;
-        const resp = await axios.post(url, body, { headers });
-        return cp<httpClient.Response>("Response", {
-            body: resp.data,
-            headers: capitalizeHeaders(resp.headers),
-            status: resp.status
-        });
-    },
-    Delete: async (p) => {
-        const { url, headers } = p.data;
-        const resp = await axios.delete(url, { headers });
-        return cp<httpClient.Response>("Response", {
-            body: resp.data,
-            headers: capitalizeHeaders(resp.headers),
-            status: resp.status
-        });
-    },
-    Put: async (p) => {
-        const {
-            data: { url, headers, body }
-        } = p;
-        const resp = await axios.put(url, body, { headers });
-        return cp<httpClient.Response>("Response", {
+
+        //Path params
+        const pathVariables = parsePathParams(path);
+        const pathWithPathParams = pathVariables.reduce((acc, curr) => acc.replace(`:${curr}`, pathParams[curr]), path);
+
+        //Query params
+        let pathWithAllParams = pathWithPathParams;
+        const queryParamKeys = Object.keys(queryParams);
+        if (queryParamKeys.length > 0) {
+            pathWithAllParams += "?" + queryParamKeys
+                .map(key => `${key}=${queryParams[key]}`)
+                .join("&");
+        }
+        const url = `${destination}${pathWithAllParams}`;
+        let resp: any = undefined;
+        if (method === "get" || method === "delete") {
+            resp = await axios[method](url, { headers });
+        } else if (method === "post" || method === "put") {
+            resp = await axios[method](url, body, { headers });
+        } else {
+            return createException("Exception", new cessnalib.sys.Exception(`Unknown Http method: ${method}`))
+        }
+        return cp<http.Response>("Response", {
             body: resp.data,
             headers: capitalizeHeaders(resp.headers),
             status: resp.status
@@ -61,4 +58,4 @@ const _httpClient = dco<httpClient.HttpClient, Sap>({
     }
 });
 
-export default _httpClient;
+export default _http;

@@ -9,11 +9,11 @@ export type ComingParticleNameUnion<COP extends OrganelleInteractions> = Trigger
     COP["in"][number]
 >["meta"]["class"];
 
-export type ComingResponseParticles<COP extends OrganelleInteractions> = ResponseParticleFromInteraction<
+export type ComingParticleResponseUnion<COP extends OrganelleInteractions> = ResponseParticleFromInteraction<
     COP["in"][number]
 >;
 
-export type ComingResponseParticleNameUnion<COP extends OrganelleInteractions> = ResponseParticleFromInteraction<
+export type ComingParticleResponseNameUnion<COP extends OrganelleInteractions> = ResponseParticleFromInteraction<
     COP["in"][number]
 >["meta"]["class"];
 
@@ -27,9 +27,9 @@ export type ComingParticle<
     N extends ComingParticleNameUnion<COP>
 > = TriggerParticleFromInteraction<FindInteraction<COP["in"][number], N>>;
 
-export type ComingParticles<COP extends OrganelleInteractions> = TriggerParticleFromInteraction<COP["in"][number]>;
+export type ComingParticleUnion<COP extends OrganelleInteractions> = TriggerParticleFromInteraction<COP["in"][number]>;
 
-export type ComingResponseParticle<
+export type ComingParticleResponse<
     COP extends OrganelleInteractions,
     N extends ComingParticleNameUnion<COP> = ComingParticleNameUnion<COP>
 > = ResponseParticleFromInteraction<FindInteraction<COP["in"][number], N>>;
@@ -38,11 +38,11 @@ export type GoingParticleNameUnion<COP extends OrganelleInteractions> = TriggerP
     COP["out"][number]
 >["meta"]["class"];
 
-export type GoingResponseParticles<COP extends OrganelleInteractions> = ResponseParticleFromInteraction<
+export type GoingParticleResponseUnion<COP extends OrganelleInteractions> = ResponseParticleFromInteraction<
     COP["out"][number]
 >;
 
-export type GoingResponseParticleNameUnion<COP extends OrganelleInteractions> = ResponseParticleFromInteraction<
+export type GoingParticleResponseNameUnion<COP extends OrganelleInteractions> = ResponseParticleFromInteraction<
     COP["out"][number]
 >["meta"]["class"];
 
@@ -51,23 +51,23 @@ export type GoingParticle<
     N extends GoingParticleNameUnion<COP>
 > = TriggerParticleFromInteraction<FindInteraction<COP["out"][number], N>>;
 
-export type GoingParticles<COP extends OrganelleInteractions> = TriggerParticleFromInteraction<COP["out"][number]>;
+export type GoingParticleUnion<COP extends OrganelleInteractions> = TriggerParticleFromInteraction<COP["out"][number]>;
 
-export type GoingResponseParticle<
+export type GoingParticleResponse<
     COP extends OrganelleInteractions,
     N extends GoingParticleNameUnion<COP> = GoingParticleNameUnion<COP>
 > = ResponseParticleFromInteraction<FindInteraction<COP["out"][number], N>>;
 
-export type AllParticles<COP extends OrganelleInteractions> =
-    | ComingParticles<COP>
-    | GoingParticles<COP>
-    | ComingResponseParticles<COP>
-    | GoingResponseParticles<COP>;
+export type AllParticleUnion<COP extends OrganelleInteractions> =
+    | ComingParticleUnion<COP>
+    | GoingParticleUnion<COP>
+    | ComingParticleResponseUnion<COP>
+    | GoingParticleResponseUnion<COP>;
 
 export type AllParticleNameUnion<COP extends OrganelleInteractions> =
     | ComingParticleNameUnion<COP>
     | GoingParticleNameUnion<COP>
-    | ComingResponseParticleNameUnion<COP>
-    | GoingResponseParticleNameUnion<COP>;
+    | ComingParticleResponseNameUnion<COP>
+    | GoingParticleResponseNameUnion<COP>;
 
 import "./in-out-particle.h.spec";

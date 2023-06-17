@@ -18,7 +18,7 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "dependencies": {
-        "cessnalib": "^0.16.0"
+        "cessnalib": "^0.18.0"
     },
     "peerDependencies": {
         "@euglena/core": "^3.0.4",

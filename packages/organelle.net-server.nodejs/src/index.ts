@@ -1,13 +1,8 @@
+import { dco, isParticle } from "@euglena/core";
+import { cell, sys } from "@euglena/template";
 import * as http from "http";
-import * as core from "@euglena/core";
-import { organelle, particle } from "@euglena/template";
 
-import netServer = organelle.netServer;
-
-const isParticle = core.particle.isParticle;
-const dco = core.organelle.dco;
-
-export type Sap = particle.common.Sap<{
+export type Sap = cell.organelle.Sap<{
     port: number;
     euglenaName: string;
 }>;
@@ -17,7 +12,7 @@ let sap: {
     port: number;
     euglenaName: string;
 };
-export default dco<netServer.NetServer, Sap>({
+export default dco<sys.io.net.bare.NetServer, Sap>({
     Sap: async ({ data }, { t, cp }) => {
         sap = data;
         server = http.createServer((req, res) => {
@@ -40,7 +35,7 @@ export default dco<netServer.NetServer, Sap>({
                             res.end(
                                 JSON.stringify(
                                     cp("Impulse", {
-                                        particle: results.data[0],
+                                        particle: results,
                                         source: sap.euglenaName
                                     })
                                 )

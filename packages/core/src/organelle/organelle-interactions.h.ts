@@ -5,5 +5,5 @@ export type OrganelleInteractions = {
     out: Interaction[];
 };
 
-export type extendOrganelleInteractions<I extends OrganelleInteractions> = I;
+export type createOrganelleInteractions<I extends OrganelleInteractions> = I;
 

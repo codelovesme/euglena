@@ -2,7 +2,7 @@ import { ts } from "cessnalib";
 import { Particle } from "../particle";
 import { CreateOrganelle } from "./create-organelle.h";
 import { dco } from "./define-create-organelle";
-import { extendOrganelleInteractions } from "./organelle-interactions.h";
+import { createOrganelleInteractions } from "./organelle-interactions.h";
 import { OrganelleTransmit } from "./reaction.h";
 
 import AssertTrue = ts.test.AssertTrue;
@@ -16,7 +16,7 @@ type Doc = Particle<"Doc">;
 type CocResponse = Particle<"CocResponse", boolean>;
 type AocResponse = Particle<"AocResponse", boolean>;
 
-type COP = extendOrganelleInteractions<{
+type COP = createOrganelleInteractions<{
     in: [[Aoc, AocResponse], [Boc]];
     out: [[Coc, CocResponse], [Doc]];
 }>;

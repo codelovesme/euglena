@@ -1,15 +1,14 @@
-import * as core from "@euglena/core";
-import * as template from "@euglena/template";
-import { dcg } from "@euglena/organelle.nucleus.js";
+import { cell, env, sys } from "@euglena/template";
 import { State } from "../../../state";
 
-import Time = template.organelle.timer.Time;
+import Time = env.time.Time;
+import { cp } from "@euglena/core";
 
-export default dcg<Time, { ui: template.organelle.ui.UI }>(
+export default cell.genetics.dcg<Time, { ui: sys.io.ui.UI }>(
     "When time changed",
     { meta: { class: "Time" } },
     async (p, s, { t }) => {
-        const state = core.particle.cp<State>("State", { title: "Hello Fedai", time: p.data });
-        t(core.particle.cp<template.organelle.ui.Render>("Render", state), "ui");
+        const state = cp<State>("State", { title: "Hello Fedai", time: p.data });
+        t(cp<sys.io.ui.Render>("Render", state), "ui");
     }
 );
