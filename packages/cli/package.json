@@ -1,7 +1,7 @@
 {
     "name": "@euglena/cli",
     "domain": "codeloves.me",
-    "version": "3.0.5",
+    "version": "4.0.0",
     "private": false,
     "license": "GPL-2.0",
     "main": "dist/index.js",

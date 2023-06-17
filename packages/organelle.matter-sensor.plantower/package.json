@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.matter-sensor.plantower",
     "domain": "codeloves.me",
-    "version": "3.0.5",
+    "version": "4.0.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
