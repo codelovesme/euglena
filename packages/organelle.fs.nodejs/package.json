@@ -18,8 +18,8 @@
         "test": "npm run compile && jest --testPathPattern=dist/**/*.spec.js"
     },
     "peerDependencies": {
-        "@euglena/core": "^4.1.0",
-        "@euglena/template": "^4.1.0"
+        "@euglena/core": "^4.2.0",
+        "@euglena/template": "^4.2.0"
     },
     "files": [
         "dist"
