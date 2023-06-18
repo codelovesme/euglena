@@ -17,7 +17,7 @@ export type Authenticate = Particle<
     }
 >;
 
-export default dcg<
+export const createGeneAuthenticate =  dcg<
     Pulse<Authenticate>,
     {
         vacuole: vacuole.Vacuole;

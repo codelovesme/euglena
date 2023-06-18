@@ -13,9 +13,7 @@ import { dcg } from "../../../../cell/genetics/gene.u";
 import { Nucleus } from "../../../../cell/genetics/nucleus.org.h";
 import { ReceiveParticle } from "../../../../cell/genetics/receive-particle.par.h";
 
-
-
-export default dcg<
+export const createGeneHandleImpulse =  dcg<
     Impulse,
     {
         logger: Logger;

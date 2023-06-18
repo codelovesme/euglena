@@ -6,7 +6,7 @@ import { ReviveOrganelle } from "./revive-organelle.par.h"
 import { ACK } from "../../ack.par.h";
 import { Exception } from "../../exception.par.h";
 
-export default dcg<
+export const createGeneReviveOrganelle =  dcg<
     ReviveOrganelle,
     {
         nucleus: Nucleus;
