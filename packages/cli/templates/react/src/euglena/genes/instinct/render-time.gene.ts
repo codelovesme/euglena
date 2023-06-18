@@ -4,7 +4,7 @@ import { State } from "../../../state";
 
 import Time = env.time.Time;
 
-export default cell.genetics.dcg<Time, { ui: sys.io.ui.UI }>(
+export const createGeneRenderTime =  cell.genetics.dcg<Time, { ui: sys.io.ui.UI }>(
     "When time changed",
     { meta: { class: "Time" } },
     async (p, s, { t }) => {

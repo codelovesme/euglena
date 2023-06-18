@@ -9,7 +9,7 @@ import { dcg } from "../../../../cell/genetics/gene.u";
 import { Nucleus } from "../../../../cell/genetics/nucleus.org.h";
 
 
-export default dcg<
+export const createGEneEuglenaInfo =  dcg<
     CreateEuglenaInfo,
     {
         vacuole: vacuole.Vacuole;
