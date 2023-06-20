@@ -1,7 +1,7 @@
 import { sys } from "cessnalib";
 import { OrganelleInfo, Sap } from "./organelle";
 import { EuglenaHasBeenBorn } from "./euglena-has-been-born.par.h";
-import { CreateOrganelle, OrganelleReceive, Particle, cp, isParticleClass } from "@euglena/core";
+import { CreateOrganelle, OrganelleReceive, Particle, cp, isParticle, isParticleClass } from "@euglena/core";
 import { createNucleusComingParticle } from "./genetics";
 import { createException } from "../exception.par.u";
 
@@ -51,14 +51,20 @@ export const attachOrganelle = async (organelleInfo: OrganelleInfo, transmit: Tr
 };
 
 export const transmit = async (particle: Particle, target: string) => {
-    console.log(`Info - Transmitting particle: ${particle.meta.class} to ${target}`);
+    console.log(`Info - Transmitting ${particle.meta.class} to ${target}`);
     const organelleReceive: OrganelleReceive = organelles[target];
     if (!organelleReceive) {
         return createException("Exception", new sys.Exception(`Organelle ${target} has not been connected yet!`));
     }
     //Triggers recursive calls
     // t(cp("Log", { message: `Transmitting ${JSON.stringify(meta)} to ${target}`, level: "Info" }));
-    return await organelleReceive(particle);
+    const response = await organelleReceive(particle);
+    if (isParticle(response)) {
+        console.log(`Info - Transmitting ${response.meta.class} from ${target}`);
+    } else {
+        console.error(`Un identified value returned from last organelleReceive call: ${response}`)
+    }
+    return response;
 };
 
 export const createEuglena = async (particles: Particle[]) => {

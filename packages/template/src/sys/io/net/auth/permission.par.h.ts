@@ -5,15 +5,6 @@ export type Permission = Particle<
     {
         /**
          * Allowed particles to receive
-         * Fill with particle examples 
-         * @example
-         * {
-         *  meta: {
-         *      class: "Authenticate"
-         *  }, data:{
-         *       
-         *  }
-         * }
          */
         particles: string[];
         sender:

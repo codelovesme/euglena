@@ -4,7 +4,7 @@ import * as cessnalib from "cessnalib";
 let genes: cell.genetics.Gene[] = [];
 
 const receive = async (particle: Particle, source: string) => {
-    console.log(`Info - Received particle ${particle.meta.class} inside the Nucleus`);
+    console.log(`Info - Received particle ${JSON.stringify(particle.meta)} inside the Nucleus`);
 
     //find which genes are matched with properties of the particle
     const triggerableReactions = new Array<{
@@ -62,6 +62,7 @@ const receive = async (particle: Particle, source: string) => {
         ];
     }
     const allResults = await Promise.all(promises);
+    console.log(JSON.stringify(allResults));
     const result = allResults.filter((x) => x !== undefined) as Particle[];
     return cp<Particles>("Particles", result);
 };

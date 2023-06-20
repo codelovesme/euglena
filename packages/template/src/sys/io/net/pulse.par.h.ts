@@ -1,5 +1,5 @@
 import { Particle } from "@euglena/core";
-import { EuglenaInfo } from "./euglena-info.par.h";
+import { EuglenaInfo } from "./auth/euglena-info.par.h";
 
 export type Pulse<P extends Particle = Particle> = Particle<
     "Pulse",
