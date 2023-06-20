@@ -1,14 +1,16 @@
 import { cp } from "@euglena/core";
 import { genetics, getEuglenaName } from "../../../../cell";
 import { vacuole } from "../../store";
-import { Permission, Pulse, getSenderPermissions } from "../auth";
+import { Permission, getSenderPermissions } from "../auth";
 import { GetApi } from "./get-api.par.h";
 import { Api } from "./api.par.h";
 import { Logger } from "../../../../log/logger.org.h";
 import { isException } from "../../../../exception.par.u";
 import { Log } from "../../../../log/log.par.h";
+import { dcg } from "../../../../cell/genetics/gene.u";
+import { Pulse } from "../pulse.par.h";
 
-export const createGeneGetApi = genetics.dcg<
+export const createGeneGetApi = dcg<
     Pulse<GetApi>,
     {
         permanentVacuole: vacuole.Vacuole;
@@ -28,7 +30,7 @@ export const createGeneGetApi = genetics.dcg<
         await t(cp<Log>("Log", { message: `EuglenaName: ${euglenaName.data}`, level: "Info" }), "logger");
 
         //Read permissons of the euglena
-        const permissions = await getSenderPermissions(t, "permanentVacuole", euglenaName, p.data.sender);
+        const permissions = await getSenderPermissions(t, "permanentVacuole", euglenaName.data, p.data.sender);
         if (isException(permissions)) return permissions;
         const allowedParticles = permissions.data.reduce((acc, curr) => [...acc, ...(curr as Permission).data.particles], [] as string[])
         return cp<Api>("Api", allowedParticles);

@@ -7,7 +7,7 @@ import { Session } from "./session.par.h";
 import { Exception } from "../../../../exception.par.h";
 import { Boolean } from "../../../../boolean.par.h";
 import { dcg } from "../../../../cell/genetics/gene.u";
-import { Pulse } from "./pulse.par.h";
+import { Pulse } from "../pulse.par.h";
 
 export type Authenticate = Particle<
     "Authenticate",
@@ -120,5 +120,5 @@ export const createGeneAuthenticate =  dcg<
 
         //Return session
         return session;
-    }
+    },
 );
