@@ -8,6 +8,10 @@ import { Particles } from "../../../../particles.par.h";
 import { Exception } from "../../../../exception.par.h";
 import { isException } from "../../../../exception.par.u";
 import * as sys from "../../../../sys";
+import { ReadParticle, SaveParticle, Vacuole } from "../../store/vacuole";
+import { KeyForValue } from "cessnalib/dist/ts";
+import { getFirstParticle } from "../../../../particles.par.u";
+import { ACK } from "../../../../ack.par.h";
 
 export const getSender = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole | sys.crypt.Encryptor }>, VacuoleName extends Exclude<keyof O, symbol | number>, JWTName extends Exclude<keyof O, symbol | number>>(
     t: any,
@@ -63,16 +67,16 @@ export const getSender = async <O extends genetics.createOrganelles<{ [x: string
     return sender;
 }
 
-export const getSenderPermissions = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole }>, VacuoleName extends Exclude<keyof O, symbol | number>>(
-    t: any,
-    vacuole: VacuoleName,
+export const getSenderPermissions = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole }>>(
+    t: (particle: ReadParticle , organelleName: KeyForValue<O, Vacuole>) => Promise<Particle<"Particles", Particle[]> | Exception>,
+    vacuole: KeyForValue<O, Vacuole>,
     receiverEuglenaName: string,
     sender?: EuglenaInfo) => {
     const getPermissions = cp<vacuole.ReadParticle>("ReadParticle", {
         query: { meta: { class: "Permission" }, data: { receiverEuglenaName: receiverEuglenaName } },
         count: "all"
     });
-    const permissions = await (t as genetics.GeneTransmit)(getPermissions, vacuole) as Particles<Permission> | Exception;
+    const permissions = await t(getPermissions, vacuole);
     if (isException(permissions)) return permissions;
     //Check if sender is permitted
     const senderPermissionsData = permissions.data.filter(
@@ -86,6 +90,35 @@ export const getSenderPermissions = async <O extends genetics.createOrganelles<{
     );
     return cp<Particles>("Particles", senderPermissionsData) as Particles<Permission>;
 };
+
+export const getPermission = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole }>>(
+    t: (particle: ReadParticle, organelleName: KeyForValue<O, Vacuole>) => Promise<Particle<"Particles", Particle[]> | Exception>,
+    vacuole: KeyForValue<O, Vacuole>,
+    sender: Permission["data"]["sender"],
+    receiver: Permission["data"]["receiverEuglenaName"]
+): Promise<Permission | undefined | Exception> => {
+    const getPermissions = cp<vacuole.ReadParticle>("ReadParticle", {
+        query: { meta: { class: "Permission" }, data: { sender: sender, receiverEuglenaName: receiver } },
+        count: 1
+    });
+    const permissions = await t(getPermissions, vacuole);
+    if (isException(permissions)) return permissions;
+
+    return getFirstParticle(permissions) as Permission | undefined;
+}
+
+export const savePermission = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole }>>(
+    t: (particle: SaveParticle, organelleName: KeyForValue<O, Vacuole>) => Promise<ACK | Exception>,
+    vacuole: KeyForValue<O, Vacuole>,
+    permission: Permission
+): Promise<ACK | Exception> => {
+    const savePermission = cp<vacuole.SaveParticle>("SaveParticle", {
+        query: { meta: { class: "Permission" }, data: { sender: permission.data.sender, receiverEuglenaName: permission.data.receiverEuglenaName } },
+        particle: permission,
+        count: 1
+    });
+    return await t(savePermission, vacuole);
+}
 
 export const isSenderPermitted = (senderPermissions: Particles<Permission>, particleClass: string) => {
     for (const permission of senderPermissions.data) {

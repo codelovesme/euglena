@@ -1,0 +1,2 @@
+export declare const createParticle: ((class_: "ReadTime") => import("./read-time.par.h").ReadTime) & ((class_: "SetTime", data: import("cessnalib").sys.Time) => import("./set-time.par.h").SetTime);
+//# sourceMappingURL=timer.org.u.d.ts.map

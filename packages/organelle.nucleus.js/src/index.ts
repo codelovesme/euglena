@@ -49,12 +49,11 @@ const receive = async (particle: Particle, source: string) => {
     for (let i = 0; i < reactions.length; i++) {
         let [reaction, organelles] = reactions[i];
         const geneName: string = names[i];
-        console.log(`Info - Triggering Gene: ${geneName} Particle: ${JSON.stringify(particle.meta)}`);
+        console.log(`Info - Triggering Gene: ${geneName} Particle: ${JSON.stringify(particle)}`);
         promises = [
             ...promises,
             reaction(particle, source, {
                 t: async (particle: Particle, target: string) => {
-                    console.log(`Info - Transmitting particle: ReadParticle to organelle aliased ${target} in gene`);
                     return (await cell.transmit(particle, organelles[target])) as any
                 },
                 o: organelles

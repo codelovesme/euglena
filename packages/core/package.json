@@ -18,7 +18,7 @@
         "test": "npm run compile && jest --testPathPattern=*.spec.ts"
     },
     "dependencies": {
-        "cessnalib": "^0.18.0"
+        "cessnalib": "^0.18.2"
     },
     "files": [
         "dist"

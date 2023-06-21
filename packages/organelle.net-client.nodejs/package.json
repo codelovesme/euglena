@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "axios": "~0.19.2",
-        "cessnalib": "^0.18.0"
+        "cessnalib": "^0.18.2"
     },
     "peerDependencies": {
         "@euglena/core": "^4.2.1",

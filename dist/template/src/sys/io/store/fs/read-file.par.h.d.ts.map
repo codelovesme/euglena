@@ -1,0 +1,1 @@
+{"version":3,"file":"read-file.par.h.d.ts","sourceRoot":"","sources":["../../../../../../../packages/template/src/sys/io/store/fs/read-file.par.h.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,eAAe,CAAC;AACzC,OAAO,EAAE,QAAQ,EAAE,MAAM,cAAc,CAAC;AAExC,MAAM,MAAM,QAAQ,GAAG,QAAQ,CAC3B,UAAU,EACV;IACI,QAAQ,EAAE,MAAM,CAAC;IACjB,QAAQ,CAAC,EAAE,QAAQ,CAAC;CACvB,CACJ,CAAC"}

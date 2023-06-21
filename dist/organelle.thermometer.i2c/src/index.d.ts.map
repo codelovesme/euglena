@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../packages/organelle.thermometer.i2c/src/index.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,IAAI,EAAO,MAAM,mBAAmB,CAAC;AAG9C,MAAM,MAAM,GAAG,GAAG,IAAI,CAAC,SAAS,CAAC,GAAG,CAAC;IAAE,UAAU,EAAE,MAAM,CAAC;IAAC,aAAa,EAAE,MAAM,CAAC;IAAC,QAAQ,EAAE,MAAM,CAAA;CAAE,CAAC,CAAC;;AAItG,wBAmCG"}

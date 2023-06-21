@@ -6,3 +6,4 @@ export * from "./create-euglena-info.par.h";
 export * from "./euglena-info.par.h";
 export * from "./permission.par.h";
 export * from "./session.par.h";
+export * from "./give-permission.gene";
