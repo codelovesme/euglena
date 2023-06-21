@@ -45,7 +45,7 @@ export const createGeneHandleImpulse = dcg<
     //Get sender
     let sender: EuglenaInfo | undefined = undefined;
     if (token) {
-        const getSenderResponse = await getSender(t, "permanentVacuole", "jwt", token);
+        const getSenderResponse = await getSender<{ permanentVacuole: Vacuole, jwt: Encryptor }>(t, "permanentVacuole", "jwt", token);
         if (isException(getSenderResponse)) return getSenderResponse;
         sender = getSenderResponse;
     }

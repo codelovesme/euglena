@@ -2597,10 +2597,10 @@ caniuse-lite@^1.0.30001400:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001431.tgz#e7c59bd1bc518fae03a4656be442ce6c4887a795"
   integrity sha512-zBUoFU0ZcxpvSt9IU66dXVT/3ctO1cy4y9cscs1szkPlcWb6pasYM144GqrUygUbT+k7cmUCW61cvskjcv0enQ==
 
-cessnalib@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.18.0.tgz#e165ce9a19e2a7977deb209435dd85b26d9e859d"
-  integrity sha512-wfyCS2KT+elNjhqNz79A8J3yqY2ZGgQK03VNE+qFZeeIiGbClIghL3u/NX1fseBXi+uKaT6/gHjarTxrSTf6Cw==
+cessnalib@^0.18.2:
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/cessnalib/-/cessnalib-0.18.2.tgz#a81c6848f3207b74aff2b929c7bc8fce40f7fa95"
+  integrity sha512-WMSA3OmvPoXuZ8AOxHXddvPOO34mzhJv006tbGeLo0jzNwx4YRXKZbgitfBaBz4Q8gddfM2UxaE+nKnfhljHzA==
   dependencies:
     sift "^3.3.5"
 

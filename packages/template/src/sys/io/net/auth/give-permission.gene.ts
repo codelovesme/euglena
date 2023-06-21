@@ -29,7 +29,7 @@ export const createGeneGivePermission = dcg<
         if (isException(permission)) return permission;
 
         //update permission
-        permission.data.particles.concat(particles);
+        permission.data.particles = permission.data.particles.concat(particles);
 
         //save permission into vacuole
         return await savePermission<Organelles>(t, "vacuole", permission);
