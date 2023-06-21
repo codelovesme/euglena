@@ -34,13 +34,17 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
             return cp("Exception", { message: JSON.stringify(err) });
         }
     },
-    Hibernate: async () => {},
+    Hibernate: async () => { },
     ReadParticle: async (p, { cp, t }) => {
         const { query } = p.data;
         try {
             const collection = db.collection<Particle>("particles");
             const findResult = collection.find(cessnalib.js.Class.toDotNotation(query), { _id: 0 } as any);
-            return cp("Particles", await findResult.toArray());
+            const particleArray: Particle[] = (await findResult.toArray()).map(item => {
+                delete (item as any)._id;
+                return item;
+            });
+            return cp("Particles", particleArray);
         } catch (err) {
             t(cp("Log", { message: "Couldn't connect to db", level: "Error" }));
             return cp("Exception", { message: JSON.stringify(err) });
