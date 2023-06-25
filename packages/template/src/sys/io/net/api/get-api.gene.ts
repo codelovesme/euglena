@@ -37,6 +37,6 @@ export const createGeneGetApi = dcg<
         const permissions = await getSenderPermissions<{ permanentVacuole: Vacuole }>(t, "permanentVacuole", euglenaName.data, p.data.sender);
         if (isException(permissions)) return permissions;
         const allowedParticles = permissions.data.reduce((acc, curr) => [...acc, ...(curr as Permission).data.particles], [] as string[])
-        return cp<Api>("Api", allowedParticles);
+        return cp<Api>("Api", Array.from(new Set(allowedParticles)));
     }
 );

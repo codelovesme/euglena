@@ -8,10 +8,11 @@ import { Particles } from "../../../../particles.par.h";
 import { Exception } from "../../../../exception.par.h";
 import { isException } from "../../../../exception.par.u";
 import * as sys from "../../../../sys";
-import { ReadParticle, SaveParticle, Vacuole } from "../../store/vacuole";
+import { ReadParticle, RemoveParticle, SaveParticle, Vacuole } from "../../store/vacuole";
 import { getFirstParticle } from "../../../../particles.par.u";
 import { ACK } from "../../../../ack.par.h";
-import { Encryptor } from "../../../crypt";
+import { Encrypt, Encryptor, Hash } from "../../../crypt";
+import { Session } from "./session.par.h";
 
 export const getSender = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole | sys.crypt.Encryptor }>>(
     t: any,
@@ -67,7 +68,7 @@ export const getSender = async <O extends genetics.createOrganelles<{ [x: string
     return sender;
 }
 
-export type GetSenderPermissionsTransmit<O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole }>> = 
+export type GetSenderPermissionsTransmit<O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole }>> =
     (particle: ReadParticle, organelleName: cessnalib.ts.KeyForValue<O, Vacuole>) => Promise<Particle<"Particles", Particle[]> | Exception>;
 
 export const getSenderPermissions = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole }>>(
@@ -131,3 +132,66 @@ export const isSenderPermitted = (senderPermissions: Particles<Permission>, part
     }
     return false;
 }
+
+export type GenerateTokenTransmit<O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole | Encryptor }>> = ((particle: ReadParticle | RemoveParticle | SaveParticle | Encrypt, organelleName: cessnalib.ts.KeyForValue<O, Vacuole> | cessnalib.ts.KeyForValue<O, Encryptor>) => Promise<Particle<"Particles", Particle[]> | Exception> | Promise<Hash> | Promise<ACK | Exception>);
+
+export const generateSession = async <O extends genetics.createOrganelles<{ [x: string]: vacuole.Vacuole | Encryptor }>>(
+    t: GenerateTokenTransmit<O>,
+    euglenaInfo: EuglenaInfo,
+    vacuole: cessnalib.ts.KeyForValue<O, Vacuole>,
+    jwt: cessnalib.ts.KeyForValue<O, Encryptor>,
+): Promise<Session | Exception> => {
+
+    /**
+     * Generate Token
+     */
+    const createdAt = new Date().getTime();
+    const expireAt =
+        createdAt + cessnalib.sys.StaticTools.TimeSpan.toUnixTimestamp(new cessnalib.sys.TimeSpan(1, 1, 1, 1, 1));
+    const decryptedToken: Session["data"]["decryptedToken"] = {
+        euglenaName: euglenaInfo.data.euglenaName,
+        createdAt,
+        expireAt,
+        type: "Session",
+        roles: euglenaInfo.data.roles,
+        status: euglenaInfo.data.status
+    };
+    const generateToken = cp<Encrypt>("Encrypt", decryptedToken, {
+        version: "2.0"
+    });
+    const generateTokenResult = await t(generateToken, jwt) as Hash;
+
+    /**
+     * Remove old sessions
+     */
+    const removeSessions = cp<vacuole.RemoveParticle>("RemoveParticle", {
+        count: "all",
+        query: {
+            meta: { class: "Session" },
+            data: { decryptedToken: { euglenaName: decryptedToken.euglenaName } }
+        }
+    });
+    const removeSessionsResult = await t(removeSessions, vacuole) as ACK | Exception;
+    if (isParticleClass(removeSessionsResult, "Exception")) return removeSessionsResult;
+
+    /**
+     * Insert session
+     */
+    const session: Session = cp("Session", {
+        decryptedToken: decryptedToken,
+        encryptedToken: generateTokenResult.data
+    });
+    const saveSession = cp<vacuole.SaveParticle>("SaveParticle", {
+        count: 1,
+        particle: session,
+        query: {
+            meta: { class: "Session" },
+            data: { decryptedToken: { euglenaName: euglenaInfo.data.euglenaName } }
+        }
+    });
+    const saveSessionResult = await t(saveSession, vacuole) as ACK | Exception;
+    if (isParticleClass(saveSessionResult, "Exception")) return saveSessionResult;
+
+    //Return session
+    return session;
+} 

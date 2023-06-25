@@ -9,7 +9,7 @@ import { dcg } from "../../../../cell/genetics/gene.u";
 import { Nucleus } from "../../../../cell/genetics/nucleus.org.h";
 
 
-export const createGEneEuglenaInfo =  dcg<
+export const createGeneEuglenaInfo =  dcg<
     CreateEuglenaInfo,
     {
         vacuole: vacuole.Vacuole;
@@ -24,7 +24,7 @@ export const createGEneEuglenaInfo =  dcg<
 
     //create euglenainfo object
     const euglenaInfo: EuglenaInfo = {
-        meta: { class: "EuglenaInfo", version: "2.0" },
+        meta: { class: "EuglenaInfo", version: "3" },
         data: {
             ...p.data,
             password: encryptPasswordResult.data

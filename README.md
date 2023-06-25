@@ -10,6 +10,7 @@ less. It has event driven architecture with enhanced side features. Mostly focus
     * Code reusability
     * Logic reusability
     * Logic update at runtime
+    * Testability
 
 An euglena application consists of three main part. Organelles, Particles, Genes.
 
@@ -147,3 +148,9 @@ If it is a folder containing particle and / or organelle definitions and / or ot
 ### 4.0.0
 
 Namespace refactoring, replacing 
+
+## Caution
+
+**euglenaName** is an id which is not changable after giving it to a app or human account. Human accounts also has username which is changable. 
+
+Make login flow using username beside euglenaName if you would like to supply users more flexability
