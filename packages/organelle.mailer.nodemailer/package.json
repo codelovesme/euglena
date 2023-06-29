@@ -19,14 +19,14 @@
     },
     "dependencies": {
         "cessnalib": "^0.18.2",
-        "nodemailer":"^6.9.3"
+        "nodemailer": "^6.9.3"
     },
     "peerDependencies": {
-        "@euglena/core": "^4.2.1",
-        "@euglena/template": "^4.2.1"
+        "@euglena/core": "^4.3.0",
+        "@euglena/template": "^4.3.0"
     },
     "devDependencies": {
-        "@types/nodemailer":"^6.4.8"
+        "@types/nodemailer": "^6.4.8"
     },
     "files": [
         "dist"
