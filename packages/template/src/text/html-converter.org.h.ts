@@ -4,7 +4,7 @@ import { Html } from "./html.par.h";
 
 export type ConvertToHtml = Particle<"ConvertToHtml", unknown>;
 
-export type HtmlConvertor = createOrganelleInteractions<{
+export type HtmlConverter = createOrganelleInteractions<{
     in: [[ConvertToHtml, Html]];
     out: [Log];
 }>;

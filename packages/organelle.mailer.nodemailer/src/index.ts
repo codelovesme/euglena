@@ -1,6 +1,6 @@
 import * as cessnalib from "cessnalib";
 import { dco } from "@euglena/core";
-import { ACK, cell, createException, sys, log } from "@euglena/template";
+import { cell, createException, sys } from "@euglena/template";
 import * as nodemailer from "nodemailer";
 
 /**

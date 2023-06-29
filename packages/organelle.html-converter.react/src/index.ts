@@ -5,7 +5,7 @@ import { renderToString } from "react-dom/server";
 
 export type Sap = cell.organelle.Sap<{}>;
 
-export default dco<text.HtmlConvertor, Sap>({
+export default dco<text.HtmlConverter, Sap>({
     Sap: async (_sap) => { },
     ConvertToHtml: async (p) => {
         /**

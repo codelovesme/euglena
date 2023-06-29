@@ -10,7 +10,7 @@ import { getFirstParticle } from "../../../../particles.par.u";
 import { Encrypt, Encryptor } from "../../../crypt";
 import { GenerateTokenTransmit, generateSession } from "./auth.u";
 import { ACK } from "../../../../ack.par.h";
-import { ConvertToHtml, HtmlConvertor } from "../../../../text";
+import { ConvertToHtml, HtmlConverter } from "../../../../text";
 import { Mailer, SendMail } from "../mail";
 import { Exception } from "../../../../exception.par.h";
 import { Particles } from "../../../../particles.par.h";
@@ -32,7 +32,7 @@ type Organelles = {
     temporaryVacuole: Vacuole;
     bcrypt: Encryptor;
     jwt: Encryptor;
-    htmlConvertor: HtmlConvertor;
+    htmlConverter: HtmlConverter;
     mailer: Mailer;
 };
 
@@ -117,12 +117,12 @@ export const createGeneSignUp = dcg<
         /**
         * generate session
         */
-        type O = Omit<Organelles, "htmlConvertor" | "mailer">;
+        type O = Omit<Organelles, "htmlConverter" | "mailer">;
         const session = await generateSession<O>(t as GenerateTokenTransmit<O>, euglenaInfo, "permanentVacuole", "jwt");
         if (isException(session)) return session;
 
         /**
-         * email html template
+         * get email html template from memory
          */
         const getMailTemplate = cp<ReadParticle>("ReadParticle", {
             count: 1,
@@ -134,18 +134,13 @@ export const createGeneSignUp = dcg<
         if (!mailTemplate) return createException("Exception", new cessnalib.sys.Exception("Email verification code mail template has not been loaded into vacuole"));
 
         /**
-         * get verification email html
+         * render email template to html
          */
-        // sendEmailVerificationCode({
-        //     userEmail: userFromRequest.email,
-        //     userName: userFromRequest.name,
-        //     verificationCode: verificationCode,
-        // });
         const convertToHtml = cp<ConvertToHtml>("ConvertToHtml", mailTemplate.data({
             userName: euglenaInfo.data.euglenaName,
-            verificationLink: `http://localhost:3000/verification?code=${verificationCode}`
+            verificationLink: `http://localhost:3000/verification?code=${session.data.encryptedToken}`
         }));
-        const html = await t(convertToHtml, "htmlConvertor");
+        const html = await t(convertToHtml, "htmlConverter");
 
         /**
          * send verification email
