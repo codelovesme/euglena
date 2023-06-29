@@ -51,7 +51,7 @@ export const attachOrganelle = async (organelleInfo: OrganelleInfo, transmit: Tr
 };
 
 export const transmit = async (particle: Particle, target: string) => {
-    console.log(`Info - Transmitting ${particle.meta.class} to ${target}`);
+    console.log(`Info - Transmitting ${JSON.stringify(particle)} to ${target}`);
     const organelleReceive: OrganelleReceive = organelles[target];
     if (!organelleReceive) {
         return createException("Exception", new sys.Exception(`Organelle ${target} has not been connected yet!`));
@@ -60,7 +60,7 @@ export const transmit = async (particle: Particle, target: string) => {
     // t(cp("Log", { message: `Transmitting ${JSON.stringify(meta)} to ${target}`, level: "Info" }));
     const response = await organelleReceive(particle);
     if (isParticle(response)) {
-        console.log(`Info - Transmitting ${response.meta.class} from ${target}`);
+        console.log(`Info - Transmitting ${JSON.stringify(response)} from ${target}`);
     } else {
         console.error(`Un identified value returned from last organelleReceive call: ${response}`)
     }

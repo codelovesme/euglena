@@ -1,0 +1,1 @@
+{"version":3,"file":"state.d.ts","sourceRoot":"","sources":["../../../../../packages/cli/templates/react/src/state.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,eAAe,CAAC;AACzC,OAAO,EAAE,GAAG,EAAE,MAAM,WAAW,CAAC;AAEhC,MAAM,MAAM,KAAK,GAAG,QAAQ,CACxB,OAAO,EACP;IACI,KAAK,EAAE,MAAM,CAAC;IACd,IAAI,EAAE,GAAG,CAAC,IAAI,CAAC;CAClB,GAAG,SAAS,CAChB,CAAC"}

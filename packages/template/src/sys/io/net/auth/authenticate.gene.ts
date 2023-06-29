@@ -1,13 +1,13 @@
 import * as cessnalib from "cessnalib";
 import { Particle, cp, isParticleClass } from "@euglena/core";
 import { vacuole } from "../../store"
-import { Encryptor, Compare, Encrypt, Hash, Plain } from "../../../crypt";
+import { Encryptor, Compare, Hash, Plain } from "../../../crypt";
 import { EuglenaInfo } from "./euglena-info.par.h";
-import { Session } from "./session.par.h";
 import { Exception } from "../../../../exception.par.h";
 import { Boolean } from "../../../../boolean.par.h";
 import { dcg } from "../../../../cell/genetics/gene.u";
 import { Pulse } from "../pulse.par.h";
+import {GenerateTokenTransmit, generateSession} from "./auth.u";
 
 export type Authenticate = Particle<
     "Authenticate",
@@ -17,17 +17,19 @@ export type Authenticate = Particle<
     }
 >;
 
-export const createGeneAuthenticate =  dcg<
+type Organelles = {
+    vacuole: vacuole.Vacuole;
+    bcrypt: Encryptor;
+    jwt: Encryptor;
+};
+
+export const createGeneAuthenticate = dcg<
     Pulse<Authenticate>,
-    {
-        vacuole: vacuole.Vacuole;
-        bcrypt: Encryptor;
-        jwt: Encryptor;
-    }
+    Organelles
 >(
     "Authenticate",
     { meta: { class: "Pulse" }, data: { particle: { meta: { class: "Authenticate" } } } },
-    async (pulse, s, { t, o }) => {
+    async (pulse, _, { t }) => {
         const {
             data: { euglenaName, password }
         } = pulse.data.particle;
@@ -71,54 +73,6 @@ export const createGeneAuthenticate =  dcg<
         /**
          * Generate Token
          */
-        const createdAt = new Date().getTime();
-        const expireAt =
-            createdAt + cessnalib.sys.StaticTools.TimeSpan.toUnixTimestamp(new cessnalib.sys.TimeSpan(1, 1, 1, 1, 1));
-        const decryptedToken: Session["data"]["decryptedToken"] = {
-            euglenaName: euglenaName,
-            createdAt,
-            expireAt,
-            type: "Session",
-            roles: euglenaInfo.data.roles,
-            status: euglenaInfo.data.status
-        };
-        const generateToken = cp<Encrypt>("Encrypt", decryptedToken, {
-            version: "2.0"
-        });
-        const generateTokenResult = await t(generateToken, "jwt");
-
-        /**
-         * Remove old sessions
-         */
-        const removeSessions = cp<vacuole.RemoveParticle>("RemoveParticle", {
-            count: "all",
-            query: {
-                meta: { class: "Session" },
-                data: { decryptedToken: { euglenaName: decryptedToken.euglenaName } }
-            }
-        });
-        const removeSessionsResult = await t(removeSessions, "vacuole");
-        if (isParticleClass(removeSessionsResult, "Exception")) return removeSessionsResult;
-
-        /**
-         * Insert session
-         */
-        const session: Session = cp("Session", {
-            decryptedToken: decryptedToken,
-            encryptedToken: generateTokenResult.data
-        });
-        const saveSession = cp<vacuole.SaveParticle>("SaveParticle", {
-            count: 1,
-            particle: session,
-            query: {
-                meta: { class: "Session" },
-                data: { decryptedToken: { euglenaName } }
-            }
-        });
-        const saveSessionResult = await t(saveSession, "vacuole");
-        if (isParticleClass(saveSessionResult, "Exception")) return saveSessionResult;
-
-        //Return session
-        return session;
+        return await generateSession<Organelles>(t as GenerateTokenTransmit<Organelles>,euglenaInfo,"vacuole","jwt");
     },
 );

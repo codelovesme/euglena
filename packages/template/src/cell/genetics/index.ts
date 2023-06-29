@@ -4,3 +4,4 @@ export * from "./get-genes.par.h";
 export * from "./nucleus.org.h";
 export * from "./nucleus.org.u";
 export * from "./receive-particle.par.h";
+export * from "./get-genes.gene";

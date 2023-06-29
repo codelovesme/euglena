@@ -2,6 +2,7 @@ export * as cell from "./cell";
 export * as env from "./env";
 export * as sys from "./sys";
 export * as log from "./log";
+export * as text from "./text";
 export * from "./ack.par.h";
 export * from "./boolean.par.h";
 export * from "./exception.par.h";

@@ -1,0 +1,1 @@
+{"version":3,"file":"reticulum.js","sourceRoot":"","sources":["../../../../../../../packages/cli/templates/node/src/euglena/organelles/reticulum.ts"],"names":[],"mappings":";;;;;AAAA,sCAAmC;AAEnC,2FAAwD;AACxD,0CAA0C;AAE1C,kBAAe;IACX,IAAA,SAAE,EAA+B,eAAe,EAAE;QAC9C,IAAI,EAAE,sBAAU,CAAC,SAAS;QAC1B,QAAQ,EAAE;YACN,IAAI,EAAE,UAAU;YAChB,SAAS,EAAE,gCAAS;SACvB;KACJ,CAAC;CACL,CAAC"}

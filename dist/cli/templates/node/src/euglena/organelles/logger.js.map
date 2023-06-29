@@ -1,0 +1,1 @@
+{"version":3,"file":"logger.js","sourceRoot":"","sources":["../../../../../../../packages/cli/templates/node/src/euglena/organelles/logger.ts"],"names":[],"mappings":";;;;;AAAA,sCAAmC;AAEnC,+FAAuD;AACvD,0CAA0C;AAG1C,kBAAe;IACX,IAAA,SAAE,EAA+B,eAAe,EAAE;QAC9C,IAAI,EAAE,sBAAU,CAAC,MAAM;QACvB,QAAQ,EAAE;YACN,IAAI,EAAE,UAAU;YAChB,SAAS,EAAE,kCAAM;SACpB;KACJ,CAAC;CACL,CAAC"}

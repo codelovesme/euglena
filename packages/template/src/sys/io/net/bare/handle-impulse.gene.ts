@@ -13,6 +13,9 @@ import { Nucleus } from "../../../../cell/genetics/nucleus.org.h";
 import { ReceiveParticle } from "../../../../cell/genetics/receive-particle.par.h";
 import { log } from "../../..";
 import { Pulse } from "../pulse.par.h";
+import { Particles } from "../../../../particles.par.h";
+import { getFirstParticle } from "../../../../particles.par.u";
+import { Vacuole } from "../../store/vacuole";
 
 /**
  * Checks authorization / permissions
@@ -42,12 +45,12 @@ export const createGeneHandleImpulse = dcg<
     //Get sender
     let sender: EuglenaInfo | undefined = undefined;
     if (token) {
-        const getSenderResponse = await getSender(t, "permanentVacuole", "jwt", token);
+        const getSenderResponse = await getSender<{ permanentVacuole: Vacuole, jwt: Encryptor }>(t, "permanentVacuole", "jwt", token);
         if (isException(getSenderResponse)) return getSenderResponse;
         sender = getSenderResponse;
     }
     //Read permissons of the euglena
-    const senderPermissions = await getSenderPermissions(t, "permanentVacuole", euglenaName.data, sender);
+    const senderPermissions = await getSenderPermissions<{ permanentVacuole: Vacuole }>(t, "permanentVacuole", euglenaName.data, sender);
     if (isException(senderPermissions)) return senderPermissions;
 
     //Check if sender is permitted
@@ -59,7 +62,8 @@ export const createGeneHandleImpulse = dcg<
             }),
             source: o.nucleus
         });
-        return await t(releaseParticle, "nucleus");
+        const response = await t(releaseParticle, "nucleus") as Particles;
+        return getFirstParticle(response);
     }
     return cp<Exception>("Exception", new cessnalib.sys.Exception("Operation is unauthorized"));
 });
