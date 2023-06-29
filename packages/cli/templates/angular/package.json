@@ -25,7 +25,7 @@
         "@euglena/organelle.vacuole.js": "^4.2.1",
         "@euglena/organelle.reticulum.js": "^4.2.1",
         "@euglena/organelle.nucleus.js": "^4.2.1",
-        "cessnalib": "^0.18.2",
+        "cessnalib": "^0.19.0",
         "rxjs": "~7.5.0",
         "tslib": "^2.3.0",
         "zone.js": "~0.12.0"
