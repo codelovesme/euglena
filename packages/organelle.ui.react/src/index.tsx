@@ -20,7 +20,8 @@ export const ToolsContext = createContext({
         ((class_: "Event") => sys.io.ui.Event)
 });
 
-let setState: (state: any) => void;
+let setState: (state: any) =
+> void;
 
 export default dco<sys.io.ui.UI, Sap>({
     Sap: async (p, { t }) => {

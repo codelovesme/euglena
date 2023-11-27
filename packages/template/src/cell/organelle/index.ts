@@ -1,4 +1,5 @@
 export * from "./get-alive.par.h";
+export * from "./get-organelle-names.par.h";
 export * from "./organelle-info.par.h";
 export * from "./reticulum.org.h";
 export * from "./reticulum.org.u";
