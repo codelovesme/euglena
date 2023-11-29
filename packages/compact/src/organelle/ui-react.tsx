@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Particle, State } from "../particle";
 
 const createServiceWorker = () => {
-    // This optional code is used to register a service worker.
+    // This optional code is used to register a sergvice worker.
     // register() is not called by default.
 
     // This lets the app load faster on subsequent visits in production, and gives
@@ -148,7 +148,8 @@ export namespace ui {
         handleEvent(event: Particle): void;
     }
     export class UIReact {
-        setState?: (state: any) => void;
+        public static ToolsContext = createContext({} as { fireEvent: Nucleus["handleEvent"] });
+        private setState?: (state: any) => void;
         constructor(
             private rootComponent: React.FC<any>,
             private serviceWorker: boolean,
@@ -162,8 +163,8 @@ export namespace ui {
                 this.setState = _setState;
                 return this.rootComponent(state);
             };
-            const ToolsContext = createContext({} as { fireEvent: Nucleus["handleEvent"] });
-            root.render(<ToolsContext.Provider value={{ fireEvent: this.nucleus.handleEvent}}> {< App />}</ToolsContext.Provider>);
+            const ToolsContext = UIReact.ToolsContext;
+            root.render(<ToolsContext.Provider value={{ fireEvent: this.nucleus.handleEvent }}> {< App />}</ToolsContext.Provider>);
         }
         render(state: any) {
             this.setState!(state);

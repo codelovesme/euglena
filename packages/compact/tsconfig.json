@@ -1,7 +1,11 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "lib": ["es2018", "dom"],
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
         "outDir": "dist",
         "jsx": "react"
     },
