@@ -1,5 +1,7 @@
-import { Exception, isException, Token } from "../particle";
-import { HttpClient } from "./http-client";
+import { Exception, isException, Token } from "@euglena/compact";
+import {httpClient} from "@euglena/compact";
+import HttpClient = httpClient.HttpClient;
+
 
 export type User = {
     "euglenaName": string,
@@ -117,15 +119,7 @@ type LoginSuccessResponse = {
 }
 
 export class AuthClient {
-    private httpClient: HttpClient;
-    constructor(
-        /**
-         * host:port pair
-         */
-        destination: string
-    ) {
-        this.httpClient = new HttpClient(destination);
-    }
+    constructor(private httpClient: HttpClient) { }
     async login(username: string, password: string): Promise<Token | Exception> {
         const resp = await this.httpClient.post("/", {
             "meta": {
@@ -173,9 +167,6 @@ export class AuthClient {
         const { data: { particle: { data: [ack] } } } = resp as ACKResponse | ExceptionResponse;
         if (ack.meta.class === "Exception") return new Exception(`logout: Error returned from auth server : ${(ack as ExceptionResponse["data"]["particle"]["data"][0]).data.message}`);
     }
-
-
-
     async getUser(token: string, source?: string): Promise<User | Exception> {
         const resp = await this.httpClient.post("/", {
             "meta": {

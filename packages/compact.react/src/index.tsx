@@ -1,6 +1,6 @@
+import { Particle, State } from "@euglena/compact";
 import React, { createContext, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Particle, State } from "../particle";
 
 const createServiceWorker = () => {
     // This optional code is used to register a sergvice worker.
@@ -143,31 +143,30 @@ const createServiceWorker = () => {
     }
 
 }
-export namespace ui {
-    export interface Nucleus {
-        handleEvent(event: Particle): void;
+
+export interface Nucleus {
+    handleEvent(event: Particle): void;
+}
+export const ToolsContext = createContext({} as { fireEvent: Nucleus["handleEvent"] });
+export class UIReact {
+    private setState?: (state: any) => void;
+    constructor(
+        private rootComponent: React.FC<any>,
+        private serviceWorker: boolean,
+        private nucleus: Nucleus
+    ) {
+        const { register, unregister } = createServiceWorker();
+        (this.serviceWorker ? register : unregister)();
+        const root = createRoot(document.getElementById("root")!);
+        const App = () => {
+            const [state, _setState] = useState(new State());
+            this.setState = _setState;
+            return this.rootComponent(state);
+        };
+        root.render(<ToolsContext.Provider value={{ fireEvent: this.nucleus.handleEvent }}> {< App />}</ToolsContext.Provider>);
     }
-    export class UIReact {
-        public static ToolsContext = createContext({} as { fireEvent: Nucleus["handleEvent"] });
-        private setState?: (state: any) => void;
-        constructor(
-            private rootComponent: React.FC<any>,
-            private serviceWorker: boolean,
-            private nucleus: Nucleus
-        ) {
-            const { register, unregister } = createServiceWorker();
-            (this.serviceWorker ? register : unregister)();
-            const root = createRoot(document.getElementById("root")!);
-            const App = () => {
-                const [state, _setState] = useState(new State());
-                this.setState = _setState;
-                return this.rootComponent(state);
-            };
-            const ToolsContext = UIReact.ToolsContext;
-            root.render(<ToolsContext.Provider value={{ fireEvent: this.nucleus.handleEvent }}> {< App />}</ToolsContext.Provider>);
-        }
-        render(state: any) {
-            this.setState!(state);
-        }
+
+    render(state: any) {
+        this.setState!(state);
     }
 }

@@ -1,20 +1,22 @@
 import axios from "axios";
-import { Exception } from "../particle";
+import { Exception, httpClient } from "@euglena/compact";
 import { sys } from "cessnalib";
 
 export type Method = "get" | "put" | "post" | "delete";
 
 export type Native = object | string | boolean | number;
 
-export class HttpClient {
+export class HttpClientAxios extends httpClient.HttpClient{
     constructor(
         /**
          * host:port pair
          */
-        protected destination: string
-    ) { }
+        destination: string
+    ) { 
+        super(destination);
+    }
 
-    async send(path: string, headers: sys.Headers, body: any, method: Method): Promise<Native | Exception> {
+    async send(method: Method, path: string, body: any,headers: sys.Headers = {}): Promise<Native | Exception> {
         const url = `${this.destination}/${path}`;
         let resp: any = undefined;
         try {
@@ -32,19 +34,16 @@ export class HttpClient {
         return resp.data;
     }
 
-    async get(path: string, headers: sys.Headers = {}) {
-        return await this.send(path, headers, {}, "get");
+    async get(path: string, headers?: sys.Headers):Promise<Native | Exception> {
+        return await this.send("get",path, {}, headers);
     }
-    async post(path: string, body: any, headers: sys.Headers = {}) {
-        return await this.send(path, headers, body, "post");
-
+    async post(path: string, body: any, headers?: sys.Headers): Promise<Native | Exception> {
+        return await this.send("post",path, body, headers);
     }
-    async put(path: string, body: any, headers: sys.Headers = {}) {
-        return await this.send(path, headers, body, "put");
-
+    async put(path: string, body: any, headers: sys.Headers = {}):Promise<Native | Exception> {
+        return await this.send("put",path, body, headers);
     }
-    async delete(path: string, headers: sys.Headers = {}) {
-        return await this.send(path, headers, {}, "delete");
-
+    async delete(path: string, headers: sys.Headers = {}): Promise<Native | Exception> {
+        return await this.send("delete",path, {}, headers);
     }
 }

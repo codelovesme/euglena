@@ -1,9 +1,8 @@
 import * as cessnalib from "cessnalib";
 import { MongoClient, Db } from "mongodb";
-import { Exception, Particle } from "../../particle";
-import { Nucleus, Vacuole } from "../vacuole";
+import {vacuole, Exception, Particle} from "@euglena/compact";
 
-export class VacuoleMongoDB extends Vacuole {
+export class VacuoleMongoDB extends vacuole.Vacuole {
     private db?: Db;
     constructor(private database: string,
         /**
@@ -11,7 +10,7 @@ export class VacuoleMongoDB extends Vacuole {
          * "mongodb://dbdevc2scdlvsm:<password>@dbdevc2scdlvsm.documents.azure.com:10255/?ssl=true"
          */
         private uri: string,
-        nucleus: Nucleus) {
+        nucleus: vacuole.Nucleus) {
         super(nucleus);
     }
     async getAlive(): Promise<void | Exception> {

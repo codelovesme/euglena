@@ -1,5 +1,4 @@
-export * from "./logger";
+export * as logger from "./logger";
 export * as vacuole from "./vacuole";
-export * from "./http-client";
-export * from "./ui-react";
-export * from "./auth-client";
+export * as ui from "./ui";
+export * as httpClient from "./http-client";

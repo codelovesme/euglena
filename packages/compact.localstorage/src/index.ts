@@ -1,6 +1,5 @@
 import * as cessnalib from "cessnalib";
-import { Exception, Particle } from "../../particle";
-import { Nucleus, Vacuole } from ".";
+import { Exception, Particle, vacuole } from "@euglena/compact";
 
 const getParticles = (): Particle[] => {
     return (JSON.parse(localStorage.getItem("particles") || "[]")) as Particle[];
@@ -10,8 +9,8 @@ const setParticles = (particles: Particle[]) => {
     localStorage.setItem("particles", JSON.stringify(particles));
 }
 
-export class VacuoleLocalstorage extends Vacuole {
-    constructor(nucleus: Nucleus) {
+export class VacuoleLocalstorage extends vacuole.Vacuole {
+    constructor(nucleus: vacuole.Nucleus) {
         super(nucleus);
     }
     getAlive(): Promise<void | Exception> {
