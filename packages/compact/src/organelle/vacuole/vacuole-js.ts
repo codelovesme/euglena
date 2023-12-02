@@ -28,12 +28,15 @@ export class VacuoleJs extends Vacuole {
                     overrideCount++;
                 }
             }
+            if(overrideCount === 0) {
+                this.particles.push(particle);
+            }
         } else {
-            this.particles = [...this.particles, particle];
+            this.particles.push(particle);
         }
     }
     async saveAll(particles: Particle[]) {
-        this.particles = [...this.particles, ...particles];
+        this.particles.concat(particles);
     }
     async remove(query: Partial<Particle>, count: number | "All" = 1) {
         if (query) {

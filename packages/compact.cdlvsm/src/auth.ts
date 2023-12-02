@@ -121,7 +121,7 @@ type LoginSuccessResponse = {
 export class AuthClient {
     constructor(private httpClient: HttpClient) { }
     async login(username: string, password: string): Promise<Token | Exception> {
-        const resp = await this.httpClient.post("/", {
+        const resp = await this.httpClient.post("", {
             "meta": {
                 "class": "Impulse"
             },
@@ -149,7 +149,7 @@ export class AuthClient {
         return new Token(token.data.encryptedToken, token.data.decryptedToken);
     }
     async logout(token: string, source?: string): Promise<void | Exception> {
-        const resp = await this.httpClient.post("/", {
+        const resp = await this.httpClient.post("", {
             "meta": {
                 "class": "Impulse"
             },
@@ -168,7 +168,7 @@ export class AuthClient {
         if (ack.meta.class === "Exception") return new Exception(`logout: Error returned from auth server : ${(ack as ExceptionResponse["data"]["particle"]["data"][0]).data.message}`);
     }
     async getUser(token: string, source?: string): Promise<User | Exception> {
-        const resp = await this.httpClient.post("/", {
+        const resp = await this.httpClient.post("", {
             "meta": {
                 "class": "Impulse"
             },
