@@ -37,6 +37,9 @@ export class VacuoleLocalstorage extends vacuole.Vacuole {
                     overrideCount++;
                 }
             }
+            if (overrideCount === 0) {
+                particles.push(particle);
+            }
         } else {
             particles = [...particles, particle];
         }

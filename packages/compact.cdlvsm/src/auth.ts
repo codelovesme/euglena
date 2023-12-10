@@ -165,7 +165,12 @@ export class AuthClient {
         });
         if (isException(resp)) return resp;
         const { data: { particle: { data: [ack] } } } = resp as ACKResponse | ExceptionResponse;
-        if (ack.meta.class === "Exception") return new Exception(`logout: Error returned from auth server : ${(ack as ExceptionResponse["data"]["particle"]["data"][0]).data.message}`);
+        if (ack.meta.class === "Exception") {
+            if((ack as any).data.message === "Not Authenticated" || (ack as any).data.message === "Not a valid token.") {
+                this.httpClient.onUnauthenticated();
+            }
+            return new Exception(`logout: Error returned from auth server : ${(ack as ExceptionResponse["data"]["particle"]["data"][0]).data.message}`);
+        } 
     }
     async getUser(token: string, source?: string): Promise<User | Exception> {
         const resp = await this.httpClient.post("", {
@@ -184,7 +189,12 @@ export class AuthClient {
         });
         if (isException(resp)) return resp;
         const { data: { particle: { data: [euglenaInfo] } } } = resp as GetEuglenaInfoResponse | ExceptionResponse;
-        if (euglenaInfo.meta.class === "Exception") return new Exception(`getUser: Error returned from auth server : ${(euglenaInfo as ExceptionResponse["data"]["particle"]["data"][0]).data.message}`);
+        if (euglenaInfo.meta.class === "Exception") {
+            if((euglenaInfo.data as any).message === "Not Authenticated" || (euglenaInfo.data as any).message === "Not a valid token.") {
+                this.httpClient.onUnauthenticated();
+            }
+            return new Exception(`getUser: Error returned from auth server : ${(euglenaInfo as ExceptionResponse["data"]["particle"]["data"][0]).data.message}`);
+        }
         const user = (euglenaInfo as GetEuglenaInfoResponse["data"]["particle"]["data"][0]).data;
         return user;
     }

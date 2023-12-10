@@ -6,17 +6,19 @@ export type Method = "get" | "put" | "post" | "delete";
 
 export type Native = object | string | boolean | number;
 
-export class HttpClientAxios extends httpClient.HttpClient{
+export class HttpClientAxios extends httpClient.HttpClient {
     constructor(
+        serverEuglenaName: string,
         /**
          * host:port pair
          */
-        destination: string
-    ) { 
-        super(destination);
+        destination: string,
+        nucleus: httpClient.Nucleus
+    ) {
+        super(serverEuglenaName, destination, nucleus);
     }
 
-    async send(method: Method, path: string, body: any,headers: sys.Headers = {}): Promise<Native | Exception> {
+    async send(method: Method, path: string, body: any, headers: sys.Headers = {}): Promise<Native | Exception> {
         const url = `${this.destination}/${path}`;
         let resp: any = undefined;
         try {
@@ -30,20 +32,21 @@ export class HttpClientAxios extends httpClient.HttpClient{
         } catch (e: any) {
             return new Exception(`Error occurred while running axios: ${e.message || JSON.stringify(e)}`);
         }
+        if(resp.status === 401) this.onUnauthenticated();
         if (resp.status < 200 || resp.status > 299) return new Exception(`Http error returned from server; Http Code: ${resp.status} Http Body: ${resp.data}`);
         return resp.data;
     }
 
-    async get(path: string, headers?: sys.Headers):Promise<Native | Exception> {
-        return await this.send("get",path, {}, headers);
+    async get(path: string, headers?: sys.Headers): Promise<Native | Exception> {
+        return await this.send("get", path, {}, headers);
     }
     async post(path: string, body: any, headers?: sys.Headers): Promise<Native | Exception> {
-        return await this.send("post",path, body, headers);
+        return await this.send("post", path, body, headers);
     }
-    async put(path: string, body: any, headers: sys.Headers = {}):Promise<Native | Exception> {
-        return await this.send("put",path, body, headers);
+    async put(path: string, body: any, headers: sys.Headers = {}): Promise<Native | Exception> {
+        return await this.send("put", path, body, headers);
     }
     async delete(path: string, headers: sys.Headers = {}): Promise<Native | Exception> {
-        return await this.send("delete",path, {}, headers);
+        return await this.send("delete", path, {}, headers);
     }
 }
