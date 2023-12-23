@@ -114,6 +114,9 @@ TODO :
 
 [organelles](docs/organelle.md)
 
+[compact](docs/compact.md)
+
+
 # How to
 
 ## Install dependencies
