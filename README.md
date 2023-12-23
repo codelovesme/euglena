@@ -114,6 +114,9 @@ TODO :
 
 [organelles](docs/organelle.md)
 
+[compact](docs/compact.md)
+
+
 # How to
 
 ## Install dependencies
@@ -130,6 +133,7 @@ TODO :
 | ------------- | ------------------- | --------------------- | ---------------------- | -------------------- |
 |1.4.4          |es5                  |12 or higher           |11.2.12                 |17.0.2                |
 |3.0.0          |es5                  |18.10 or higher        |15.0.2                  |18.2.0                |
+
 
 ## Import strategy
 
