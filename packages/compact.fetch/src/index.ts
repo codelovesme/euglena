@@ -40,8 +40,8 @@ export class HttpClientFetch extends httpClient.HttpClient {
         if (resp.status === 401) this.onUnauthenticated();
         //parse response body
         let data;
-        const contentType: string = resp.headers.get('Content-Type');
-        if (contentType.includes("application/json")) {
+        const contentType: string = resp.headers.get('Content-Type') || resp.headers.get('content-type');
+        if (contentType?.includes("application/json")) {
             data = await resp.json();
         } else {
             data = await resp.text();
