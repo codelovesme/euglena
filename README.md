@@ -134,6 +134,7 @@ TODO :
 |1.4.4          |es5                  |12 or higher           |11.2.12                 |17.0.2                |
 |3.0.0          |es5                  |18.10 or higher        |15.0.2                  |18.2.0                |
 
+
 ## Import strategy
 
 If it is a particle / organelle file or folder named abc.particle or def.organelle then import statement in the folder index.ts file will be like shown below.
