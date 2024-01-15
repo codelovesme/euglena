@@ -4,7 +4,7 @@ import {vacuole, Exception, Particle} from "@euglena/compact";
 
 export class VacuoleMongoDB extends vacuole.Vacuole {
     private db?: Db;
-    constructor(private database: string,
+    constructor(private databaseName: string, private collectionName: string, 
         /**
          * @example
          * "mongodb://dbdevc2scdlvsm:<password>@dbdevc2scdlvsm.documents.azure.com:10255/?ssl=true"
@@ -17,7 +17,7 @@ export class VacuoleMongoDB extends vacuole.Vacuole {
         const client = new MongoClient(this.uri);
         try {
             await client.connect();
-            this.db = client.db(this.database);
+            this.db = client.db(this.databaseName);
             this.nucleus.log("Db is Online", "Info");
         } catch (err) {
             this.nucleus.log("Couldn't connect to db", "Error");
@@ -26,7 +26,7 @@ export class VacuoleMongoDB extends vacuole.Vacuole {
     }
     async read(query: Partial<Particle>, count: number | "All" = 1): Promise<Particle[] | Exception> {
         try {
-            const collection = this.db!.collection<Particle>("particles");
+            const collection = this.db!.collection<Particle>(this.collectionName);
             const findResult = collection.find(cessnalib.js.Class.toDotNotation(query), { _id: 0 } as any);
             const particleArray: Particle[] = (await findResult.toArray()).map(item => {
                 delete (item as any)._id;
@@ -42,21 +42,21 @@ export class VacuoleMongoDB extends vacuole.Vacuole {
             if (query) {
                 if (count === "All") {
                     return this.db!
-                        .collection("particles")
+                        .collection(this.collectionName)
                         .updateMany(cessnalib.js.Class.toDotNotation(query), particle, { upsert: true }, async (err, doc) => {
                             if (err) return resolve(new Exception(JSON.stringify(err)));
                             return resolve();
                         });
                 } else {
                     return this.db!
-                        .collection("particles")
+                        .collection(this.collectionName)
                         .replaceOne(cessnalib.js.Class.toDotNotation(query), particle, { upsert: true }, (err, doc) => {
                             if (err) return resolve(new Exception(JSON.stringify(err)));
                             return resolve();
                         });
                 }
             } else {
-                return this.db!.collection("particles").insertOne(particle, (err: any) => {
+                return this.db!.collection(this.collectionName).insertOne(particle, (err: any) => {
                     if (err) return resolve(new Exception(JSON.stringify(err)));
                     return resolve();
                 });
@@ -65,7 +65,7 @@ export class VacuoleMongoDB extends vacuole.Vacuole {
     }
     async saveAll(data: Particle[]): Promise<void | Exception> {
         return new Promise((resolve) => {
-            this.db!.collection("particles").insertMany(data, async (err: any, result: any) => {
+            this.db!.collection(this.collectionName).insertMany(data, async (err: any, result: any) => {
                 if (err) return resolve(new Exception(JSON.stringify(err)));
                 return resolve();
             });
@@ -74,12 +74,12 @@ export class VacuoleMongoDB extends vacuole.Vacuole {
     async remove(query: Partial<Particle>, count: number | "All" = 1): Promise<void | Exception> {
         return new Promise((resolve) => {
             if (count === "All") {
-                this.db!.collection("particles").deleteMany(cessnalib.js.Class.toDotNotation(query), (err: any, doc: any) => {
+                this.db!.collection(this.collectionName).deleteMany(cessnalib.js.Class.toDotNotation(query), (err: any, doc: any) => {
                     if (err) return resolve(new Exception(JSON.stringify(err)));
                     return resolve();
                 });
             } else {
-                this.db!.collection("particles").deleteOne(cessnalib.js.Class.toDotNotation(query), (err: any, doc: any) => {
+                this.db!.collection(this.collectionName).deleteOne(cessnalib.js.Class.toDotNotation(query), (err: any, doc: any) => {
                     if (err) return resolve(new Exception(JSON.stringify(err)));
                     return resolve();
                 });

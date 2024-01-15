@@ -5,7 +5,8 @@ import { MongoClient, Db } from "mongodb";
 
 export type Sap = cell.organelle.Sap<
     {
-        database: string;
+        databaseName: string;
+        collectionName: string;
 
         /**
          * @example
@@ -22,11 +23,10 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
         sap = p.data;
     },
     GetAlive: async (p, { cp, t }) => {
-        const { database, uri } = sap;
-        const client = new MongoClient(uri);
+        const client = new MongoClient(sap.uri);
         try {
             await client.connect();
-            db = client.db(database);
+            db = client.db(sap.databaseName);
             t(cp("Log", { message: "Db is Online", level: "Info" }));
             return cp("ACK");
         } catch (err) {
@@ -38,7 +38,7 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
     ReadParticle: async (p, { cp, t }) => {
         const { query } = p.data;
         try {
-            const collection = db.collection<Particle>("particles");
+            const collection = db.collection<Particle>(sap.collectionName);
             const findResult = collection.find(cessnalib.js.Class.toDotNotation(query), { _id: 0 } as any);
             const particleArray: Particle[] = (await findResult.toArray()).map(item => {
                 delete (item as any)._id;
@@ -54,7 +54,7 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
         return new Promise((resolve) => {
             const data = p.data;
             if (data instanceof Array) {
-                db.collection("particles").insertMany(data, async (err: any, result: any) => {
+                db.collection(sap.collectionName).insertMany(data, async (err: any, result: any) => {
                     if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(cp("ACK"));
                 });
@@ -81,7 +81,7 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
                             });
                     }
                 } else {
-                    return db.collection("particles").insertOne(particle, (err: any) => {
+                    return db.collection(sap.collectionName).insertOne(particle, (err: any) => {
                         if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
                         return resolve(cp("ACK"));
                     });
@@ -93,12 +93,12 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
         return new Promise((resolve) => {
             const { query, count } = p.data;
             if (count === "all") {
-                db.collection("particles").deleteMany(cessnalib.js.Class.toDotNotation(query), (err: any, doc: any) => {
+                db.collection(sap.collectionName).deleteMany(cessnalib.js.Class.toDotNotation(query), (err: any, doc: any) => {
                     if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(cp("ACK"));
                 });
             } else {
-                db.collection("particles").deleteOne(cessnalib.js.Class.toDotNotation(query), (err: any, doc: any) => {
+                db.collection(sap.collectionName).deleteOne(cessnalib.js.Class.toDotNotation(query), (err: any, doc: any) => {
                     if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
                     return resolve(cp("ACK"));
                 });
