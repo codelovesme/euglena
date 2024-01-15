@@ -1,7 +1,7 @@
 {
     "name": "@euglena/script",
     "domain": "codeloves.me",
-    "version": "4.4.0",
+    "version": "5.0.0",
     "private": false,
     "license": "GPL-2.0",
     "main": "dist/index.js",
