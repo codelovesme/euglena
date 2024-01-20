@@ -67,14 +67,14 @@ export default dco<sys.io.store.vacuole.Vacuole, Sap>({
                 if (query) {
                     if (count === "all") {
                         return db
-                            .collection("particles")
+                            .collection(sap.collectionName)
                             .updateMany(cessnalib.js.Class.toDotNotation(query), particle, { upsert: true }, async (err, doc) => {
                                 if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
                                 return resolve(cp("ACK"));
                             });
                     } else {
                         return db
-                            .collection("particles")
+                            .collection(sap.collectionName)
                             .replaceOne(cessnalib.js.Class.toDotNotation(query), particle, { upsert: true }, (err, doc) => {
                                 if (err) return resolve(cp("Exception", { message: JSON.stringify(err) }));
                                 return resolve(cp("ACK"));
