@@ -21,8 +21,8 @@
         "cessnalib": "^0.19.0"
     },
     "peerDependencies": {
-        "@euglena/core": "^5.0.0",
-        "@euglena/template": "^5.0.0"
+        "@euglena/core": "^5.0.1",
+        "@euglena/template": "^5.0.1"
     },
     "files": [
         "dist"
