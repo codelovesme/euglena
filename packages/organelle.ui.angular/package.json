@@ -22,8 +22,8 @@
     },
     "peerDependencies": {
         "@angular/core": "^15.0.2",
-        "@euglena/core": "^5.0.2",
-        "@euglena/template": "^5.0.2"
+        "@euglena/core": "^5.0.3",
+        "@euglena/template": "^5.0.3"
     },
     "devDependencies": {
         "@angular/core": "^15.0.2"

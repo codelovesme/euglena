@@ -23,8 +23,8 @@
         "express": "^4.17.1"
     },
     "peerDependencies": {
-        "@euglena/core": "^5.0.2",
-        "@euglena/template": "^5.0.2"
+        "@euglena/core": "^5.0.3",
+        "@euglena/template": "^5.0.3"
     },
     "files": [
         "dist"
