@@ -19,12 +19,12 @@
     },
     "dependencies": {
         "cessnalib": "^0.19.0",
-        "@euglena/core": "^5.0.1",
-        "@euglena/template": "^5.0.1",
-        "@euglena/organelle.vacuole.js": "^5.0.1",
-        "@euglena/organelle.logger.console": "^5.0.1",
-        "@euglena/organelle.nucleus.js": "^5.0.1",
-        "@euglena/organelle.reticulum.js": "^5.0.1"
+        "@euglena/core": "^5.0.2",
+        "@euglena/template": "^5.0.2",
+        "@euglena/organelle.vacuole.js": "^5.0.2",
+        "@euglena/organelle.logger.console": "^5.0.2",
+        "@euglena/organelle.nucleus.js": "^5.0.2",
+        "@euglena/organelle.reticulum.js": "^5.0.2"
     },
     "devDependencies": {
         "typescript": "^4.9.4"
