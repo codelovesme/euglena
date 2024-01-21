@@ -16,7 +16,7 @@ export default dco<sys.io.net.bare.NetServer, Sap>({
     Sap: async ({ data }, { t, cp }) => {
         sap = data;
         server = http.createServer((req, res) => {
-            if (req.method == "POST") {
+            if (req.method?.toUpperCase() == "POST") {
                 var body = "";
                 req.on("data", (data: string) => {
                     body += data;
