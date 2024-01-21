@@ -1,7 +1,7 @@
 {
     "name": "@euglena/organelle.ui.react",
     "domain": "codeloves.me",
-    "version": "5.0.2",
+    "version": "5.0.3",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
