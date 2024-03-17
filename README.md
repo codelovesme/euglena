@@ -11,6 +11,7 @@ less. It has event driven architecture with enhanced side features. Mostly focus
     * Logic reusability
     * Logic update at runtime
     * Testability
+    * Isolation to external dependencies
 
 An euglena application consists of three main part. Organelles, Particles, Genes.
 
