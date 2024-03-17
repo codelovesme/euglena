@@ -22,8 +22,8 @@
         "nodemailer": "^6.9.3"
     },
     "peerDependencies": {
-        "@euglena/core": "^5.0.3",
-        "@euglena/template": "^5.0.3"
+        "@euglena/core": "^5.0.4",
+        "@euglena/template": "^5.0.4"
     },
     "devDependencies": {
         "@types/nodemailer": "^6.4.8"
