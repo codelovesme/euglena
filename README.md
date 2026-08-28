@@ -25,7 +25,7 @@ cdlvsm install euglena --link   # also get a bare `euglena` on PATH
 Or install directly from a release, which does put a bare `euglena` on PATH:
 
 ```bash
-curl -sSf https://raw.githubusercontent.com/codelovesme/euglena-cli/main/install.sh | sh
+curl -sSf https://raw.githubusercontent.com/codelovesme/euglena/main/install.sh | sh
 ```
 
 Linux x86_64 only, for now. Examples below use `cdlvsm euglena` — drop the

@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # Direct installer for the `euglena` CLI from GitHub Releases.
 #
-#   curl -sSf https://raw.githubusercontent.com/codelovesme/euglena-cli/main/install.sh | sh
+#   curl -sSf https://raw.githubusercontent.com/codelovesme/euglena/main/install.sh | sh
 #
 # For the broader codelovesme CLI namespace, prefer `cdlvsm install euglena`
 # (https://github.com/codelovesme/cdlvsm-cli) — this script is the direct path,
@@ -16,7 +16,7 @@
 #   PREFIX           install root (default: $HOME/.local); binary goes in $PREFIX/bin
 set -eu
 
-REPO="codelovesme/euglena-cli"
+REPO="codelovesme/euglena"
 PREFIX="${PREFIX:-$HOME/.local}"
 BIN_DIR="$PREFIX/bin"
 
