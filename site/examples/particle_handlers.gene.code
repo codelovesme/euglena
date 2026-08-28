@@ -1,0 +1,12 @@
+-> A gene is a set of typed particle handlers. Particles are records —
+-> the _class tag decides which handler receives them.
+
+PingResponse = Particle ∩ { _class ∈ "PingResponse", message ∈ String }
+
+Ping { request_id ∈ String } => {
+    emit server.Respond { request_id = request_id, status_code = 200, body = PingResponse { message = "Pong" } } to server
+}
+
+HealthCheck { request_id ∈ String } => {
+    emit server.Respond { request_id = request_id, status_code = 200, body = PingResponse { message = "ok" } } to server
+}

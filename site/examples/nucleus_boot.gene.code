@@ -1,0 +1,11 @@
+-> The nucleus boots the cell: one handler, fired exactly once at birth.
+
+EuglenaHasBeenBorn = Particle ∩ { _class ∈ "EuglenaHasBeenBorn", cell_name ∈ String }
+
+booted = false
+
+EuglenaHasBeenBorn => {
+    booted = true
+    emit logger.Log { message = "[" + cell_name + "] cell booted", level = "Info" } to logger
+    return EuglenaHasBeenBorn { cell_name = cell_name }
+}

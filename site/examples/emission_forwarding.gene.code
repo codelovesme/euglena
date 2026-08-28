@@ -1,0 +1,10 @@
+-> Emission handlers react to what organelles say back — every Log and
+-> Exception emitted anywhere in the cell lands here.
+
+Log { source ∈ String, level ∈ String, message ∈ String } => {
+    emit logger.Log { message = "[" + source + "] " + message, level = level } to logger
+}
+
+Exception { source ∈ String, message ∈ String } => {
+    emit logger.Log { message = "[EXCEPTION:" + source + "] " + message, level = "Error" } to logger
+}

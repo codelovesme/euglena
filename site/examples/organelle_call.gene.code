@@ -1,0 +1,13 @@
+-> Organelles are capability providers. emit … to … get … sends a particle
+-> to the organelle and binds its synchronous reply.
+
+InteractionRecord = Particle ∩ { _class ∈ "InteractionRecord", email ∈ String, action ∈ String }
+
+GetMyInteractions { request_id ∈ String, caller_token ∈ String } => {
+    emit jwt.Decode { token = caller_token } to jwt get decoded
+
+    if decoded.valid {
+        emit store.Find { collection = "interactions", limit = 50 } to store get result
+        emit server.Respond { request_id = request_id, status_code = 200, body = result.items } to server
+    }
+}

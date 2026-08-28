@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>euglena — apps as living cells, written in code</title>
+<meta name="description" content="euglena is a framework for building applications in the Code language: cells, genes, organelles, and particles. Scaffold with euglena init, run with euglena run." />
+<meta property="og:title" content="euglena — apps as living cells, written in code" />
+<meta property="og:description" content="Cells, genes, organelles, and particles — a framework for building apps in the Code language. Scaffold, run, and build with one CLI." />
+<meta property="og:type" content="website" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png" />
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #07090f;
+    --bg-2: #0b0e17;
+    --panel: rgba(255, 255, 255, 0.03);
+    --panel-2: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.09);
+    --border-2: rgba(255, 255, 255, 0.16);
+    --text: #e8ecf4;
+    --muted: #9aa3b5;
+    --muted-2: #6b7385;
+    --teal: #5eead4;
+    --violet: #a78bfa;
+    --pink: #f472b6;
+    --amber: #fbbf24;
+    --green: #86efac;
+    --red: #f87171;
+    --grad: linear-gradient(120deg, #5eead4 0%, #a78bfa 52%, #f472b6 100%);
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: var(--teal); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  ::selection { background: rgba(167, 139, 250, 0.35); }
+
+  /* ---------- background ---------- */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 65% at 50% 0%, #000 25%, transparent 78%);
+    mask-image: radial-gradient(ellipse 90% 65% at 50% 0%, #000 25%, transparent 78%);
+  }
+  .blob { position: fixed; border-radius: 50%; filter: blur(95px); opacity: 0.32; z-index: -1; pointer-events: none; }
+  .blob-1 { width: 540px; height: 540px; background: #0d9488; top: -200px; left: -140px; animation: drift1 26s ease-in-out infinite alternate; }
+  .blob-2 { width: 480px; height: 480px; background: #7c3aed; top: 6%; right: -180px; animation: drift2 34s ease-in-out infinite alternate; }
+  .blob-3 { width: 440px; height: 440px; background: #db2777; bottom: -220px; left: 32%; animation: drift3 40s ease-in-out infinite alternate; }
+  @keyframes drift1 { to { transform: translate(130px, 90px) scale(1.12); } }
+  @keyframes drift2 { to { transform: translate(-110px, 120px) scale(1.08); } }
+  @keyframes drift3 { to { transform: translate(90px, -110px) scale(1.15); } }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 1.5rem;
+    max-width: 1120px; margin: 0 auto;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(7, 9, 15, 0.55);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s, background 0.25s;
+  }
+  nav.scrolled { border-bottom-color: var(--border); background: rgba(7, 9, 15, 0.82); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1120px; margin: 0 auto; }
+  .logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1.1rem; color: var(--text); letter-spacing: -0.01em; }
+  .logo:hover { text-decoration: none; }
+  .logo img { display: block; filter: brightness(1.4) contrast(1.05) drop-shadow(0 0 7px rgba(167,139,250,0.5)); }
+  .nav-links { display: flex; align-items: center; gap: 1.4rem; font-size: 0.92rem; }
+  .nav-links a { color: var(--muted); transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  .nav-links a.gh { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    max-width: 1120px; margin: 0 auto;
+    padding: 5rem 1.5rem 4.5rem;
+    display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 3.5rem; align-items: center;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.8rem; font-weight: 500; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 0.32rem 0.85rem; background: var(--panel);
+    margin-bottom: 1.4rem;
+  }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 0 rgba(94,234,212,0.6); animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(94,234,212,0.55); } 70% { box-shadow: 0 0 0 8px rgba(94,234,212,0); } 100% { box-shadow: 0 0 0 0 rgba(94,234,212,0); } }
+  h1 {
+    display: flex; align-items: center; gap: 0.32em;
+    margin: 0 0 1.1rem;
+    font-size: clamp(3.2rem, 8vw, 5.4rem);
+    font-weight: 800; letter-spacing: -0.035em; line-height: 1.02;
+  }
+  .h1-cursor {
+    display: inline-block; width: 0.42em; height: 0.82em; margin-left: 0.12em;
+    background: var(--grad); border-radius: 3px; vertical-align: baseline;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .tagline { font-size: 1.12rem; color: var(--muted); max-width: 52ch; margin: 0 0 1.8rem; }
+  .tagline b { color: var(--text); font-weight: 600; }
+  .cta { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font: inherit; font-size: 0.95rem; font-weight: 600;
+    border-radius: 10px; padding: 0.7rem 1.25rem; cursor: pointer;
+    border: 1px solid transparent; transition: transform 0.15s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); }
+  .btn-primary { background: var(--grad); color: #0a0c12; box-shadow: 0 10px 30px -10px rgba(167,139,250,0.55); }
+  .btn-primary:hover { box-shadow: 0 16px 40px -12px rgba(167,139,250,0.7); }
+  .btn-ghost { background: var(--panel); color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover { border-color: var(--border-2); background: var(--panel-2); }
+  .kinds { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .kind {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: var(--mono); font-size: 0.78rem; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 8px; padding: 0.3rem 0.65rem; background: var(--panel);
+  }
+  .kind i { width: 8px; height: 8px; border-radius: 3px; display: inline-block; }
+
+  /* hero demo window */
+  .demo-window {
+    border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    background: rgba(11, 14, 23, 0.85); box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+  }
+  .demo-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02);
+  }
+  .demo-bar .d { width: 11px; height: 11px; border-radius: 50%; }
+  .demo-bar .d1 { background: #ff5f57; } .demo-bar .d2 { background: #febc2e; } .demo-bar .d3 { background: #28c840; }
+  .demo-file { margin-left: 0.6rem; font-family: var(--mono); font-size: 0.75rem; color: var(--muted-2); }
+  .demo-body { padding: 1rem 1.1rem; font-family: var(--mono); font-size: 0.86rem; line-height: 1.7; min-height: 210px; }
+  .demo-code { margin: 0; white-space: pre-wrap; word-break: break-word; }
+  .demo-code::after { content: "▌"; color: var(--teal); animation: blink 1s steps(1) infinite; }
+  .demo-out {
+    margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px dashed var(--border);
+    color: var(--muted); white-space: pre-wrap; word-break: break-word;
+    opacity: 0; transform: translateY(4px); transition: opacity 0.4s, transform 0.4s;
+  }
+  .demo-out.show { opacity: 1; transform: none; }
+  .demo-out .lbl { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-2); margin-bottom: 0.35rem; }
+  /* ---------- sections ---------- */
+  section { max-width: 1120px; margin: 0 auto; padding: 4.5rem 1.5rem; scroll-margin-top: 70px; }
+  .overline {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 0.6rem;
+  }
+  h2 { font-size: clamp(1.7rem, 3.5vw, 2.3rem); font-weight: 750; letter-spacing: -0.02em; margin: 0 0 0.7rem; }
+  .section-sub { color: var(--muted); max-width: 60ch; margin: 0 0 2.4rem; }
+
+  /* features */
+  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
+  .feat {
+    border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem 1.3rem;
+    background: var(--panel); transition: transform 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.25s;
+  }
+  .feat:hover { transform: translateY(-3px); border-color: var(--border-2); background: var(--panel-2); box-shadow: 0 18px 40px -22px rgba(0,0,0,0.8); }
+  .feat .ico {
+    width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center;
+    margin-bottom: 0.9rem; border: 1px solid var(--border);
+  }
+  .feat h3 { margin: 0 0 0.35rem; font-size: 1.02rem; font-weight: 650; }
+  .feat p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+  .feat code { font-family: var(--mono); font-size: 0.82em; color: var(--teal); background: rgba(94,234,212,0.08); padding: 0.08em 0.35em; border-radius: 5px; }
+
+  /* quickstart terminal */
+  .term {
+    border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    background: rgba(11, 14, 23, 0.85); box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+  }
+  .term-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02);
+  }
+  .term-bar .d { width: 11px; height: 11px; border-radius: 50%; }
+  .term-bar .d1 { background: #ff5f57; } .term-bar .d2 { background: #febc2e; } .term-bar .d3 { background: #28c840; }
+  .term-title { margin-left: 0.6rem; font-family: var(--mono); font-size: 0.75rem; color: var(--muted-2); }
+  .term-body { padding: 1.1rem 1.2rem; font-family: var(--mono); font-size: 0.88rem; line-height: 1.9; }
+  .term-body .ln { white-space: pre-wrap; word-break: break-word; }
+  .term-body .pr { color: var(--green); user-select: none; }
+  .term-body .cm { color: var(--muted-2); font-style: italic; }
+  .term-body .out { color: var(--muted); }
+  .term-body .hl { color: var(--teal); }
+
+  /* request flow */
+  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; counter-reset: step; }
+  .flow-step {
+    position: relative;
+    border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1rem 1rem;
+    background: var(--panel); transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .flow-step:hover { transform: translateY(-3px); border-color: var(--border-2); background: var(--panel-2); }
+  .flow-step .n {
+    counter-increment: step;
+    display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px;
+    font-family: var(--mono); font-size: 0.8rem; font-weight: 700; color: #0a0c12;
+    background: var(--grad); margin-bottom: 0.7rem;
+  }
+  .flow-step .n::before { content: counter(step); }
+  .flow-step h3 { margin: 0 0 0.3rem; font-size: 0.95rem; font-weight: 650; }
+  .flow-step p { margin: 0; font-size: 0.82rem; color: var(--muted); }
+  .flow-step code { font-family: var(--mono); font-size: 0.8em; color: var(--teal); }
+  .flow-note { margin-top: 1.4rem; font-size: 0.88rem; color: var(--muted); max-width: 70ch; }
+  .flow-note b { color: var(--text); font-weight: 600; }
+
+  /* examples */
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.6rem; }
+  .chip {
+    font: inherit; font-size: 0.83rem; font-weight: 500;
+    color: var(--muted); background: var(--panel); border: 1px solid var(--border);
+    border-radius: 999px; padding: 0.38rem 0.95rem; cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .chip:hover { color: var(--text); border-color: var(--border-2); }
+  .chip.active { color: #0a0c12; background: var(--grad); border-color: transparent; font-weight: 700; }
+  .ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .ex-card {
+    border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.05rem;
+    background: var(--panel); cursor: pointer; text-align: left;
+    transition: transform 0.18s, border-color 0.18s, background 0.18s, box-shadow 0.22s;
+    font: inherit; color: inherit; display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .ex-card:hover { transform: translateY(-3px); border-color: var(--border-2); background: var(--panel-2); box-shadow: 0 16px 36px -22px rgba(0,0,0,0.85); }
+  .ex-top { display: flex; align-items: center; gap: 0.5rem; }
+  .ex-dot { width: 8px; height: 8px; border-radius: 3px; flex: none; }
+  .ex-name { font-family: var(--mono); font-size: 0.85rem; font-weight: 600; color: var(--text); }
+  .ex-desc { font-size: 0.82rem; color: var(--muted); margin: 0; min-height: 2.5em; }
+  .ex-code {
+    margin: 0.2rem 0 0; font-family: var(--mono); font-size: 0.72rem; line-height: 1.55;
+    color: var(--muted-2); background: rgba(0,0,0,0.28); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.6rem 0.7rem; overflow: hidden;
+    display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .ex-card .try { font-size: 0.75rem; color: var(--teal); opacity: 0; transition: opacity 0.15s; }
+  .ex-card:hover .try { opacity: 1; }
+
+  /* example viewer modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 100; display: none;
+    background: rgba(4, 6, 10, 0.72); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 1.5rem;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    width: min(760px, 100%); max-height: 84vh; display: flex; flex-direction: column;
+    border: 1px solid var(--border-2); border-radius: 14px; overflow: hidden;
+    background: rgba(11, 14, 23, 0.97); box-shadow: var(--shadow);
+  }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.8rem 1.1rem; border-bottom: 1px solid var(--border); }
+  .modal-head .t { font-family: var(--mono); font-size: 0.9rem; font-weight: 600; }
+  .modal-head .x { font: inherit; font-size: 0.85rem; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 8px; padding: 0.3rem 0.7rem; cursor: pointer; }
+  .modal-head .x:hover { color: var(--text); border-color: var(--border-2); }
+  .modal pre {
+    margin: 0; padding: 1.1rem 1.2rem; overflow: auto; flex: 1;
+    font-family: var(--mono); font-size: 0.85rem; line-height: 1.7;
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  /* tokens */
+  .tok-c { color: var(--muted-2); font-style: italic; }
+  .tok-s { color: var(--green); }
+  .tok-n { color: var(--teal); }
+  .tok-k { color: var(--violet); font-weight: 600; }
+  .tok-b { color: var(--amber); }
+  .tok-p { color: var(--pink); font-weight: 600; }
+
+  /* ---------- footer ---------- */
+  footer { border-top: 1px solid var(--border); margin-top: 2rem; }
+  .foot-inner { max-width: 1120px; margin: 0 auto; padding: 2rem 1.5rem 3rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; color: var(--muted); font-size: 0.88rem; }
+  .foot-inner code { font-family: var(--mono); font-size: 0.85em; background: var(--panel); border: 1px solid var(--border); border-radius: 5px; padding: 0.08em 0.4em; }
+
+  /* reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; gap: 2.5rem; padding-top: 3.5rem; }
+    .feat-grid, .ex-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .feat-grid, .ex-grid, .flow { grid-template-columns: 1fr; }
+    .nav-links a:not(.gh) { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .blob, .h1-cursor, .demo-code::after, .badge .dot { animation: none; }
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="blob blob-1" aria-hidden="true"></div>
+<div class="blob blob-2" aria-hidden="true"></div>
+<div class="blob blob-3" aria-hidden="true"></div>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#top">
+      <img src="logo.png" alt="the euglena cell mark" width="34" height="34" />
+      euglena
+    </a>
+    <div class="nav-links">
+      <a href="#concepts">Concepts</a>
+      <a href="#quickstart">Quickstart</a>
+      <a href="#flow">How it runs</a>
+      <a href="#examples">Examples</a>
+      <a class="gh" href="https://github.com/codelovesme/euglena-cli" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div>
+    <div class="badge"><span class="dot"></span> apps as living cells · written in code</div>
+    <h1>euglena<span class="h1-cursor" aria-hidden="true"></span></h1>
+    <p class="tagline">
+      A framework for building applications in the <b>Code</b> language — your app is a
+      <b>cell</b>: genes handle typed <b>particles</b>, organelles provide capability, and one
+      CLI scaffolds, runs, and builds it all.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#quickstart">
+        Scaffold an app
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/codelovesme/euglena-cli" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        View source
+      </a>
+    </div>
+    <div class="kinds" aria-label="the parts of a cell">
+      <span class="kind"><i style="background:#5eead4"></i>cell</span>
+      <span class="kind"><i style="background:#a78bfa"></i>gene</span>
+      <span class="kind"><i style="background:#f472b6"></i>organelle</span>
+      <span class="kind"><i style="background:#fbbf24"></i>particle</span>
+      <span class="kind"><i style="background:#86efac"></i>sap</span>
+      <span class="kind"><i style="background:#6b7385"></i>nucleus</span>
+    </div>
+  </div>
+
+  <div class="demo-window" aria-hidden="true">
+    <div class="demo-bar">
+      <span class="d d1"></span><span class="d d2"></span><span class="d d3"></span>
+      <span class="demo-file" id="demo-file">nucleus.gene.code</span>
+    </div>
+    <div class="demo-body">
+      <pre class="demo-code" id="demo-code"></pre>
+      <div class="demo-out" id="demo-out"><span class="lbl">output</span><span id="demo-out-text"></span></div>
+    </div>
+  </div>
+</header>
+<main>
+  <section id="concepts">
+    <div class="reveal">
+      <div class="overline">concepts</div>
+      <h2>Your app is a cell</h2>
+      <p class="section-sub">
+        Euglena borrows its vocabulary from biology on purpose — every part has one job, and
+        the whole stays small enough to hold in your head. Apps are written in the
+        <a href="https://github.com/codelovesme/code" target="_blank" rel="noopener">Code</a> language.
+      </p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal">
+        <div class="ico" style="background:rgba(94,234,212,0.1); color:var(--teal)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>Cell</h3>
+        <p>A running instance of your app — an actor with a mailbox on its own thread. A panic inside one cell can't take down the runtime.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico" style="background:rgba(167,139,250,0.1); color:var(--violet)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></svg>
+        </div>
+        <h3>Gene</h3>
+        <p>A <code>.gene.code</code> file of typed particle handlers — <code>Ping {} =&gt; { … }</code>. Every gene in <code>src/</code> is linked into the cell automatically.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico" style="background:rgba(244,114,182,0.1); color:var(--pink)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>
+        </div>
+        <h3>Organelle</h3>
+        <p>The capability providers a cell calls into — <code>store</code>, <code>jwt</code>, <code>mailer</code>, <code>server</code>, <code>localai</code>… Native ones are <code>.so</code>, browser ones <code>.wasm</code>.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico" style="background:rgba(251,191,36,0.1); color:var(--amber)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>
+        </div>
+        <h3>Particle</h3>
+        <p>The unit of message passing — a typed record like <code>store.Fetch { key = "…" }</code>. Cells emit particles to organelles and to themselves.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico" style="background:rgba(134,239,172,0.1); color:var(--green)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-5 3.4L16.2 20 12 16.4 7.8 20 9 13.4 4 10l6.1-1.2z"/></svg>
+        </div>
+        <h3>SAP config</h3>
+        <p>Self-addressed particles configure each organelle at startup — declared under <code>organelles.&lt;alias&gt;.sap</code> in <code>manifest.json</code>, with <code>${ENV}</code> interpolation for secrets.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico" style="background:rgba(107,115,133,0.15); color:var(--muted)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <h3>Nucleus</h3>
+        <p>The <code>nucleus.gene.code</code> boot gene starts the cell when it's born — the first handler that runs, before any traffic arrives.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="quickstart">
+    <div class="reveal">
+      <div class="overline">quickstart</div>
+      <h2>Three commands to a running app</h2>
+      <p class="section-sub">
+        Install via <code>cdlvsm</code> or straight from a release, then scaffold. No build
+        system, no config files to invent — just genes and a manifest.
+      </p>
+    </div>
+    <div class="term reveal">
+      <div class="term-bar">
+        <span class="d d1"></span><span class="d d2"></span><span class="d d3"></span>
+        <span class="term-title">bash</span>
+      </div>
+      <div class="term-body">
+        <div class="ln"><span class="cm"># install the CLI + the Code interpreter</span></div>
+        <div class="ln"><span class="pr">$</span> cdlvsm install euglena --link</div>
+        <div class="ln"><span class="pr">$</span> cdlvsm install code</div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln"><span class="cm"># scaffold, enter, run</span></div>
+        <div class="ln"><span class="pr">$</span> euglena init myapp</div>
+        <div class="ln out">Created Euglena app 'myapp'</div>
+        <div class="ln"><span class="pr">$</span> cd myapp &amp;&amp; euglena run</div>
+        <div class="ln out"><span class="hl">EuglenaHasBeenBorn</span> { cell_name = "myapp" }</div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln"><span class="cm"># ship it as a native binary</span></div>
+        <div class="ln"><span class="pr">$</span> euglena build --release</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="flow">
+    <div class="reveal">
+      <div class="overline">how it runs</div>
+      <h2>One request, five hops</h2>
+      <p class="section-sub">
+        Inbound HTTP never touches a cell directly. It travels through a single ingress, gets
+        identity injected server-side, and only then reaches your gene.
+      </p>
+    </div>
+    <div class="flow reveal">
+      <div class="flow-step">
+        <span class="n"></span>
+        <h3>Browser / client</h3>
+        <p>Frontend apps compile to WASM and call the API over plain HTTP.</p>
+      </div>
+      <div class="flow-step">
+        <span class="n"></span>
+        <h3>Hub :9900</h3>
+        <p>Serves static assets, enforces the CAPTCHA gate, proxies <code>/proxy/&lt;app&gt;/</code>.</p>
+      </div>
+      <div class="flow-step">
+        <span class="n"></span>
+        <h3>Ingress :9800</h3>
+        <p><code>server.so</code> verifies the JWT, strips client-supplied identity, injects <code>caller_sub</code>.</p>
+      </div>
+      <div class="flow-step">
+        <span class="n"></span>
+        <h3>Your cell</h3>
+        <p>The router dispatches an <code>AppImpulse</code> to the matching gene handler.</p>
+      </div>
+      <div class="flow-step">
+        <span class="n"></span>
+        <h3>Organelles</h3>
+        <p>The cell emits particles to <code>store</code>, <code>jwt</code>, <code>mailer</code>… and responds back up the chain.</p>
+      </div>
+    </div>
+    <p class="flow-note reveal">
+      Identity is <b>server-derived, never client-supplied</b>; what's public vs protected is
+      decided by each app's own <code>public_classes</code> list — the single source of truth.
+    </p>
+  </section>
+
+  <section id="examples">
+    <div class="reveal">
+      <div class="overline">examples</div>
+      <h2>The anatomy, in real code</h2>
+      <p class="section-sub">
+        Hand-written snippets showing each part of the model — current Code syntax throughout.
+        Click any card to read the full snippet.
+      </p>
+    </div>
+    <div class="chips reveal" id="chips" role="tablist" aria-label="filter examples by category"></div>
+    <div class="ex-grid" id="ex-grid"></div>
+  </section>
+</main>
+
+<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-name">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="t" id="modal-name"></span>
+      <button class="x" id="modal-close">close · esc</button>
+    </div>
+    <pre id="modal-code"></pre>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <span>
+      Source at
+      <a href="https://github.com/codelovesme/euglena-cli" target="_blank" rel="noopener">github.com/codelovesme/euglena-cli</a>.
+      Built on the <a href="https://github.com/codelovesme/code" target="_blank" rel="noopener">Code</a> language.
+    </span>
+    <span style="font-family:var(--mono); font-size:0.8rem; color:var(--muted-2)">
+      cells → genes → organelles → particles
+    </span>
+  </div>
+</footer>
+
+<script id="examples-data" type="application/json">__EXAMPLES__</script>
+<script>
+  const EXAMPLES = JSON.parse(document.getElementById("examples-data").textContent);
+  const nav = document.getElementById("nav");
+  const chipsEl = document.getElementById("chips");
+  const gridEl = document.getElementById("ex-grid");
+  const modal = document.getElementById("modal");
+  const modalName = document.getElementById("modal-name");
+  const modalCode = document.getElementById("modal-code");
+  const modalClose = document.getElementById("modal-close");
+
+  /* ---------- syntax highlighting ---------- */
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const TOKEN_RE =
+    /(-> [^\n]*)|("(?:[^"\\]|\\.)*")|(\b\d+(?:\.\d+)?\b)|\b(if|loop|over|break|assert|link|as|type|private|is|not|this|base|return|in|with|yield|fold|by|and|or|get|emit|to)\b|\b(true|false|null)\b|([A-Z][A-Za-z0-9_]*)(?=\s*\{)/g;
+  function highlight(src) {
+    let out = "", last = 0, m;
+    TOKEN_RE.lastIndex = 0;
+    while ((m = TOKEN_RE.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      const [full, comment, str, num, kw, bool, particle] = m;
+      if (comment) out += `<span class="tok-c">${esc(full)}</span>`;
+      else if (str) out += `<span class="tok-s">${esc(full)}</span>`;
+      else if (num) out += `<span class="tok-n">${esc(full)}</span>`;
+      else if (kw) out += `<span class="tok-k">${esc(full)}</span>`;
+      else if (bool) out += `<span class="tok-b">${esc(full)}</span>`;
+      else if (particle) out += `<span class="tok-p">${esc(full)}</span>`;
+      last = TOKEN_RE.lastIndex;
+    }
+    out += esc(src.slice(last));
+    return out;
+  }
+
+  /* ---------- examples gallery ---------- */
+  const CAT_COLORS = {
+    "Nucleus": "#6b7385",
+    "Particles": "#fbbf24",
+    "Organelles": "#f472b6",
+    "SAP Config": "#86efac",
+    "Loops": "#a78bfa",
+  };
+  const catColor = (c) => CAT_COLORS[c] || "#9aa3b5";
+  const cats = [...new Set(EXAMPLES.map((e) => e.category))];
+
+  function makeChip(label, cat) {
+    const b = document.createElement("button");
+    b.className = "chip" + (cat === "all" ? " active" : "");
+    b.textContent = label;
+    b.dataset.cat = cat;
+    b.addEventListener("click", () => {
+      chipsEl.querySelectorAll(".chip").forEach((c) => c.classList.toggle("active", c === b));
+      filterGrid(cat);
+    });
+    chipsEl.appendChild(b);
+  }
+  function filterGrid(cat) {
+    gridEl.querySelectorAll(".ex-card").forEach((card) => {
+      card.style.display = cat === "all" || card.dataset.cat === cat ? "" : "none";
+    });
+  }
+  makeChip("All", "all");
+  cats.forEach((c) => makeChip(c, c));
+
+  function openExample(ex) {
+    modalName.textContent = ex.name + ".code";
+    modalCode.innerHTML = highlight(ex.code) + "\n";
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeExample() {
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+  modalClose.addEventListener("click", closeExample);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeExample(); });
+  window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeExample(); });
+
+  for (const ex of EXAMPLES) {
+    const card = document.createElement("button");
+    card.className = "ex-card reveal";
+    card.dataset.cat = ex.category;
+    card.innerHTML = `
+      <div class="ex-top">
+        <span class="ex-dot" style="background:${catColor(ex.category)}"></span>
+        <span class="ex-name">${esc(ex.name)}.code</span>
+      </div>
+      <p class="ex-desc">${esc(ex.description || ex.name)}</p>
+      <pre class="ex-code">${highlight(ex.code.split("\n").slice(0, 6).join("\n"))}</pre>
+      <span class="try">read the full snippet →</span>`;
+    card.addEventListener("click", () => openExample(ex));
+    gridEl.appendChild(card);
+  }
+
+  /* ---------- hero demo ---------- */
+  const DEMOS = [
+    {
+      file: "nucleus.gene.code",
+      code: '-> Boot gene — runs once when the cell is born.\n\nEuglenaHasBeenBorn = Particle ∩ { _class ∈ "EuglenaHasBeenBorn", cell_name ∈ String }\n\nEuglenaHasBeenBorn => {\n    emit logger.Log { message = "cell booted", level = "Info" } to logger\n    return EuglenaHasBeenBorn { cell_name = cell_name }\n}',
+      out: 'EuglenaHasBeenBorn { cell_name = "myapp" }',
+    },
+    {
+      file: "ping_handler.gene.code",
+      code: 'Ping { request_id ∈ String } => {\n    -> Respond to the caller and log the interaction\n    emit store.Insert { collection = "interactions", doc = PingRecord { action = "ping" } } to store\n    emit server.Respond { request_id = request_id, status_code = 200, body = Pong { message = "Pong" } } to server\n}',
+      out: 'HTTP 200 → Pong { message = "Pong" }',
+    },
+    {
+      file: "manifest.json",
+      code: '{\n  "name": "myapp",\n  "organelles": {\n    "logger": "organelles/console.so",\n    "store": {\n      "path": "organelles/mongodb.so",\n      "sap": { "database": "myapp", "collection": "state" }\n    }\n  }\n}',
+      out: 'organelles sapped at cell startup',
+    },
+  ];
+  const demoFile = document.getElementById("demo-file");
+  const demoCode = document.getElementById("demo-code");
+  const demoOut = document.getElementById("demo-out");
+  const demoOutText = document.getElementById("demo-out-text");
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  async function typeText(el, text) {
+    el.textContent = "";
+    for (const ch of text) {
+      el.textContent += ch;
+      await sleep(13);
+    }
+  }
+  async function demoLoop() {
+    if (reduced) {
+      demoFile.textContent = DEMOS[0].file;
+      demoCode.textContent = DEMOS[0].code;
+      demoOutText.textContent = DEMOS[0].out;
+      demoOut.classList.add("show");
+      return;
+    }
+    let i = 0;
+    for (;;) {
+      const d = DEMOS[i % DEMOS.length];
+      i++;
+      demoFile.textContent = d.file;
+      demoOut.classList.remove("show");
+      await typeText(demoCode, d.code);
+      await sleep(420);
+      demoOutText.textContent = d.out;
+      demoOut.classList.add("show");
+      await sleep(4600);
+    }
+  }
+
+  /* ---------- scroll effects ---------- */
+  const io = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      }),
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  window.addEventListener("scroll", () => nav.classList.toggle("scrolled", window.scrollY > 8), { passive: true });
+
+  demoLoop();
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+name: Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/site.yml"
+  pull_request:
+    paths:
+      - "site/**"
+      - ".github/workflows/site.yml"
+
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-site:
+    name: Build static site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble dist
+        run: python3 site/build.py . site/dist
+
+      - name: Check placeholder replaced
+        run: |
+          if grep -q "__EXAMPLES__" site/dist/index.html; then
+            echo "::error::__EXAMPLES__ placeholder still present in dist"
+            exit 1
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: euglena-site
+          path: site/dist

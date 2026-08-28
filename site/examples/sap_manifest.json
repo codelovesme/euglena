@@ -1,0 +1,22 @@
+-> SAP config lives in manifest.json, not in code. ${ENV} values are
+-> interpolated from .env so secrets stay out of version control.
+
+{
+  "name": "myapp",
+  "runtime": "native",
+  "organelles": {
+    "logger": "organelles/console.so",
+    "server": {
+      "path": "organelles/server.so",
+      "sap": { "public_classes": ["HealthCheck"] }
+    },
+    "store": {
+      "path": "organelles/mongodb.so",
+      "sap": {
+        "connection_string": "${MONGO_URI}",
+        "database": "myapp",
+        "collection": "state"
+      }
+    }
+  }
+}
