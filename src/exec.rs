@@ -2,71 +2,68 @@ use std::path::Path;
 use std::path::PathBuf;
 use std::process;
 
-use crate::codegen::generate_main_code_file;
-use crate::config;
+use crate::codegen;
 
-/// Invoke the `code` interpreter with the given subcommand and optional file argument.
-///
-/// Exits with the interpreter's exit code on failure.
-pub fn run_code(command: &str, file: Option<&str>, release: bool) {
+/// The minimum `code` version euglena generates valid syntax for. Everything
+/// this crate emits — comment style, particle/handler syntax, `link`,
+/// `.code/` project layout — targets this baseline; below it, generated
+/// programs fail to parse. Recorded here once so the check and its error
+/// text can never drift from each other.
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 1, 0);
+
+pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
+    format!("{major}.{minor}.{patch}")
+}
+
+/// Run a project (or a bare `.code` file/directory with no manifest) through
+/// `code run`.
+pub fn run(path: &str) {
     let binary = find_code_binary_or_exit();
+    let entry_arg = resolve_entry_arg(path);
 
-    let project_root = project_root_from_file(file);
+    let status = process::Command::new(&binary)
+        .arg("run")
+        .arg(&entry_arg)
+        .status();
+    exit_on_status(&binary, status);
+}
 
-    // If the project has a manifest.json, generate the entry in a temp dir
-    // so it never appears in the project source tree.
-    let generated_entry: Option<PathBuf> = if project_root.join("manifest.json").is_file() {
-        match generate_main_code_file(&project_root) {
-            Ok(p) => Some(p),
-            Err(e) => {
-                eprintln!("euglena: failed to generate main.code: {}", e);
-                process::exit(1);
-            }
-        }
-    } else {
-        None
-    };
+/// Compile a project (or a bare `.code` file/directory) through `code build`.
+pub fn build(path: &str, release: bool, target: Option<&str>, output: Option<&str>) {
+    let binary = find_code_binary_or_exit();
+    let entry_arg = resolve_entry_arg(path);
 
     let mut cmd = process::Command::new(&binary);
-    cmd.arg(command);
-
-    // Prefer the generated temp entry; fall back to the user-supplied path.
-    match &generated_entry {
-        Some(gen_path) => {
-            cmd.arg(gen_path);
-        }
-        None => {
-            if let Some(f) = file {
-                cmd.arg(resolve_entry_file(f));
-            }
-        }
+    cmd.arg("build").arg(&entry_arg);
+    cmd.args(["--target", target.unwrap_or("exe")]);
+    if release {
+        cmd.arg("--release");
+    }
+    if let Some(o) = output {
+        cmd.args(["--output", o]);
     }
 
-    if command == "build" {
-        cmd.args(["--target", "exe"]);
-        if release {
-            cmd.arg("--release");
-        }
-    }
+    let status = cmd.status();
+    exit_on_status(&binary, status);
+}
 
-    // Build CODE_PATH: organelle search dirs + project src/ for gene files.
-    let start_dir = discovery_start_dir(file);
-    let mut discovered_paths = discover_euglena_organelles_paths(&start_dir);
-    if generated_entry.is_some() {
-        // Gene files live in src/; the temp entry cannot find them by relative
-        // path, so add src/ explicitly so `link foo.gene.code` resolves there.
-        let src_dir = project_root.join("src");
-        if src_dir.is_dir() {
-            discovered_paths.insert(0, src_dir);
-        }
-    }
-    let merged_code_path = merge_code_path_env(discovered_paths);
-    if !merged_code_path.is_empty() {
-        cmd.env("CODE_PATH", merged_code_path);
-    }
+/// `code format`, defaulting to `src/` and `tests/` when no paths are given.
+pub fn format(check: bool, paths: &[String]) {
+    let binary = find_code_binary_or_exit();
 
-    let status = cmd.status().unwrap_or_else(|e| {
-        cleanup_generated_entry(&generated_entry);
+    let mut cmd = process::Command::new(&binary);
+    cmd.arg("format");
+    if check {
+        cmd.arg("--check");
+    }
+    cmd.args(paths);
+
+    let status = cmd.status();
+    exit_on_status(&binary, status);
+}
+
+fn exit_on_status(binary: &str, status: std::io::Result<process::ExitStatus>) {
+    let status = status.unwrap_or_else(|e| {
         eprintln!("euglena: failed to run '{}': {}", binary, e);
         eprintln!("If this path is wrong, update it with:");
         eprintln!(
@@ -75,122 +72,96 @@ pub fn run_code(command: &str, file: Option<&str>, release: bool) {
         );
         process::exit(1);
     });
-
-    // Delete temp entry dir regardless of exit code.
-    cleanup_generated_entry(&generated_entry);
-
     if !status.success() {
         process::exit(status.code().unwrap_or(1));
     }
 }
 
-/// Remove the temp directory containing the generated entry file.
-fn cleanup_generated_entry(generated: &Option<PathBuf>) {
-    if let Some(path) = generated {
-        if let Some(parent) = path.parent() {
-            let _ = std::fs::remove_dir_all(parent);
-        }
-    }
-}
-
-fn discovery_start_dir(file: Option<&str>) -> PathBuf {
-    if let Some(f) = file {
-        let resolved = resolve_entry_file(f);
-        let path = Path::new(&resolved);
-        let base = if path.is_dir() {
-            path.to_path_buf()
-        } else {
-            path.parent().unwrap_or(Path::new(".")).to_path_buf()
-        };
-        return std::fs::canonicalize(base)
-            .unwrap_or_else(|_| std::env::current_dir().unwrap_or_else(|_| PathBuf::from(".")));
-    }
-    std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))
-}
-
-/// Return the project root for the given entry file (or the current working
-/// directory when no file is specified).
+/// Resolve the `run`/`build` positional argument to what actually gets
+/// handed to `code`. A manifest.json makes this an euglena app: the entry is
+/// (re)generated at the project root (see `codegen::write_main_code`) and
+/// that root directory is what's passed — `code`'s own "a directory means
+/// its main.code" convention does the rest, and installed organelles resolve
+/// natively since the entry now lives where `.code/` actually is.
 ///
-/// If `file` points to `src/main.code` (or the `src/` directory one level up
-/// from the entry file), walk up one extra level to reach the project root
-/// that contains `manifest.json`.
-fn project_root_from_file(file: Option<&str>) -> PathBuf {
-    let cwd = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
-
-    let base = if let Some(f) = file {
-        let resolved = resolve_entry_file(f);
-        let path = Path::new(&resolved);
-        // If the resolved path is a directory, that IS the project root.
-        if path.is_dir() {
-            return std::fs::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
+/// With no manifest.json, `path` is passed straight through: a bare `.code`
+/// file or a plain (non-euglena) `code` project.
+fn resolve_entry_arg(path: &str) -> String {
+    let project_root = project_root_from_path(path);
+    if project_root.join("manifest.json").is_file() {
+        if let Err(e) = codegen::write_main_code(&project_root) {
+            eprintln!("euglena: failed to generate main.code: {}", e);
+            process::exit(1);
         }
-        // Otherwise go up from the file to find the root.
-        // For "src/main.code" the parent is "src/", grandparent is the project root.
-        match path.parent() {
-            Some(p) if p.ends_with("src") => p.parent().unwrap_or(&cwd).to_path_buf(),
-            Some(p) => p.to_path_buf(),
-            None => cwd.clone(),
-        }
+        project_root.to_string_lossy().to_string()
     } else {
-        cwd.clone()
-    };
+        path.to_string()
+    }
+}
 
+/// The project root a `run`/`build` path argument implies: the path itself
+/// when it names a directory, or its parent when it names a file.
+pub(crate) fn project_root_from_path(path: &str) -> PathBuf {
+    let p = Path::new(path);
+    let base = if p.is_dir() {
+        p.to_path_buf()
+    } else {
+        p.parent().unwrap_or(Path::new(".")).to_path_buf()
+    };
     std::fs::canonicalize(&base).unwrap_or(base)
 }
 
-fn discover_euglena_organelles_paths(start_dir: &Path) -> Vec<PathBuf> {
-    let mut paths = Vec::new();
-    for ancestor in start_dir.ancestors() {
-        let candidate = ancestor.join("euglena-organelles");
-        if candidate.is_dir() {
-            paths.push(candidate);
-        }
-    }
-    paths
-}
-
-fn merge_code_path_env(discovered_paths: Vec<PathBuf>) -> String {
-    let mut ordered: Vec<String> = Vec::new();
-
-    for p in discovered_paths {
-        let s = p.to_string_lossy().to_string();
-        if !ordered.contains(&s) {
-            ordered.push(s);
-        }
-    }
-
-    if let Ok(existing) = std::env::var("CODE_PATH") {
-        for part in existing.split(':').filter(|s| !s.is_empty()) {
-            let p = part.to_string();
-            if !ordered.contains(&p) {
-                ordered.push(p);
-            }
-        }
-    }
-
-    ordered.join(":")
-}
-
-fn resolve_entry_file(input: &str) -> String {
-    let path = Path::new(input);
-    if path.is_dir() {
-        return path.join("src/main.code").to_string_lossy().to_string();
-    }
-    input.to_string()
-}
-
-fn find_code_binary_or_exit() -> String {
+pub(crate) fn find_code_binary_or_exit() -> String {
     // 1. An explicitly configured path always wins (dev builds, custom
     //    locations) — `euglena code set` is the override, not a requirement.
-    if let Some(path) = config::read_code_binary_path() {
-        return path.to_string_lossy().to_string();
+    //    Still version-checked: a stale configured binary should fail here,
+    //    by name, rather than as a parse error partway through a generated
+    //    file.
+    if let Some(path) = crate::config::read_code_binary_path() {
+        match code_interpreter_version(&path) {
+            Some(v) if v >= MIN_CODE_VERSION => return path.to_string_lossy().to_string(),
+            Some(v) => {
+                eprintln!(
+                    "euglena: configured Code interpreter '{}' is v{}, but euglena requires >= v{}.",
+                    path.display(),
+                    fmt_version(v),
+                    fmt_version(MIN_CODE_VERSION)
+                );
+                eprintln!("Install a newer one, then re-point euglena if the path changed:");
+                eprintln!("  cdlvsm install code");
+                eprintln!(
+                    "  {} code set /absolute/path/to/code",
+                    crate::invocation::command_prefix()
+                );
+                process::exit(1);
+            }
+            None => {
+                eprintln!(
+                    "euglena: configured path '{}' does not look like a Code interpreter (failed `--version`)",
+                    path.display()
+                );
+                process::exit(1);
+            }
+        }
     }
 
     // 2. Otherwise discover cdlvsm's `cdlvsm-code` shim on PATH, so the common
     //    flow (`cdlvsm install code && cdlvsm install euglena`) needs no manual
     //    wiring — both land in a PATH dir like ~/.local/bin.
-    if let Some(found) = discover_cdlvsm_code_on_path() {
-        return found;
+    match discover_cdlvsm_code_on_path() {
+        Some(CodeDiscovery::Ready(path)) => return path,
+        Some(CodeDiscovery::TooOld { path, version }) => {
+            eprintln!(
+                "euglena: found Code v{} at '{}', but euglena requires >= v{}.",
+                fmt_version(version),
+                path,
+                fmt_version(MIN_CODE_VERSION)
+            );
+            eprintln!("Upgrade it:");
+            eprintln!("  cdlvsm install code");
+            process::exit(1);
+        }
+        None => {}
     }
 
     eprintln!("euglena: no Code interpreter found.");
@@ -204,35 +175,107 @@ fn find_code_binary_or_exit() -> String {
     process::exit(1);
 }
 
+pub(crate) enum CodeDiscovery {
+    Ready(String),
+    TooOld {
+        path: String,
+        version: (u32, u32, u32),
+    },
+}
+
 /// Search PATH for cdlvsm's `cdlvsm-code` shim — and ONLY that name.
 ///
 /// Deliberately NOT a bare `code`: on Linux `code` is VS Code's own CLI, and
 /// euglena must never risk invoking (or even running `--version` on) that. A
 /// `code` binary installed some other way is supported via an explicit
-/// `euglena code set`. The `--version` check below is a final guard that the
-/// shim really resolves to the Code interpreter.
-fn discover_cdlvsm_code_on_path() -> Option<String> {
+/// `euglena code set`.
+pub(crate) fn discover_cdlvsm_code_on_path() -> Option<CodeDiscovery> {
     let path_var = std::env::var_os("PATH")?;
     for dir in std::env::split_paths(&path_var) {
         let candidate = dir.join("cdlvsm-code");
-        if is_code_interpreter(&candidate) {
-            return Some(candidate.to_string_lossy().to_string());
+        if let Some(version) = code_interpreter_version(&candidate) {
+            let path_str = candidate.to_string_lossy().to_string();
+            return Some(if version >= MIN_CODE_VERSION {
+                CodeDiscovery::Ready(path_str)
+            } else {
+                CodeDiscovery::TooOld {
+                    path: path_str,
+                    version,
+                }
+            });
         }
     }
     None
 }
 
-/// True if `path` runs and reports itself as the Code interpreter (`Code v…`).
-/// A guard against a broken/dangling shim resolving to something that isn't
-/// the interpreter.
-fn is_code_interpreter(path: &Path) -> bool {
+/// `path`'s reported version, if it runs and identifies itself as the Code
+/// interpreter (`Code vX.Y.Z`) — a guard against a broken/dangling shim, or
+/// something else entirely, resolving to that name. `None` either way means
+/// "not usable as the interpreter", never "usable but ancient" — version
+/// comparison is the caller's job.
+pub(crate) fn code_interpreter_version(path: &Path) -> Option<(u32, u32, u32)> {
     if !path.is_file() {
-        return false;
+        return None;
     }
-    match process::Command::new(path).arg("--version").output() {
-        Ok(out) => {
-            out.status.success() && String::from_utf8_lossy(&out.stdout).starts_with("Code v")
+    let out = process::Command::new(path).arg("--version").output().ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    parse_code_version(&String::from_utf8_lossy(&out.stdout))
+}
+
+/// Parse a `Code vX.Y.Z…` line into `(X, Y, Z)`. Trailing non-digit text
+/// after the patch number (a prerelease/build suffix) is tolerated and
+/// ignored, so `Code v9.9.9-fake` still parses as `(9, 9, 9)`.
+fn parse_code_version(s: &str) -> Option<(u32, u32, u32)> {
+    let first_line = s.lines().next()?;
+    let rest = first_line.strip_prefix("Code v")?;
+    let mut parts = rest.splitn(3, '.');
+    let major: u32 = parts.next()?.parse().ok()?;
+    let minor: u32 = parts.next()?.parse().ok()?;
+    let patch = match parts.next() {
+        Some(field) => {
+            let digits: String = field.chars().take_while(|c| c.is_ascii_digit()).collect();
+            if digits.is_empty() {
+                0
+            } else {
+                digits.parse().ok()?
+            }
         }
-        Err(_) => false,
+        None => 0,
+    };
+    Some((major, minor, patch))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_plain_version() {
+        assert_eq!(parse_code_version("Code v1.1.3"), Some((1, 1, 3)));
+    }
+
+    #[test]
+    fn parses_version_with_suffix() {
+        assert_eq!(parse_code_version("Code v9.9.9-fake"), Some((9, 9, 9)));
+    }
+
+    #[test]
+    fn parses_version_with_no_patch() {
+        assert_eq!(parse_code_version("Code v1.1"), Some((1, 1, 0)));
+    }
+
+    #[test]
+    fn rejects_non_code_output() {
+        assert_eq!(parse_code_version("1.99.0"), None);
+        assert_eq!(parse_code_version(""), None);
+    }
+
+    #[test]
+    fn min_version_ordering() {
+        assert!((1, 1, 3) >= MIN_CODE_VERSION);
+        assert!((0, 4, 1) < MIN_CODE_VERSION);
+        assert!((1, 0, 99) < MIN_CODE_VERSION);
     }
 }

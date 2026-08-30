@@ -3,31 +3,37 @@ use std::fs;
 use std::io::BufRead;
 use std::path::Path;
 
-/// A single organelle entry — either a plain path string or an object with
-/// a path and optional Sap particle configuration.
+/// A single organelle entry — either a bare reference string or an object
+/// pairing one with Sap particle configuration.
+///
+/// The reference is looked up two ways at codegen time (see
+/// `crate::codegen::organelle_link_target`): a string containing `/` or
+/// ending `.so`/`.code` is a literal path (a vendored or locally-built
+/// organelle); anything else is a **module name**, resolved through this
+/// project's `.code/lock.json` — the file `code install` writes.
 pub enum OrganelleEntry {
-    /// Simple form: `"react": "organelles/react.wasm"`.
-    Path(String),
-    /// Full form: `"server": { "path": "organelles/server.so", "sap": { ... } }`.
+    /// Simple form: `"term": "terminal"`.
+    Reference(String),
+    /// Full form: `"srv": { "module": "http_server", "sap": { ... } }`.
     Full {
-        path: String,
+        reference: String,
         sap: serde_json::Map<String, serde_json::Value>,
     },
 }
 
 impl OrganelleEntry {
-    /// The organelle's import path.
-    pub fn path(&self) -> &str {
+    /// The organelle's reference — a module name or a literal path.
+    pub fn reference(&self) -> &str {
         match self {
-            OrganelleEntry::Path(p) => p,
-            OrganelleEntry::Full { path, .. } => path,
+            OrganelleEntry::Reference(r) => r,
+            OrganelleEntry::Full { reference, .. } => reference,
         }
     }
 
-    /// Sap configuration, if any. Returns `None` for the simple `Path` variant.
+    /// Sap configuration, if any. Returns `None` for the simple `Reference` variant.
     pub fn sap(&self) -> Option<&serde_json::Map<String, serde_json::Value>> {
         match self {
-            OrganelleEntry::Path(_) => None,
+            OrganelleEntry::Reference(_) => None,
             OrganelleEntry::Full { sap, .. } => Some(sap),
         }
     }
@@ -37,7 +43,7 @@ impl OrganelleEntry {
 pub struct AppManifest {
     /// Cell name — taken from the `"name"` field.
     pub name: String,
-    /// Organelle alias → entry (path string or `{ path, sap }` object).
+    /// Organelle alias → entry (a reference string or `{ module, sap }` object).
     pub organelles: BTreeMap<String, OrganelleEntry>,
 }
 
@@ -116,14 +122,14 @@ pub fn parse_manifest(path: &Path) -> Result<AppManifest, String> {
     if let Some(org_obj) = json.get("organelles").and_then(|v| v.as_object()) {
         for (alias, val) in org_obj {
             if let Some(s) = val.as_str() {
-                organelles.insert(alias.clone(), OrganelleEntry::Path(s.to_string()));
+                organelles.insert(alias.clone(), OrganelleEntry::Reference(s.to_string()));
             } else if let Some(obj) = val.as_object() {
-                let org_path = obj
-                    .get("path")
+                let reference = obj
+                    .get("module")
                     .and_then(|v| v.as_str())
                     .ok_or_else(|| {
                         format!(
-                            "organelle '{}' object must have a \"path\" string in '{}'",
+                            "organelle '{}' object must have a \"module\" string in '{}'",
                             alias,
                             path.display()
                         )
@@ -134,13 +140,7 @@ pub fn parse_manifest(path: &Path) -> Result<AppManifest, String> {
                     .and_then(|v| v.as_object())
                     .cloned()
                     .unwrap_or_default();
-                organelles.insert(
-                    alias.clone(),
-                    OrganelleEntry::Full {
-                        path: org_path,
-                        sap,
-                    },
-                );
+                organelles.insert(alias.clone(), OrganelleEntry::Full { reference, sap });
             } else {
                 return Err(format!(
                     "organelle '{}' must be a string or object in '{}'",

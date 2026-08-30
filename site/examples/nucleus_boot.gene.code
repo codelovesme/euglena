@@ -1,11 +1,8 @@
--> The nucleus boots the cell: one handler, fired exactly once at birth.
+-- The nucleus boots the cell: one handler, fired exactly once at birth.
 
-EuglenaHasBeenBorn = Particle ∩ { _class ∈ "EuglenaHasBeenBorn", cell_name ∈ String }
+export let gene_name = "nucleus"
 
-booted = false
-
-EuglenaHasBeenBorn => {
-    booted = true
-    emit logger.Log { message = "[" + cell_name + "] cell booted", level = "Info" } to logger
-    return EuglenaHasBeenBorn { cell_name = cell_name }
+EuglenaHasBeenBorn { cell_name } => {
+    emit Log { source = "nucleus", level = "Info", message = "[$cell_name] cell booted" } to logger
+    return Alive { cell_name = cell_name }
 }

@@ -1,12 +1,12 @@
--> A gene is a set of typed particle handlers. Particles are records —
--> the _class tag decides which handler receives them.
+-- A gene is a set of particle handlers. A particle is parser sugar for an
+-- object with a `_class` field — the field list is the only place its
+-- shape is declared, and `return` is what gives the result one to test
+-- with `∈`.
 
-PingResponse = Particle ∩ { _class ∈ "PingResponse", message ∈ String }
-
-Ping { request_id ∈ String } => {
-    emit server.Respond { request_id = request_id, status_code = 200, body = PingResponse { message = "Pong" } } to server
+Ping {} => {
+    return Pong { message = "pong" }
 }
 
-HealthCheck { request_id ∈ String } => {
-    emit server.Respond { request_id = request_id, status_code = 200, body = PingResponse { message = "ok" } } to server
+Score { points } => {
+    return Scored { total = points * 2 }
 }

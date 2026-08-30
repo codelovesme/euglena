@@ -39,5 +39,20 @@ jobs:
       - name: Build
         run: cargo build
 
+      # Pinned to the same minimum this repo targets (src/exec.rs's
+      # MIN_CODE_VERSION) — bump together. Without a real `code` binary in
+      # CI, the tests that actually run a scaffolded app are silently
+      # skipped (they're gated on EUGLENA_TEST_CODE_BIN) — which is how the
+      # v0.4 -> v1.1 syntax drift this repo just went through shipped
+      # unnoticed in the first place. See docs/tickets/17-release-0-2-0.md.
+      - name: Download code (v1.1.3)
+        run: |
+          set -euo pipefail
+          curl -sSfL -o code.tar.gz \
+            https://github.com/codelovesme/code/releases/download/v1.1.3/code-v1.1.3-x86_64-linux.tar.gz
+          tar -xzf code.tar.gz
+
       - name: Test
+        env:
+          EUGLENA_TEST_CODE_BIN: ${{ github.workspace }}/code-v1.1.3-x86_64-linux/code
         run: cargo test

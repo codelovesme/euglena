@@ -8,7 +8,7 @@ JSON array into the __EXAMPLES__ placeholder in site/index.html.
 
 Unlike the code-language site there is no test-fixture corpus to mine: the
 snippets ARE the content, curated to show one concept each. Descriptions
-come from each file's first `->` comment line (the Code language's comment
+come from each file's first `--` comment line (the Code language's comment
 marker), truncated to keep cards tidy.
 
 Usage: build.py <repo-root> <dist-dir>
@@ -38,11 +38,11 @@ def category_for(name: str) -> str:
 
 
 def first_comment(source: str) -> str:
-    """The file's first `->` comment line, stripped — the author's own
+    """The file's first `--` comment line, stripped — the author's own
     one-line explanation of the concept."""
     for line in source.splitlines():
         s = line.strip()
-        if s.startswith("->"):
+        if s.startswith("--"):
             text = s[2:].strip()
             if text:
                 return text

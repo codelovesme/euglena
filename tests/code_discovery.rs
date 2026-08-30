@@ -160,3 +160,84 @@ fn does_not_auto_discover_a_bare_code_even_if_it_is_the_real_interpreter() {
 
     let _ = fs::remove_dir_all(&work);
 }
+
+/// T6: a `cdlvsm-code` that identifies itself but is below euglena's
+/// minimum version is refused, by name — not silently accepted to fail
+/// later as a parse error inside a generated file.
+#[test]
+fn refuses_a_stale_cdlvsm_code_below_minimum_version() {
+    let work = tmp_dir("stale_version");
+    let home = work.join("home");
+    fs::create_dir_all(&home).unwrap();
+
+    let fakebin = work.join("bin");
+    fs::create_dir_all(&fakebin).unwrap();
+    fake_bin(&fakebin, "cdlvsm-code", "Code v0.4.1", "STALE_CODE_RAN");
+
+    let proj = work.join("proj");
+    minimal_project(&proj);
+
+    let (ok, out) = run_euglena_run(&proj, &home, &fakebin);
+    assert!(!ok, "a v0.4.1 cdlvsm-code should be refused; got:\n{out}");
+    assert!(
+        out.contains("1.1.0"),
+        "error should name the required minimum version; got:\n{out}"
+    );
+    assert!(
+        !out.contains("STALE_CODE_RAN"),
+        "must not invoke a too-old interpreter; got:\n{out}"
+    );
+
+    let _ = fs::remove_dir_all(&work);
+}
+
+/// A `cdlvsm-code` at or above the minimum is accepted and actually run.
+#[test]
+fn accepts_a_current_cdlvsm_code() {
+    let work = tmp_dir("current_version");
+    let home = work.join("home");
+    fs::create_dir_all(&home).unwrap();
+
+    let fakebin = work.join("bin");
+    fs::create_dir_all(&fakebin).unwrap();
+    fake_bin(&fakebin, "cdlvsm-code", "Code v1.1.3", "CURRENT_CODE_RAN");
+
+    let proj = work.join("proj");
+    minimal_project(&proj);
+
+    let (ok, out) = run_euglena_run(&proj, &home, &fakebin);
+    assert!(ok, "a v1.1.3 cdlvsm-code should be accepted; got:\n{out}");
+    assert!(out.contains("CURRENT_CODE_RAN"), "got:\n{out}");
+
+    let _ = fs::remove_dir_all(&work);
+}
+
+/// A `cdlvsm-code` that exists but fails `--version` outright is treated as
+/// not-an-interpreter (the pre-existing broken-shim guard), not as "too old".
+#[test]
+fn refuses_a_cdlvsm_code_that_fails_version_check() {
+    let work = tmp_dir("broken_shim");
+    let home = work.join("home");
+    fs::create_dir_all(&home).unwrap();
+
+    let fakebin = work.join("bin");
+    fs::create_dir_all(&fakebin).unwrap();
+    write_exec(
+        &fakebin.join("cdlvsm-code"),
+        "#!/bin/sh
+exit 1
+",
+    );
+
+    let proj = work.join("proj");
+    minimal_project(&proj);
+
+    let (ok, out) = run_euglena_run(&proj, &home, &fakebin);
+    assert!(!ok, "a broken cdlvsm-code should be refused; got:\n{out}");
+    assert!(
+        out.contains("no Code interpreter"),
+        "should print the no-interpreter error; got:\n{out}"
+    );
+
+    let _ = fs::remove_dir_all(&work);
+}

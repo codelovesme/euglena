@@ -1,10 +1,11 @@
--> Emission handlers react to what organelles say back — every Log and
--> Exception emitted anywhere in the cell lands here.
+-- Emission handlers react to what organelles say back — Log and Exception
+-- are common vocabulary (see the language README's "Common particles"), so
+-- one handler here serves every organelle that pushes them.
 
-Log { source ∈ String, level ∈ String, message ∈ String } => {
-    emit logger.Log { message = "[" + source + "] " + message, level = level } to logger
+Log { source, level, message } => {
+    emit Print { value = "[$source] $message\n" } to logger
 }
 
-Exception { source ∈ String, message ∈ String } => {
-    emit logger.Log { message = "[EXCEPTION:" + source + "] " + message, level = "Error" } to logger
+Exception { source, message } => {
+    emit Print { value = "[EXCEPTION:$source] $message\n" } to logger
 }
