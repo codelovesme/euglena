@@ -48,7 +48,7 @@ An organelle entry's value becomes a **module name**, not a path:
 - Read `<project>/.code/lock.json`, map each declared module name to its
   `asset`, and emit `link "<asset>" as <alias>`.
 - A declared organelle with no lock entry is an error naming the fix:
-  `cdlvsm euglena add <name>`. Failing at generation time with that sentence
+  `cdlvsm euglena install <name>`. Failing at generation time with that sentence
   beats a loader error listing four directories.
 - Keep an escape hatch: a value containing `/` or ending in `.so`/`.code` is
   treated as a literal path relative to the project root, for a vendored or

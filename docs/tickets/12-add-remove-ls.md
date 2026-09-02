@@ -1,5 +1,9 @@
 # 12 — `add` / `remove` / `ls` over `code install`
 
+> **Renamed by [T18](18-one-module-vocabulary.md)** — the three commands are
+> now `install` / `uninstall` / `list`, matching `cdlvsm` and `code`. The
+> behaviour below is unchanged; only the spellings are. These never shipped.
+
 - **Priority:** Medium
 - **Type:** Feature
 - **Area:** `src/main.rs`, new `src/modules.rs`

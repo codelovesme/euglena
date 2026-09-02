@@ -38,16 +38,29 @@ fn fake_bin(dir: &Path, name: &str, version_line: &str, marker: &str) {
     );
 }
 
-/// A minimal runnable project (no manifest.json, so `euglena run` invokes the
-/// interpreter directly on the entry file).
+/// A minimal Euglena app — the only thing `euglena run` accepts. Discovery
+/// happens before the entry is generated, so no organelle is needed here:
+/// what these tests care about is *which* binary gets invoked, not what it
+/// is handed.
 fn minimal_project(root: &Path) {
     fs::create_dir_all(root.join("src")).unwrap();
-    fs::write(root.join("src/main.code"), "x = 1\n").unwrap();
+    fs::create_dir_all(root.join(".code")).unwrap();
+    fs::write(root.join(".code/lock.json"), "{\n  \"modules\": {}\n}\n").unwrap();
+    fs::write(
+        root.join("manifest.json"),
+        "{\n  \"name\": \"disc\",\n  \"organelles\": {}\n}\n",
+    )
+    .unwrap();
+    fs::write(
+        root.join("src/nucleus.gene.code"),
+        "EuglenaHasBeenBorn { cell_name } => {\n    return Alive { cell_name = cell_name }\n}\n",
+    )
+    .unwrap();
 }
 
 fn run_euglena_run(project: &Path, home: &Path, path_dirs: &Path) -> (bool, String) {
     let out = Command::new(bin())
-        .args(["run", "src/main.code"])
+        .arg("run")
         .current_dir(project)
         .env("HOME", home) // isolate: no real `euglena code set` config
         .env("PATH", path_dirs) // only our fake bin dir

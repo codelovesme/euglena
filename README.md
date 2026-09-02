@@ -4,9 +4,31 @@ The `euglena` CLI — scaffold, run, and build [Euglena](https://github.com/code
 applications. Euglena apps are written in the [Code](https://github.com/codelovesme/code)
 language (**requires code >= 1.1.0**); this CLI is a thin cell layer on top
 of the `code` toolchain: a `manifest.json` cell definition, `*.gene.code`
-genes that auto-link, Sap config, and mock mode. Everything else — the
-project marker, the module installer and its lockfile, `format` — is
+genes that auto-link, organelle `config` blocks, and mock mode. Everything else — the
+project marker, the module installer and its lockfile, `format`, `test` — is
 `code`'s own, and euglena wraps it rather than duplicating it.
+
+## What is euglena's, and what is `code`'s
+
+| | `code` | `euglena` |
+|---|---|---|
+| the language, the interpreter, the LLVM backend | ✔ | delegates |
+| installing modules, `.code/lock.json` | ✔ | wraps as `install`/`uninstall` |
+| `format` | ✔ | delegates |
+| `test` — the `tests/` walk, the `fail_` convention | ✔ | delegates |
+| the cell model: `manifest.json`, `*.gene.code`, organelle aliases, mock mode | — | ✔ |
+| generating `main.code` from those | — | ✔ |
+
+Your Euglena app **is** a `code` project, and nothing here fences it off:
+`code list`, `code format`, `code build main.code --target wasm`, reading the
+generated entry to see what your manifest and genes actually compile to —
+all of it works, and reading `main.code` is the fastest way to learn the
+language underneath.
+
+Only `run`, `build` and `test` should go through euglena, because only
+euglena knows to regenerate the entry first. In a directory with no
+`manifest.json` they don't even try — see
+[run and build need a manifest](#run-and-build-need-a-manifest).
 
 ## Install
 
@@ -38,18 +60,21 @@ Linux x86_64 only, for now. Examples below use `cdlvsm euglena` — drop the
 
 ```
 cdlvsm euglena init <name>              scaffold a new app in ./<name>
-cdlvsm euglena run [path]               run the app (default: this directory)
-cdlvsm euglena build [path] [options]   compile to a native binary (or a module)
-cdlvsm euglena test                     run every tests/*.code fixture, in place
+cdlvsm euglena run [app]                run the app (default: this directory)
+cdlvsm euglena build [app] [options]    compile to a native binary (or a module)
+cdlvsm euglena test                     run this project's fixtures (wraps `code test`)
 cdlvsm euglena format [--check] [path...]   the canonical layout (wraps `code format`)
-cdlvsm euglena add <name> [--as <alias>]    install an organelle, declare it in the manifest
-cdlvsm euglena remove <alias>           drop the alias, and the module if unreferenced
-cdlvsm euglena ls                       declared organelles, and whether each is installed
+cdlvsm euglena install <name> [--as <alias>]  install an organelle, declare it in the manifest
+cdlvsm euglena uninstall <alias>        drop the alias, and the module if unreferenced
+cdlvsm euglena list                     declared organelles, and whether each is installed
 cdlvsm euglena doctor                   check the interpreter, project, and organelles
 cdlvsm euglena code set <path>          point euglena at a specific `code` binary
 cdlvsm euglena code show
 cdlvsm euglena code clear
 ```
+
+`run`, `build` and `test` all take `-v` / `--verbose`, which prints the
+generated entry and the exact `code` command euglena hands it to.
 
 ```
 build options:
@@ -67,7 +92,7 @@ cdlvsm euglena run    # just works — no code-path setup needed, see below
 
 ### Finding `code`
 
-`run`/`build`/`test`/`format`/`add`/`remove` shell out to the `code`
+`run`/`build`/`test`/`format`/`install`/`uninstall` shell out to the `code`
 interpreter. euglena finds it automatically: if you haven't pinned a path,
 it uses cdlvsm's `cdlvsm-code` shim from your `PATH` — no extra setup needed
 after `cdlvsm install code`. Either way it's version-checked: euglena
@@ -97,7 +122,7 @@ myapp/
   manifest.json          cell name + organelles
   src/nucleus.gene.code  boot gene (any src/*.gene.code is auto-linked)
   tests/nucleus.code     a starter fixture for `euglena test`
-  .code/lock.json        marks the project root — where `add` installs into
+  .code/lock.json        marks the project root — where `install` installs into
   .gitignore             .code/modules/, main.code, build/
   main.code              GENERATED on first run/build/test — not written by init
 ```
@@ -106,6 +131,49 @@ myapp/
 `run`/`build`/`test` and gitignored; euglena refuses to touch one that
 doesn't carry its `-- GENERATED` header, so a hand-written entry is never at
 risk.
+
+Its second line is a **stamp** — the euglena that wrote the file, and the
+SHA-256 of everything below:
+
+```
+-- GENERATED — do not edit. Modify manifest.json or src/*.gene.code instead.
+-- euglena 0.2.0 · body sha256:1f0c…
+```
+
+The header says euglena owns the file; the stamp is what lets `euglena
+doctor` tell apart the two states it can't:
+
+- **stale** — the entry still matches its own stamp, but `manifest.json`,
+  a gene, or `.code/lock.json` has moved on since. Harmless: the next
+  `run`/`build`/`test` regenerates it. Worth reporting because a plain
+  `code run .` in that directory would quietly execute the *old* entry.
+- **edited by hand** — the body no longer matches its stamp, so someone
+  changed a generated file and the next `run`/`build`/`test` will throw
+  that work away. This one fails `doctor`; move the change into
+  `manifest.json` or a gene.
+
+### run and build need a manifest
+
+`run` and `build` are for cells. In a directory with no `manifest.json`
+they stop and point at `code` rather than passing the path through — a
+plain `code` project or a lone `.code` file is `code`'s job, and
+`euglena run` being a second spelling of `code run` on some inputs but not
+others helped nobody:
+
+```
+$ cdlvsm euglena run
+euglena: '.' is not a Euglena app — no manifest.json in /home/you/scratch.
+
+euglena runs and builds cells: manifest.json + src/*.gene.code.
+For a plain code project or a lone .code file, use code directly:
+  cdlvsm code run .
+To make this directory a Euglena app: cdlvsm euglena init <name>
+```
+
+The other direction stays open, and is worth using: a Euglena app **is** a
+`code` project. `code list`, `code format`, reading `main.code` to see what
+your manifest and genes actually compile to — all of it works. Only
+`run`/`build` should go through euglena, so the entry is regenerated first.
 
 ### Organelles
 
@@ -117,36 +185,81 @@ An organelle is a `code` native module, declared in `manifest.json` by
   "name": "myapp",
   "organelles": {
     "term": "terminal",
-    "srv": { "module": "http_server", "sap": { "port": "${PORT}" } }
+    "srv": { "module": "http_server", "config": { "port": "${PORT}" } }
   }
 }
 ```
 
 ```bash
-cdlvsm euglena add terminal            # code install terminal, then declares "terminal": "terminal"
-cdlvsm euglena add http_server --as srv
-cdlvsm euglena ls                      # each alias, and whether it's installed
+cdlvsm euglena install terminal        # code install terminal, then declares "terminal": "terminal"
+cdlvsm euglena install http_server --as srv
+cdlvsm euglena list                    # each alias, and whether it's installed
+cdlvsm euglena uninstall srv           # the ALIAS — `code uninstall` is the one taking a module name
 ```
 
-`add` fetches the module via `code install` (bytes land in this project's
+`install` fetches the module via `code install` (bytes land in this project's
 `.code/modules/`, pinned by sha256 in `.code/lock.json`) and records the
-alias. At generate time euglena resolves the module name against that
-lockfile to the exact asset `code install` laid down (platform-suffixed,
-e.g. `terminal-linux-x86_64.so`) and writes `link "<asset>" as <alias>`. A
-declared organelle with no lock entry fails generation with the fix:
-`euglena add <name>`.
+alias. At generate time euglena checks the module name against that lockfile
+and writes `link "<name>.<ext>" as <alias>` — `link "terminal.so" as term`,
+not the platform-suffixed asset `code install` laid down
+(`terminal-linux-x86_64.so`). `code`'s loader maps the tidy spelling back to
+the pinned asset through the same lockfile. A declared organelle with no lock
+entry fails generation with the fix: `euglena install <name>`.
+
+`install` / `uninstall` / `list` are `cdlvsm`'s and `code`'s three words, on
+purpose — one vocabulary across the family. What differs is the argument, and
+it has to: `code uninstall` takes a module name, `euglena uninstall` takes the
+alias the manifest is keyed by and `euglena list` prints. `uninstall` needs
+**code >= 1.3.0**, the release those names landed in.
 
 A reference containing `/` or ending `.so`/`.code` is treated as a literal
 path instead — an escape hatch for a vendored or locally-built organelle.
 
-A `sap` block, if given, becomes `emit Sap { … } to <alias>` right after the
-links — one line per organelle, config and readiness in one round trip.
-`${VAR}` in a `sap` value interpolates from the environment (loaded from a
-`.env` file next to `manifest.json`, if present) — so secrets stay out of
+A `config` block, if given, becomes `emit <Setup> { … } to <alias> get
+_cfg_<alias>` right after the links — where `<Setup>` is the particle the
+module names for its configuration (`Config` for most, `Listen` for
+`http_server`), read from its `module.json` via `.code/lock.json`. A
+`config` block on a *stateless* module (`crypto`, `strings`, …) is a
+generation error — those take their parameters per call. A literal-path
+organelle names its own setup particle in the entry (`"setup": "Config"`),
+since there is no lockfile row to read.
+
+`${VAR}` in a `config` value interpolates from the environment (loaded from
+a `.env` file next to `manifest.json`, if present) — so secrets stay out of
 version control. `EUGLENA_MOCK_MODE=true` (optionally scoped with
 `EUGLENA_MOCK_TYPES=type1,type2`) overlays a `mock-organelles` block onto
 `organelles` in memory, for local/test runs — nothing here has an
 equivalent in `code` itself.
+
+## Requiring a `code` version
+
+euglena refuses a `code` older than **1.1.0**, because that is what the
+syntax it *generates* needs. What your *app* needs is a different question —
+a module handler, a field, a particle that only exists from some version on —
+and it is the app's to state:
+
+```json
+{
+  "name": "myapp",
+  "code": ">=1.1.6",
+  "organelles": { "srv": { "module": "http_server", "config": { "port": "${PORT}" } } }
+}
+```
+
+`run`, `build` and `test` then refuse anything below **the highest** of:
+euglena's own baseline, whatever the command needs (`test` needs 1.1.7, the
+release that added `code test`), and this field. The error says which of the
+three asked, since the fix differs:
+
+```
+euglena: found Code v1.1.6 at '/home/you/.local/bin/cdlvsm-code',
+but this needs >= v1.1.9, which is what this app's manifest.json asks for.
+```
+
+Only a minimum is expressible — `"1.1.6"` and `">=1.1.6"` mean the same
+thing, and carets, tildes and ranges are refused by name. A `code`
+requirement only ever moves forward, so the other spellings would describe a
+situation that does not arise.
 
 ## Building from source
 

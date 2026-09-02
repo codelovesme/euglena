@@ -32,7 +32,7 @@ writing anything, so a refusal leaves the directory as it was rather than
 half-initialized. An existing file is a refusal, never a merge.
 
 Next-steps text keeps using `invocation::command_prefix()` (T5), and should
-now mention `euglena add terminal` rather than a manual `code` install.
+now mention `euglena install terminal` rather than a manual `code` install.
 
 ## Verify
 

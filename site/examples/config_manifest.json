@@ -1,0 +1,22 @@
+-- An organelle's config lives in manifest.json, not in code. ${ENV} values
+-- are interpolated from .env so secrets stay out of version control. euglena
+-- emits each block as the particle the module names for its setup — `Config`
+-- for most, `Listen` for http_server.
+
+{
+  "name": "myapp",
+  "organelles": {
+    "logger": "terminal",
+    "server": {
+      "module": "http_server",
+      "config": { "port": "${PORT}" }
+    },
+    "store": {
+      "module": "mongodb",
+      "config": {
+        "url": "${MONGO_URI}",
+        "database": "myapp"
+      }
+    }
+  }
+}

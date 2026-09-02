@@ -10,7 +10,7 @@ site/
 ├── index.html     # template (single self-contained page)
 ├── examples/      # hand-written Code snippets embedded into the gallery
 │   ├── *.gene.code
-│   └── sap_manifest.json
+│   └── config_manifest.json
 ├── build.py       # assembles dist/ from template + examples
 ├── logo.png / favicon-32.png
 └── dist/          # generated output (committed? no — built in CI)
@@ -24,7 +24,7 @@ xdg-open site/dist/index.html   # or open in any browser
 ```
 
 `build.py` reads every file in `examples/`, derives each entry's category from its
-filename prefix (`nucleus_`, `particle_`, `emission_`, `organelle_`, `sap_`, `loop_`)
+filename prefix (`nucleus_`, `particle_`, `emission_`, `organelle_`, `config_`, `loop_`)
 and description from its first `->` comment line, then injects the JSON array into
 the `__EXAMPLES__` placeholder in `index.html`.
 

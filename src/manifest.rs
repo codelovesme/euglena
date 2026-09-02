@@ -4,7 +4,7 @@ use std::io::BufRead;
 use std::path::Path;
 
 /// A single organelle entry — either a bare reference string or an object
-/// pairing one with Sap particle configuration.
+/// pairing one with a `config` block for its setup particle.
 ///
 /// The reference is looked up two ways at codegen time (see
 /// `crate::codegen::organelle_link_target`): a string containing `/` or
@@ -14,10 +14,15 @@ use std::path::Path;
 pub enum OrganelleEntry {
     /// Simple form: `"term": "terminal"`.
     Reference(String),
-    /// Full form: `"srv": { "module": "http_server", "sap": { ... } }`.
+    /// Full form:
+    /// `"srv": { "module": "http_server", "config": { "port": "${PORT}" } }`.
+    /// `setup` names the configuring particle for a *literal-path* organelle,
+    /// where there is no lockfile entry to read it from; for a module name
+    /// it is left `None` and codegen reads the lockfile's `setup`.
     Full {
         reference: String,
-        sap: serde_json::Map<String, serde_json::Value>,
+        config: serde_json::Map<String, serde_json::Value>,
+        setup: Option<String>,
     },
 }
 
@@ -30,12 +35,90 @@ impl OrganelleEntry {
         }
     }
 
-    /// Sap configuration, if any. Returns `None` for the simple `Reference` variant.
-    pub fn sap(&self) -> Option<&serde_json::Map<String, serde_json::Value>> {
+    /// The `config` block, if any. `None` for the simple `Reference` variant.
+    pub fn config(&self) -> Option<&serde_json::Map<String, serde_json::Value>> {
         match self {
             OrganelleEntry::Reference(_) => None,
-            OrganelleEntry::Full { sap, .. } => Some(sap),
+            OrganelleEntry::Full { config, .. } => Some(config),
         }
+    }
+
+    /// A setup-particle name given explicitly in the entry (for a
+    /// literal-path organelle).
+    pub fn setup(&self) -> Option<&str> {
+        match self {
+            OrganelleEntry::Reference(_) => None,
+            OrganelleEntry::Full { setup, .. } => setup.as_deref(),
+        }
+    }
+}
+
+/// The `code` version an app declares it needs: `"code": ">=1.1.6"`.
+///
+/// Only a minimum is expressible, and that is the whole design. euglena's own
+/// baseline (`exec::MIN_CODE_VERSION`) is what its *generated syntax* needs;
+/// this is what the *app* needs — a handler field, a module behaviour, a
+/// particle a module only started answering at some version. Those only ever
+/// move forward, so a range or a caret would be describing a situation that
+/// does not arise, and every extra spelling is one more thing to get wrong in
+/// a hand-written JSON file.
+///
+/// Accepted: `"1.1.6"` and `">=1.1.6"` (spaces after `>=` are fine); both
+/// mean the same thing. Anything else is refused by name.
+pub fn parse_version_req(raw: &str) -> Result<(u32, u32, u32), String> {
+    let trimmed = raw.trim();
+    let digits = match trimmed.strip_prefix(">=") {
+        Some(rest) => rest.trim(),
+        None if trimmed.starts_with(|c: char| c.is_ascii_digit()) => trimmed,
+        None => {
+            return Err(format!(
+                "'{raw}' is not a version requirement — write a minimum, as \"1.1.6\" or \
+                 \">=1.1.6\". Ranges, carets and tildes are not supported: a `code` \
+                 requirement only ever moves forward."
+            ))
+        }
+    };
+
+    let mut parts = digits.split('.');
+    let mut next = |what: &str| -> Result<u32, String> {
+        parts
+            .next()
+            .and_then(|p| p.parse().ok())
+            .ok_or_else(|| format!("'{raw}' is missing its {what} number — write \"1.1.6\""))
+    };
+    let major = next("major")?;
+    let minor = next("minor")?;
+    let patch = next("patch")?;
+    if parts.next().is_some() {
+        return Err(format!(
+            "'{raw}' has more than three numbers — write \"major.minor.patch\""
+        ));
+    }
+    Ok((major, minor, patch))
+}
+
+/// The `code` version `manifest.json` at `path` asks for, if it asks.
+///
+/// Read on its own rather than through [`parse_manifest`] because the caller
+/// is the version check, which runs *before* the interpreter is located and
+/// long before anything is generated — it needs one field, not a manifest
+/// with its mock overlay applied and its `.env` loaded.
+pub fn read_code_requirement(path: &Path) -> Result<Option<(u32, u32, u32)>, String> {
+    let text = match fs::read_to_string(path) {
+        Ok(text) => text,
+        Err(e) => return Err(format!("Cannot read '{}': {}", path.display(), e)),
+    };
+    let json: serde_json::Value = serde_json::from_str(&text)
+        .map_err(|e| format!("Invalid JSON in '{}': {}", path.display(), e))?;
+    match json.get("code") {
+        None => Ok(None),
+        Some(serde_json::Value::String(raw)) => parse_version_req(raw)
+            .map(Some)
+            .map_err(|e| format!("'code' in '{}': {}", path.display(), e)),
+        Some(_) => Err(format!(
+            "'code' in '{}' must be a version string, e.g. \">=1.1.6\"",
+            path.display()
+        )),
     }
 }
 
@@ -43,14 +126,14 @@ impl OrganelleEntry {
 pub struct AppManifest {
     /// Cell name — taken from the `"name"` field.
     pub name: String,
-    /// Organelle alias → entry (a reference string or `{ module, sap }` object).
+    /// Organelle alias → entry (a reference string or `{ module, config }` object).
     pub organelles: BTreeMap<String, OrganelleEntry>,
 }
 
 /// Parse the manifest.json at `path` and return an `AppManifest`.
 ///
 /// Before parsing, any `.env` file next to the manifest is loaded into the
-/// process environment.  String values in `sap` objects are then subject to
+/// process environment.  String values in `config` objects are then subject to
 /// `${VAR}` interpolation so secrets stay out of version control.
 pub fn parse_manifest(path: &Path) -> Result<AppManifest, String> {
     // Load .env from the manifest directory (if present).
@@ -118,6 +201,13 @@ pub fn parse_manifest(path: &Path) -> Result<AppManifest, String> {
         })?
         .to_string();
 
+    // Validated here as well as in `read_code_requirement`, so a typo in the
+    // field is a named error on any path that reads the manifest rather than
+    // only on the one that enforces it.
+    if let Some(raw) = json.get("code").and_then(|v| v.as_str()) {
+        parse_version_req(raw).map_err(|e| format!("'code' in '{}': {}", path.display(), e))?;
+    }
+
     let mut organelles = BTreeMap::new();
     if let Some(org_obj) = json.get("organelles").and_then(|v| v.as_object()) {
         for (alias, val) in org_obj {
@@ -135,12 +225,33 @@ pub fn parse_manifest(path: &Path) -> Result<AppManifest, String> {
                         )
                     })?
                     .to_string();
-                let sap = obj
-                    .get("sap")
+                if obj.contains_key("sap") {
+                    return Err(format!(
+                        "organelle '{}' in '{}' uses \"sap\" — rename it to \"config\". \
+                         `Sap` was euglena's own mechanism; a module is configured by the \
+                         particle it names in its `setup` (`Config`, `Listen`, …), and \
+                         euglena emits that.",
+                        alias,
+                        path.display()
+                    ));
+                }
+                let config = obj
+                    .get("config")
                     .and_then(|v| v.as_object())
                     .cloned()
                     .unwrap_or_default();
-                organelles.insert(alias.clone(), OrganelleEntry::Full { reference, sap });
+                let setup = obj
+                    .get("setup")
+                    .and_then(|v| v.as_str())
+                    .map(str::to_string);
+                organelles.insert(
+                    alias.clone(),
+                    OrganelleEntry::Full {
+                        reference,
+                        config,
+                        setup,
+                    },
+                );
             } else {
                 return Err(format!(
                     "organelle '{}' must be a string or object in '{}'",
@@ -272,7 +383,7 @@ fn interpolate_env_vars(value: &mut serde_json::Value) {
                 let interpolated = interpolate_str(s);
                 // If the result is a pure number (e.g. "${EUGLENA_PORT}" →
                 // "9991"), promote the JSON string to a JSON number so
-                // downstream consumers (server.Sap `port`, etc.) get the
+                // downstream consumers (the config particle's `port`, etc.) get the
                 // proper type.
                 if let Ok(n) = interpolated.parse::<u64>() {
                     *value = serde_json::Value::Number(n.into());
@@ -333,4 +444,58 @@ fn interpolate_str(input: &str) -> String {
     }
 
     result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn version_req_accepts_both_spellings_of_a_minimum() {
+        assert_eq!(parse_version_req("1.1.6"), Ok((1, 1, 6)));
+        assert_eq!(parse_version_req(">=1.1.6"), Ok((1, 1, 6)));
+        assert_eq!(parse_version_req(">= 1.1.6"), Ok((1, 1, 6)));
+        assert_eq!(parse_version_req("  1.1.6  "), Ok((1, 1, 6)));
+    }
+
+    /// Every rejection names what it read, because the field is hand-written
+    /// JSON and the fix is always "write it the other way".
+    #[test]
+    fn version_req_rejects_what_it_does_not_mean() {
+        for bad in ["^1.1.6", "~1.1.6", ">1.1.6", "1.1.6 - 2.0.0", "latest", ""] {
+            let err = parse_version_req(bad).unwrap_err();
+            assert!(
+                err.contains(bad) || bad.is_empty(),
+                "'{bad}' should be quoted back: {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn version_req_wants_all_three_numbers() {
+        assert!(parse_version_req("1.1").is_err());
+        assert!(parse_version_req("1").is_err());
+        assert!(parse_version_req("1.1.6.2").unwrap_err().contains("three"));
+    }
+
+    #[test]
+    fn code_requirement_is_optional_and_typed() {
+        let dir = std::env::temp_dir().join(format!("euglena_req_{}", std::process::id()));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("manifest.json");
+
+        fs::write(&path, r#"{"name":"x","organelles":{}}"#).unwrap();
+        assert_eq!(read_code_requirement(&path), Ok(None));
+
+        fs::write(&path, r#"{"name":"x","code":">=1.1.6","organelles":{}}"#).unwrap();
+        assert_eq!(read_code_requirement(&path), Ok(Some((1, 1, 6))));
+
+        // A number is not a version requirement, and guessing at one would be
+        // worse than saying so.
+        fs::write(&path, r#"{"name":"x","code":1.1,"organelles":{}}"#).unwrap();
+        assert!(read_code_requirement(&path).unwrap_err().contains("string"));
+
+        let _ = fs::remove_dir_all(&dir);
+    }
 }

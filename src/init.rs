@@ -60,7 +60,7 @@ pub fn run(name: &str) {
     println!("  {cmd} run   (needs a `code` interpreter on PATH — e.g. `cdlvsm install code`)");
     println!();
     println!("Add more genes as src/*.gene.code — euglena-cli links them automatically.");
-    println!("Add an organelle: {cmd} add <name>   (fetches it via `code install` and");
+    println!("Add an organelle: {cmd} install <name>   (fetches it via `code install` and");
     println!("declares it in manifest.json).");
 }
 
@@ -112,7 +112,7 @@ assert born.cell_name = "test"
 
 fn gitignore_template() -> &'static str {
     r#"# Installed organelle binaries. .code/lock.json (committed) pins what
-# they are, so a checkout can reproduce them with `euglena add`.
+# they are, so a checkout can reproduce them with `euglena install`.
 .code/modules/
 
 # Generated from manifest.json + src/*.gene.code on every run/build/test.

@@ -18,6 +18,11 @@ slipped in as a patch.
 - `Cargo.toml` → `0.2.0`.
 - Release notes stating plainly: **requires `code` >= 1.1.0**, and a 0.1.x
   app must be re-scaffolded (or hand-migrated per T7/T10/T11).
+- Release notes must also carry T18: the organelle commands are
+  `install` / `uninstall` / `list`, and `uninstall` needs **`code` >= 1.3.0**
+  (the release that renamed `code remove`/`ls`). Nothing shipped under
+  T12's `add`/`remove`/`ls`, so there is no migration to describe — but the
+  `code` floor is a real one and belongs in the notes.
 - Check `install.sh` and the release workflow still match the repo rename to
   `codelovesme/euglena` (commit 12d612d) — the README's `install.sh` URL
   already points at `codelovesme/euglena/main`.

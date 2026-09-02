@@ -116,6 +116,63 @@ fn scaffolded_nucleus_uses_current_syntax() {
     let _ = fs::remove_dir_all(&work);
 }
 
+/// `euglena run`/`build` are for cells, not for anything `code` can already
+/// run. A directory with no manifest.json is refused by name, and pointed at
+/// the tool that does handle it — it used to be passed straight through,
+/// which made `euglena run` a second spelling of `code run` on some inputs
+/// and not others.
+///
+/// The refusal comes *before* interpreter discovery, so it survives an empty
+/// PATH: being in the wrong directory is not a reason to be told to install
+/// `code`.
+#[test]
+fn run_refuses_a_directory_that_is_not_a_euglena_app() {
+    let work = tmp_dir("not_an_app");
+    let home = work.join("home");
+    fs::create_dir_all(&home).unwrap();
+    fs::write(work.join("main.code"), "assert 1 = 1\n").unwrap();
+
+    for command in ["run", "build"] {
+        let out = Command::new(bin())
+            .arg(command)
+            .current_dir(&work)
+            .env("HOME", &home)
+            .env("PATH", "") // no interpreter anywhere
+            .output()
+            .unwrap();
+        let combined = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+
+        assert!(
+            !out.status.success(),
+            "`{command}` should refuse; got:\n{combined}"
+        );
+        assert!(
+            combined.contains("not a Euglena app"),
+            "`{command}` should say why; got:\n{combined}"
+        );
+        assert!(
+            combined.contains("code run"),
+            "`{command}` should name the tool that handles this; got:\n{combined}"
+        );
+        assert!(
+            !combined.contains("no Code interpreter"),
+            "`{command}` must not blame the interpreter for a missing manifest; got:\n{combined}"
+        );
+    }
+
+    // Nothing was generated in a directory euglena does not own.
+    assert_eq!(
+        fs::read_to_string(work.join("main.code")).unwrap(),
+        "assert 1 = 1\n"
+    );
+
+    let _ = fs::remove_dir_all(&work);
+}
+
 /// Full end-to-end: scaffold a project and actually run it through a real
 /// `code` interpreter. Gated on `EUGLENA_TEST_CODE_BIN` since CI has no `code`.
 #[test]

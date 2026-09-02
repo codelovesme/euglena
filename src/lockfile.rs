@@ -1,8 +1,10 @@
 //! Minimal reader for a project's `.code/lock.json` — the file `code
 //! install` writes and pins by sha256. euglena never writes to it; `code
-//! install`/`code remove` own it. This only reads what is already there, so
-//! codegen can turn an organelle's module name into the asset `code install`
-//! actually laid down (platform-suffixed, e.g. `terminal-linux-x86_64.so`).
+//! install`/`code uninstall` own it. This only reads what is already there, so
+//! codegen can confirm an organelle is installed, pick the right native
+//! extension (`.so` / `.a`) from the asset `code install` laid down, and —
+//! for an organelle carrying a `config` block — learn which particle
+//! configures it (`setup`, copied there from the module's `module.json`).
 
 use std::fs;
 use std::path::Path;
@@ -10,6 +12,10 @@ use std::path::Path;
 pub struct LockedModule {
     pub version: String,
     pub asset: String,
+    /// The module's setup handler — `"Config"` for a stateful module,
+    /// `"Listen"` for `http_server`, `None` for a stateless one. Absent in a
+    /// lockfile written before `code` recorded it.
+    pub setup: Option<String>,
 }
 
 /// Look up `module_name` in `<project_root>/.code/lock.json`. `None` covers
@@ -24,5 +30,9 @@ pub fn read(project_root: &Path, module_name: &str) -> Option<LockedModule> {
     Some(LockedModule {
         version: entry.get("version")?.as_str()?.to_string(),
         asset: entry.get("asset")?.as_str()?.to_string(),
+        setup: entry
+            .get("setup")
+            .and_then(|v| v.as_str())
+            .map(str::to_string),
     })
 }

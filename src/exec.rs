@@ -11,27 +11,110 @@ use crate::codegen;
 /// text can never drift from each other.
 pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 1, 0);
 
+/// The `code` version `euglena test` needs: the release that added `code
+/// test`, the runner euglena stopped keeping its own copy of.
+pub(crate) const MIN_CODE_VERSION_FOR_TEST: (u32, u32, u32) = (1, 2, 0);
+
+/// The `code` version `euglena uninstall` needs: the release that renamed
+/// `code remove` to `code uninstall`, so that `cdlvsm`, `code` and `euglena`
+/// spell the three module operations one way.
+///
+/// Only `uninstall` carries this floor. `euglena install` shells out to `code
+/// install`, whose spelling did not change, and `euglena list` reads the
+/// lockfile without invoking `code` at all — so neither should refuse a
+/// `code` that would in fact serve them.
+pub(crate) const MIN_CODE_VERSION_FOR_UNINSTALL: (u32, u32, u32) = (1, 3, 0);
+
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
 }
 
-/// Run a project (or a bare `.code` file/directory with no manifest) through
-/// `code run`.
-pub fn run(path: &str) {
-    let binary = find_code_binary_or_exit();
-    let entry_arg = resolve_entry_arg(path);
-
-    let status = process::Command::new(&binary)
-        .arg("run")
-        .arg(&entry_arg)
-        .status();
-    exit_on_status(&binary, status);
+/// A `code` version some invocation needs, and what asked for it.
+///
+/// Three things can raise the bar and they fail for different reasons, so an
+/// error that only said "need >= x.y.z" would send the reader to the wrong
+/// place: euglena's baseline is about the *syntax it generates*, a command
+/// floor is about a subcommand that did not exist yet, and a manifest
+/// requirement is about what the *app itself* uses.
+pub(crate) struct VersionNeed {
+    pub version: (u32, u32, u32),
+    /// A clause completing "…, which <reason>" — kept short so the error
+    /// reads as a sentence.
+    pub reason: String,
 }
 
-/// Compile a project (or a bare `.code` file/directory) through `code build`.
-pub fn build(path: &str, release: bool, target: Option<&str>, output: Option<&str>) {
-    let binary = find_code_binary_or_exit();
-    let entry_arg = resolve_entry_arg(path);
+impl VersionNeed {
+    fn baseline() -> Self {
+        VersionNeed {
+            version: MIN_CODE_VERSION,
+            reason: "is the syntax euglena generates".to_string(),
+        }
+    }
+
+    /// Raise this need if `candidate` is higher. The highest bar wins, and it
+    /// keeps its own explanation.
+    fn raise(self, candidate: Option<(u32, u32, u32)>, reason: &str) -> Self {
+        match candidate {
+            Some(v) if v > self.version => VersionNeed {
+                version: v,
+                reason: reason.to_string(),
+            },
+            _ => self,
+        }
+    }
+}
+
+/// What version this invocation needs: euglena's baseline, raised by a
+/// command floor (`code test`) and by the app's own `"code"` requirement.
+///
+/// A malformed `"code"` field is an error rather than a shrug — an app that
+/// states a requirement wrongly is not an app with no requirement.
+pub(crate) fn version_need(
+    project_root: Option<&Path>,
+    command_floor: Option<((u32, u32, u32), &str)>,
+) -> Result<VersionNeed, String> {
+    let mut need = VersionNeed::baseline();
+    if let Some((floor, reason)) = command_floor {
+        need = need.raise(Some(floor), reason);
+    }
+    let Some(root) = project_root else {
+        return Ok(need);
+    };
+    let required = crate::manifest::read_code_requirement(&root.join("manifest.json"))?;
+    Ok(need.raise(required, "is what this app's manifest.json asks for"))
+}
+
+/// [`version_need`], for the commands that have nothing useful to do with a
+/// malformed manifest but stop.
+fn version_need_or_exit(
+    project_root: Option<&Path>,
+    command_floor: Option<((u32, u32, u32), &str)>,
+) -> VersionNeed {
+    version_need(project_root, command_floor).unwrap_or_else(|e| {
+        eprintln!("euglena: {e}");
+        process::exit(1);
+    })
+}
+
+/// Run a Euglena app through `code run`, regenerating its entry first.
+pub fn run(path: &str, verbose: bool) {
+    let project_root = euglena_project_root_or_exit(path);
+    let need = version_need_or_exit(Some(&project_root), None);
+    let binary = find_code_binary_or_exit(&need);
+    let entry_arg = generate_entry_or_exit(&project_root, verbose);
+
+    let mut cmd = process::Command::new(&binary);
+    cmd.arg("run").arg(&entry_arg);
+    trace(verbose, &binary, &cmd);
+    exit_on_status(&binary, cmd.status());
+}
+
+/// Compile a Euglena app through `code build`, regenerating its entry first.
+pub fn build(path: &str, release: bool, target: Option<&str>, output: Option<&str>, verbose: bool) {
+    let project_root = euglena_project_root_or_exit(path);
+    let need = version_need_or_exit(Some(&project_root), None);
+    let binary = find_code_binary_or_exit(&need);
+    let entry_arg = generate_entry_or_exit(&project_root, verbose);
 
     let mut cmd = process::Command::new(&binary);
     cmd.arg("build").arg(&entry_arg);
@@ -43,13 +126,54 @@ pub fn build(path: &str, release: bool, target: Option<&str>, output: Option<&st
         cmd.args(["--output", o]);
     }
 
-    let status = cmd.status();
-    exit_on_status(&binary, status);
+    trace(verbose, &binary, &cmd);
+    exit_on_status(&binary, cmd.status());
+}
+
+/// `euglena test` — regenerate the entry, then hand the fixtures to `code
+/// test`.
+///
+/// The runner is `code`'s. Walking `tests/`, the `fail_` prefix convention
+/// and interpreting a fixture are all the language toolchain's job and have
+/// nothing to do with cells; euglena kept its own copy only because `code`
+/// had no `test` command yet, and two copies of one convention is two things
+/// that can disagree.
+pub fn test(path: &str, verbose: bool) {
+    let project_root = euglena_project_root_or_exit(path);
+    let need = version_need_or_exit(
+        Some(&project_root),
+        Some((MIN_CODE_VERSION_FOR_TEST, "is where `code test` landed")),
+    );
+    let binary = find_code_binary_or_exit(&need);
+    generate_entry_or_exit(&project_root, verbose);
+
+    let mut cmd = process::Command::new(&binary);
+    cmd.arg("test").current_dir(&project_root);
+    trace(verbose, &binary, &cmd);
+    exit_on_status(&binary, cmd.status());
+}
+
+/// A `code` at euglena's own baseline — for the commands that touch the
+/// toolchain without running an app (`install`, `format`).
+pub(crate) fn baseline_code_binary_or_exit() -> String {
+    find_code_binary_or_exit(&version_need_or_exit(None, None))
+}
+
+/// A `code` new enough to have `uninstall` — for `euglena uninstall`, which
+/// hands the module name to it once the alias is gone.
+pub(crate) fn uninstall_code_binary_or_exit() -> String {
+    find_code_binary_or_exit(&version_need_or_exit(
+        None,
+        Some((
+            MIN_CODE_VERSION_FOR_UNINSTALL,
+            "is where `code uninstall` landed",
+        )),
+    ))
 }
 
 /// `code format`, defaulting to `src/` and `tests/` when no paths are given.
 pub fn format(check: bool, paths: &[String]) {
-    let binary = find_code_binary_or_exit();
+    let binary = find_code_binary_or_exit(&version_need_or_exit(None, None));
 
     let mut cmd = process::Command::new(&binary);
     cmd.arg("format");
@@ -60,6 +184,22 @@ pub fn format(check: bool, paths: &[String]) {
 
     let status = cmd.status();
     exit_on_status(&binary, status);
+}
+
+/// Under `-v`, print the `code` invocation about to run.
+///
+/// euglena's whole job is delegation, and a wrapper that never shows what it
+/// delegates to is a wrapper you cannot learn the underlying tool from. This
+/// turns `euglena run -v` into the answer to "so what does this actually do?"
+fn trace(verbose: bool, binary: &str, cmd: &process::Command) {
+    if !verbose {
+        return;
+    }
+    let args: Vec<String> = cmd
+        .get_args()
+        .map(|a| a.to_string_lossy().into_owned())
+        .collect();
+    eprintln!("euglena: exec {} {}", binary, args.join(" "));
 }
 
 fn exit_on_status(binary: &str, status: std::io::Result<process::ExitStatus>) {
@@ -77,25 +217,70 @@ fn exit_on_status(binary: &str, status: std::io::Result<process::ExitStatus>) {
     }
 }
 
-/// Resolve the `run`/`build` positional argument to what actually gets
-/// handed to `code`. A manifest.json makes this an euglena app: the entry is
-/// (re)generated at the project root (see `codegen::write_main_code`) and
-/// that root directory is what's passed — `code`'s own "a directory means
-/// its main.code" convention does the rest, and installed organelles resolve
-/// natively since the entry now lives where `.code/` actually is.
+/// The Euglena project root a `run`/`build` path argument names — or exit.
 ///
-/// With no manifest.json, `path` is passed straight through: a bare `.code`
-/// file or a plain (non-euglena) `code` project.
-fn resolve_entry_arg(path: &str) -> String {
+/// A manifest.json is **required**. euglena runs and builds cells; the one
+/// thing it adds over `code` is generating an entry from `manifest.json` plus
+/// `src/*.gene.code`, and with no manifest there is nothing to generate and
+/// nothing euglena contributes. It used to hand such a path straight to
+/// `code`, which made `euglena run` a second name for `code run` on some
+/// inputs but not others — the layer boundary is worth more than that
+/// convenience, so this stops and names the right tool instead.
+///
+/// Checked before the interpreter is located, so a directory that was never a
+/// Euglena app is told *that*, rather than being sent to install a `code` it
+/// would have no use for.
+fn euglena_project_root_or_exit(path: &str) -> PathBuf {
     let project_root = project_root_from_path(path);
     if project_root.join("manifest.json").is_file() {
-        if let Err(e) = codegen::write_main_code(&project_root) {
+        return project_root;
+    }
+
+    eprintln!(
+        "euglena: '{}' is not a Euglena app — no manifest.json in {}.",
+        path,
+        project_root.display()
+    );
+    eprintln!();
+    eprintln!("euglena runs and builds cells: manifest.json + src/*.gene.code.");
+    eprintln!("For a plain code project or a lone .code file, use code directly:");
+    eprintln!("  cdlvsm code run {path}");
+    eprintln!(
+        "To make this directory a Euglena app: {} init <name>",
+        crate::invocation::command_prefix()
+    );
+    process::exit(1);
+}
+
+/// Regenerate the app's `main.code` and return what to hand `code`: the
+/// project root itself. `code`'s own "a directory means its main.code"
+/// convention does the rest, and installed organelles resolve natively since
+/// the entry lives where `.code/` actually is.
+fn generate_entry_or_exit(project_root: &Path, verbose: bool) -> String {
+    match codegen::write_main_code(project_root) {
+        Ok(summary) => {
+            if verbose {
+                eprintln!(
+                    "euglena: generated {}/main.code ({}, {})",
+                    project_root.display(),
+                    plural(summary.genes, "gene"),
+                    plural(summary.organelles, "organelle"),
+                );
+            }
+        }
+        Err(e) => {
             eprintln!("euglena: failed to generate main.code: {}", e);
             process::exit(1);
         }
-        project_root.to_string_lossy().to_string()
+    }
+    project_root.to_string_lossy().to_string()
+}
+
+fn plural(n: usize, noun: &str) -> String {
+    if n == 1 {
+        format!("1 {noun}")
     } else {
-        path.to_string()
+        format!("{n} {noun}s")
     }
 }
 
@@ -111,7 +296,12 @@ pub(crate) fn project_root_from_path(path: &str) -> PathBuf {
     std::fs::canonicalize(&base).unwrap_or(base)
 }
 
-pub(crate) fn find_code_binary_or_exit() -> String {
+/// Locate a usable `code`, or explain why the one that is there is not.
+///
+/// `need` carries both the bar and the reason it is that high, so "upgrade
+/// `code`" and "your manifest asks for more than you have installed" do not
+/// arrive as the same sentence.
+pub(crate) fn find_code_binary_or_exit(need: &VersionNeed) -> String {
     // 1. An explicitly configured path always wins (dev builds, custom
     //    locations) — `euglena code set` is the override, not a requirement.
     //    Still version-checked: a stale configured binary should fail here,
@@ -119,13 +309,14 @@ pub(crate) fn find_code_binary_or_exit() -> String {
     //    file.
     if let Some(path) = crate::config::read_code_binary_path() {
         match code_interpreter_version(&path) {
-            Some(v) if v >= MIN_CODE_VERSION => return path.to_string_lossy().to_string(),
+            Some(v) if v >= need.version => return path.to_string_lossy().to_string(),
             Some(v) => {
                 eprintln!(
-                    "euglena: configured Code interpreter '{}' is v{}, but euglena requires >= v{}.",
+                    "euglena: configured Code interpreter '{}' is v{}, but this needs >= v{}, which {}.",
                     path.display(),
                     fmt_version(v),
-                    fmt_version(MIN_CODE_VERSION)
+                    fmt_version(need.version),
+                    need.reason
                 );
                 eprintln!("Install a newer one, then re-point euglena if the path changed:");
                 eprintln!("  cdlvsm install code");
@@ -148,14 +339,15 @@ pub(crate) fn find_code_binary_or_exit() -> String {
     // 2. Otherwise discover cdlvsm's `cdlvsm-code` shim on PATH, so the common
     //    flow (`cdlvsm install code && cdlvsm install euglena`) needs no manual
     //    wiring — both land in a PATH dir like ~/.local/bin.
-    match discover_cdlvsm_code_on_path() {
+    match discover_cdlvsm_code_on_path(need.version) {
         Some(CodeDiscovery::Ready(path)) => return path,
         Some(CodeDiscovery::TooOld { path, version }) => {
             eprintln!(
-                "euglena: found Code v{} at '{}', but euglena requires >= v{}.",
+                "euglena: found Code v{} at '{}', but this needs >= v{}, which {}.",
                 fmt_version(version),
                 path,
-                fmt_version(MIN_CODE_VERSION)
+                fmt_version(need.version),
+                need.reason
             );
             eprintln!("Upgrade it:");
             eprintln!("  cdlvsm install code");
@@ -189,13 +381,13 @@ pub(crate) enum CodeDiscovery {
 /// euglena must never risk invoking (or even running `--version` on) that. A
 /// `code` binary installed some other way is supported via an explicit
 /// `euglena code set`.
-pub(crate) fn discover_cdlvsm_code_on_path() -> Option<CodeDiscovery> {
+pub(crate) fn discover_cdlvsm_code_on_path(min: (u32, u32, u32)) -> Option<CodeDiscovery> {
     let path_var = std::env::var_os("PATH")?;
     for dir in std::env::split_paths(&path_var) {
         let candidate = dir.join("cdlvsm-code");
         if let Some(version) = code_interpreter_version(&candidate) {
             let path_str = candidate.to_string_lossy().to_string();
-            return Some(if version >= MIN_CODE_VERSION {
+            return Some(if version >= min {
                 CodeDiscovery::Ready(path_str)
             } else {
                 CodeDiscovery::TooOld {

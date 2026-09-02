@@ -169,6 +169,12 @@
   }
   h2 { font-size: clamp(1.7rem, 3.5vw, 2.3rem); font-weight: 750; letter-spacing: -0.02em; margin: 0 0 0.7rem; }
   .section-sub { color: var(--muted); max-width: 60ch; margin: 0 0 2.4rem; }
+  .plat-note {
+    font-size: 0.82rem; color: var(--muted); max-width: 62ch;
+    border: 1px solid var(--border); border-left: 2px solid var(--teal);
+    border-radius: 8px; padding: 0.7rem 0.9rem; margin: 1.4rem 0 0;
+  }
+  .plat-note b { color: var(--text); font-weight: 600; }
 
   /* features */
   .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
@@ -362,7 +368,7 @@
       <span class="kind"><i style="background:#a78bfa"></i>gene</span>
       <span class="kind"><i style="background:#f472b6"></i>organelle</span>
       <span class="kind"><i style="background:#fbbf24"></i>particle</span>
-      <span class="kind"><i style="background:#86efac"></i>sap</span>
+      <span class="kind"><i style="background:#86efac"></i>config</span>
       <span class="kind"><i style="background:#6b7385"></i>nucleus</span>
     </div>
   </div>
@@ -422,8 +428,8 @@
         <div class="ico" style="background:rgba(134,239,172,0.1); color:var(--green)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-5 3.4L16.2 20 12 16.4 7.8 20 9 13.4 4 10l6.1-1.2z"/></svg>
         </div>
-        <h3>SAP config</h3>
-        <p>Self-addressed particles configure each organelle at startup — declared under <code>organelles.&lt;alias&gt;.sap</code> in <code>manifest.json</code>, with <code>${ENV}</code> interpolation for secrets.</p>
+        <h3>Config</h3>
+        <p>An organelle&#39;s config is declared under <code>organelles.&lt;alias&gt;.config</code> in <code>manifest.json</code>, with <code>${ENV}</code> interpolation for secrets. euglena emits it as the particle the module names for its setup — <code>Config</code>, or <code>Listen</code> for http_server.</p>
       </div>
       <div class="feat reveal">
         <div class="ico" style="background:rgba(107,115,133,0.15); color:var(--muted)">
@@ -464,6 +470,12 @@
         <div class="ln"><span class="pr">$</span> euglena build --release</div>
       </div>
     </div>
+    <p class="plat-note">
+      <b>Platform:</b> the <code>euglena</code> and <code>code</code> binaries
+      <code>cdlvsm</code> installs are <b>Linux&nbsp;x86_64</b>, for now. From
+      source it's <code>cargo build --release</code>, with a <code>code</code>
+      &ge;&nbsp;1.1.0 on <code>PATH</code>.
+    </p>
   </section>
 
   <section id="flow">
@@ -583,7 +595,7 @@
     "Nucleus": "#6b7385",
     "Particles": "#fbbf24",
     "Organelles": "#f472b6",
-    "SAP Config": "#86efac",
+    "Config": "#86efac",
     "Loops": "#a78bfa",
   };
   const catColor = (c) => CAT_COLORS[c] || "#9aa3b5";
@@ -652,8 +664,8 @@
     },
     {
       file: "manifest.json",
-      code: '{\n  "name": "myapp",\n  "organelles": {\n    "logger": "organelles/console.so",\n    "store": {\n      "path": "organelles/mongodb.so",\n      "sap": { "database": "myapp", "collection": "state" }\n    }\n  }\n}',
-      out: 'organelles sapped at cell startup',
+      code: '{\n  "name": "myapp",\n  "organelles": {\n    "logger": "terminal",\n    "store": {\n      "module": "mongodb",\n      "config": { "url": "${MONGO_URI}", "database": "myapp" }\n    }\n  }\n}',
+      out: 'organelles configured at cell startup',
     },
   ];
   const demoFile = document.getElementById("demo-file");

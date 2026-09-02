@@ -3,7 +3,7 @@
 
 Reads the hand-written snippets in site/examples/ (current Code syntax —
 see src/init.rs for the canonical nucleus template and src/codegen.rs for
-the canonical Sap lines), turns each into a gallery entry, and injects the
+the canonical setup-particle lines), turns each into a gallery entry, and injects the
 JSON array into the __EXAMPLES__ placeholder in site/index.html.
 
 Unlike the code-language site there is no test-fixture corpus to mine: the
@@ -24,7 +24,7 @@ CATEGORY_BY_PREFIX = [
     ("particle_", "Particles"),
     ("emission_", "Particles"),
     ("organelle_", "Organelles"),
-    ("sap_", "SAP Config"),
+    ("config_", "Config"),
     ("loop_", "Loops"),
 ]
 DEFAULT_CATEGORY = "Concepts"

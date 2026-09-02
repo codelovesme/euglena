@@ -9,7 +9,7 @@ mod invocation;
 mod lockfile;
 mod manifest;
 mod modules;
-mod testrunner;
+mod sha256;
 
 #[derive(Parser)]
 #[command(
@@ -29,15 +29,18 @@ enum Commands {
         /// Name of the new project (used as directory name and cell name)
         name: String,
     },
-    /// Run an Euglena application (or a bare .code file/project) with the `code` interpreter
+    /// Run an Euglena application through the `code` interpreter
     Run {
-        /// Project directory, or a .code file (default: this directory)
+        /// The app's project directory (default: this directory)
         #[arg(default_value = ".")]
         path: String,
+        /// Show the `code` command euglena delegates to
+        #[arg(short, long)]
+        verbose: bool,
     },
-    /// Compile an Euglena application (or a bare .code file/project) to native binary
+    /// Compile an Euglena application to a native binary
     Build {
-        /// Project directory, or a .code file (default: this directory)
+        /// The app's project directory (default: this directory)
         #[arg(default_value = ".")]
         path: String,
         /// Enable LLVM optimizations (slower compile, faster runtime)
@@ -49,9 +52,16 @@ enum Commands {
         /// Where to write the artifact (default: build/<name> beside what you named)
         #[arg(short = 'o', long)]
         output: Option<String>,
+        /// Show the `code` command euglena delegates to
+        #[arg(short, long)]
+        verbose: bool,
     },
-    /// Run every tests/*.code fixture in the current project, in place
-    Test,
+    /// Run this project's tests/ fixtures (wraps `code test`)
+    Test {
+        /// Show the `code` command euglena delegates to
+        #[arg(short, long)]
+        verbose: bool,
+    },
     /// Rewrite .code source in the one canonical layout (wraps `code format`)
     Format {
         /// Write nothing; exit non-zero if anything would change
@@ -61,7 +71,7 @@ enum Commands {
         paths: Vec<String>,
     },
     /// Fetch an organelle via `code install` and declare it in manifest.json
-    Add {
+    Install {
         /// Module name (or a manifest URL `code install` accepts)
         name: String,
         /// Alias to declare in manifest.json (default: the module name)
@@ -69,12 +79,16 @@ enum Commands {
         alias: Option<String>,
     },
     /// Drop an organelle's manifest alias, and its module if unreferenced
-    Remove {
+    ///
+    /// Takes the *alias*, not the module name — the manifest is keyed by
+    /// alias, and that is what `euglena list` prints. `code uninstall` is the
+    /// one that takes a module name.
+    Uninstall {
         /// The alias as declared in manifest.json
         alias: String,
     },
     /// List declared organelles and whether each is installed
-    Ls,
+    List,
     /// Check the Code interpreter, project layout, and declared organelles
     Doctor,
     /// Manage Code interpreter path used by euglena-cli
@@ -101,18 +115,21 @@ fn main() {
     let cli = Cli::parse();
     match cli.command {
         Commands::Init { name } => init::run(&name),
-        Commands::Run { path } => exec::run(&path),
+        Commands::Run { path, verbose } => exec::run(&path, verbose),
         Commands::Build {
             path,
             release,
             target,
             output,
-        } => exec::build(&path, release, target.as_deref(), output.as_deref()),
-        Commands::Test => {
-            let binary = exec::find_code_binary_or_exit();
-            let root = std::env::current_dir().unwrap_or_else(|_| std::path::PathBuf::from("."));
-            testrunner::run(&root, &binary);
-        }
+            verbose,
+        } => exec::build(
+            &path,
+            release,
+            target.as_deref(),
+            output.as_deref(),
+            verbose,
+        ),
+        Commands::Test { verbose } => exec::test(".", verbose),
         Commands::Format { check, paths } => {
             let paths = if paths.is_empty() {
                 vec!["src".to_string(), "tests".to_string()]
@@ -121,9 +138,9 @@ fn main() {
             };
             exec::format(check, &paths);
         }
-        Commands::Add { name, alias } => modules::add(&name, alias.as_deref()),
-        Commands::Remove { alias } => modules::remove(&alias),
-        Commands::Ls => modules::ls(),
+        Commands::Install { name, alias } => modules::install(&name, alias.as_deref()),
+        Commands::Uninstall { alias } => modules::uninstall(&alias),
+        Commands::List => modules::list(),
         Commands::Doctor => doctor::run(),
         Commands::Code { command } => match command {
             CodeCommands::Set { path } => config::set_code_binary_path(&path),
