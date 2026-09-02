@@ -13,7 +13,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{self, Command};
 
-use crate::exec::{baseline_code_binary_or_exit, uninstall_code_binary_or_exit};
+use crate::exec::baseline_code_binary_or_exit;
 use crate::{invocation, lockfile, manifest};
 
 fn project_root() -> PathBuf {
@@ -95,7 +95,7 @@ pub fn uninstall(alias: &str) {
     // `json` no longer holds the alias, so this asks the question that
     // matters: with it gone, does anything still name the module?
     let orphaned = !module_name.is_empty() && !references_module(&json, &module_name);
-    let binary = orphaned.then(uninstall_code_binary_or_exit);
+    let binary = orphaned.then(baseline_code_binary_or_exit);
 
     if let Err(e) = write_manifest_json(&manifest_path, &json) {
         eprintln!("euglena: {}", e);

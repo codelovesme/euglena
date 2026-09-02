@@ -106,9 +106,9 @@ fn a_generated_entry_carries_a_stamp() {
     let app = scaffolded("stamped");
     let lines: Vec<String> = app.entry().lines().map(str::to_string).collect();
 
-    assert!(lines[0].starts_with("-- GENERATED"), "got:\n{:?}", lines[0]);
+    assert!(lines[0].starts_with("| GENERATED"), "got:\n{:?}", lines[0]);
     assert!(
-        lines[1].starts_with("-- euglena ") && lines[1].contains("sha256:"),
+        lines[1].starts_with("| euglena ") && lines[1].contains("sha256:"),
         "second line should be the stamp; got:\n{:?}",
         lines[1]
     );
@@ -182,7 +182,7 @@ fn doctor_fails_on_an_entry_edited_after_generation() {
 #[test]
 fn doctor_leaves_a_hand_written_entry_alone() {
     let app = scaffolded("hand_written");
-    fs::write(app.root.join("main.code"), "-- mine\nassert 1 = 1\n").unwrap();
+    fs::write(app.root.join("main.code"), "| mine\nassert 1 = 1\n").unwrap();
 
     let (_, out) = app.euglena(&["doctor"]);
     assert!(out.contains("main.code: hand-written"), "got:\n{out}");

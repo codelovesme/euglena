@@ -9,7 +9,7 @@ use crate::sha256;
 /// file that doesn't start with this — a file the user wrote is not
 /// euglena's to clobber.
 pub const GENERATED_HEADER: &str =
-    "-- GENERATED — do not edit. Modify manifest.json or src/*.gene.code instead.";
+    "| GENERATED — do not edit. Modify manifest.json or src/*.gene.code instead.";
 
 /// Start of the *stamp* — the second line of every generated `main.code`,
 /// recording which euglena wrote the file and the digest of everything below
@@ -21,7 +21,7 @@ pub const GENERATED_HEADER: &str =
 /// the next `run`/`build`/`test` will silently throw those edits away. A
 /// file that matches its stamp but no longer matches its inputs is merely
 /// **stale**, and regenerating it is the fix rather than the loss.
-const STAMP_PREFIX: &str = "-- euglena ";
+const STAMP_PREFIX: &str = "| euglena ";
 
 /// Separates the euglena version from the digest on the stamp line.
 const STAMP_DIGEST_MARKER: &str = " · body sha256:";
@@ -435,7 +435,7 @@ mod tests {
         assert!(content.contains("emit EuglenaHasBeenBorn { cell_name = \"my-app\" } to this"));
         assert!(!content.contains("link"));
         assert!(content.starts_with(GENERATED_HEADER));
-        assert!(GENERATED_HEADER.starts_with("--"));
+        assert!(GENERATED_HEADER.starts_with("|"));
     }
 
     #[test]
@@ -545,7 +545,7 @@ mod tests {
 
     #[test]
     fn parse_stamp_rejects_what_is_not_one() {
-        assert!(parse_stamp("-- hand-written\nassert 1 = 1\n").is_none());
+        assert!(parse_stamp("| hand-written\nassert 1 = 1\n").is_none());
         // Our header but no stamp — an entry from a euglena that predates it.
         assert!(parse_stamp(&format!("{GENERATED_HEADER}\n\nassert 1 = 1\n")).is_none());
         // A stamp whose digest is not 64 hex characters is not a stamp.
@@ -577,7 +577,7 @@ mod tests {
         .unwrap();
         assert!(matches!(entry_status(&root), EntryStatus::Absent));
 
-        fs::write(root.join("main.code"), "-- mine\nassert 1 = 1\n").unwrap();
+        fs::write(root.join("main.code"), "| mine\nassert 1 = 1\n").unwrap();
         assert!(matches!(entry_status(&root), EntryStatus::HandWritten));
     }
 
@@ -812,7 +812,7 @@ mod tests {
             r#"{"name":"x","organelles":{}}"#,
         )
         .unwrap();
-        fs::write(root.join("main.code"), "-- hand-written\nassert 1 = 1\n").unwrap();
+        fs::write(root.join("main.code"), "| hand-written\nassert 1 = 1\n").unwrap();
         let err = write_main_code(&root).unwrap_err();
         assert!(err.contains("already exists"), "got: {err}");
     }

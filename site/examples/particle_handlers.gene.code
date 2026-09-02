@@ -1,7 +1,7 @@
--- A gene is a set of particle handlers. A particle is parser sugar for an
--- object with a `_class` field — the field list is the only place its
--- shape is declared, and `return` is what gives the result one to test
--- with `∈`.
+| A gene is a set of particle handlers. A particle is parser sugar for an
+| object with a `_class` field — the field list is the only place its
+| shape is declared, and `return` is what gives the result one to test
+| with `∈`.
 
 Ping {} => {
     return Pong { message = "pong" }

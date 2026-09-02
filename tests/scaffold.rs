@@ -97,8 +97,8 @@ fn scaffolded_nucleus_uses_current_syntax() {
     let gene = fs::read_to_string(work.join("demo/src/nucleus.gene.code")).unwrap();
 
     assert!(
-        gene.contains("--") && !gene.contains("->"),
-        "nucleus gene should use `--` comments, not `->`; got:\n{gene}"
+        gene.contains("|") && !gene.contains("--"),
+        "nucleus gene should use `|` comments, not `--`; got:\n{gene}"
     );
     assert!(
         gene.contains("EuglenaHasBeenBorn { cell_name } =>"),
@@ -229,7 +229,7 @@ fn scaffolded_app_runs_against_real_code() {
         "main.code should be generated at the project root"
     );
     let content = fs::read_to_string(&entry).unwrap();
-    assert!(content.starts_with("-- GENERATED"));
+    assert!(content.starts_with("| GENERATED"));
 
     // euglena test runs the starter fixture too.
     let test = Command::new(bin())
@@ -277,7 +277,7 @@ fn refuses_to_overwrite_a_hand_written_main_code() {
         .unwrap();
 
     let project = work.join("demo");
-    fs::write(project.join("main.code"), "-- hand-written\nassert 1 = 1\n").unwrap();
+    fs::write(project.join("main.code"), "| hand-written\nassert 1 = 1\n").unwrap();
 
     let run = Command::new(bin())
         .arg("run")

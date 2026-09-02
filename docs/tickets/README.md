@@ -39,6 +39,7 @@ stateless module is a generation error.
 | 15 | [`doctor`](15-doctor.md) | 11 |
 | 16 | [README and site refresh](16-readme-and-site.md) | 11, 14 |
 | 18 | [One module vocabulary](18-one-module-vocabulary.md) | 12 |
+| 19 | [The comment marker is `\|`](19-pipe-comment-marker.md) | 18 |
 | 17 | [Release 0.2.0](17-release-0-2-0.md) | all |
 
 Ship order is the table order. 13 and 14 are independent of the 11/12 pair

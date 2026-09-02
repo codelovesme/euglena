@@ -1,5 +1,8 @@
 # 7 — Templates to current syntax
 
+> **Superseded in part by [T19](19-pipe-comment-marker.md)** — the comment
+> marker shown below as `--` is now `|`. Everything else here still holds.
+
 - **Priority:** High
 - **Type:** Bug / compatibility
 - **Area:** `src/init.rs` (`nucleus_gene_template`), `tests/scaffold.rs`

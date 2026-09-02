@@ -1,4 +1,4 @@
--- loop … over … walks arrays; no while, no index bookkeeping.
+| loop … over … walks arrays; no while, no index bookkeeping.
 
 let nums = [1, 2, 3, 4]
 let doubled = []

@@ -1,5 +1,5 @@
--- Organelles are capability providers, reached the same way core is:
--- emit … to … get … sends a particle and binds the synchronous reply.
+| Organelles are capability providers, reached the same way core is:
+| emit … to … get … sends a particle and binds the synchronous reply.
 
 GetProfile { user_id } => {
     emit Decode { token = user_id } to jwt get decoded

@@ -1,6 +1,6 @@
--- Emission handlers react to what organelles say back — Log and Exception
--- are common vocabulary (see the language README's "Common particles"), so
--- one handler here serves every organelle that pushes them.
+| Emission handlers react to what organelles say back — Log and Exception
+| are common vocabulary (see the language README's "Common particles"), so
+| one handler here serves every organelle that pushes them.
 
 Log { source, level, message } => {
     emit Print { value = "[$source] $message\n" } to logger

@@ -84,11 +84,11 @@ fn manifest_template(name: &str) -> String {
 /// Every construct here needs nothing installed — `code run` works with a
 /// bare `code install`-free project, and the nucleus gene should too.
 fn nucleus_gene_template() -> &'static str {
-    r#"-- Nucleus gene — the cell's boot handler.
---
--- Any src/*.gene.code file is linked into the app automatically. Handlers
--- defined here join one program-wide dispatch table, so a gene is just a
--- file that answers particles.
+    r#"| Nucleus gene — the cell's boot handler.
+|
+| Any src/*.gene.code file is linked into the app automatically. Handlers
+| defined here join one program-wide dispatch table, so a gene is just a
+| file that answers particles.
 
 export let gene_name = "nucleus"
 
@@ -99,8 +99,8 @@ EuglenaHasBeenBorn { cell_name } => {
 }
 
 fn test_fixture_template() -> &'static str {
-    r#"-- A starter fixture for `euglena test`. Fixtures run in place, from
--- tests/, so a gene under src/ is linked with a relative path.
+    r#"| A starter fixture for `euglena test`. Fixtures run in place, from
+| tests/, so a gene under src/ is linked with a relative path.
 
 link "../src/nucleus.gene.code"
 

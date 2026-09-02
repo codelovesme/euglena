@@ -9,21 +9,19 @@ use crate::codegen;
 /// `.code/` project layout — targets this baseline; below it, generated
 /// programs fail to parse. Recorded here once so the check and its error
 /// text can never drift from each other.
-pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 1, 0);
-
-/// The `code` version `euglena test` needs: the release that added `code
-/// test`, the runner euglena stopped keeping its own copy of.
-pub(crate) const MIN_CODE_VERSION_FOR_TEST: (u32, u32, u32) = (1, 2, 0);
-
-/// The `code` version `euglena uninstall` needs: the release that renamed
-/// `code remove` to `code uninstall`, so that `cdlvsm`, `code` and `euglena`
-/// spell the three module operations one way.
 ///
-/// Only `uninstall` carries this floor. `euglena install` shells out to `code
-/// install`, whose spelling did not change, and `euglena list` reads the
-/// lockfile without invoking `code` at all — so neither should refuse a
-/// `code` that would in fact serve them.
-pub(crate) const MIN_CODE_VERSION_FOR_UNINSTALL: (u32, u32, u32) = (1, 3, 0);
+/// 2.0.0 because that is where the comment marker became `|`: every file
+/// euglena generates opens with a `| GENERATED` header and a `| euglena …`
+/// stamp, so on any older `code` the entry does not parse at all.
+///
+/// This baseline swallowed the two per-command floors that used to sit here
+/// — 1.2.0 for `code test`, 1.3.0 for `code uninstall`. Both are below
+/// 2.0.0, so no `code` can satisfy the baseline and still be too old for
+/// either command: the floors could not fire, and a floor that cannot fire
+/// is a claim nothing checks. The *mechanism* stays (`version_need` still
+/// takes a `command_floor`), for the next subcommand that lands ahead of
+/// whatever the baseline is then.
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (2, 0, 0);
 
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
@@ -140,10 +138,7 @@ pub fn build(path: &str, release: bool, target: Option<&str>, output: Option<&st
 /// that can disagree.
 pub fn test(path: &str, verbose: bool) {
     let project_root = euglena_project_root_or_exit(path);
-    let need = version_need_or_exit(
-        Some(&project_root),
-        Some((MIN_CODE_VERSION_FOR_TEST, "is where `code test` landed")),
-    );
+    let need = version_need_or_exit(Some(&project_root), None);
     let binary = find_code_binary_or_exit(&need);
     generate_entry_or_exit(&project_root, verbose);
 
@@ -154,21 +149,9 @@ pub fn test(path: &str, verbose: bool) {
 }
 
 /// A `code` at euglena's own baseline — for the commands that touch the
-/// toolchain without running an app (`install`, `format`).
+/// toolchain without running an app (`install`, `uninstall`, `format`).
 pub(crate) fn baseline_code_binary_or_exit() -> String {
     find_code_binary_or_exit(&version_need_or_exit(None, None))
-}
-
-/// A `code` new enough to have `uninstall` — for `euglena uninstall`, which
-/// hands the module name to it once the alias is gone.
-pub(crate) fn uninstall_code_binary_or_exit() -> String {
-    find_code_binary_or_exit(&version_need_or_exit(
-        None,
-        Some((
-            MIN_CODE_VERSION_FOR_UNINSTALL,
-            "is where `code uninstall` landed",
-        )),
-    ))
 }
 
 /// `code format`, defaulting to `src/` and `tests/` when no paths are given.
@@ -466,8 +449,11 @@ mod tests {
 
     #[test]
     fn min_version_ordering() {
-        assert!((1, 1, 3) >= MIN_CODE_VERSION);
+        assert!((2, 0, 0) >= MIN_CODE_VERSION);
+        assert!((2, 1, 0) >= MIN_CODE_VERSION);
+        // Everything on the 1.x line is below it: 1.x has no `|` comment,
+        // so it cannot parse the entry euglena writes.
+        assert!((1, 3, 0) < MIN_CODE_VERSION);
         assert!((0, 4, 1) < MIN_CODE_VERSION);
-        assert!((1, 0, 99) < MIN_CODE_VERSION);
     }
 }

@@ -1,7 +1,7 @@
--- v1.1 gives an organelle a way to speak first: http_server pushes Request,
--- a handler answers by returning Response, and loop { } keeps the cell up
--- to receive it. No request_id bookkeeping — the module remembers who to
--- answer.
+| v1.1 gives an organelle a way to speak first: http_server pushes Request,
+| a handler answers by returning Response, and loop { } keeps the cell up
+| to receive it. No request_id bookkeeping — the module remembers who to
+| answer.
 
 Request { method, path } => {
     if path = "/health" {

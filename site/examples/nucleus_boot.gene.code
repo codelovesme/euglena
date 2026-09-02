@@ -1,4 +1,4 @@
--- The nucleus boots the cell: one handler, fired exactly once at birth.
+| The nucleus boots the cell: one handler, fired exactly once at birth.
 
 export let gene_name = "nucleus"
 

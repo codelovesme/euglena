@@ -156,42 +156,17 @@ fn test_delegates_to_code_test() {
     app.cleanup();
 }
 
-/// `code test` did not always exist, so a `code` older than the release that
-/// added it is refused by name — with the command, not just the version, in
-/// the reason.
-#[test]
-fn test_refuses_a_code_that_predates_the_test_command() {
-    let app = scaffolded("test_too_old", "1.1.9");
-
-    let (ok, out) = app.euglena(&["test"]);
-    assert!(!ok, "a v1.1.9 code has no `test`; got:\n{out}");
-    assert!(
-        out.contains("1.2.0"),
-        "should name the version; got:\n{out}"
-    );
-    assert!(
-        out.contains("code test"),
-        "should say which command raised the bar; got:\n{out}"
-    );
-
-    // ...while run, which needs nothing new, is happy with the same binary.
-    let (ok, out) = app.euglena(&["run"]);
-    assert!(ok, "run should not be held to `test`'s floor; got:\n{out}");
-
-    app.cleanup();
-}
-
 /// euglena's baseline is what its *generated syntax* needs. What the *app*
 /// needs is the app's to state, and it can only ever raise the bar.
 #[test]
 fn a_manifest_can_require_a_newer_code_than_euglenas_baseline() {
-    let app = scaffolded("manifest_req", "1.1.6");
-    app.require_code(">=1.1.9");
+    let app = scaffolded("manifest_req", "2.0.0");
+    app.require_code(">=2.1.0");
 
     let (ok, out) = app.euglena(&["run"]);
-    assert!(!ok, "v1.1.6 does not satisfy >=1.1.9; got:\n{out}");
+    assert!(!ok, "v2.0.0 does not satisfy >=2.1.0; got:\n{out}");
     assert!(
-        out.contains("1.1.9"),
+        out.contains("2.1.0"),
         "should name what was asked for; got:\n{out}"
     );
     assert!(
