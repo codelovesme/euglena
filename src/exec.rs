@@ -10,18 +10,18 @@ use crate::codegen;
 /// programs fail to parse. Recorded here once so the check and its error
 /// text can never drift from each other.
 ///
-/// 2.0.0 because that is where the comment marker became `|`: every file
+/// 1.4.0 because that is where the comment marker became `|`: every file
 /// euglena generates opens with a `| GENERATED` header and a `| euglena …`
 /// stamp, so on any older `code` the entry does not parse at all.
 ///
 /// This baseline swallowed the two per-command floors that used to sit here
 /// — 1.2.0 for `code test`, 1.3.0 for `code uninstall`. Both are below
-/// 2.0.0, so no `code` can satisfy the baseline and still be too old for
+/// 1.4.0, so no `code` can satisfy the baseline and still be too old for
 /// either command: the floors could not fire, and a floor that cannot fire
 /// is a claim nothing checks. The *mechanism* stays (`version_need` still
 /// takes a `command_floor`), for the next subcommand that lands ahead of
 /// whatever the baseline is then.
-pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (2, 0, 0);
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 4, 0);
 
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
@@ -449,10 +449,10 @@ mod tests {
 
     #[test]
     fn min_version_ordering() {
+        assert!((1, 4, 0) >= MIN_CODE_VERSION);
         assert!((2, 0, 0) >= MIN_CODE_VERSION);
-        assert!((2, 1, 0) >= MIN_CODE_VERSION);
-        // Everything on the 1.x line is below it: 1.x has no `|` comment,
-        // so it cannot parse the entry euglena writes.
+        // Everything before it is below: nothing under 1.4.0 has the `|`
+        // comment, so none of it can parse the entry euglena writes.
         assert!((1, 3, 0) < MIN_CODE_VERSION);
         assert!((0, 4, 1) < MIN_CODE_VERSION);
     }

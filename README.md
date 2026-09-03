@@ -2,7 +2,7 @@
 
 The `euglena` CLI — scaffold, run, and build [Euglena](https://github.com/codelovesme)
 applications. Euglena apps are written in the [Code](https://github.com/codelovesme/code)
-language (**requires code >= 2.0.0**); this CLI is a thin cell layer on top
+language (**requires code >= 1.4.0**); this CLI is a thin cell layer on top
 of the `code` toolchain: a `manifest.json` cell definition, `*.gene.code`
 genes that auto-link, organelle `config` blocks, and mock mode. Everything else — the
 project marker, the module installer and its lockfile, `format`, `test` — is
@@ -96,7 +96,7 @@ cdlvsm euglena run    # just works — no code-path setup needed, see below
 interpreter. euglena finds it automatically: if you haven't pinned a path,
 it uses cdlvsm's `cdlvsm-code` shim from your `PATH` — no extra setup needed
 after `cdlvsm install code`. Either way it's version-checked: euglena
-generates syntax that only parses on **code >= 2.0.0**, so a stale binary is
+generates syntax that only parses on **code >= 1.4.0**, so a stale binary is
 refused by name up front rather than failing as a parse error partway
 through a generated file. `euglena doctor` reports what was found and why.
 
@@ -233,7 +233,7 @@ equivalent in `code` itself.
 
 ## Requiring a `code` version
 
-euglena refuses a `code` older than **2.0.0**, because that is what the
+euglena refuses a `code` older than **1.4.0**, because that is what the
 syntax it *generates* needs. What your *app* needs is a different question —
 a module handler, a field, a particle that only exists from some version on —
 and it is the app's to state:
@@ -241,7 +241,7 @@ and it is the app's to state:
 ```json
 {
   "name": "myapp",
-  "code": ">=2.1.0",
+  "code": ">=1.5.0",
   "organelles": { "srv": { "module": "http_server", "config": { "port": "${PORT}" } } }
 }
 ```
@@ -251,15 +251,15 @@ euglena's own baseline and this field, and the error says which of the two
 asked, since the fix differs:
 
 ```
-euglena: found Code v2.0.0 at '/home/you/.local/bin/cdlvsm-code',
-but this needs >= v2.1.0, which is what this app's manifest.json asks for.
+euglena: found Code v1.4.0 at '/home/you/.local/bin/cdlvsm-code',
+but this needs >= v1.5.0, which is what this app's manifest.json asks for.
 ```
 
 (There is a third input — a floor for a subcommand newer than the baseline —
-but nothing needs one today: the 2.0.0 baseline is above every version that
+but nothing needs one today: the 1.4.0 baseline is above every version that
 introduced a command euglena delegates to.)
 
-Only a minimum is expressible — `"2.1.0"` and `">=2.1.0"` mean the same
+Only a minimum is expressible — `"1.5.0"` and `">=1.5.0"` mean the same
 thing, and carets, tildes and ranges are refused by name. A `code`
 requirement only ever moves forward, so the other spellings would describe a
 situation that does not arise.
@@ -274,7 +274,7 @@ cargo test
 Depends only on `clap` and `serde_json` — no LLVM, no build-time dependency
 on the `code` language (it invokes the `code` binary at runtime). The
 real-run integration tests are gated behind `EUGLENA_TEST_CODE_BIN=/path/to/code`
-(CI has no `code`); point it at a `code` >= 2.0.0 binary to run them.
+(CI has no `code`); point it at a `code` >= 1.4.0 binary to run them.
 
 ## License
 
