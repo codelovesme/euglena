@@ -160,13 +160,16 @@ fn test_delegates_to_code_test() {
 /// needs is the app's to state, and it can only ever raise the bar.
 #[test]
 fn a_manifest_can_require_a_newer_code_than_euglenas_baseline() {
-    let app = scaffolded("manifest_req", "1.4.0");
-    app.require_code(">=1.5.0");
+    // The `code` here satisfies euglena's own baseline, so if the run is
+    // refused it can only be the manifest that refused it — which is the
+    // whole point of the test.
+    let app = scaffolded("manifest_req", "1.5.1");
+    app.require_code(">=1.6.0");
 
     let (ok, out) = app.euglena(&["run"]);
-    assert!(!ok, "v1.4.0 does not satisfy >=1.5.0; got:\n{out}");
+    assert!(!ok, "v1.5.1 does not satisfy >=1.6.0; got:\n{out}");
     assert!(
-        out.contains("1.5.0"),
+        out.contains("1.6.0"),
         "should name what was asked for; got:\n{out}"
     );
     assert!(

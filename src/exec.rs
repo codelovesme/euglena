@@ -10,18 +10,32 @@ use crate::codegen;
 /// programs fail to parse. Recorded here once so the check and its error
 /// text can never drift from each other.
 ///
-/// 1.4.0 because that is where the comment marker became `|`: every file
-/// euglena generates opens with a `| GENERATED` header and a `| euglena …`
-/// stamp, so on any older `code` the entry does not parse at all.
+/// The syntax reason is 1.4.0: that is where the comment marker became `|`,
+/// and every file euglena generates opens with a `| GENERATED` header and a
+/// `| euglena …` stamp, so on any older `code` the entry does not parse at
+/// all.
+///
+/// It says 1.5.1 anyway, because **1.4.0 was tagged and never published** —
+/// no binary was ever built for it, so nobody can install the version this
+/// used to claim to support. A minimum nobody can obtain is not a
+/// compatibility promise, it is a number; and CI could not test against it
+/// either, which is how it went unnoticed that the pin there had been left
+/// three minor versions behind. Raised to the oldest `code` a person can
+/// actually download, which is also the one CI now runs against — the claim
+/// and the check say the same thing again.
+///
+/// Cheap to do because nobody is on an earlier euglena to be cut off. If
+/// that stops being true, the honest move is a published binary at whatever
+/// the baseline is, not a lower number.
 ///
 /// This baseline swallowed the two per-command floors that used to sit here
-/// — 1.2.0 for `code test`, 1.3.0 for `code uninstall`. Both are below
-/// 1.4.0, so no `code` can satisfy the baseline and still be too old for
-/// either command: the floors could not fire, and a floor that cannot fire
-/// is a claim nothing checks. The *mechanism* stays (`version_need` still
-/// takes a `command_floor`), for the next subcommand that lands ahead of
-/// whatever the baseline is then.
-pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 4, 0);
+/// — 1.2.0 for `code test`, 1.3.0 for `code uninstall`. Both are below it,
+/// so no `code` can satisfy the baseline and still be too old for either
+/// command: the floors could not fire, and a floor that cannot fire is a
+/// claim nothing checks. The *mechanism* stays (`version_need` still takes a
+/// `command_floor`), for the next subcommand that lands ahead of whatever
+/// the baseline is then.
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 5, 1);
 
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
@@ -449,10 +463,13 @@ mod tests {
 
     #[test]
     fn min_version_ordering() {
-        assert!((1, 4, 0) >= MIN_CODE_VERSION);
+        assert!((1, 5, 1) >= MIN_CODE_VERSION);
         assert!((2, 0, 0) >= MIN_CODE_VERSION);
-        // Everything before it is below: nothing under 1.4.0 has the `|`
-        // comment, so none of it can parse the entry euglena writes.
+        // Everything before it is below. Nothing under 1.4.0 has the `|`
+        // comment and so cannot parse the entry euglena writes; 1.4.0 and
+        // 1.5.0 could, but neither is a version anyone can install — see
+        // `MIN_CODE_VERSION`.
+        assert!((1, 5, 0) < MIN_CODE_VERSION);
         assert!((1, 3, 0) < MIN_CODE_VERSION);
         assert!((0, 4, 1) < MIN_CODE_VERSION);
     }

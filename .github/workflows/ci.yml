@@ -45,17 +45,15 @@ jobs:
       # this repo went through shipped unnoticed in the first place. See
       # docs/tickets/17-release-0-2-0.md.
       #
-      # This used to be pinned to `src/exec.rs`'s MIN_CODE_VERSION, on the
-      # reasoning that testing against the oldest supported `code` is what
-      # catches an accidental dependency on a newer one. That is still the
-      # better rule, and it is not what this does: the pin sat at v1.1.3
-      # after the minimum moved to 1.4.0, so every test that needed a binary
-      # ran against a `code` three minor versions behind and failed. And
-      # 1.4.0 has no published binary to pin to.
+      # Pinned to `src/exec.rs`'s MIN_CODE_VERSION — bump together. Testing
+      # against the oldest supported `code` is what catches an accidental
+      # dependency on a newer one, and it only works while the two agree:
+      # this pin sat at v1.1.3 after the minimum moved to 1.4.0, so every
+      # test needing a binary ran three minor versions behind and failed.
       #
-      # So this tracks a real release instead, and the guarantee is weaker
-      # by exactly that much: it says euglena works with this `code`, not
-      # that it still works with the oldest one it claims.
+      # They agree again, and the minimum is now a version that was actually
+      # published — 1.4.0 never was, which is part of how the drift went
+      # unnoticed. See `MIN_CODE_VERSION` for why that decided the number.
       - name: Download code (v1.5.1)
         run: |
           set -euo pipefail
