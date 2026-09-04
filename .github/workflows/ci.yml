@@ -39,20 +39,31 @@ jobs:
       - name: Build
         run: cargo build
 
-      # Pinned to the same minimum this repo targets (src/exec.rs's
-      # MIN_CODE_VERSION) — bump together. Without a real `code` binary in
-      # CI, the tests that actually run a scaffolded app are silently
-      # skipped (they're gated on EUGLENA_TEST_CODE_BIN) — which is how the
-      # v0.4 -> v1.1 syntax drift this repo just went through shipped
-      # unnoticed in the first place. See docs/tickets/17-release-0-2-0.md.
-      - name: Download code (v1.1.3)
+      # A real `code` binary, because without one the tests that actually run
+      # a scaffolded app are silently skipped (they are gated on
+      # EUGLENA_TEST_CODE_BIN) — which is how the v0.4 -> v1.1 syntax drift
+      # this repo went through shipped unnoticed in the first place. See
+      # docs/tickets/17-release-0-2-0.md.
+      #
+      # This used to be pinned to `src/exec.rs`'s MIN_CODE_VERSION, on the
+      # reasoning that testing against the oldest supported `code` is what
+      # catches an accidental dependency on a newer one. That is still the
+      # better rule, and it is not what this does: the pin sat at v1.1.3
+      # after the minimum moved to 1.4.0, so every test that needed a binary
+      # ran against a `code` three minor versions behind and failed. And
+      # 1.4.0 has no published binary to pin to.
+      #
+      # So this tracks a real release instead, and the guarantee is weaker
+      # by exactly that much: it says euglena works with this `code`, not
+      # that it still works with the oldest one it claims.
+      - name: Download code (v1.5.1)
         run: |
           set -euo pipefail
           curl -sSfL -o code.tar.gz \
-            https://github.com/codelovesme/code/releases/download/v1.1.3/code-v1.1.3-x86_64-linux.tar.gz
+            https://github.com/codelovesme/code/releases/download/v1.5.1/code-v1.5.1-x86_64-linux.tar.gz
           tar -xzf code.tar.gz
 
       - name: Test
         env:
-          EUGLENA_TEST_CODE_BIN: ${{ github.workspace }}/code-v1.1.3-x86_64-linux/code
+          EUGLENA_TEST_CODE_BIN: ${{ github.workspace }}/code-v1.5.1-x86_64-linux/code
         run: cargo test
