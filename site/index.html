@@ -664,7 +664,7 @@
     },
     {
       file: "manifest.json",
-      code: '{\n  "name": "myapp",\n  "organelles": {\n    "logger": "terminal",\n    "store": {\n      "module": "mongodb",\n      "config": { "url": "${MONGO_URI}", "database": "myapp" }\n    }\n  }\n}',
+      code: '{\n  "name": "myapp",\n  "organelles": {\n    "logger": "console",\n    "store": {\n      "module": "mongodb",\n      "config": { "url": "${MONGO_URI}", "database": "myapp" }\n    }\n  }\n}',
       out: 'organelles configured at cell startup',
     },
   ];

@@ -12,7 +12,7 @@ use std::path::Path;
 /// organelle); anything else is a **module name**, resolved through this
 /// project's `.code/lock.json` — the file `code install` writes.
 pub enum OrganelleEntry {
-    /// Simple form: `"term": "terminal"`.
+    /// Simple form: `"term": "console"`.
     Reference(String),
     /// Full form:
     /// `"srv": { "module": "http_server", "config": { "port": "${PORT}" } }`.

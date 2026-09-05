@@ -17,7 +17,7 @@ so nothing installed resolves. Measured against the real binary:
 
 ```
 CODE_MODULE_PATH=<project> code run /tmp/…/main.code
-error: cannot resolve module 'terminal-linux-x86_64.so' from '/tmp/…/main.code'
+error: cannot resolve module 'console-linux-x86_64.so' from '/tmp/…/main.code'
        (looked in: '/tmp/…', '<project>', '/home/…/.code/modules')
 ```
 

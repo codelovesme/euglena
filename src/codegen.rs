@@ -95,8 +95,8 @@ pub fn scan_genes(src_dir: &Path) -> Vec<String> {
 /// vendored or locally-built organelle, used as written. Anything else is a
 /// module name; it's checked against this project's `.code/lock.json` (the
 /// file `code install` writes) to confirm it's installed, then linked as
-/// `<name>.<ext>` — `link "terminal.so"`, not the platform-suffixed asset
-/// `link "terminal-linux-x86_64.so"`. `code`'s loader maps the tidy spelling
+/// `<name>.<ext>` — `link "console.so"`, not the platform-suffixed asset
+/// `link "console-linux-x86_64.so"`. `code`'s loader maps the tidy spelling
 /// back to the pinned asset through the same lockfile. `.wasm` is rejected up
 /// front: `code`'s loader does not link `.wasm` organelles yet.
 pub fn organelle_link_target(project_root: &Path, reference: &str) -> Result<String, String> {
@@ -604,14 +604,14 @@ mod tests {
         fs::create_dir_all(root.join(".code")).unwrap();
         fs::write(
             root.join(".code/lock.json"),
-            r#"{"modules":{"terminal":{"name":"terminal","version":"1.1.3","asset":"terminal-linux-x86_64.so"}}}"#,
+            r#"{"modules":{"console":{"name":"console","version":"1.1.3","asset":"console-linux-x86_64.so"}}}"#,
         )
         .unwrap();
-        let m = make_manifest("myapp", &[("term", "terminal")]);
+        let m = make_manifest("myapp", &[("term", "console")]);
         let content = generate_main_code(&m, &[], &root).unwrap();
         // Linked by module name, not the platform-suffixed asset — code's
-        // loader maps `terminal.so` back to the pinned asset via lock.json.
-        assert!(content.contains("link \"terminal.so\" as term"));
+        // loader maps `console.so` back to the pinned asset via lock.json.
+        assert!(content.contains("link \"console.so\" as term"));
     }
 
     #[test]
@@ -631,9 +631,9 @@ mod tests {
     #[test]
     fn generate_module_name_organelle_not_installed_errors() {
         let root = tmp_root("module_missing");
-        let m = make_manifest("myapp", &[("term", "terminal")]);
+        let m = make_manifest("myapp", &[("term", "console")]);
         let err = generate_main_code(&m, &[], &root).unwrap_err();
-        assert!(err.contains("terminal"), "error should name it: {err}");
+        assert!(err.contains("console"), "error should name it: {err}");
         assert!(err.contains("install"), "error should hint the fix: {err}");
     }
 
@@ -921,11 +921,11 @@ mod tests {
         // so freshness is unknowable rather than false.
         fs::write(
             root.join("manifest.json"),
-            r#"{"name":"x","organelles":{"term":"terminal"}}"#,
+            r#"{"name":"x","organelles":{"term":"console"}}"#,
         )
         .unwrap();
         match entry_status(&root) {
-            EntryStatus::Unverifiable(e) => assert!(e.contains("terminal"), "got: {e}"),
+            EntryStatus::Unverifiable(e) => assert!(e.contains("console"), "got: {e}"),
             _ => panic!("a failing regeneration should be Unverifiable"),
         }
     }

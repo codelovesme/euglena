@@ -11,7 +11,7 @@ is what `link` walks up to find installed modules, and what makes
 `code install` put bytes *here* rather than in whatever ancestor happens to
 have a `.code/` of its own. An `euglena init` app today has no `.code/` at
 all, so an `install` run inside it lands somewhere unpredictable and a
-`link "terminal-linux-x86_64.so"` resolves against the wrong project.
+`link "console-linux-x86_64.so"` resolves against the wrong project.
 
 ## Change
 
@@ -32,7 +32,7 @@ writing anything, so a refusal leaves the directory as it was rather than
 half-initialized. An existing file is a refusal, never a merge.
 
 Next-steps text keeps using `invocation::command_prefix()` (T5), and should
-now mention `euglena install terminal` rather than a manual `code` install.
+now mention `euglena install console` rather than a manual `code` install.
 
 ## Verify
 

@@ -21,13 +21,13 @@ are wrong.
   supported. Any manifest naming a `.wasm` organelle is dead.
 
 There is also a naming detail that matters for codegen: an installed module's
-asset is platform-suffixed. `code install terminal` prints
+asset is platform-suffixed. `code install console` prints
 
 ```
-link it with:  link "terminal-linux-x86_64.so" as <alias>
+link it with:  link "console-linux-x86_64.so" as <alias>
 ```
 
-so the linkable name is `terminal-linux-x86_64.so`, not `terminal.so`.
+so the linkable name is `console-linux-x86_64.so`, not `console.so`.
 Hardcoding either spelling in a manifest is wrong; the lockfile is the only
 source of truth.
 
@@ -39,7 +39,7 @@ An organelle entry's value becomes a **module name**, not a path:
 {
   "name": "myapp",
   "organelles": {
-    "term": "terminal",
+    "term": "console",
     "srv": { "module": "http_server", "sap": { "port": "${PORT}" } }
   }
 }
@@ -65,7 +65,7 @@ An organelle entry's value becomes a **module name**, not a path:
 
 - Unit: lock entry → link line; missing entry → the `add` error; `.wasm` →
   refused; a `/`-bearing value stays a literal path.
-- Gated: an app declaring `terminal` runs and prints, with nothing on
+- Gated: an app declaring `console` runs and prints, with nothing on
   `CODE_MODULE_PATH`.
 
 ## Note

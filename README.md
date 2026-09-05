@@ -184,14 +184,14 @@ An organelle is a `code` native module, declared in `manifest.json` by
 {
   "name": "myapp",
   "organelles": {
-    "term": "terminal",
+    "con": "console",
     "srv": { "module": "http_server", "config": { "port": "${PORT}" } }
   }
 }
 ```
 
 ```bash
-cdlvsm euglena install terminal        # code install terminal, then declares "terminal": "terminal"
+cdlvsm euglena install console        # code install console, then declares "console": "console"
 cdlvsm euglena install http_server --as srv
 cdlvsm euglena list                    # each alias, and whether it's installed
 cdlvsm euglena uninstall srv           # the ALIAS — `code uninstall` is the one taking a module name
@@ -200,9 +200,9 @@ cdlvsm euglena uninstall srv           # the ALIAS — `code uninstall` is the o
 `install` fetches the module via `code install` (bytes land in this project's
 `.code/modules/`, pinned by sha256 in `.code/lock.json`) and records the
 alias. At generate time euglena checks the module name against that lockfile
-and writes `link "<name>.<ext>" as <alias>` — `link "terminal.so" as term`,
+and writes `link "<name>.<ext>" as <alias>` — `link "console.so" as con`,
 not the platform-suffixed asset `code install` laid down
-(`terminal-linux-x86_64.so`). `code`'s loader maps the tidy spelling back to
+(`console-linux-x86_64.so`). `code`'s loader maps the tidy spelling back to
 the pinned asset through the same lockfile. A declared organelle with no lock
 entry fails generation with the fix: `euglena install <name>`.
 
