@@ -11,6 +11,6 @@ Request { method, path } => {
 }
 
 emit Config { port = 8080 } to server
-emit Listen { } to server
+emit Listen {} to server
 loop {
 }
