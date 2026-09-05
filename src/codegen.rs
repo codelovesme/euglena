@@ -139,12 +139,38 @@ pub fn generate_main_code(
     let mut lines = Vec::new();
 
     // Organelle link statements — always aliased, always a quoted reference.
+    //
+    // Except a stand-in one (`"hosted": "membrane"`), which is not known until
+    // the application runs and finds out whether it is being held. That one
+    // links from inside a handler instead, and binds an *address* under the
+    // same alias — which `emit` accepts, so the setup line below and every
+    // gene reading the alias stay exactly as they were.
+    let mut picks = Vec::new();
     for (alias, entry) in &manifest.organelles {
         let target = organelle_link_target(project_root, entry.reference())?;
-        lines.push(format!("link \"{}\" as {}", target, alias));
+        match entry.hosted() {
+            None => lines.push(format!("link \"{}\" as {}", target, alias)),
+            Some(stand_in) => {
+                let held = organelle_link_target(project_root, stand_in)?;
+                check_stand_in_agrees(project_root, alias, entry, stand_in)?;
+                picks.push(format!(
+                    "emit {PICK_PARTICLE} {{ alone = \"{target}\", held = \"{held}\" }} \
+                     to this get _pick_{alias}\nlet {alias} = _pick_{alias}.organelle"
+                ));
+            }
+        }
     }
 
-    if !manifest.organelles.is_empty() {
+    if !manifest.organelles.is_empty() && lines.iter().any(|l| l.starts_with("link ")) {
+        lines.push(String::new());
+    }
+
+    if !picks.is_empty() {
+        lines.push(pick_handler().to_string());
+        lines.push(String::new());
+        for pick in picks {
+            lines.push(pick);
+        }
         lines.push(String::new());
     }
 
@@ -204,6 +230,67 @@ pub fn generate_main_code(
 /// its `module.json` declared, recorded in `.code/lock.json` by `code
 /// install`; a stateless module has none, and a `config` block on one is a
 /// mistake worth stopping for.
+/// The particle euglena emits to choose between an organelle and its hosted
+/// stand-in. Named for the generated entry, which is the only place it exists;
+/// a gene that defined a handler of this name would be answering euglena's
+/// own question, so the name is deliberately one nobody would reach for.
+const PICK_PARTICLE: &str = "EuglenaPickOrganelle";
+
+/// The handler that does the choosing, generated once however many aliases
+/// need it.
+///
+/// It has to be a handler rather than three top-level lines because `link`
+/// takes a path it works out while running only inside a handler body — and
+/// because the alias has to survive the choice, which it does by coming back
+/// as an ordinary value the entry binds.
+///
+/// `Hosted` is answered by the runtime itself and is true from the first
+/// statement, since a host installs itself before its guest runs at all.
+fn pick_handler() -> String {
+    format!(
+        "{PICK_PARTICLE} {{ alone, held }} => {{\n    \
+         emit Hosted to core get _where\n    \
+         if _where.value {{\n        \
+         link held as _held_organelle\n        \
+         return EuglenaOrganellePicked {{ organelle = _held_organelle }}\n    \
+         }}\n    \
+         link alone as _alone_organelle\n    \
+         return EuglenaOrganellePicked {{ organelle = _alone_organelle }}\n\
+         }}"
+    )
+}
+
+/// Both sides of a `hosted` pair have to answer the same setup particle,
+/// because one `config` block is emitted for whichever gets linked and the
+/// entry cannot know in advance which that will be.
+///
+/// Checked here rather than left to runtime: a mismatch would surface as a
+/// configuration particle nobody handles, in whichever of the two lives the
+/// application happened not to be tested in.
+fn check_stand_in_agrees(
+    project_root: &Path,
+    alias: &str,
+    entry: &OrganelleEntry,
+    stand_in: &str,
+) -> Result<(), String> {
+    if entry.config().is_none() {
+        return Ok(());
+    }
+    let theirs = match lockfile::read(project_root, stand_in).and_then(|m| m.setup) {
+        Some(particle) => particle,
+        None => return Ok(()),
+    };
+    let ours = setup_particle(project_root, alias, entry)?;
+    if ours != theirs {
+        return Err(format!(
+            "organelle '{alias}' is configured with `{ours}` but its hosted stand-in \
+             '{stand_in}' is configured with `{theirs}` — one `config` block is emitted for \
+             whichever of the two gets linked, so both have to answer the same particle"
+        ));
+    }
+    Ok(())
+}
+
 fn setup_particle(
     project_root: &Path,
     alias: &str,
@@ -507,6 +594,117 @@ mod tests {
         assert!(err.contains("wasm"));
     }
 
+    /// An organelle with a hosted stand-in is not linked up front: it is
+    /// chosen while the application runs, and the alias every gene already
+    /// writes is bound to whichever one it picked.
+    #[test]
+    fn generate_hosted_stand_in_is_picked_at_runtime() {
+        let root = tmp_root("hosted_stand_in");
+        fs::create_dir_all(root.join(".code")).unwrap();
+        fs::write(
+            root.join(".code/lock.json"),
+            r#"{"modules":{
+                "net_server":{"name":"net_server","version":"1.0.0","asset":"net_server-linux-x86_64.so","setup":"Config"},
+                "membrane":{"name":"membrane","version":"1.0.0","asset":"membrane-linux-x86_64.so","setup":"Config"}
+            }}"#,
+        )
+        .unwrap();
+
+        let mut map = BTreeMap::new();
+        let mut config = serde_json::Map::new();
+        config.insert("port".to_string(), serde_json::json!("8080"));
+        map.insert(
+            "net".to_string(),
+            OrganelleEntry::Full {
+                reference: "net_server".to_string(),
+                config,
+                setup: None,
+                hosted: Some("membrane".to_string()),
+            },
+        );
+        let m = AppManifest {
+            name: "twolives".to_string(),
+            organelles: map,
+        };
+        let content = generate_main_code(&m, &[], &root).unwrap();
+
+        // Not linked up front — that is the whole point.
+        assert!(
+            !content.contains("link \"net_server.so\" as net"),
+            "a stand-in organelle must not be linked before the choice:\n{content}"
+        );
+        assert!(content.contains("EuglenaPickOrganelle { alone, held } =>"));
+        assert!(content.contains("emit Hosted to core get _where"));
+        assert!(content.contains(
+            "emit EuglenaPickOrganelle { alone = \"net_server.so\", held = \"membrane.so\" } \
+             to this get _pick_net"
+        ));
+        assert!(content.contains("let net = _pick_net.organelle"));
+
+        // And the alias is still the alias: one config block, emitted to the
+        // name, whichever organelle ended up behind it.
+        assert!(content.contains("emit Config { port = \"8080\" } to net get _cfg_net"));
+
+        // The choice has to be made before anything is emitted to the name.
+        let pick = content.find("let net = _pick_net.organelle").unwrap();
+        let cfg = content.find("emit Config").unwrap();
+        assert!(
+            pick < cfg,
+            "the organelle is configured before it exists:\n{content}"
+        );
+    }
+
+    /// One `config` block is emitted for whichever organelle gets linked, so
+    /// two that are configured differently cannot stand in for each other.
+    #[test]
+    fn generate_hosted_stand_in_must_take_the_same_setup() {
+        let root = tmp_root("hosted_mismatch");
+        fs::create_dir_all(root.join(".code")).unwrap();
+        fs::write(
+            root.join(".code/lock.json"),
+            r#"{"modules":{
+                "net_server":{"name":"net_server","version":"1.0.0","asset":"net_server-linux-x86_64.so","setup":"Config"},
+                "odd":{"name":"odd","version":"1.0.0","asset":"odd-linux-x86_64.so","setup":"Listen"}
+            }}"#,
+        )
+        .unwrap();
+
+        let mut map = BTreeMap::new();
+        let mut config = serde_json::Map::new();
+        config.insert("port".to_string(), serde_json::json!("8080"));
+        map.insert(
+            "net".to_string(),
+            OrganelleEntry::Full {
+                reference: "net_server".to_string(),
+                config,
+                setup: None,
+                hosted: Some("odd".to_string()),
+            },
+        );
+        let m = AppManifest {
+            name: "mismatch".to_string(),
+            organelles: map,
+        };
+        let err = generate_main_code(&m, &[], &root).unwrap_err();
+        assert!(err.contains("Config") && err.contains("Listen"), "{err}");
+        assert!(
+            err.contains("odd"),
+            "the error should name the stand-in: {err}"
+        );
+    }
+
+    /// Ordinary organelles are untouched by any of this — no picker, no
+    /// handler, nothing generated that was not generated before.
+    #[test]
+    fn generate_without_a_stand_in_generates_no_picker() {
+        let m = make_manifest("plain", &[("term", "organelles/term.so")]);
+        let root = tmp_root("no_picker");
+        let content = generate_main_code(&m, &[], &root).unwrap();
+        assert!(content.contains("link \"organelles/term.so\" as term"));
+        assert!(!content.contains("EuglenaPickOrganelle"));
+        assert!(!content.contains("Hosted"));
+    }
+
     #[test]
     fn generate_header_marks_as_generated() {
         let m = make_manifest("x", &[]);
@@ -669,6 +867,7 @@ mod tests {
             reference: reference.to_string(),
             config: config.as_object().cloned().unwrap_or_default(),
             setup: setup.map(str::to_string),
+            hosted: None,
         }
     }
 

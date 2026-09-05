@@ -2,7 +2,7 @@
 
 The `euglena` CLI — scaffold, run, and build [Euglena](https://github.com/codelovesme)
 applications. Euglena apps are written in the [Code](https://github.com/codelovesme/code)
-language (**requires code >= 1.4.0**); this CLI is a thin cell layer on top
+language (**requires code >= 1.7.1**); this CLI is a thin cell layer on top
 of the `code` toolchain: a `manifest.json` cell definition, `*.gene.code`
 genes that auto-link, organelle `config` blocks, and mock mode. Everything else — the
 project marker, the module installer and its lockfile, `format`, `test` — is
@@ -96,7 +96,7 @@ cdlvsm euglena run    # just works — no code-path setup needed, see below
 interpreter. euglena finds it automatically: if you haven't pinned a path,
 it uses cdlvsm's `cdlvsm-code` shim from your `PATH` — no extra setup needed
 after `cdlvsm install code`. Either way it's version-checked: euglena
-generates syntax that only parses on **code >= 1.4.0**, so a stale binary is
+generates syntax that only parses on **code >= 1.7.1**, so a stale binary is
 refused by name up front rather than failing as a parse error partway
 through a generated file. `euglena doctor` reports what was found and why.
 
@@ -224,6 +224,34 @@ generation error — those take their parameters per call. A literal-path
 organelle names its own setup particle in the entry (`"setup": "Config"`),
 since there is no lockfile row to read.
 
+### One app, held or alone
+
+An application that may be run on its own **or** held inside a host has one
+thing it cannot settle at build time: its door. Alone it opens a port; held
+it must not, because a thread that outlives the application cannot be
+unloaded, and an application that cannot be unloaded never gives its memory
+back.
+
+`"hosted"` names the stand-in to link instead when it turns out to be held:
+
+```json
+"organelles": {
+  "net": { "module": "net_server", "hosted": "membrane",
+           "config": { "port": "${PORT}" } }
+}
+```
+
+One manifest, one build, both lives. The alias is the same, the particles are
+the same, the `config` block is the same — **no gene changes anything**. Only
+the organelle behind the name differs, and euglena picks it while the
+application starts, by asking `code` whether a host is holding it.
+
+Both sides have to answer the same setup particle, since one `config` block
+is emitted for whichever gets linked; a mismatch is a generation error rather
+than a surprise in whichever of the two lives you did not test.
+
+Needs **code >= 1.7.1** — see [Requiring a `code` version](#requiring-a-code-version).
+
 `${VAR}` in a `config` value interpolates from the environment (loaded from
 a `.env` file next to `manifest.json`, if present) — so secrets stay out of
 version control. `EUGLENA_MOCK_MODE=true` (optionally scoped with
@@ -233,7 +261,7 @@ equivalent in `code` itself.
 
 ## Requiring a `code` version
 
-euglena refuses a `code` older than **1.4.0**, because that is what the
+euglena refuses a `code` older than **1.7.1**, because that is what the
 syntax it *generates* needs. What your *app* needs is a different question —
 a module handler, a field, a particle that only exists from some version on —
 and it is the app's to state:
@@ -251,12 +279,12 @@ euglena's own baseline and this field, and the error says which of the two
 asked, since the fix differs:
 
 ```
-euglena: found Code v1.4.0 at '/home/you/.local/bin/cdlvsm-code',
-but this needs >= v1.5.0, which is what this app's manifest.json asks for.
+euglena: found Code v1.7.1 at '/home/you/.local/bin/cdlvsm-code',
+but this needs >= v1.9.0, which is what this app's manifest.json asks for.
 ```
 
 (There is a third input — a floor for a subcommand newer than the baseline —
-but nothing needs one today: the 1.4.0 baseline is above every version that
+but nothing needs one today: the 1.7.1 baseline is above every version that
 introduced a command euglena delegates to.)
 
 Only a minimum is expressible — `"1.5.0"` and `">=1.5.0"` mean the same
@@ -274,7 +302,7 @@ cargo test
 Depends only on `clap` and `serde_json` — no LLVM, no build-time dependency
 on the `code` language (it invokes the `code` binary at runtime). The
 real-run integration tests are gated behind `EUGLENA_TEST_CODE_BIN=/path/to/code`
-(CI has no `code`); point it at a `code` >= 1.4.0 binary to run them.
+(CI has no `code`); point it at a `code` >= 1.7.1 binary to run them.
 
 ## License
 

@@ -19,10 +19,13 @@ pub enum OrganelleEntry {
     /// `setup` names the configuring particle for a *literal-path* organelle,
     /// where there is no lockfile entry to read it from; for a module name
     /// it is left `None` and codegen reads the lockfile's `setup`.
+    /// `hosted` names a **stand-in** to link instead when this application is
+    /// being held by a host — see [`OrganelleEntry::hosted`].
     Full {
         reference: String,
         config: serde_json::Map<String, serde_json::Value>,
         setup: Option<String>,
+        hosted: Option<String>,
     },
 }
 
@@ -49,6 +52,30 @@ impl OrganelleEntry {
         match self {
             OrganelleEntry::Reference(_) => None,
             OrganelleEntry::Full { setup, .. } => setup.as_deref(),
+        }
+    }
+
+    /// What to link under this alias **instead**, when the application turns
+    /// out to be running inside a host:
+    ///
+    /// ```json
+    /// "net": { "module": "net_server", "hosted": "membrane",
+    ///          "config": { "port": "8080" } }
+    /// ```
+    ///
+    /// One application, one build, two lives. The alias, the particles and
+    /// the `config` block are the same either way, so no gene changes and no
+    /// second manifest — only the organelle behind the name differs.
+    ///
+    /// A door is the reason this exists. Alone an application opens a port;
+    /// held it must not, because a thread that outlives it cannot be
+    /// unloaded, and an application that cannot be unloaded never gives its
+    /// memory back. Both stand-ins must answer the same setup particle,
+    /// which is checked at codegen rather than left to fail at runtime.
+    pub fn hosted(&self) -> Option<&str> {
+        match self {
+            OrganelleEntry::Reference(_) => None,
+            OrganelleEntry::Full { hosted, .. } => hosted.as_deref(),
         }
     }
 }
@@ -244,12 +271,29 @@ pub fn parse_manifest(path: &Path) -> Result<AppManifest, String> {
                     .get("setup")
                     .and_then(|v| v.as_str())
                     .map(str::to_string);
+                let hosted = match obj.get("hosted") {
+                    None => None,
+                    Some(v) => Some(
+                        v.as_str()
+                            .ok_or_else(|| {
+                                format!(
+                                    "organelle '{}' in '{}': \"hosted\" must be a string — the \
+                                     organelle to link under this name when the application is \
+                                     held by a host, e.g. \"hosted\": \"membrane\"",
+                                    alias,
+                                    path.display()
+                                )
+                            })?
+                            .to_string(),
+                    ),
+                };
                 organelles.insert(
                     alias.clone(),
                     OrganelleEntry::Full {
                         reference,
                         config,
                         setup,
+                        hosted,
                     },
                 );
             } else {

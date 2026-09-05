@@ -15,7 +15,16 @@ use crate::codegen;
 /// `| euglena …` stamp, so on any older `code` the entry does not parse at
 /// all.
 ///
-/// It says 1.5.1 anyway, because **1.4.0 was tagged and never published** —
+/// It says 1.7.1, because a manifest may now name a hosted stand-in
+/// (`"hosted": "membrane"`), and the entry generated for one asks the runtime
+/// `Hosted` and links from inside a handler — both of which arrived in 1.7.1.
+/// Only apps that use a stand-in generate that code, so this is a baseline
+/// raised for a feature most apps will not touch. One number is still the
+/// right shape: a second, feature-scoped floor would have to be checked at
+/// codegen and reported somewhere else, for a saving nobody is asking for
+/// while the earlier baseline has no users left on it.
+///
+/// The number before it was 1.5.1, because **1.4.0 was tagged and never published** —
 /// no binary was ever built for it, so nobody can install the version this
 /// used to claim to support. A minimum nobody can obtain is not a
 /// compatibility promise, it is a number; and CI could not test against it
@@ -35,7 +44,7 @@ use crate::codegen;
 /// claim nothing checks. The *mechanism* stays (`version_need` still takes a
 /// `command_floor`), for the next subcommand that lands ahead of whatever
 /// the baseline is then.
-pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 5, 1);
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 7, 1);
 
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
@@ -463,12 +472,13 @@ mod tests {
 
     #[test]
     fn min_version_ordering() {
-        assert!((1, 5, 1) >= MIN_CODE_VERSION);
+        assert!((1, 7, 1) >= MIN_CODE_VERSION);
         assert!((2, 0, 0) >= MIN_CODE_VERSION);
         // Everything before it is below. Nothing under 1.4.0 has the `|`
         // comment and so cannot parse the entry euglena writes; 1.4.0 and
-        // 1.5.0 could, but neither is a version anyone can install — see
-        // `MIN_CODE_VERSION`.
+        // 1.5.0 could, but neither is a version anyone can install; and
+        // nothing before 1.7.1 can answer `Hosted` — see `MIN_CODE_VERSION`.
+        assert!((1, 7, 0) < MIN_CODE_VERSION);
         assert!((1, 5, 0) < MIN_CODE_VERSION);
         assert!((1, 3, 0) < MIN_CODE_VERSION);
         assert!((0, 4, 1) < MIN_CODE_VERSION);

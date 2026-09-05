@@ -33,15 +33,15 @@ jobs:
       # examples can silently drift out of sync with the language, which is
       # exactly what happened across the v0.4 -> v1.1 migration (see
       # docs/tickets/16-readme-and-site.md).
-      - name: Download code (v1.1.3)
+      - name: Download code (v1.7.1)
         run: |
           set -euo pipefail
           curl -sSfL -o code.tar.gz \
-            https://github.com/codelovesme/code/releases/download/v1.1.3/code-v1.1.3-x86_64-linux.tar.gz
+            https://github.com/codelovesme/code/releases/download/v1.7.1/code-v1.7.1-x86_64-linux.tar.gz
           tar -xzf code.tar.gz
 
       - name: Check site examples are current, canonical Code
-        run: ./code-v1.1.3-x86_64-linux/code format --check site/examples/
+        run: ./code-v1.7.1-x86_64-linux/code format --check site/examples/
 
       - name: Assemble dist
         run: python3 site/build.py . site/dist
