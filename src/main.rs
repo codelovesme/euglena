@@ -70,10 +70,13 @@ enum Commands {
         /// Paths to format (default: src/ tests/)
         paths: Vec<String>,
     },
-    /// Fetch an organelle via `code install` and declare it in manifest.json
+    /// Fetch an organelle and declare it — or, with no name, fetch every
+    /// organelle manifest.json already declares
     Install {
-        /// Module name (or a manifest URL `code install` accepts)
-        name: String,
+        /// Module name (or a manifest URL `code install` accepts). Leave it
+        /// out to install everything the manifest declares — what a fresh
+        /// checkout needs.
+        name: Option<String>,
         /// Alias to declare in manifest.json (default: the module name)
         #[arg(long = "as")]
         alias: Option<String>,
@@ -138,7 +141,7 @@ fn main() {
             };
             exec::format(check, &paths);
         }
-        Commands::Install { name, alias } => modules::install(&name, alias.as_deref()),
+        Commands::Install { name, alias } => modules::install(name.as_deref(), alias.as_deref()),
         Commands::Uninstall { alias } => modules::uninstall(&alias),
         Commands::List => modules::list(),
         Commands::Doctor => doctor::run(),

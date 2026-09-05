@@ -32,40 +32,131 @@ fn require_manifest(project_root: &Path) -> PathBuf {
     manifest_path
 }
 
-/// `code install <name>`, then declare `<alias>: <name>` in manifest.json.
+/// `euglena install [name] [--as alias]`.
 ///
-/// A web app gets the browser's archive rather than the machine's library.
-/// The manifest already says which kind of app this is, so nobody has to
-/// remember: `"runtime": "web"` means the bytes are for a page, and a page
-/// cannot open a `.so` — it links an archive in.
-pub fn install(name: &str, alias: Option<&str>) {
+/// With a name: fetch that organelle and make sure the manifest declares it.
+/// Without one: the manifest *is* the list — fetch everything it declares,
+/// which is what a fresh checkout needs and the only way to get an app
+/// running without reading its manifest by hand.
+pub fn install(name: Option<&str>, alias: Option<&str>) {
+    match name {
+        Some(name) => install_one(name, alias),
+        None => {
+            if alias.is_some() {
+                eprintln!(
+                    "euglena: `--as` gives one organelle a name, so it needs one to name — \
+                     drop it to install everything the manifest declares"
+                );
+                process::exit(1);
+            }
+            install_declared();
+        }
+    }
+}
+
+/// Everything `manifest.json` declares, fetched in one go.
+///
+/// Per *module*, not per alias: two aliases on one module are two organelles
+/// to the app and one download. `mock-organelles` counts too — a module named
+/// only there is still a module this app links, and leaving it out breaks the
+/// next mock run at link time, which is where it is hardest to read.
+///
+/// One failure does not stop the rest. A checkout missing four organelles
+/// should learn that in one run, not four.
+fn install_declared() {
     let root = project_root();
     let manifest_path = require_manifest(&root);
-    let web = runs_in_a_browser(&manifest_path);
-    let binary = if web {
-        web_install_code_binary_or_exit()
-    } else {
-        baseline_code_binary_or_exit()
+    let json = match read_manifest_json(&manifest_path) {
+        Ok(json) => json,
+        Err(e) => {
+            eprintln!("euglena: {}", e);
+            process::exit(1);
+        }
     };
 
-    let mut args = vec!["install", name];
-    if web {
-        args.extend(["--platform", "wasm32"]);
-    }
-    let status = Command::new(&binary)
-        .args(&args)
-        .current_dir(&root)
-        .status()
-        .unwrap_or_else(|e| {
-            eprintln!("euglena: failed to run '{}': {}", binary, e);
-            process::exit(1);
-        });
-    if !status.success() {
-        process::exit(status.code().unwrap_or(1));
+    let modules = declared_modules(&json);
+    if modules.is_empty() {
+        println!("no organelles to install — manifest.json declares none by name");
+        return;
     }
 
-    let alias = alias.unwrap_or(name);
-    if let Err(e) = insert_organelle_alias(&manifest_path, alias, name) {
+    let web = runs_in_a_browser(&manifest_path);
+    let binary = code_binary_for(web);
+
+    let mut failed = Vec::new();
+    for module in &modules {
+        println!("installing {module}...");
+        if !run_code_install(&binary, &root, module, web) {
+            failed.push(module.clone());
+        }
+    }
+
+    if failed.is_empty() {
+        println!("{} organelle(s) declared and installed", modules.len());
+        return;
+    }
+    eprintln!(
+        "euglena: could not install {} of {}: {}",
+        failed.len(),
+        modules.len(),
+        failed.join(", ")
+    );
+    process::exit(1);
+}
+
+/// One organelle: fetch it, and make sure the manifest declares it.
+///
+/// What the manifest will say is settled *before* anything is fetched, so a
+/// refusal never leaves bytes behind that nothing names.
+fn install_one(name: &str, alias: Option<&str>) {
+    let root = project_root();
+    let manifest_path = require_manifest(&root);
+    let json = match read_manifest_json(&manifest_path) {
+        Ok(json) => json,
+        Err(e) => {
+            eprintln!("euglena: {}", e);
+            process::exit(1);
+        }
+    };
+
+    let declare: Option<String> = match alias {
+        Some(alias) => match module_of_alias(&json, alias) {
+            // An alias is a name in the app: every `emit ... to <alias>`
+            // means it. Quietly pointing it at a different module would
+            // change what all of them do.
+            Some(existing) if existing != name => {
+                eprintln!(
+                    "euglena: '{alias}' already names organelle '{existing}' in manifest.json \
+                     — pick another alias, or `{} uninstall {alias}` first",
+                    invocation::command_prefix()
+                );
+                process::exit(1);
+            }
+            Some(_) => None,
+            None => Some(alias.to_string()),
+        },
+        None => match aliases_of_module(&json, name).first() {
+            // Already declared. A second entry would be a second organelle —
+            // a module has state, so two names are two of them — and nobody
+            // typing `install <name>` twice meant that. Saying `--as` does.
+            Some(existing) => {
+                println!("'{name}' is already declared as organelle '{existing}'");
+                None
+            }
+            None => Some(name.to_string()),
+        },
+    };
+
+    let web = runs_in_a_browser(&manifest_path);
+    let binary = code_binary_for(web);
+    if !run_code_install(&binary, &root, name, web) {
+        process::exit(1);
+    }
+
+    let Some(alias) = declare else {
+        return;
+    };
+    if let Err(e) = insert_organelle_alias(&manifest_path, &alias, name) {
         eprintln!(
             "euglena: installed '{}', but failed to update manifest.json: {}",
             name, e
@@ -73,6 +164,30 @@ pub fn install(name: &str, alias: Option<&str>) {
         process::exit(1);
     }
     println!("Added organelle '{}' -> '{}' in manifest.json", alias, name);
+}
+
+/// A web app gets the browser's archive rather than the machine's library,
+/// and the flag that asks for it is newer than euglena's own baseline.
+fn code_binary_for(web: bool) -> String {
+    if web {
+        web_install_code_binary_or_exit()
+    } else {
+        baseline_code_binary_or_exit()
+    }
+}
+
+fn run_code_install(binary: &str, root: &Path, module: &str, web: bool) -> bool {
+    let mut args = vec!["install", module];
+    if web {
+        args.extend(["--platform", "wasm32"]);
+    }
+    match Command::new(binary).args(&args).current_dir(root).status() {
+        Ok(status) => status.success(),
+        Err(e) => {
+            eprintln!("euglena: failed to run '{}': {}", binary, e);
+            false
+        }
+    }
 }
 
 /// Drop the manifest alias, then `code uninstall` the module — but only if
@@ -260,6 +375,59 @@ fn module_name_of(value: &serde_json::Value) -> String {
     }
 }
 
+/// Every module the manifest names, once each, in a stable order.
+///
+/// Both blocks, for the reason `references_module` gives. Literal paths are
+/// left out: a `link` that names a file has nothing to fetch, and asking a
+/// release for `organelles/thing.so` would only produce a confusing 404.
+fn declared_modules(json: &serde_json::Value) -> Vec<String> {
+    let mut names: Vec<String> = Vec::new();
+    for block in ["organelles", "mock-organelles"] {
+        let Some(entries) = json.get(block).and_then(|v| v.as_object()) else {
+            continue;
+        };
+        for value in entries.values() {
+            let name = module_name_of(value);
+            if name.is_empty() || is_literal_path(&name) || names.contains(&name) {
+                continue;
+            }
+            names.push(name);
+        }
+    }
+    names.sort();
+    names
+}
+
+/// Which module an alias names, if the manifest declares that alias.
+fn module_of_alias(json: &serde_json::Value, alias: &str) -> Option<String> {
+    for block in ["organelles", "mock-organelles"] {
+        if let Some(value) = json.get(block).and_then(|v| v.get(alias)) {
+            let name = module_name_of(value);
+            if !name.is_empty() {
+                return Some(name);
+            }
+        }
+    }
+    None
+}
+
+/// Every alias already pointing at this module, in the order the manifest
+/// lists them.
+fn aliases_of_module(json: &serde_json::Value, module_name: &str) -> Vec<String> {
+    let mut aliases = Vec::new();
+    for block in ["organelles", "mock-organelles"] {
+        let Some(entries) = json.get(block).and_then(|v| v.as_object()) else {
+            continue;
+        };
+        for (alias, value) in entries {
+            if module_name_of(value) == module_name && !aliases.contains(alias) {
+                aliases.push(alias.clone());
+            }
+        }
+    }
+    aliases
+}
+
 /// Whether anything in the manifest still names this module.
 ///
 /// Both blocks count. `mock-organelles` is overlaid onto `organelles` under
@@ -295,6 +463,68 @@ mod tests {
         };
         fs::write(&path, body).expect("write manifest");
         path
+    }
+
+    fn manifest(body: &str) -> serde_json::Value {
+        serde_json::from_str(body).expect("test manifest parses")
+    }
+
+    /// `euglena install` with no name reads the manifest as its list. Per
+    /// *module*, not per alias — two aliases on one module are two organelles
+    /// to the app and one download — and `mock-organelles` counts, because a
+    /// module named only there is still one this app links.
+    #[test]
+    fn the_manifest_is_the_list_of_what_to_install() {
+        let json = manifest(
+            r#"{
+              "organelles": {
+                "issuer": "jwt",
+                "verifier": "jwt",
+                "con": "console",
+                "vendored": "organelles/local.so",
+                "gene": "src/thing.code",
+                "store": { "module": "mongodb", "config": { "url": "x" } }
+              },
+              "mock-organelles": {
+                "store": { "module": "mongodb_mock" }
+              }
+            }"#,
+        );
+        assert_eq!(
+            declared_modules(&json),
+            vec!["console", "jwt", "mongodb", "mongodb_mock"],
+            "one entry per module, mocks included, literal paths left out"
+        );
+    }
+
+    #[test]
+    fn a_manifest_declaring_nothing_asks_for_nothing() {
+        assert!(declared_modules(&manifest(r#"{"name":"x"}"#)).is_empty());
+        assert!(declared_modules(&manifest(r#"{"organelles":{}}"#)).is_empty());
+    }
+
+    /// The two questions `install <name>` asks before it writes: is this
+    /// module already declared (then adding another entry would be adding a
+    /// second organelle, which nobody meant), and is this alias already
+    /// taken by something else (then repointing it would quietly change what
+    /// every `emit ... to <alias>` does).
+    #[test]
+    fn the_manifest_answers_both_questions_install_asks() {
+        let json = manifest(
+            r#"{
+              "organelles": {
+                "issuer": "jwt",
+                "verifier": "jwt",
+                "con": "console"
+              }
+            }"#,
+        );
+
+        assert_eq!(aliases_of_module(&json, "jwt"), vec!["issuer", "verifier"]);
+        assert!(aliases_of_module(&json, "strings").is_empty());
+
+        assert_eq!(module_of_alias(&json, "con").as_deref(), Some("console"));
+        assert_eq!(module_of_alias(&json, "nobody"), None);
     }
 
     /// Which bytes `euglena install` asks for comes from the manifest, not

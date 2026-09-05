@@ -64,7 +64,8 @@ cdlvsm euglena run [app]                run the app (default: this directory)
 cdlvsm euglena build [app] [options]    compile to a native binary (or a module)
 cdlvsm euglena test                     run this project's fixtures (wraps `code test`)
 cdlvsm euglena format [--check] [path...]   the canonical layout (wraps `code format`)
-cdlvsm euglena install <name> [--as <alias>]  install an organelle, declare it in the manifest
+cdlvsm euglena install                  install every organelle the manifest declares
+cdlvsm euglena install <name> [--as <alias>]  install one, and declare it in the manifest
 cdlvsm euglena uninstall <alias>        drop the alias, and the module if unreferenced
 cdlvsm euglena list                     declared organelles, and whether each is installed
 cdlvsm euglena doctor                   check the interpreter, project, and organelles
@@ -73,10 +74,21 @@ cdlvsm euglena code show
 cdlvsm euglena code clear
 ```
 
-`install` reads the manifest to know which bytes to fetch: an app whose
-`"runtime"` is `"web"` gets the browser's archive rather than the machine's
-library, since a page has no way to open one and links the other in. Nothing
-to pass — the app already said what it is.
+`install` with no name is what a fresh checkout runs: the manifest is the
+list, and everything it names is fetched — once per *module*, so two aliases
+on one module are one download, and `mock-organelles` counts too. A literal
+path is skipped, having nothing to fetch. One failure does not stop the rest.
+
+With a name, it also keeps the manifest in step, which is the whole reason it
+wraps `code install`. A module already declared is not declared twice — that
+would be a second organelle, and a module has state, so two names are two of
+them; ask for that with `--as`. An alias already naming something else is
+refused rather than repointed, since every `emit ... to <alias>` means it.
+
+Either way the manifest says which bytes to fetch: an app whose `"runtime"`
+is `"web"` gets the browser's archive rather than the machine's library,
+since a page has no way to open one and links the other in. Nothing to pass —
+the app already said what it is.
 
 `run`, `build` and `test` all take `-v` / `--verbose`, which prints the
 generated entry and the exact `code` command euglena hands it to.
