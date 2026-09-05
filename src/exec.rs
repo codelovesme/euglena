@@ -15,9 +15,12 @@ use crate::codegen;
 /// `| euglena …` stamp, so on any older `code` the entry does not parse at
 /// all.
 ///
-/// It says 1.7.1, because a manifest may now name a hosted stand-in
+/// It says 1.7.2, because a manifest may now name a hosted stand-in
 /// (`"hosted": "membrane"`), and the entry generated for one asks the runtime
-/// `Hosted` and links from inside a handler — both of which arrived in 1.7.1.
+/// `Hosted` (1.7.1) and then links a door from inside a handler — which only
+/// works from 1.7.2, where a runtime-linked organelle that speaks first
+/// started being listened to. A door speaks first, so 1.7.1 would generate
+/// an entry that parses, links, and is never heard.
 /// Only apps that use a stand-in generate that code, so this is a baseline
 /// raised for a feature most apps will not touch. One number is still the
 /// right shape: a second, feature-scoped floor would have to be checked at
@@ -44,7 +47,7 @@ use crate::codegen;
 /// claim nothing checks. The *mechanism* stays (`version_need` still takes a
 /// `command_floor`), for the next subcommand that lands ahead of whatever
 /// the baseline is then.
-pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 7, 1);
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 7, 2);
 
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
@@ -472,12 +475,13 @@ mod tests {
 
     #[test]
     fn min_version_ordering() {
-        assert!((1, 7, 1) >= MIN_CODE_VERSION);
+        assert!((1, 7, 2) >= MIN_CODE_VERSION);
         assert!((2, 0, 0) >= MIN_CODE_VERSION);
         // Everything before it is below. Nothing under 1.4.0 has the `|`
         // comment and so cannot parse the entry euglena writes; 1.4.0 and
         // 1.5.0 could, but neither is a version anyone can install; and
-        // nothing before 1.7.1 can answer `Hosted` — see `MIN_CODE_VERSION`.
+        // nothing before 1.7.2 hears a door linked while the program runs
+        // — see `MIN_CODE_VERSION`.
         assert!((1, 7, 0) < MIN_CODE_VERSION);
         assert!((1, 5, 0) < MIN_CODE_VERSION);
         assert!((1, 3, 0) < MIN_CODE_VERSION);

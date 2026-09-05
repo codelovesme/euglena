@@ -151,10 +151,14 @@ pub fn generate_main_code(
         match entry.hosted() {
             None => lines.push(format!("link \"{}\" as {}", target, alias)),
             Some(stand_in) => {
-                let held = organelle_link_target(project_root, stand_in)?;
+                // Checked before the paths are resolved, so a pair that
+                // could never work is reported as the mismatch it is rather
+                // than as whichever file was looked for first.
                 check_stand_in_agrees(project_root, alias, entry, stand_in)?;
+                let alone = organelle_runtime_path(project_root, entry.reference())?;
+                let held = organelle_runtime_path(project_root, stand_in)?;
                 picks.push(format!(
-                    "emit {PICK_PARTICLE} {{ alone = \"{target}\", held = \"{held}\" }} \
+                    "emit {PICK_PARTICLE} {{ alone = \"{alone}\", held = \"{held}\" }} \
                      to this get _pick_{alias}\nlet {alias} = _pick_{alias}.organelle"
                 ));
             }
@@ -230,6 +234,49 @@ pub fn generate_main_code(
 /// its `module.json` declared, recorded in `.code/lock.json` by `code
 /// install`; a stateless module has none, and a `config` block on one is a
 /// mistake worth stopping for.
+/// Where an organelle's bytes actually are — an absolute path, for a `link`
+/// that happens while the application runs.
+///
+/// A top-level `link` may name a module the tidy way (`"net_server.so"`),
+/// because `code`'s loader resolves that against the project's lockfile
+/// before the program is built. A `link` inside a handler gets no such pass:
+/// its path is a value, taken as written and relative to the working
+/// directory. So euglena resolves it here instead, to the same file the
+/// loader would have found — and absolutely, which is what a top-level link
+/// bakes into a built binary anyway.
+fn organelle_runtime_path(project_root: &Path, reference: &str) -> Result<String, String> {
+    let target = organelle_link_target(project_root, reference)?;
+    let candidates =
+        if reference.contains('/') || reference.ends_with(".so") || reference.ends_with(".code") {
+            vec![project_root.join(&target)]
+        } else {
+            let locked = lockfile::read(project_root, reference).ok_or_else(|| {
+                format!(
+                    "organelle '{reference}' is declared in manifest.json but not installed — run \
+                 `{} install {reference}`",
+                    crate::invocation::command_prefix()
+                )
+            })?;
+            vec![project_root
+                .join(".code")
+                .join("modules")
+                .join(reference)
+                .join(&locked.version)
+                .join(&locked.asset)]
+        };
+    for candidate in &candidates {
+        if let Ok(canonical) = fs::canonicalize(candidate) {
+            return Ok(canonical.to_string_lossy().into_owned());
+        }
+    }
+    Err(format!(
+        "organelle '{reference}' is declared in manifest.json but its file is not where the \
+         lockfile says it is ({}) — run `{} install {reference}` again",
+        candidates[0].display(),
+        crate::invocation::command_prefix()
+    ))
+}
+
 /// The particle euglena emits to choose between an organelle and its hosted
 /// stand-in. Named for the generated entry, which is the only place it exists;
 /// a gene that defined a handler of this name would be answering euglena's
@@ -609,6 +656,18 @@ mod tests {
             }}"#,
         )
         .unwrap();
+        // Real files, because a runtime `link` gets no loader pass: euglena
+        // resolves the path itself and refuses one that is not there.
+        let mut installed = Vec::new();
+        for (name, asset) in [
+            ("net_server", "net_server-linux-x86_64.so"),
+            ("membrane", "membrane-linux-x86_64.so"),
+        ] {
+            let dir = root.join(".code/modules").join(name).join("1.0.0");
+            fs::create_dir_all(&dir).unwrap();
+            fs::write(dir.join(asset), b"").unwrap();
+            installed.push(fs::canonicalize(dir.join(asset)).unwrap());
+        }
 
         let mut map = BTreeMap::new();
         let mut config = serde_json::Map::new();
@@ -635,10 +694,16 @@ mod tests {
         );
         assert!(content.contains("EuglenaPickOrganelle { alone, held } =>"));
         assert!(content.contains("emit Hosted to core get _where"));
-        assert!(content.contains(
-            "emit EuglenaPickOrganelle { alone = \"net_server.so\", held = \"membrane.so\" } \
-             to this get _pick_net"
-        ));
+        // Absolute, and the file the lockfile pins — the tidy spelling is
+        // the loader's trick, and a runtime `link` does not get it.
+        assert!(
+            content.contains(&format!(
+            "emit EuglenaPickOrganelle {{ alone = \"{}\", held = \"{}\" }} to this get _pick_net",
+            installed[0].display(),
+            installed[1].display()
+        )),
+            "{content}"
+        );
         assert!(content.contains("let net = _pick_net.organelle"));
 
         // And the alias is still the alias: one config block, emitted to the

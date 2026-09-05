@@ -193,7 +193,7 @@ fn refuses_a_stale_cdlvsm_code_below_minimum_version() {
     let (ok, out) = run_euglena_run(&proj, &home, &fakebin);
     assert!(!ok, "a v0.4.1 cdlvsm-code should be refused; got:\n{out}");
     assert!(
-        out.contains("1.7.1"),
+        out.contains("1.7.2"),
         "error should name the required minimum version; got:\n{out}"
     );
     assert!(
@@ -213,13 +213,13 @@ fn accepts_a_current_cdlvsm_code() {
 
     let fakebin = work.join("bin");
     fs::create_dir_all(&fakebin).unwrap();
-    fake_bin(&fakebin, "cdlvsm-code", "Code v1.7.1", "CURRENT_CODE_RAN");
+    fake_bin(&fakebin, "cdlvsm-code", "Code v1.7.2", "CURRENT_CODE_RAN");
 
     let proj = work.join("proj");
     minimal_project(&proj);
 
     let (ok, out) = run_euglena_run(&proj, &home, &fakebin);
-    assert!(ok, "a v1.7.1 cdlvsm-code should be accepted; got:\n{out}");
+    assert!(ok, "a v1.7.2 cdlvsm-code should be accepted; got:\n{out}");
     assert!(out.contains("CURRENT_CODE_RAN"), "got:\n{out}");
 
     let _ = fs::remove_dir_all(&work);
