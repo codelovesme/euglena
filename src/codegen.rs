@@ -291,12 +291,16 @@ const PICK_PARTICLE: &str = "EuglenaPickOrganelle";
 /// because the alias has to survive the choice, which it does by coming back
 /// as an ordinary value the entry binds.
 ///
-/// `Hosted` is answered by the runtime itself and is true from the first
-/// statement, since a host installs itself before its guest runs at all.
+/// `Linked` is answered by the runtime itself, from what this was built as:
+/// an application compiled `--target shared` is a module somebody links, and
+/// it knows that from its first statement. It is not a question about hosts
+/// — `code` knows nothing about euglena — but it is the one that matters
+/// here, because a door of its own is what would make a held application
+/// impossible to unload.
 fn pick_handler() -> String {
     format!(
         "{PICK_PARTICLE} {{ alone, held }} => {{\n    \
-         emit Hosted to core get _where\n    \
+         emit Linked to core get _where\n    \
          if _where.value {{\n        \
          link held as _held_organelle\n        \
          return EuglenaOrganellePicked {{ organelle = _held_organelle }}\n    \
@@ -693,7 +697,7 @@ mod tests {
             "a stand-in organelle must not be linked before the choice:\n{content}"
         );
         assert!(content.contains("EuglenaPickOrganelle { alone, held } =>"));
-        assert!(content.contains("emit Hosted to core get _where"));
+        assert!(content.contains("emit Linked to core get _where"));
         // Absolute, and the file the lockfile pins — the tidy spelling is
         // the loader's trick, and a runtime `link` does not get it.
         assert!(
@@ -767,7 +771,7 @@ mod tests {
         let content = generate_main_code(&m, &[], &root).unwrap();
         assert!(content.contains("link \"organelles/term.so\" as term"));
         assert!(!content.contains("EuglenaPickOrganelle"));
-        assert!(!content.contains("Hosted"));
+        assert!(!content.contains("Linked"));
     }
 
     #[test]

@@ -163,11 +163,11 @@ fn a_manifest_can_require_a_newer_code_than_euglenas_baseline() {
     // The `code` here satisfies euglena's own baseline, so if the run is
     // refused it can only be the manifest that refused it — which is the
     // whole point of the test.
-    let app = scaffolded("manifest_req", "1.7.2");
+    let app = scaffolded("manifest_req", "1.8.0");
     app.require_code(">=1.9.0");
 
     let (ok, out) = app.euglena(&["run"]);
-    assert!(!ok, "v1.7.2 does not satisfy >=1.9.0; got:\n{out}");
+    assert!(!ok, "v1.8.0 does not satisfy >=1.9.0; got:\n{out}");
     assert!(
         out.contains("1.9.0"),
         "should name what was asked for; got:\n{out}"
@@ -182,7 +182,7 @@ fn a_manifest_can_require_a_newer_code_than_euglenas_baseline() {
     let (ok, out) = app.euglena(&["run"]);
     assert!(
         ok,
-        "1.7.2 clears both the baseline and a 1.0.0 ask; got:\n{out}"
+        "1.8.0 clears both the baseline and a 1.0.0 ask; got:\n{out}"
     );
 
     app.cleanup();
