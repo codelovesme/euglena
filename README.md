@@ -59,7 +59,7 @@ Linux x86_64 only, for now. Examples below use `cdlvsm euglena` — drop the
 ## Usage
 
 ```
-cdlvsm euglena init <name>              scaffold a new app in ./<name>
+cdlvsm euglena init <name> [--web]      scaffold a new app in ./<name>
 cdlvsm euglena run [app]                run the app (default: this directory)
 cdlvsm euglena build [app] [options]    compile to a native binary (or a module)
 cdlvsm euglena test                     run this project's fixtures (wraps `code test`)
@@ -73,6 +73,13 @@ cdlvsm euglena code set <path>          point euglena at a specific `code` binar
 cdlvsm euglena code show
 cdlvsm euglena code clear
 ```
+
+`init --web` scaffolds an app that runs in a browser: a manifest that says so
+(which is what makes `install` fetch the archive rather than the library), a
+page to load the module into, and a gene that draws instead of one that
+answers. It does **not** write the page's half of the browser organelles —
+`code build --target wasm` emits that beside the module it built, so the two
+halves are always the same age.
 
 `install` with no name is what a fresh checkout runs: the manifest is the
 list, and everything it names is fetched — once per *module*, so two aliases

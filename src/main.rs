@@ -28,6 +28,9 @@ enum Commands {
     Init {
         /// Name of the new project (used as directory name and cell name)
         name: String,
+        /// Scaffold an app that runs in a browser rather than on a machine
+        #[arg(long)]
+        web: bool,
     },
     /// Run an Euglena application through the `code` interpreter
     Run {
@@ -117,7 +120,7 @@ enum CodeCommands {
 fn main() {
     let cli = Cli::parse();
     match cli.command {
-        Commands::Init { name } => init::run(&name),
+        Commands::Init { name, web } => init::run(&name, web),
         Commands::Run { path, verbose } => exec::run(&path, verbose),
         Commands::Build {
             path,
