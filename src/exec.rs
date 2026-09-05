@@ -180,6 +180,26 @@ pub(crate) fn baseline_code_binary_or_exit() -> String {
     find_code_binary_or_exit(&version_need_or_exit(None, None))
 }
 
+/// The `code` version that can fetch a browser organelle.
+///
+/// `code install --platform` is what a web app needs and what a machine
+/// cannot infer: an application built for a browser does not run where it is
+/// built, so the platform has to be asked for by name. The first `code` to
+/// take the flag is the first one above 1.8.1 — the smallest such number,
+/// since a later one satisfies the floor too.
+pub(crate) const PLATFORM_FLAG_VERSION: (u32, u32, u32) = (1, 8, 2);
+
+/// A `code` new enough to install an organelle for a browser.
+pub(crate) fn web_install_code_binary_or_exit() -> String {
+    find_code_binary_or_exit(&version_need_or_exit(
+        None,
+        Some((
+            PLATFORM_FLAG_VERSION,
+            "is the first `code install` that can be asked for a platform",
+        )),
+    ))
+}
+
 /// `code format`, defaulting to `src/` and `tests/` when no paths are given.
 pub fn format(check: bool, paths: &[String]) {
     let binary = find_code_binary_or_exit(&version_need_or_exit(None, None));

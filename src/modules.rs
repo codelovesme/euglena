@@ -13,7 +13,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{self, Command};
 
-use crate::exec::baseline_code_binary_or_exit;
+use crate::exec::{baseline_code_binary_or_exit, web_install_code_binary_or_exit};
 use crate::{invocation, lockfile, manifest};
 
 fn project_root() -> PathBuf {
@@ -33,13 +33,27 @@ fn require_manifest(project_root: &Path) -> PathBuf {
 }
 
 /// `code install <name>`, then declare `<alias>: <name>` in manifest.json.
+///
+/// A web app gets the browser's archive rather than the machine's library.
+/// The manifest already says which kind of app this is, so nobody has to
+/// remember: `"runtime": "web"` means the bytes are for a page, and a page
+/// cannot open a `.so` — it links an archive in.
 pub fn install(name: &str, alias: Option<&str>) {
     let root = project_root();
     let manifest_path = require_manifest(&root);
-    let binary = baseline_code_binary_or_exit();
+    let web = runs_in_a_browser(&manifest_path);
+    let binary = if web {
+        web_install_code_binary_or_exit()
+    } else {
+        baseline_code_binary_or_exit()
+    };
 
+    let mut args = vec!["install", name];
+    if web {
+        args.extend(["--platform", "wasm32"]);
+    }
     let status = Command::new(&binary)
-        .args(["install", name])
+        .args(&args)
         .current_dir(&root)
         .status()
         .unwrap_or_else(|e| {
@@ -159,6 +173,23 @@ fn is_literal_path(reference: &str) -> bool {
     reference.contains('/') || reference.ends_with(".so") || reference.ends_with(".code")
 }
 
+/// Whether this app's manifest says it runs in a browser.
+///
+/// Read straight from the JSON rather than through `manifest::parse_manifest`,
+/// which is about organelles and does not carry this. A manifest that says
+/// nothing runs on a machine, which is what every app here said before there
+/// was a second answer.
+fn runs_in_a_browser(manifest_path: &Path) -> bool {
+    read_manifest_json(manifest_path)
+        .ok()
+        .and_then(|json| {
+            json.get("runtime")
+                .and_then(|v| v.as_str())
+                .map(|r| r == "web")
+        })
+        .unwrap_or(false)
+}
+
 fn read_manifest_json(manifest_path: &Path) -> Result<serde_json::Value, String> {
     let text = fs::read_to_string(manifest_path)
         .map_err(|e| format!("cannot read '{}': {e}", manifest_path.display()))?;
@@ -245,4 +276,39 @@ fn references_module(json: &serde_json::Value, module_name: &str) -> bool {
                     .any(|v| module_name_of(v) == module_name)
             })
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// One directory per case, the convention the integration tests here use.
+    fn manifest_with(tag: &str, runtime: Option<&str>) -> PathBuf {
+        let dir =
+            std::env::temp_dir().join(format!("euglena_modules_{}_{}", std::process::id(), tag));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create test directory");
+        let path = dir.join("manifest.json");
+        let body = match runtime {
+            Some(r) => format!(r#"{{"name":"x","runtime":"{r}","organelles":{{}}}}"#),
+            None => r#"{"name":"x","organelles":{}}"#.to_string(),
+        };
+        fs::write(&path, body).expect("write manifest");
+        path
+    }
+
+    /// Which bytes `euglena install` asks for comes from the manifest, not
+    /// from the machine: a browser app cannot open a `.so`, so it gets the
+    /// archive instead. A manifest that says nothing means a machine — what
+    /// every app here said before there was a second answer.
+    #[test]
+    fn the_manifest_says_whether_the_bytes_are_for_a_browser() {
+        assert!(runs_in_a_browser(&manifest_with("web", Some("web"))));
+        assert!(!runs_in_a_browser(&manifest_with("native", Some("native"))));
+        assert!(!runs_in_a_browser(&manifest_with("unsaid", None)));
+        assert!(
+            !runs_in_a_browser(Path::new("/nonexistent/manifest.json")),
+            "an unreadable manifest is not a reason to fetch the wrong bytes"
+        );
+    }
 }

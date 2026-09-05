@@ -73,6 +73,11 @@ cdlvsm euglena code show
 cdlvsm euglena code clear
 ```
 
+`install` reads the manifest to know which bytes to fetch: an app whose
+`"runtime"` is `"web"` gets the browser's archive rather than the machine's
+library, since a page has no way to open one and links the other in. Nothing
+to pass — the app already said what it is.
+
 `run`, `build` and `test` all take `-v` / `--verbose`, which prints the
 generated entry and the exact `code` command euglena hands it to.
 
