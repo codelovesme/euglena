@@ -8,6 +8,10 @@ genes that auto-link, organelle `config` blocks, and mock mode. Everything else 
 project marker, the module installer and its lockfile, `format`, `test` — is
 `code`'s own, and euglena wraps it rather than duplicating it.
 
+> **Working on this repo (human or AI)?** Read [`AGENTS.md`](AGENTS.md) first —
+> the layer boundary, the generated entry and its stamp, version floors, and the
+> testing gotchas that have actually bitten.
+
 ## What is euglena's, and what is `code`'s
 
 | | `code` | `euglena` |
