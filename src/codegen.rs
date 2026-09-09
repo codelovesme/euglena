@@ -875,11 +875,7 @@ mod tests {
         write_main_code(&root).unwrap();
         assert!(matches!(entry_status(&root), EntryStatus::UpToDate { .. }));
         fs::create_dir_all(root.join("src")).unwrap();
-        fs::write(
-            root.join("src/extra.gene.code"),
-            "gene_name = \"extra\"\n",
-        )
-        .unwrap();
+        fs::write(root.join("src/extra.gene.code"), "gene_name = \"extra\"\n").unwrap();
         assert!(matches!(entry_status(&root), EntryStatus::Stale));
     }
 
