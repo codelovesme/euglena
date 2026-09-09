@@ -4,6 +4,6 @@ nums = [1, 2, 3, 4]
 doubled = []
 
 loop n over nums
-    doubled = doubled + [n * 2]
+    doubled += [n * 2]
 
 assert doubled = [2, 4, 6, 8]
