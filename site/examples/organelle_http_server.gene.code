@@ -9,5 +9,5 @@ Request { method, path } =>
     return Response { status = 404, body = "not found" }
 
 emit Config { port = 8080 } to server
-emit Listen {} to server
+emit Listen to server
 loop, assert true
