@@ -877,7 +877,7 @@ mod tests {
         fs::create_dir_all(root.join("src")).unwrap();
         fs::write(
             root.join("src/extra.gene.code"),
-            "export let gene_name = \"extra\"\n",
+            "let gene_name = \"extra\"\n",
         )
         .unwrap();
         assert!(matches!(entry_status(&root), EntryStatus::Stale));

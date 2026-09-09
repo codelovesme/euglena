@@ -144,11 +144,10 @@ fn nucleus_gene_template() -> &'static str {
 | defined here join one program-wide dispatch table, so a gene is just a
 | file that answers particles.
 
-export let gene_name = "nucleus"
+let gene_name = "nucleus"
 
-EuglenaHasBeenBorn { cell_name } => {
+EuglenaHasBeenBorn { cell_name } =>
     return Alive { cell_name = cell_name }
-}
 "#
 }
 
@@ -167,22 +166,20 @@ fn web_gene_template() -> &'static str {
 
 let clicks = 0
 
-EuglenaHasBeenBorn { cell_name } => {
+EuglenaHasBeenBorn { cell_name } =>
     emit Draw { title = cell_name } to this get drawn
     return Alive { cell_name = cell_name }
-}
 
 | A click is a particle: the tree says what it means, the page sends it back,
 | and this handler answers it like any other.
-Clicked { } => {
+Clicked { } =>
     clicks = clicks + 1
     emit Draw { title = "clicked" } to this get _
     return Counted { clicks = clicks }
-}
 
 | Everything the reader sees, rebuilt from `clicks`. Nothing is reached for
 | and nothing is patched, so what is shown cannot drift from what is held.
-Draw { title } => {
+Draw { title } =>
     emit Render {
         into = "#app",
         styles = {
@@ -199,7 +196,6 @@ Draw { title } => {
         }
     } to dom get r
     return Drawn { ok = r.ok }
-}
 "##
 }
 

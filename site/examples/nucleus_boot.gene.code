@@ -1,6 +1,6 @@
 | The nucleus boots the cell: one handler, fired exactly once at birth.
 
-export let gene_name = "nucleus"
+let gene_name = "nucleus"
 
 EuglenaHasBeenBorn { cell_name } =>
     emit Log { source = "nucleus", level = "Info", message = "[$cell_name] cell booted" } to logger
