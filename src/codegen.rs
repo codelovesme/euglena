@@ -159,7 +159,7 @@ pub fn generate_main_code(
                 let held = organelle_runtime_path(project_root, stand_in)?;
                 picks.push(format!(
                     "emit {PICK_PARTICLE} {{ alone = \"{alone}\", held = \"{held}\" }} \
-                     to this get _pick_{alias}\nlet {alias} = _pick_{alias}.organelle"
+                     to this get _pick_{alias}\n{alias} = _pick_{alias}.organelle"
                 ));
             }
         }
@@ -708,14 +708,14 @@ mod tests {
         )),
             "{content}"
         );
-        assert!(content.contains("let net = _pick_net.organelle"));
+        assert!(content.contains("net = _pick_net.organelle"));
 
         // And the alias is still the alias: one config block, emitted to the
         // name, whichever organelle ended up behind it.
         assert!(content.contains("emit Config { port = \"8080\" } to net get _cfg_net"));
 
         // The choice has to be made before anything is emitted to the name.
-        let pick = content.find("let net = _pick_net.organelle").unwrap();
+        let pick = content.find("net = _pick_net.organelle").unwrap();
         let cfg = content.find("emit Config").unwrap();
         assert!(
             pick < cfg,
@@ -877,7 +877,7 @@ mod tests {
         fs::create_dir_all(root.join("src")).unwrap();
         fs::write(
             root.join("src/extra.gene.code"),
-            "let gene_name = \"extra\"\n",
+            "gene_name = \"extra\"\n",
         )
         .unwrap();
         assert!(matches!(entry_status(&root), EntryStatus::Stale));

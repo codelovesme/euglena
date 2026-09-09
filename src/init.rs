@@ -144,7 +144,7 @@ fn nucleus_gene_template() -> &'static str {
 | defined here join one program-wide dispatch table, so a gene is just a
 | file that answers particles.
 
-let gene_name = "nucleus"
+gene_name = "nucleus"
 
 EuglenaHasBeenBorn { cell_name } =>
     return Alive { cell_name = cell_name }
@@ -164,7 +164,7 @@ fn web_gene_template() -> &'static str {
 | defined here join one program-wide dispatch table, and they see this file's
 | top level — which is where an application's own state belongs.
 
-let clicks = 0
+clicks = 0
 
 EuglenaHasBeenBorn { cell_name } =>
     emit Draw { title = cell_name } to this get drawn
