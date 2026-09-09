@@ -2,10 +2,8 @@
 | are common vocabulary (see the language README's "Common particles"), so
 | one handler here serves every organelle that pushes them.
 
-Log { source, level, message } => {
+Log { source, level, message } =>
     emit Print { value = "[$source] $message\n" } to logger
-}
 
-Exception { source, message } => {
+Exception { source, message } =>
     emit Print { value = "[EXCEPTION:$source] $message\n" } to logger
-}

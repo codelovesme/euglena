@@ -1,11 +1,9 @@
 | Organelles are capability providers, reached the same way core is:
 | emit … to … get … sends a particle and binds the synchronous reply.
 
-GetProfile { user_id } => {
+GetProfile { user_id } =>
     emit Decode { token = user_id } to jwt get decoded
-    if decoded.valid {
+    if decoded.valid
         emit Find { collection = "users", id = decoded.sub } to store get result
         return Profile { user_id = decoded.sub, data = result }
-    }
     return Denied { reason = "invalid token" }
-}

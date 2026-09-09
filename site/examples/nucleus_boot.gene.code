@@ -2,7 +2,6 @@
 
 export let gene_name = "nucleus"
 
-EuglenaHasBeenBorn { cell_name } => {
+EuglenaHasBeenBorn { cell_name } =>
     emit Log { source = "nucleus", level = "Info", message = "[$cell_name] cell booted" } to logger
     return Alive { cell_name = cell_name }
-}

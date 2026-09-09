@@ -3,14 +3,11 @@
 | to receive it. No request_id bookkeeping — the module remembers who to
 | answer.
 
-Request { method, path } => {
-    if path = "/health" {
+Request { method, path } =>
+    if path = "/health"
         return Response { status = 200, body = "ok" }
-    }
     return Response { status = 404, body = "not found" }
-}
 
 emit Config { port = 8080 } to server
 emit Listen {} to server
-loop {
-}
+loop, assert true
