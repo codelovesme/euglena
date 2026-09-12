@@ -54,14 +54,14 @@ jobs:
       # They agree again, and the minimum is now a version that was actually
       # published — 1.4.0 never was, which is part of how the drift went
       # unnoticed. See `MIN_CODE_VERSION` for why that decided the number.
-      - name: Download code (v1.8.0)
+      - name: Download code (v2.0.0)
         run: |
           set -euo pipefail
           curl -sSfL -o code.tar.gz \
-            https://github.com/codelovesme/code/releases/download/v1.8.0/code-v1.8.0-x86_64-linux.tar.gz
+            https://github.com/codelovesme/code/releases/download/v2.0.0/code-v2.0.0-x86_64-linux.tar.gz
           tar -xzf code.tar.gz
 
       - name: Test
         env:
-          EUGLENA_TEST_CODE_BIN: ${{ github.workspace }}/code-v1.8.0-x86_64-linux/code
+          EUGLENA_TEST_CODE_BIN: ${{ github.workspace }}/code-v2.0.0-x86_64-linux/code
         run: cargo test

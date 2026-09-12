@@ -15,7 +15,14 @@ use crate::codegen;
 /// `| euglena …` stamp, so on any older `code` the entry does not parse at
 /// all.
 ///
-/// It says 1.8.0, because a manifest may now name a hosted stand-in
+/// It says 2.0.0, because a block is now an indented run and the brace form
+/// is gone — and every gene euglena scaffolds is written that way, starting
+/// with the nucleus `init` lays down. Nothing older parses it. This is the
+/// same kind of reason as the one below, and the one that decides the
+/// number today: the entry and the genes around it are what euglena writes,
+/// so the baseline is whatever `code` reads them.
+///
+/// It said 1.8.0 before that, because a manifest may name a hosted stand-in
 /// (`"hosted": "membrane"`), and the entry generated for one asks the runtime
 /// `Linked` and then links a door from inside a handler. Both landed by
 /// 1.7.2 — but under names the language has since dropped, along with the
@@ -47,7 +54,7 @@ use crate::codegen;
 /// claim nothing checks. The *mechanism* stays (`version_need` still takes a
 /// `command_floor`), for the next subcommand that lands ahead of whatever
 /// the baseline is then.
-pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (1, 8, 0);
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (2, 0, 0);
 
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
@@ -495,13 +502,15 @@ mod tests {
 
     #[test]
     fn min_version_ordering() {
-        assert!((1, 8, 0) >= MIN_CODE_VERSION);
         assert!((2, 0, 0) >= MIN_CODE_VERSION);
+        assert!((2, 3, 1) >= MIN_CODE_VERSION);
         // Everything before it is below. Nothing under 1.4.0 has the `|`
         // comment and so cannot parse the entry euglena writes; 1.4.0 and
-        // 1.5.0 could, but neither is a version anyone can install; and
-        // nothing before 1.8.0 hears a door linked while the program runs
-        // — see `MIN_CODE_VERSION`.
+        // 1.5.0 could, but neither is a version anyone can install; nothing
+        // before 1.8.0 hears a door linked while the program runs; and
+        // nothing before 2.0.0 reads an indented block, which is how every
+        // gene euglena scaffolds is written — see `MIN_CODE_VERSION`.
+        assert!((1, 9, 9) < MIN_CODE_VERSION);
         assert!((1, 7, 0) < MIN_CODE_VERSION);
         assert!((1, 5, 0) < MIN_CODE_VERSION);
         assert!((1, 3, 0) < MIN_CODE_VERSION);
