@@ -155,6 +155,9 @@ pub struct AppManifest {
     pub name: String,
     /// Organelle alias → entry (a reference string or `{ module, config }` object).
     pub organelles: BTreeMap<String, OrganelleEntry>,
+    /// Genes this application installs rather than writes, by name. Sorted,
+    /// so the generated entry is the same on every machine.
+    pub genes: Vec<String>,
 }
 
 /// Parse the manifest.json at `path` and return an `AppManifest`.
@@ -306,7 +309,13 @@ pub fn parse_manifest(path: &Path) -> Result<AppManifest, String> {
         }
     }
 
-    Ok(AppManifest { name, organelles })
+    let genes = crate::genes::declared(&json);
+
+    Ok(AppManifest {
+        name,
+        organelles,
+        genes,
+    })
 }
 
 // ===========================================================================

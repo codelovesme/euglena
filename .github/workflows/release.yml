@@ -67,6 +67,38 @@ jobs:
           echo "Built:"
           ls -1 ./*.tar.gz
 
+      # The gene registry. A gene ships as the `.code` source it is — a
+      # compiled artifact would be a module, reachable only through an alias,
+      # and an alias is the one thing a gene must not have. Source also needs
+      # no per-platform matrix: one file serves native, browser and held
+      # builds alike.
+      #
+      # Each gene travels with a small metadata file naming its sha256, which
+      # `euglena install` checks before it writes anything and again before
+      # it compiles it in.
+      - name: Package the genes
+        run: |
+          set -euo pipefail
+          # The tag without its `v`, matching Cargo's version and so the
+          # `.code/genes/<name>/<version>/` an install lays down.
+          version="${{ steps.version.outputs.version }}"
+          version="${version#v}"
+          shopt -s nullglob
+          for gene in genes/*.gene.code; do
+            name="$(basename "$gene" .gene.code)"
+            sum="$(sha256sum "$gene" | cut -d' ' -f1)"
+            cp "$gene" "${name}.gene.code"
+            cat > "${name}.gene.json" <<JSON
+          {
+            "name": "${name}",
+            "version": "${version}",
+            "asset": "${name}.gene.code",
+            "sha256": "${sum}"
+          }
+          JSON
+            echo "packaged gene ${name}@${version} (sha256 ${sum})"
+          done
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -77,5 +109,8 @@ jobs:
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
-          files: "*.tar.gz"
+          files: |
+            *.tar.gz
+            *.gene.code
+            *.gene.json
           generate_release_notes: true

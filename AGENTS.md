@@ -8,8 +8,8 @@ repository. `README.md` documents the CLI; this file documents *working on* it.
 ## What this repo is
 
 The euglena CLI: the **cell model** on top of the `code` language. It owns
-manifests, genes, codegen, module (organelle) installation, doctor, and
-delegation to `code`. It is a thin, deliberately dependency-poor tool —
+manifests, genes, codegen, module (organelle) and gene installation, doctor,
+and delegation to `code`. It is a thin, deliberately dependency-poor tool —
 clap + serde_json only, which is why `src/sha256.rs` exists rather than a crate.
 
 ```sh
@@ -89,13 +89,50 @@ a real alias does not delete bytes mock mode still needs.
 
 ---
 
+## Genes are euglena's, and they are source
+
+`src/genes.rs` is the package manager for shared genes — the palette and
+whatever follows it. The rules that are load-bearing, and each one's reason:
+
+- **A gene is `.code` source, never a compiled artifact.** A `.so`/`.a`/`.wasm`
+  *is* a module: its handlers are reachable only through an alias, and an alias
+  is the one thing a gene must not have. This is not a shipping convenience and
+  should not be "upgraded" later.
+- **No namespace, no alias.** A gene's handlers join the one program-wide table
+  exactly as `src/*.gene.code` do. A name defined twice is a refusal before the
+  program runs; that is the intended behaviour, not a gap.
+- **Installed genes link before `src/`**, so an application reads its own last.
+- **The pin goes in the entry body**, as `| gene <name>@<ver> sha256:<12>`.
+  Without it the entry names only a path, so a gene republished at the same
+  version leaves the generated text identical and every application reports
+  "up to date" while compiling in changed bytes. This was found the hard way;
+  `tests/genes.rs` holds the case.
+- **`genes` is its own section of `.code/lock.json`**, beside but not among
+  `modules`. euglena owns `genes`; `code install` owns `modules`, and neither
+  should write the other's.
+- **A gene's version is euglena's version.** They ship from the same release, so
+  an app holding euglena 0.3.0 and `palette 0.3.0` need not ask whether they
+  agree. `genes/*.gene.code` in this repo are packaged by the release workflow
+  into `<name>.gene.code` plus a `<name>.gene.json` naming the sha256.
+- **`EUGLENA_GENE_RELEASE`** points the registry at a directory (`file://…`).
+  That is how a gene is tried before it is published, and how `tests/genes.rs`
+  runs without the network.
+
+A bare `euglena install` keeps any gene that already verifies — a fresh
+checkout is what it is for. Naming the gene refetches it, which is how a
+republish at the same version is picked up.
+
+---
+
 ## Vocabulary
 
 `install` / `uninstall` / `list` — matching `code` exactly. The old `add` /
 `remove` / `ls` spellings never shipped from here. In `code` the rename was
 hard (old spellings are `unknown command`, no aliases).
 
-`euglena install` with no name installs everything the manifest already names.
+`euglena install` with no name installs everything the manifest already names
+— organelles and genes both, counted and reported separately. `euglena
+uninstall` takes an organelle's *alias*, or a gene's *name*: a gene has none.
 A first-party module missing from the pinned release is reported as
 uninstallable — for `guest` that is **expected and correct**, since it is
 unreleased and apps pin it with `"source": "local"` in `.code/lock.json`.

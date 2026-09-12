@@ -1,0 +1,105 @@
+| The workspace's colours, in one file, linked by every application.
+|
+| Seven roles and nothing else, from the design: the page and any band that
+| should recede; every panel, at one elevation and never nested; one pixel
+| of border doing all the separating; text being read; text supporting it;
+| one accent, spent on at most one filled button per view plus link text;
+| and green for a service's health, which only an administrator sees.
+|
+| **This file is linked, not copied.** The shell and its guests share one
+| origin and one theme, so a colour that differs between them is a bug —
+| and before this existed there were a hundred and thirty-nine hard-coded
+| hex values across seven applications, with five of them ignoring the
+| theme switch outright.
+|
+| The theme is the shell's choice, kept in the origin's storage under
+| `ui:theme`. Every application reads it; none offers a switch. An
+| application links this and asks `Palette` whenever it draws.
+
+| Light and dark are not the same palette with the lightness flipped: the
+| page and the panel **swap roles**. A panel is lighter than the page in
+| the dark theme and darker in the light one, which is what keeps a panel
+| reading as a panel rather than as a hole.
+Palette =>
+    emit Get { key = "ui:theme" } to store get chosen
+    if chosen.value = "light"
+        return Colours {
+            bg = "#ffffff"
+            panel = "#f6f8fa"
+            line = "#d0d7de"
+            fg = "#1f2328"
+            muted = "#656d76"
+            accent = "#0969da"
+            health = "#1a7f37"
+            health_soft = "#dafbe1"
+            danger = "#cf222e"
+            danger_soft = "#ffebe9"
+            warn = "#9a6700"
+            warn_soft = "#fff8c5"
+            accent_soft = "#ddf4ff"
+            header = "rgba(255,255,255,0.97)"
+            hover = "#eaeef2"
+        }
+    return Colours {
+        bg = "#0d1117"
+        panel = "#161b22"
+        line = "#30363d"
+        fg = "#e6edf3"
+        muted = "#9da7b3"
+        accent = "#2f81f7"
+        health = "#3fb950"
+        health_soft = "#172d20"
+        danger = "#f85149"
+        danger_soft = "#321b20"
+        | Amber, for a service that is degraded rather than down. Only
+        | System Monitor has ever needed it.
+        warn = "#d29922"
+        warn_soft = "#2d2607"
+        accent_soft = "#17243a"
+        header = "rgba(22,27,34,0.97)"
+        hover = "#1f242d"
+    }
+
+| Type and shape, so two applications do not disagree about what a button
+| is. Sizes that differ between a phone and a desktop are one `clamp`:
+| a stylesheet here is a selector to a flat set of properties, so there
+| are no media queries to be had.
+Metrics =>
+    return Sizes {
+        sans = "system-ui, -apple-system, sans-serif"
+        mono = "ui-monospace, Menlo, monospace"
+        | The hub's headline, and the only display type in the workspace.
+        display = "clamp(30px, 6vw, 52px)"
+        lead = "clamp(15px, 1.4vw, 17px)"
+        app_large = "clamp(19px, 2.2vw, 24px)"
+        app_small = "15px"
+        heading = "clamp(19px, 2.2vw, 24px)"
+        body = "clamp(14px, 1.2vw, 15px)"
+        meta = "12.5px"
+        label = "11px"
+        | Never smaller: a button is pressed with a thumb. And never under
+        | 16px for an input, or Safari zooms the page on focus.
+        button = "15px"
+        field = "16px"
+        gutter = "clamp(20px, 4vw, 40px)"
+        | Content capped so a wide screen does not stretch a line of text
+        | past reading width.
+        page = "1120px"
+        radius = "12px"
+        control = "10px"
+        tap = "46px"
+    }
+
+| Task priority — the one place colour carries meaning rather than mood.
+| It reads as a stripe down the left edge of a task, so these are the four
+| steps of a scale and are deliberately not the accent, which is spent on
+| buttons and links. Here rather than in To Do because a second
+| application showing a priority must show the same four.
+Priorities =>
+    emit Palette to this get c
+    return Steps {
+        urgent = c.danger
+        high = "#db6d28"
+        medium = c.warn
+        low = c.health
+    }

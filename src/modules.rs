@@ -38,9 +38,9 @@ fn require_manifest(project_root: &Path) -> PathBuf {
 /// Without one: the manifest *is* the list — fetch everything it declares,
 /// which is what a fresh checkout needs and the only way to get an app
 /// running without reading its manifest by hand.
-pub fn install(name: Option<&str>, alias: Option<&str>) {
+pub fn install(name: Option<&str>, gene: bool, alias: Option<&str>) {
     match name {
-        Some(name) => install_one(name, alias),
+        Some(name) => install_one(name, gene, alias),
         None => {
             if alias.is_some() {
                 eprintln!(
@@ -76,7 +76,12 @@ fn install_declared() {
 
     let modules = declared_modules(&json);
     if modules.is_empty() {
-        println!("no organelles to install — manifest.json declares none by name");
+        let genes = install_declared_genes(&root, &json);
+        if genes == 0 {
+            println!("no organelles to install — manifest.json declares none by name");
+        } else {
+            println!("{genes} gene(s) declared and installed");
+        }
         return;
     }
 
@@ -91,8 +96,13 @@ fn install_declared() {
         }
     }
 
+    let genes = install_declared_genes(&root, &json);
+
     if failed.is_empty() {
         println!("{} organelle(s) declared and installed", modules.len());
+        if genes > 0 {
+            println!("{genes} gene(s) declared and installed");
+        }
         return;
     }
     eprintln!(
@@ -104,13 +114,78 @@ fn install_declared() {
     process::exit(1);
 }
 
+/// Does `manifest.json` already list this gene? Then `euglena install
+/// <name>` means the gene, not a module that happens to share the name.
+fn declares_gene(manifest_path: &Path, name: &str) -> bool {
+    read_manifest_json(manifest_path)
+        .map(|json| crate::genes::declared(&json).iter().any(|g| g == name))
+        .unwrap_or(false)
+}
+
+/// One gene: fetch it, and make sure the manifest declares it. Like an
+/// organelle, what the manifest will say is settled before anything is
+/// fetched, so a refusal leaves no bytes behind that nothing names.
+fn install_gene(root: &Path, manifest_path: &Path, name: &str, alias: Option<&str>) {
+    if alias.is_some() {
+        eprintln!(
+            "euglena: a gene has no alias — its handlers link into the root, \
+             which is what makes it a gene rather than an organelle"
+        );
+        process::exit(1);
+    }
+    let mut json = match read_manifest_json(manifest_path) {
+        Ok(json) => json,
+        Err(e) => {
+            eprintln!("euglena: {e}");
+            process::exit(1);
+        }
+    };
+    if let Err(e) = crate::genes::install_one(root, name) {
+        eprintln!("euglena: {e}");
+        process::exit(1);
+    }
+    let mut declared = crate::genes::declared(&json);
+    if !declared.iter().any(|g| g == name) {
+        declared.push(name.to_string());
+        declared.sort();
+        json.as_object_mut()
+            .map(|o| o.insert("genes".to_string(), serde_json::json!(declared)));
+        if let Err(e) = write_manifest_json(manifest_path, &json) {
+            eprintln!("euglena: {e}");
+            process::exit(1);
+        }
+        println!("manifest.json now declares the gene '{name}'");
+    }
+}
+
+/// The genes a manifest declares, fetched the same way. Reported separately
+/// because they are a different kind of thing: an organelle is a native
+/// artifact with an ABI, a gene is source that links into the root.
+fn install_declared_genes(root: &Path, json: &serde_json::Value) -> usize {
+    match crate::genes::install_declared(root, json) {
+        Ok(n) => n,
+        Err(e) => {
+            eprintln!("euglena: {e}");
+            process::exit(1);
+        }
+    }
+}
+
 /// One organelle: fetch it, and make sure the manifest declares it.
 ///
 /// What the manifest will say is settled *before* anything is fetched, so a
 /// refusal never leaves bytes behind that nothing names.
-fn install_one(name: &str, alias: Option<&str>) {
+fn install_one(name: &str, gene: bool, alias: Option<&str>) {
     let root = project_root();
     let manifest_path = require_manifest(&root);
+
+    // A gene, if the caller said so or the manifest already declares one by
+    // that name. Genes and organelles are different kinds of thing and share
+    // only the verb, so the branch is taken before anything else is read.
+    if gene || declares_gene(&manifest_path, name) {
+        install_gene(&root, &manifest_path, name, alias);
+        return;
+    }
     let json = match read_manifest_json(&manifest_path) {
         Ok(json) => json,
         Err(e) => {
@@ -209,6 +284,14 @@ pub fn uninstall(alias: &str) {
             process::exit(1);
         }
     };
+
+    // A gene, if the manifest declares one by that name. It is matched by
+    // name rather than alias because a gene has none — the same reason
+    // `euglena install <name>` finds it without `--gene`.
+    if declares_gene(&manifest_path, alias) {
+        uninstall_gene(&root, &manifest_path, &mut json, alias);
+        return;
+    }
     let module_name = match take_organelle_alias(&mut json, alias) {
         Ok(Some(name)) => name,
         Ok(None) => {
@@ -246,6 +329,28 @@ pub fn uninstall(alias: &str) {
             module_name
         ),
     }
+}
+
+/// One gene: undeclared, then unpinned and removed. Nothing else can be
+/// holding onto it — a gene has no alias, so the manifest naming it is the
+/// only thing that puts it in the build.
+fn uninstall_gene(root: &Path, manifest_path: &Path, json: &mut serde_json::Value, name: &str) {
+    let remaining: Vec<String> = crate::genes::declared(json)
+        .into_iter()
+        .filter(|g| g != name)
+        .collect();
+    if let Some(o) = json.as_object_mut() {
+        o.insert("genes".to_string(), serde_json::json!(remaining));
+    }
+    if let Err(e) = write_manifest_json(manifest_path, json) {
+        eprintln!("euglena: {e}");
+        process::exit(1);
+    }
+    if let Err(e) = crate::genes::remove_installed(root, name) {
+        eprintln!("euglena: manifest.json no longer declares '{name}', but {e}");
+        process::exit(1);
+    }
+    println!("Removed gene '{name}' from manifest.json and .code/");
 }
 
 /// Every declared organelle, and whether it's actually installed —

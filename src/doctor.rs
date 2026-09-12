@@ -199,8 +199,13 @@ fn check_entry(project_root: &Path, report: &mut Report) {
             report.ok = false;
         }
         EntryStatus::Unverifiable(e) => {
+            // A failure, not a curiosity: if the entry cannot be generated
+            // then `run`, `build` and `test` will all fail the same way, and
+            // saying "everything checks out" underneath is the one answer
+            // that is certainly wrong.
             println!("  main.code: cannot check — regenerating it fails:");
             println!("    {e}");
+            report.ok = false;
         }
     }
 }

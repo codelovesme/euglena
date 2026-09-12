@@ -4,6 +4,7 @@ mod codegen;
 mod config;
 mod doctor;
 mod exec;
+mod genes;
 mod init;
 mod invocation;
 mod lockfile;
@@ -80,17 +81,24 @@ enum Commands {
         /// out to install everything the manifest declares — what a fresh
         /// checkout needs.
         name: Option<String>,
+        /// Install a gene rather than an organelle: `.code` source whose
+        /// handlers link into the root, fetched from euglena's own registry.
+        /// Not needed for a gene manifest.json already declares.
+        #[arg(long = "gene")]
+        gene: bool,
         /// Alias to declare in manifest.json (default: the module name)
         #[arg(long = "as")]
         alias: Option<String>,
     },
-    /// Drop an organelle's manifest alias, and its module if unreferenced
+    /// Drop an organelle's manifest alias, and its module if unreferenced —
+    /// or drop a declared gene
     ///
     /// Takes the *alias*, not the module name — the manifest is keyed by
     /// alias, and that is what `euglena list` prints. `code uninstall` is the
-    /// one that takes a module name.
+    /// one that takes a module name. A gene is matched by its name instead,
+    /// because a gene has no alias.
     Uninstall {
-        /// The alias as declared in manifest.json
+        /// The alias as declared in manifest.json (or a gene's name)
         alias: String,
     },
     /// List declared organelles and whether each is installed
@@ -144,7 +152,9 @@ fn main() {
             };
             exec::format(check, &paths);
         }
-        Commands::Install { name, alias } => modules::install(name.as_deref(), alias.as_deref()),
+        Commands::Install { name, gene, alias } => {
+            modules::install(name.as_deref(), gene, alias.as_deref())
+        }
         Commands::Uninstall { alias } => modules::uninstall(&alias),
         Commands::List => modules::list(),
         Commands::Doctor => doctor::run(),

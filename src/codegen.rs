@@ -201,13 +201,51 @@ pub fn generate_main_code(
         lines.push(String::new());
     }
 
+    // Installed genes first, then the application's own.
+    //
+    // A gene has no alias and no namespace: its handlers join the one
+    // program-wide table, exactly as `src/*.gene.code` do. Installed ones
+    // come first so an application reads its own last, which is the order
+    // a reader expects and the order a duplicate is reported in. A name
+    // defined twice is refused before the program runs — a shipped gene's
+    // handler names are reserved for every application that installs it.
+    let mut installed = Vec::new();
+    for name in &manifest.genes {
+        crate::genes::verify(project_root, name)?;
+        match crate::genes::installed_path(project_root, name) {
+            Some(path) => installed.push(path.display().to_string().replace('\\', "/")),
+            None => {
+                return Err(format!(
+                    "manifest.json declares the gene '{name}', but it is not installed — \
+                     run `euglena install`"
+                ))
+            }
+        }
+    }
+    // The pins, written into the entry itself.
+    //
+    // Without this the entry names only a *path*, so a gene republished at
+    // the same version leaves the generated text identical and every
+    // application goes on reporting "up to date" while compiling in bytes
+    // that changed. The digest is part of the body, so the stamp covers it
+    // and `doctor` says STALE the moment a pin moves.
+    for name in &manifest.genes {
+        if let Some(pinned) = crate::genes::locked(project_root, name) {
+            let short: String = pinned.sha256.chars().take(12).collect();
+            lines.push(format!("| gene {name}@{} sha256:{short}", pinned.version));
+        }
+    }
+    for path in &installed {
+        lines.push(format!("link \"{path}\""));
+    }
+
     // Gene link statements — quoted, relative to the project root the
     // generated entry now lives at.
     for gene in genes {
         lines.push(format!("link \"src/{gene}\""));
     }
 
-    if !genes.is_empty() {
+    if !genes.is_empty() || !installed.is_empty() {
         lines.push(String::new());
     }
 
@@ -551,6 +589,7 @@ mod tests {
         AppManifest {
             name: name.to_string(),
             organelles: map,
+            genes: Vec::new(),
         }
     }
 
@@ -688,6 +727,7 @@ mod tests {
         let m = AppManifest {
             name: "twolives".to_string(),
             organelles: map,
+            genes: Vec::new(),
         };
         let content = generate_main_code(&m, &[], &root).unwrap();
 
@@ -753,6 +793,7 @@ mod tests {
         let m = AppManifest {
             name: "mismatch".to_string(),
             organelles: map,
+            genes: Vec::new(),
         };
         let err = generate_main_code(&m, &[], &root).unwrap_err();
         assert!(err.contains("Config") && err.contains("Listen"), "{err}");
@@ -942,6 +983,7 @@ mod tests {
         AppManifest {
             name: name.to_string(),
             organelles: map,
+            genes: Vec::new(),
         }
     }
 

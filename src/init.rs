@@ -229,9 +229,11 @@ assert born.cell_name = "test"
 
 fn gitignore_template(web: bool) -> String {
     let mut text = String::from(
-        r#"# Installed organelle binaries. .code/lock.json (committed) pins what
-# they are, so a checkout can reproduce them with `euglena install`.
+        r#"# Installed organelle binaries, and installed genes. .code/lock.json
+# (committed) pins what they are, so a checkout can reproduce both with
+# `euglena install`.
 .code/modules/
+.code/genes/
 
 # Generated from manifest.json + src/*.gene.code on every run/build/test.
 main.code

@@ -70,7 +70,9 @@ cdlvsm euglena test                     run this project's fixtures (wraps `code
 cdlvsm euglena format [--check] [path...]   the canonical layout (wraps `code format`)
 cdlvsm euglena install                  install every organelle the manifest declares
 cdlvsm euglena install <name> [--as <alias>]  install one, and declare it in the manifest
+cdlvsm euglena install <name> --gene    install a shared gene, and declare it
 cdlvsm euglena uninstall <alias>        drop the alias, and the module if unreferenced
+                                        (or a gene, by its name)
 cdlvsm euglena list                     declared organelles, and whether each is installed
 cdlvsm euglena doctor                   check the interpreter, project, and organelles
 cdlvsm euglena code set <path>          point euglena at a specific `code` binary
@@ -147,11 +149,11 @@ cdlvsm euglena code clear     # go back to cdlvsm-code discovery
 
 ```
 myapp/
-  manifest.json          cell name + organelles
+  manifest.json          cell name + organelles + genes
   src/nucleus.gene.code  boot gene (any src/*.gene.code is auto-linked)
   tests/nucleus.code     a starter fixture for `euglena test`
   .code/lock.json        marks the project root — where `install` installs into
-  .gitignore             .code/modules/, main.code, build/
+  .gitignore             .code/modules/, .code/genes/, main.code, build/
   main.code              GENERATED on first run/build/test — not written by init
 ```
 
@@ -251,6 +253,67 @@ module names for its configuration (`Config` for most, `Listen` for
 generation error — those take their parameters per call. A literal-path
 organelle names its own setup particle in the entry (`"setup": "Config"`),
 since there is no lockfile row to read.
+
+### Genes
+
+An organelle is `code`'s: a native artifact with an ABI, reached through an
+alias. A **gene** is euglena's: `.code` source whose handlers join the one
+program-wide table, exactly as `src/*.gene.code` do. So a shared palette, a
+shared clock, a shared anything is written once and installed, rather than
+copied into every application that wants it.
+
+```json
+{
+  "name": "myapp",
+  "organelles": { "dom": "dom" },
+  "genes": ["palette"]
+}
+```
+
+```bash
+cdlvsm euglena install palette --gene   # fetch it, and declare it
+cdlvsm euglena install                  # a fresh checkout: every gene the manifest names
+cdlvsm euglena uninstall palette        # undeclare, unpin, remove
+```
+
+`--gene` is only needed the first time. Once `manifest.json` declares it,
+`euglena install palette` means the gene.
+
+**Source, not a compiled artifact, and that is not a compromise.** A
+`.so`/`.a`/`.wasm` *is* a module: its handlers are reachable only through an
+alias, which is the one thing a gene must not have. Source also has no
+per-platform matrix — one file serves a native build, a browser build and a
+held one alike.
+
+Genes live in this repository (`genes/*.gene.code`), are published as release
+artifacts beside the CLI, and carry euglena's own version: an application
+holding euglena 0.3.0 and `palette 0.3.0` never has to ask whether the two
+agree. `install` fetches the metadata, checks the bytes against the sha256 it
+publishes, writes them to `.code/genes/<name>/<version>/`, and pins them in
+`.code/lock.json` — in a `genes` section of its own, beside but not among the
+modules, because the two are different kinds of thing.
+
+At generate time euglena verifies the installed bytes against that pin again
+— a gene edited in place is refused, not quietly compiled in — and links the
+installed ones **before** `src/*.gene.code`, so an application reads its own
+last. There is no namespace, so a name defined by both a gene and the
+application is refused before the program runs. The pin is written into the
+entry as a comment:
+
+```
+| gene palette@0.3.0 sha256:81373a59b1c2
+link ".code/genes/palette/0.3.0/palette.gene.code"
+link "src/nucleus.gene.code"
+```
+
+That line is what makes a republished gene visible. Without it the entry
+would name only a *path*, so a gene rebuilt at the same version would leave
+the generated text identical and every application would go on reporting "up
+to date" while compiling in bytes that had changed. The digest is part of the
+body, so the stamp covers it and `doctor` says STALE the moment a pin moves.
+
+`EUGLENA_GENE_RELEASE` points the registry somewhere else — a directory on
+disk (`file://…`) is how a gene is tried before it is published.
 
 ### One app, held or alone
 
