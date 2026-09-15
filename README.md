@@ -285,6 +285,16 @@ alias, which is the one thing a gene must not have. Source also has no
 per-platform matrix — one file serves a native build, a browser build and a
 held one alike.
 
+The genes that ship today:
+
+| gene | what it is | asks of the application |
+|---|---|---|
+| `palette` | the workspace's colours, both themes, read from `ui:theme` | a `store` alias |
+| `outbox` | changes not yet at the service: a line sent one at a time, kept through no network and a reload, with one word — saving, saved, failed — for the toolbar | `store`, `json`, `clock` aliases; `OutboxDeliver { item }` and `OutboxChanged` handlers; `OutboxDelivered` / `OutboxRejected` / `OutboxUndelivered { id }` called from wherever answers land |
+
+A gene's handlers share the program's one table, so a gene owns a prefix
+(`Outbox…`) rather than a plain word an application is likely to have.
+
 Genes live in this repository (`genes/*.gene.code`), are published as release
 artifacts beside the CLI, and carry euglena's own version: an application
 holding euglena 0.3.0 and `palette 0.3.0` never has to ask whether the two

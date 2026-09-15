@@ -1,0 +1,196 @@
+| The outbox: changes that have not reached the service yet, kept in a line
+| and sent one at a time, in order — and kept through no network, a closed
+| tab and a reload, so a change made on a train lands when the train does.
+|
+| An application applies a change to what the reader sees the instant it is
+| made, and posts the change here to be *told*. This gene owns the telling:
+| the line, one item on its way at a time, the pause that grows when the
+| service cannot be reached, the copy in `storage` under the reader's own
+| key, and one word about whether what the reader is looking at is safe —
+| "saving", "saved", "failed", or "" when there is nothing to say.
+|
+| **It never sends anything itself.** An item is a plain value — the fields
+| of a delta, a message, whatever the application's service takes — and
+| the application says how one goes. Two handlers are the application's to
+| write, and this gene calls both:
+|
+|   OutboxOutboxDeliver { item } → Asked { id }   send the item; `id` is the number the
+|                                       answer will carry, or 0 when it could
+|                                       not even be sent
+|   OutboxChanged                       the word or the line changed: draw
+|
+| and three are the application's to call, from wherever its answers land,
+| with the number the answer carries:
+|
+|   OutboxDelivered { id }    the service took it
+|   OutboxRejected { id }     the service refused it — dropped, not retried, since
+|                       it will never be taken
+|   OutboxUndelivered { id }  it never arrived — kept, and tried again after a pause
+|
+| Each answers `Handled { mine, more }`: whether the number was the item on
+| its way (an application has other exchanges than these), and whether the
+| line still has something in it — a fresh read taken between two items
+| would show the service without the changes still to be sent, and they
+| would flicker off the page and back on.
+|
+| Plain values, deliberately: `Stringify` drops `_class`, so a particle put
+| into storage would come back as its fields alone. An item goes in as
+| fields and comes out as fields, and `OutboxDeliver` makes the particle — so the
+| line survives a reload with nothing here knowing what an item means.
+|
+| Every handler here begins with `Outbox`, and so do the application's two,
+| because a gene's handlers join the one program-wide table: a name like
+| `Rejected` would collide with the first application that has an auth.
+|
+| Needs three aliases named as every application here names them: `store`
+| (storage), `json`, and `clock` (timer).
+
+| Oldest first. `outbox_flight` is the number of the item on its way, 0
+| when none is; `outbox_pause` is how long the last retry waited.
+outbox_items = []
+outbox_flight = 0
+outbox_pause = 0
+
+| "", "saving", "saved" or "failed" — whether the last *change* is safe.
+| Only what happens to an item here moves it: a read that fails has nothing
+| to do with whether a change landed, and must not be allowed to say so.
+outbox_state = ""
+
+| Where the line is kept: "outbox:" and whatever the application gives —
+| the reader's own name, so two people on one browser never see each
+| other's changes. "" until opened, and nothing is kept or sent before then.
+outbox_key = ""
+
+| ---------------------------------------------------------------------------
+| Opening, posting, sending
+| ---------------------------------------------------------------------------
+
+| Open the line under a key: read back what an earlier session left, and
+| start sending it. Called once the application knows who the reader is.
+OutboxOpen { key } =>
+    if key ∉ String or key = ""
+        return Noted
+    outbox_key = "outbox:" + key
+    emit Get { key = outbox_key } to store get kept
+    if kept.value ∈ String and kept.value ≠ ""
+        emit Parse { text = kept.value } to json get back
+        if back.value ∈ Array
+            outbox_items = back.value
+    emit Length { value = outbox_items } to core get n
+    if n.value > 0
+        outbox_state = "saving"
+        emit OutboxFlush to this
+        emit OutboxChanged to this
+    return Noted
+
+| A change to be told. Joins the line and goes when its turn comes.
+OutboxPost { item } =>
+    outbox_state = "saving"
+    outbox_items += [item]
+    emit OutboxKeep to this
+    emit OutboxFlush to this
+    emit OutboxChanged to this
+    return Noted
+
+| Send the head of the line, unless one is already on its way. Idempotent
+| on purpose: `OutboxPost` asks, a retry asks, a reader pressing "retry now" asks,
+| and none of them has to know about the others.
+OutboxFlush =>
+    if outbox_flight ≠ 0
+        return Busy
+    emit Length { value = outbox_items } to core get n
+    if n.value = 0
+        return Empty
+    emit OutboxDeliver { item = outbox_items[0] } to this get asked
+    if asked.id ∈ Number and asked.id > 0
+        outbox_flight = asked.id
+        return Flushing
+    | Could not even be sent — no network, no session. Kept, and tried again
+    | after the pause, the same as an item that went and never arrived.
+    outbox_state = "failed"
+    emit OutboxLater to this
+    emit OutboxChanged to this
+    return Flushing
+
+| ---------------------------------------------------------------------------
+| What became of the one on its way
+| ---------------------------------------------------------------------------
+
+OutboxDelivered { id } =>
+    if id ∉ Number or id ≠ outbox_flight
+        return Handled { mine = false, more = false }
+    emit OutboxDone to this get rest
+    if rest.more
+        emit OutboxFlush to this
+        return Handled { mine = true, more = true }
+    outbox_state = "saved"
+    emit Delay { ms = 2500, then = "OutboxSettled" } to clock
+    emit OutboxChanged to this
+    return Handled { mine = true, more = false }
+
+OutboxRejected { id } =>
+    if id ∉ Number or id ≠ outbox_flight
+        return Handled { mine = false, more = false }
+    emit OutboxDone to this get rest
+    outbox_state = "failed"
+    if rest.more, emit OutboxFlush to this
+    emit OutboxChanged to this
+    return Handled { mine = true, more = rest.more }
+
+OutboxUndelivered { id } =>
+    if id ∉ Number or id ≠ outbox_flight
+        return Handled { mine = false, more = false }
+    outbox_flight = 0
+    outbox_state = "failed"
+    emit OutboxLater to this
+    emit OutboxChanged to this
+    return Handled { mine = true, more = true }
+
+| The head of the line is done with, one way or the other.
+OutboxDone =>
+    outbox_flight = 0
+    outbox_pause = 0
+    rest = []
+    i = 0
+    loop item over outbox_items
+        if i > 0, rest += [item]
+        i = i + 1
+    outbox_items = rest
+    emit OutboxKeep to this
+    emit Length { value = outbox_items } to core get n
+    return Rest { more = n.value > 0 }
+
+| Try again after a pause that grows: a service that is down for a minute is
+| not helped by being asked every second. Two seconds, then double, then
+| fifteen at most.
+OutboxLater =>
+    outbox_pause = outbox_pause * 2
+    if outbox_pause < 2000, outbox_pause = 2000
+    if outbox_pause > 15000, outbox_pause = 15000
+    emit Delay { ms = outbox_pause, then = "OutboxFlush" } to clock
+    return Noted
+
+| "Saved" is worth seeing and not worth keeping, so it goes by itself after
+| a moment. Guarded, because another change may have started in that moment
+| and that one is not finished.
+OutboxSettled =>
+    if outbox_state = "saved"
+        outbox_state = ""
+        emit OutboxChanged to this
+    return Noted
+
+| ---------------------------------------------------------------------------
+| Kept, and asked about
+| ---------------------------------------------------------------------------
+
+OutboxKeep =>
+    if outbox_key = ""
+        return Noted
+    emit Stringify { value = outbox_items } to json get text
+    emit Set { key = outbox_key, value = text.value } to store
+    return Noted
+
+| For the handler that draws: the word, and how many are still to go.
+Outbox =>
+    emit Length { value = outbox_items } to core get n
+    return OutboxState { state = outbox_state, waiting = n.value, sending = outbox_flight ≠ 0 }
