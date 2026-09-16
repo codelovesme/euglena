@@ -1,0 +1,42 @@
+| The diagram gene, exercised as a fixture: a flow of three steps — sizes
+| in proportion to their milliseconds, colours by ok, a duration said the
+| way a person would. `Palette` is stubbed here rather than linked: the
+| real one reads the theme from a browser's storage, and there is none.
+
+link "../diagram.gene.code"
+
+Palette =>
+    return Colours { bg = "#fff", panel = "#eee", line = "#ccc", fg = "#000", muted = "#666", health = "#0a0", health_soft = "#efe", danger = "#a00", danger_soft = "#fee" }
+
+emit DiagramFlow { steps = [
+    { label = "fetch", ms = 4000, ok = true, count = 90 }
+    { label = "filter", ms = 20, ok = true, count = 26 }
+    { label = "value", ms = 65000, ok = false, note = "the model did not answer" }
+    { label = "store", ms = 0, ok = null }
+] } to this get d
+
+assert d ∈ Node
+assert d.value.tag = "div"
+assert d.value.attrs.class = "diagram"
+| Four boxes and three arrows between them.
+emit Length { value = d.value.children } to core get n
+assert n.value = 7
+first = d.value.children[0]
+assert first.attrs.class = "diagram-box ok"
+assert first.children[0].children[0] = "fetch"
+assert first.children[1].children[0] = "4 s"
+assert first.children[2].children[0] = "90"
+assert d.value.children[1].attrs.class = "diagram-arrow"
+third = d.value.children[4]
+assert third.attrs.class = "diagram-box bad"
+assert third.attrs.title = "the model did not answer"
+assert third.children[1].children[0] = "1 min"
+| The longest step is the widest; the shortest is at the floor.
+assert third.attrs.style = "flex-basis: 18rem"
+assert first.attrs.style ≠ "flex-basis: 18rem"
+last = d.value.children[6]
+assert last.attrs.class = "diagram-box idle"
+assert last.attrs.style = "flex-basis: 4.5rem"
+assert last.children[1].children[0] = "0 ms"
+| Styles come with the node, for the application's Render.
+assert d.styles[".diagram-box.ok"]["border-color"] = "#0a0"

@@ -1,0 +1,114 @@
+| The diagram: a flow of steps, drawn as a value the `dom` organelle
+| renders — Mermaid's flowchart look, without Mermaid: no text to parse,
+| no script on the page, just boxes left to right joined by arrows.
+|
+| An application asks:
+|
+|   emit DiagramFlow { steps = [ { label, ms, ok, note } … ] } to this get d
+|
+| and puts `d.value` (a node) into its tree, and merges `d.styles` into the
+| `styles` of its Render once. Each step is a box: the label, the duration
+| under it, and the box's width in proportion to `ms` (never narrower than
+| its label). `ok = true` is the health colour, `ok = false` the danger
+| colour, `ok = null` (not run) the muted one. `note`, when given, is the
+| box's title — the browser shows it on hover.
+|
+| Why boxes in HTML rather than an `svg`: the page draws `svg` nodes, but
+| not `text` inside them (dom's SVG set has no `text` element), so labels
+| would not appear. A row of flex boxes with an arrow glyph between them is
+| what a reader sees as a flowchart, and it wraps on a phone.
+|
+| Every handler here begins with `Diagram`, since a gene's handlers join
+| the program's one table. Needs the `palette` gene (for `Palette`) and a
+| `core` that answers `Length`.
+
+| ---------------------------------------------------------------------------
+| The flow
+| ---------------------------------------------------------------------------
+
+DiagramFlow { steps } =>
+    emit Palette to this get c
+    | The longest step sets the scale; the rest are its fractions, with a
+    | floor so a two-millisecond step is still a box a finger can find.
+    longest = 0
+    total = 0
+    if steps ∈ Array
+        loop step over steps
+            if step.ms ∈ Number
+                total = total + step.ms
+                if step.ms > longest, longest = step.ms
+    if longest = 0, longest = 1
+
+    boxes = []
+    if steps ∈ Array
+        loop i, step over steps
+            if i > 0
+                boxes += [{ tag = "span", attrs = { class = "diagram-arrow", "aria-hidden" = "true" }, children = ["→"] }]
+            emit DiagramBox { step = step, longest = longest, colours = c } to this get box
+            boxes += [box.value]
+
+    emit DiagramSaid { ms = total } to this get took
+    return Node {
+        value = {
+            tag = "div"
+            attrs = { class = "diagram", role = "img", "aria-label" = "a flow of steps, " + took.text + " in all" }
+            children = boxes
+        }
+        styles = {
+            ".diagram" = { display = "flex", "flex-wrap" = "wrap", "align-items" = "center", gap = ".35rem", padding = ".6rem", background = c.bg, border = "1px solid " + c.line, "border-radius" = ".5rem" }
+            ".diagram-box" = { display = "flex", "flex-direction" = "column", "align-items" = "center", "justify-content" = "center", "min-width" = "4.5rem", padding = ".35rem .5rem", border = "1px solid " + c.line, "border-radius" = ".4rem", "font-size" = ".8rem", "line-height" = "1.2", "text-align" = "center", color = c.fg, background = c.panel }
+            ".diagram-box.ok" = { "border-color" = c.health, background = c.health_soft }
+            ".diagram-box.bad" = { "border-color" = c.danger, background = c.danger_soft }
+            ".diagram-box.idle" = { color = c.muted, "border-style" = "dashed" }
+            ".diagram-label" = { "font-weight" = "600" }
+            ".diagram-ms" = { color = c.muted, "font-size" = ".72rem", "font-variant-numeric" = "tabular-nums" }
+            ".diagram-count" = { "font-size" = ".72rem" }
+            ".diagram-arrow" = { color = c.muted }
+        }
+    }
+
+| One box. The width grows with the step's share of the longest one, from
+| the floor a label needs up to about four labels wide.
+DiagramBox { step, longest, colours } =>
+    klass = "diagram-box idle"
+    if step.ok = true, klass = "diagram-box ok"
+    if step.ok = false, klass = "diagram-box bad"
+    ms = 0
+    if step.ms ∈ Number, ms = step.ms
+    | 4.5rem at the floor, 18rem for the longest; between them in proportion.
+    width = 4.5 + 13.5 * ms / longest
+    label = "step"
+    if step.label ∈ String, label = step.label
+    attrs = { class = klass, style = "flex-basis: " + width + "rem" }
+    if step.note ∈ String and step.note ≠ "", attrs = attrs + { title = step.note }
+    emit DiagramSaid { ms = ms } to this get took
+    lines = [
+        { tag = "span", attrs = { class = "diagram-label" }, children = [label] }
+        { tag = "span", attrs = { class = "diagram-ms" }, children = [took.text] }
+    ]
+    if step.count ∈ Number
+        lines += [{ tag = "span", attrs = { class = "diagram-count" }, children = ["$step.count"] }]
+    return Node { value = { tag = "div", attrs = attrs, children = lines } }
+
+| A duration a person would say: milliseconds under a second, seconds to a
+| minute, then minutes — whole numbers, since the language divides into
+| fractions and a box is no place for them.
+DiagramSaid { ms } =>
+    if ms ∉ Number
+        return Said { text = "" }
+    if ms < 1000
+        return Said { text = "$ms ms" }
+    emit DiagramWhole { value = ms, by = 1000 } to this get s
+    if s.value < 60
+        return Said { text = "$s.value s" }
+    emit DiagramWhole { value = s.value, by = 60 } to this get m
+    return Said { text = "$m.value min" }
+
+| The whole number of `by`s in `value`, by counting — no floor in the
+| language, and division answers a fraction.
+DiagramWhole { value, by } =>
+    n = 0
+    loop
+        if (n + 1) * by > value, break
+        n = n + 1
+    return Whole { value = n }

@@ -290,6 +290,7 @@ The genes that ship today:
 | gene | what it is | asks of the application |
 |---|---|---|
 | `palette` | the workspace's colours, both themes, read from `ui:theme` | a `store` alias |
+| `diagram` | a flow of steps drawn as a `dom` value — boxes left to right joined by arrows, widths by duration, colours by outcome; Mermaid's flowchart look with nothing to parse | the `palette` gene (`Palette`); `DiagramFlow { steps } → Node { value, styles }` |
 | `outbox` | changes not yet at the service: a line sent one at a time, kept through no network and a reload, with one word — saving, saved, failed — for the toolbar | `store`, `json`, `clock` aliases; `OutboxDeliver { item }` and `OutboxChanged` handlers; `OutboxDelivered` / `OutboxRejected` / `OutboxUndelivered { id }` called from wherever answers land |
 
 A gene's handlers share the program's one table, so a gene owns a prefix
