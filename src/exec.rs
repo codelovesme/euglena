@@ -54,7 +54,14 @@ use crate::codegen;
 /// claim nothing checks. The *mechanism* stays (`version_need` still takes a
 /// `command_floor`), for the next subcommand that lands ahead of whatever
 /// the baseline is then.
-pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (2, 0, 0);
+///
+/// **2.15.0 since euglena 0.4.4.** The genes euglena ships are written for
+/// code 2.15.0's type check — the diagram gene labels a list `Array of {
+/// children ∈ Array of (String ∪ Object), … }`, which no earlier `code`
+/// parses — and 2.15.0's modules are ABI 2, which an earlier compiler's
+/// generated code cannot read. One baseline again: the newest thing euglena
+/// itself hands an app.
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (2, 15, 0);
 
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
@@ -502,14 +509,16 @@ mod tests {
 
     #[test]
     fn min_version_ordering() {
-        assert!((2, 0, 0) >= MIN_CODE_VERSION);
-        assert!((2, 3, 1) >= MIN_CODE_VERSION);
+        assert!((2, 15, 0) >= MIN_CODE_VERSION);
+        assert!((3, 0, 0) >= MIN_CODE_VERSION);
         // Everything before it is below. Nothing under 1.4.0 has the `|`
         // comment and so cannot parse the entry euglena writes; 1.4.0 and
         // 1.5.0 could, but neither is a version anyone can install; nothing
         // before 1.8.0 hears a door linked while the program runs; and
         // nothing before 2.0.0 reads an indented block, which is how every
-        // gene euglena scaffolds is written — see `MIN_CODE_VERSION`.
+        // gene euglena scaffolds is written; and nothing before 2.15.0
+        // parses the genes it ships — see `MIN_CODE_VERSION`.
+        assert!((2, 14, 9) < MIN_CODE_VERSION);
         assert!((1, 9, 9) < MIN_CODE_VERSION);
         assert!((1, 7, 0) < MIN_CODE_VERSION);
         assert!((1, 5, 0) < MIN_CODE_VERSION);
