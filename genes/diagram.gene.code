@@ -39,7 +39,8 @@ DiagramFlow { steps } =>
                 if step.ms > longest, longest = step.ms
     if longest = 0, longest = 1
 
-    boxes = []
+    | An arrow holds text, a box holds lines: the two kinds of children meet here.
+    boxes ∈ Array of { children ∈ Array of (String ∪ Object), … } = []
     if steps ∈ Array
         loop i, step over steps
             if i > 0
