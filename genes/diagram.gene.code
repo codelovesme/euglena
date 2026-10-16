@@ -19,8 +19,7 @@
 | what a reader sees as a flowchart, and it wraps on a phone.
 |
 | Every handler here begins with `Diagram`, since a gene's handlers join
-| the program's one table. Needs the `palette` gene (for `Palette`) and a
-| `core` that answers `Length`.
+| the program's one table. Needs the `palette` gene (for `Palette`).
 
 | ---------------------------------------------------------------------------
 | The flow

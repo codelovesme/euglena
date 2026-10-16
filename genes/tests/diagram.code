@@ -9,18 +9,18 @@ Palette =>
     return Colours { bg = "#fff", panel = "#eee", line = "#ccc", fg = "#000", muted = "#666", health = "#0a0", health_soft = "#efe", danger = "#a00", danger_soft = "#fee" }
 
 emit DiagramFlow { steps = [
-    { label = "fetch", ms = 4000, ok = true, count = 90 }
-    { label = "filter", ms = 20, ok = true, count = 26 }
-    { label = "value", ms = 65000, ok = false, note = "the model did not answer" }
-    { label = "store", ms = 0, ok = null }
-] } to this get d
+        { label = "fetch", ms = 4000, ok = true, count = 90 }
+        { label = "filter", ms = 20, ok = true, count = 26 }
+        { label = "value", ms = 65000, ok = false, note = "the model did not answer" }
+        { label = "store", ms = 0, ok = null }
+    ] } to this get d
 
 assert d ∈ Node
 assert d.value.tag = "div"
 assert d.value.attrs.class = "diagram"
 | Four boxes and three arrows between them.
-emit Length { value = d.value.children } to core get n
-assert n.value = 7
+assert d.value.children[6] ≠ null
+assert d.value.children[7] = null
 first = d.value.children[0]
 assert first.attrs.class = "diagram-box ok"
 assert first.children[0].children[0] = "fetch"
