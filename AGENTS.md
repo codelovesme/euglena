@@ -181,3 +181,13 @@ Codex and Claude Code may be working these repos simultaneously.
   run through this codegen. Before pushing anything that touches `codegen.rs`,
   `manifest.rs` or `exec.rs`, rebuild at least `ping-api` and `ping-web` in that
   repo — they are the smallest end-to-end pair.
+
+## Length migration (ticket 130, unreleased)
+
+The source outbox gene now asks arrays.Length, not core.Length. Consumers must
+provide an arrays alias and matching module pin before linking this gene;
+store/json/clock remain its other aliases. The diagram fixture observes exact
+array boundaries, avoiding an unrelated runtime module dependency. The gene is
+not republished by this change. my-euglena-apps/tools/install-length-modules.py
+uses a file:// gene registry to install/hash-pin the local outbox alongside
+local utility modules. No codegen or minimum Code language version changes.
