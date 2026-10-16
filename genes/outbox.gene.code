@@ -42,8 +42,8 @@
 | because a gene's handlers join the one program-wide table: a name like
 | `Rejected` would collide with the first application that has an auth.
 |
-| Needs three aliases named as every application here names them: `store`
-| (storage), `json`, and `clock` (timer).
+| Needs four aliases named as every application here names them: `store`
+| (storage), `json`, `clock` (timer), and `arrays`.
 
 | Oldest first. `outbox_flight` is the number of the item on its way, 0
 | when none is; `outbox_pause` is how long the last retry waited.
@@ -76,7 +76,7 @@ OutboxOpen { key } =>
         emit Parse { text = kept.value } to json get back
         if back.value ∈ Array
             outbox_items = back.value
-    emit Length { value = outbox_items } to core get n
+    emit Length { value = outbox_items } to arrays get n
     if n.value > 0
         outbox_state = "saving"
         emit OutboxFlush to this
@@ -98,7 +98,7 @@ OutboxPost { item } =>
 OutboxFlush =>
     if outbox_flight ≠ 0
         return Busy
-    emit Length { value = outbox_items } to core get n
+    emit Length { value = outbox_items } to arrays get n
     if n.value = 0
         return Empty
     emit OutboxDeliver { item = outbox_items[0] } to this get asked
@@ -157,7 +157,7 @@ OutboxDone =>
         i = i + 1
     outbox_items = rest
     emit OutboxKeep to this
-    emit Length { value = outbox_items } to core get n
+    emit Length { value = outbox_items } to arrays get n
     return Rest { more = n.value > 0 }
 
 | Try again after a pause that grows: a service that is down for a minute is
@@ -192,5 +192,5 @@ OutboxKeep =>
 
 | For the handler that draws: the word, and how many are still to go.
 Outbox =>
-    emit Length { value = outbox_items } to core get n
+    emit Length { value = outbox_items } to arrays get n
     return OutboxState { state = outbox_state, waiting = n.value, sending = outbox_flight ≠ 0 }
