@@ -426,3 +426,11 @@ read without loading their `.env` files or mock overlays. Missing or malformed
 guest declarations fail the check. Wasm builds enforce declared guests before
 entry generation; deployment should also run the shell's doctor when a guest
 changes. Keep the list current when registering a hosted application.
+
+Doctor also audits existing module/gene pins (unreleased, ticket 106). A pin no
+longer declared by real/mock organelles, hosted stand-ins or genes produces an
+advisory warning; no bytes or lock entries are deleted. Declared hosted guests
+with a newer stable numeric module version than the shell also warn. Unknown
+version forms are not ordered, and ordering does not establish compatibility.
+Malformed lock JSON/sections fail the audit. Warnings retain a successful exit
+when the other checks pass, with a summary that acknowledges the warnings.

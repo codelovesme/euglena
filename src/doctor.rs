@@ -18,12 +18,14 @@ use crate::{codegen, config, invocation, manifest};
 struct Report {
     ok: bool,
     stale: bool,
+    warnings: bool,
 }
 
 pub fn run(guests: &[PathBuf]) {
     let mut report = Report {
         ok: true,
         stale: false,
+        warnings: false,
     };
     let project_root = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
 
@@ -55,10 +57,25 @@ pub fn run(guests: &[PathBuf]) {
         }
     }
 
+    match crate::pin_audit::warnings(&project_root, guests) {
+        Ok(warnings) => {
+            report.warnings = !warnings.is_empty();
+            for warning in warnings {
+                println!("  WARNING: {warning}");
+            }
+        }
+        Err(e) => {
+            println!("  pin audit: {e}");
+            report.ok = false;
+        }
+    }
+
     println!();
     if !report.ok {
         println!("Some checks failed — see above.");
         process::exit(1);
+    } else if report.warnings {
+        println!("No failing checks — review the warnings above.");
     } else if report.stale {
         println!("Nothing broken — main.code is just behind its inputs.");
     } else {
