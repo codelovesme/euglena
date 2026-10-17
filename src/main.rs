@@ -5,6 +5,7 @@ mod config;
 mod doctor;
 mod exec;
 mod genes;
+mod hosting;
 mod init;
 mod invocation;
 mod lockfile;
@@ -104,7 +105,11 @@ enum Commands {
     /// List declared organelles and whether each is installed
     List,
     /// Check the Code interpreter, project layout, and declared organelles
-    Doctor,
+    Doctor {
+        /// Additional hosted web projects to check against this shell
+        #[arg(long = "guest")]
+        guests: Vec<std::path::PathBuf>,
+    },
     /// Manage Code interpreter path used by euglena-cli
     Code {
         #[command(subcommand)]
@@ -157,7 +162,7 @@ fn main() {
         }
         Commands::Uninstall { alias } => modules::uninstall(&alias),
         Commands::List => modules::list(),
-        Commands::Doctor => doctor::run(),
+        Commands::Doctor { guests } => doctor::run(&guests),
         Commands::Code { command } => match command {
             CodeCommands::Set { path } => config::set_code_binary_path(&path),
             CodeCommands::Show => config::show_code_binary_path(),

@@ -20,7 +20,7 @@ struct Report {
     stale: bool,
 }
 
-pub fn run() {
+pub fn run(guests: &[PathBuf]) {
     let mut report = Report {
         ok: true,
         stale: false,
@@ -46,6 +46,14 @@ pub fn run() {
     println!();
     println!("Project ({}):", project_root.display());
     check_project(&project_root, &mut report);
+    match crate::hosting::check(&project_root, guests) {
+        Ok(0) => {}
+        Ok(count) => println!("  hosted guests: {count} checked — all modules supplied"),
+        Err(e) => {
+            println!("  hosted guests: FAILED\n    {e}");
+            report.ok = false;
+        }
+    }
 
     println!();
     if !report.ok {

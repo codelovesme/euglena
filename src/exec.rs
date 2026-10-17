@@ -150,6 +150,12 @@ pub fn run(path: &str, verbose: bool) {
 /// Compile a Euglena app through `code build`, regenerating its entry first.
 pub fn build(path: &str, release: bool, target: Option<&str>, output: Option<&str>, verbose: bool) {
     let project_root = euglena_project_root_or_exit(path);
+    if target == Some("wasm") {
+        if let Err(e) = crate::hosting::check(&project_root, &[]) {
+            eprintln!("euglena: hosted guests: {e}");
+            process::exit(1);
+        }
+    }
     let need = version_need_or_exit(Some(&project_root), None);
     let binary = find_code_binary_or_exit(&need);
     let entry_arg = generate_entry_or_exit(&project_root, verbose);

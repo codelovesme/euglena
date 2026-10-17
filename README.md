@@ -409,3 +409,20 @@ real-run integration tests are gated behind `EUGLENA_TEST_CODE_BIN=/path/to/code
 ## License
 
 GPL-3.0-or-later — see [LICENSE](./LICENSE).
+
+### Browser shell dependency checks (unreleased)
+
+A browser shell declares its hosted projects in `manifest.json`:
+
+```json
+"guests": ["../auth-web", "../todo-web"]
+```
+
+Paths are relative to the shell project. `euglena doctor` compares every guest's
+real organelle module references with the shell's references, regardless of alias
+names, and reports each missing guest/alias/module. `doctor --guest ../other-web`
+adds a project for this check without changing the manifest. Guest manifests are
+read without loading their `.env` files or mock overlays. Missing or malformed
+guest declarations fail the check. Wasm builds enforce declared guests before
+entry generation; deployment should also run the shell's doctor when a guest
+changes. Keep the list current when registering a hosted application.
