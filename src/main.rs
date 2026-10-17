@@ -11,6 +11,7 @@ mod invocation;
 mod lockfile;
 mod manifest;
 mod modules;
+mod pin_audit;
 mod sha256;
 
 #[derive(Parser)]

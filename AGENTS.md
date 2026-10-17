@@ -200,3 +200,12 @@ check reads declarations without dotenv/mock side effects and compares module
 references rather than aliases. Doctor and wasm build use the same validation;
 build refuses gaps before generating main.code. Keep this cell-model policy in
 Euglena; Code only diagnoses unanswered browser module calls in debug builds.
+
+## Pin diagnostics (ticket 106, unreleased)
+
+`src/pin_audit.rs` reads raw manifests/locks without dotenv or mock overlays.
+Doctor warns on stale module/gene entries and newer stable-numeric guest
+versions. Real, mock and hosted stand-in references all retain a module.
+Warnings are advisory (no deletion or compatibility inference); malformed lock
+JSON/sections fail. Keep the warning summary distinct from a clean checkup.
+Repository-wide staged upgrades belong to apps/tools/pins, not the Code language.
