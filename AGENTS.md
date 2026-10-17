@@ -191,3 +191,12 @@ array boundaries, avoiding an unrelated runtime module dependency. The gene is
 not republished by this change. my-euglena-apps/tools/install-length-modules.py
 uses a file:// gene registry to install/hash-pin the local outbox alongside
 local utility modules. No codegen or minimum Code language version changes.
+
+## Shell dependencies (ticket 100, unreleased)
+
+`src/hosting.rs` checks explicit `guests` project paths relative to a web shell.
+Doctor also accepts repeatable `--guest` paths (relative to its caller). The
+check reads declarations without dotenv/mock side effects and compares module
+references rather than aliases. Doctor and wasm build use the same validation;
+build refuses gaps before generating main.code. Keep this cell-model policy in
+Euglena; Code only diagnoses unanswered browser module calls in debug builds.
