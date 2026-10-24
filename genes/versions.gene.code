@@ -1,0 +1,197 @@
+| Versions: a stored program keeps every version it has had. A program kept
+| as data (a Home rule, a saved plasmid) is saved, changed, switched off and
+| deleted; none of that loses what was there before.
+|
+| Saving a program that already exists adds a version and makes the one
+| before it inactive. Nothing is overwritten. Every version says when it
+| was made and whether it is the active one. Deleting makes every version
+| inactive: the program stops, and its versions stay readable and can be
+| restored. Restoring copies an old version's source into a new active
+| version, so history only ever grows.
+|
+| One version, as it is kept:
+|
+|   { name, version, source, created_at, active, enabled, broken }
+|
+| `version` counts from 1 per name; `created_at` is unix seconds; at most one
+| version of a name is `active`, and none is once it has been deleted.
+| `enabled` (the program's on/off switch) and `broken` (why it will not
+| load, "" when it does) are the application's to set, on the active
+| version, with `VersionsMark`. Only an active, enabled version should run.
+|
+| **It keeps nothing itself.** Where a program's versions live (a database
+| row, a file, storage) is the application's, and so is loading one. Two
+| handlers are the application's to write, and this gene calls both:
+|
+|   VersionsRead { name } → VersionsHeld { versions }
+|       every version of the name, oldest first; [] when there are none
+|   VersionsWrite { name, versions } → VersionsWritten
+|       keep the whole list for the name, replacing what was kept
+|
+| Either answers `VersionsFailed { reason }` when the store cannot be
+| reached, and the handler that asked answers the same.
+|
+| Every handler here begins with `Versions`, and so do the application's
+| two, because a gene's handlers join the one program-wide table. It needs
+| no alias: the time comes from `core`.
+
+| ---------------------------------------------------------------------------
+| Saving, restoring
+| ---------------------------------------------------------------------------
+
+| A new version of a program, active from now on; the one before it, if
+| any, stops being active. `enabled` defaults to true.
+VersionsSave { name ∈ String, source ∈ String, enabled ∈ Boolean } =>
+    if name ∉ String or name = ""
+        return VersionsFailed { reason = "a stored program needs a name" }
+    if source ∉ String or source = ""
+        return VersionsFailed { reason = "a stored program needs its source" }
+    on = true
+    if enabled = false, on = false
+    emit VersionsRead { name = name } to this get held
+    if held ∉ VersionsHeld
+        emit VersionsCouldNot { doing = "read", name = name, answer = held } to this get failed
+        return failed
+    emit Timestamp to core get now
+    next = 1
+    kept = []
+    loop one over held.versions
+        if one.version ≥ next, next = one.version + 1
+        kept += [one + { active = false }]
+    kept += [{ name = name, version = next, source = source, created_at = now.value, active = true, enabled = on, broken = "" }]
+    emit VersionsWrite { name = name, versions = kept } to this get wrote
+    if wrote ∉ VersionsWritten
+        emit VersionsCouldNot { doing = "kept", name = name, answer = wrote } to this get failed
+        return failed
+    return VersionsSaved { name = name, version = next, created_at = now.value }
+
+| An old version again, as a new active version with that version's
+| source. Restoring a deleted program brings it back, switched on.
+VersionsRestore { name ∈ String, version ∈ Number } =>
+    emit VersionsOne { name = name, version = version } to this get one
+    if one ∉ VersionsFound
+        return one
+    emit VersionsSave { name = name, source = one.record.source, enabled = true } to this get saved
+    return saved
+
+| ---------------------------------------------------------------------------
+| Reading
+| ---------------------------------------------------------------------------
+
+| Every version of a program, oldest first.
+VersionsOf { name ∈ String } =>
+    emit VersionsRead { name = name } to this get held
+    if held ∉ VersionsHeld
+        emit VersionsCouldNot { doing = "read", name = name, answer = held } to this get failed
+        return failed
+    return VersionsList { name = name, items = held.versions }
+
+| One version of a program, by number.
+VersionsOne { name ∈ String, version ∈ Number } =>
+    emit VersionsRead { name = name } to this get held
+    if held ∉ VersionsHeld
+        emit VersionsCouldNot { doing = "read", name = name, answer = held } to this get failed
+        return failed
+    loop one over held.versions
+        if one.version = version
+            return VersionsFound { record = one }
+    return VersionsMissing { name = name, version = version }
+
+| The active version among a program's versions, or null when there is
+| none (never saved, or deleted). Asks nothing: an application that read
+| many programs at once finds each one's active version with this.
+VersionsActiveOf { versions ∈ Array of Any } =>
+    if versions ∉ Array
+        return VersionsCurrent { record = null }
+    loop one over versions
+        if one.active = true
+            return VersionsCurrent { record = one }
+    return VersionsCurrent { record = null }
+
+| ---------------------------------------------------------------------------
+| Active and inactive
+| ---------------------------------------------------------------------------
+
+| No version is active any more: the program stops. Every version is kept.
+| `was` is the version that was active, 0 when none was.
+VersionsDeactivate { name ∈ String } =>
+    emit VersionsMakeActive { name = name, version = 0 } to this get made
+    return made
+
+| Deleting is deactivating: what was written is never thrown away.
+VersionsDelete { name ∈ String } =>
+    emit VersionsMakeActive { name = name, version = 0 } to this get made
+    return made
+
+| One version active again, without a new one: `version`, or the newest
+| when it is 0.
+VersionsActivate { name ∈ String, version ∈ Number } =>
+    emit VersionsRead { name = name } to this get held
+    if held ∉ VersionsHeld
+        emit VersionsCouldNot { doing = "read", name = name, answer = held } to this get failed
+        return failed
+    wanted = 0
+    if version ∈ Number, wanted = version
+    newest = 0
+    exists = false
+    loop one over held.versions
+        if one.version > newest, newest = one.version
+        if one.version = wanted, exists = true
+    if wanted = 0
+        wanted = newest
+        exists = newest > 0
+    if not exists
+        return VersionsMissing { name = name, version = wanted }
+    emit VersionsMakeActive { name = name, version = wanted } to this get made
+    return made
+
+| Only `version` active, or none when it is 0. Answers
+| `VersionsActivated { name, active, was }`.
+VersionsMakeActive { name ∈ String, version ∈ Number } =>
+    emit VersionsRead { name = name } to this get held
+    if held ∉ VersionsHeld
+        emit VersionsCouldNot { doing = "read", name = name, answer = held } to this get failed
+        return failed
+    was = 0
+    kept = []
+    loop one over held.versions
+        if one.active = true, was = one.version
+        kept += [one + { active = one.version = version }]
+    if was ≠ version
+        emit VersionsWrite { name = name, versions = kept } to this get wrote
+        if wrote ∉ VersionsWritten
+            emit VersionsCouldNot { doing = "kept", name = name, answer = wrote } to this get failed
+            return failed
+    return VersionsActivated { name = name, active = version, was = was }
+
+| Set `enabled` and/or `broken` on the active version; a field left out is
+| left as it is. `VersionsMissing` when no version is active.
+VersionsMark { name ∈ String, enabled ∈ Boolean, broken ∈ String } =>
+    emit VersionsRead { name = name } to this get held
+    if held ∉ VersionsHeld
+        emit VersionsCouldNot { doing = "read", name = name, answer = held } to this get failed
+        return failed
+    marked = null
+    kept = []
+    loop one over held.versions
+        if one.active ≠ true
+            kept += [one]
+            continue
+        changed = one
+        if enabled ∈ Boolean, changed = changed + { enabled = enabled }
+        if broken ∈ String, changed = changed + { broken = broken }
+        marked = changed
+        kept += [changed]
+    if marked = null
+        return VersionsMissing { name = name, version = 0 }
+    emit VersionsWrite { name = name, versions = kept } to this get wrote
+    if wrote ∉ VersionsWritten
+        emit VersionsCouldNot { doing = "kept", name = name, answer = wrote } to this get failed
+        return failed
+    return VersionsMarked { record = marked }
+
+| The one failure answer: the application's own reason when it gave one.
+VersionsCouldNot { doing ∈ String, name ∈ String, answer ∈ Any } =>
+    reason = "the versions of '$name' could not be $doing"
+    if answer ∈ VersionsFailed and answer.reason ∈ String, reason = answer.reason
+    return VersionsFailed { reason = reason }
