@@ -16,6 +16,11 @@ pub struct LockedModule {
     /// `"Listen"` for `http_server`, `None` for a stateless one. Absent in a
     /// lockfile written before `code` recorded it.
     pub setup: Option<String>,
+    /// Whether the pin carries the module's native archive beside its `.so`
+    /// (`static_archive`, written by `code install` from a release that
+    /// publishes one — code tickets 141/142). Only then may `main.code` name
+    /// the module rather than its `.so`, and let the build link it in.
+    pub static_archive: bool,
 }
 
 /// Look up `module_name` in `<project_root>/.code/lock.json`. `None` covers
@@ -34,5 +39,6 @@ pub fn read(project_root: &Path, module_name: &str) -> Option<LockedModule> {
             .get("setup")
             .and_then(|v| v.as_str())
             .map(str::to_string),
+        static_archive: entry.get("static_archive").is_some_and(|v| v.is_object()),
     })
 }
