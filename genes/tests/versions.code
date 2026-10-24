@@ -1,0 +1,140 @@
+| The versions gene, exercised as a fixture: the application's two hooks
+| keep every program's versions in a map here, the way an application
+| would keep them in a row each.
+
+link "../versions.gene.code"
+
+shelf = {}
+refuse = false
+
+VersionsRead { name ∈ String } =>
+    if refuse
+        return VersionsFailed { reason = "the shelf is closed" }
+    if shelf[name] ∈ Array
+        return VersionsHeld { versions = shelf[name] }
+    return VersionsHeld { versions = [] }
+
+VersionsWrite { name ∈ String, versions ∈ Array of Any } =>
+    if refuse
+        return VersionsFailed { reason = "the shelf is closed" }
+    shelf = shelf + { "$name" = versions }
+    return VersionsWritten
+
+| Saving: the first version, then two more. Only the newest is active,
+| and every one says when it was made.
+emit VersionsSave { name = "heating", source = "one", enabled = true } to this get first
+assert first ∈ VersionsSaved
+assert first.version = 1
+assert first.created_at > 0
+emit VersionsSave { name = "heating", source = "two" } to this get second
+assert second.version = 2
+emit VersionsSave { name = "heating", source = "three", enabled = false } to this get third
+assert third.version = 3
+
+emit VersionsOf { name = "heating" } to this get all
+assert all ∈ VersionsList
+assert all.items[0].source = "one"
+assert all.items[0].active = false
+assert all.items[1].active = false
+assert all.items[2].active = true
+assert all.items[2].source = "three"
+assert all.items[2].enabled = false
+assert all.items[1].enabled = true
+assert all.items[2].broken = ""
+assert all.items[3] = null
+loop one over all.items
+    assert one.created_at ∈ Number
+    assert one.created_at > 0
+    assert one.name = "heating"
+
+emit VersionsActiveOf { versions = all.items } to this get current
+assert current.record.version = 3
+emit VersionsActiveOf { versions = [] } to this get none
+assert none.record = null
+
+| One version by number, and one that does not exist.
+emit VersionsOne { name = "heating", version = 2 } to this get two
+assert two ∈ VersionsFound
+assert two.record.source = "two"
+emit VersionsOne { name = "heating", version = 9 } to this get nine
+assert nine ∈ VersionsMissing
+
+| Marking touches the active version and nothing else.
+emit VersionsMark { name = "heating", enabled = true } to this get on
+assert on ∈ VersionsMarked
+assert on.record.version = 3
+assert on.record.enabled = true
+emit VersionsMark { name = "heating", broken = "will not load" } to this get broke
+assert broke.record.enabled = true
+assert broke.record.broken = "will not load"
+emit VersionsOf { name = "heating" } to this get marked
+assert marked.items[1].broken = ""
+assert marked.items[2].broken = "will not load"
+
+| Deleting deactivates: nothing is active, and all three are still there.
+emit VersionsDelete { name = "heating" } to this get gone
+assert gone ∈ VersionsActivated
+assert gone.was = 3
+assert gone.active = 0
+emit VersionsOf { name = "heating" } to this get after
+assert after.items[2].source = "three"
+loop one over after.items
+    assert one.active = false
+emit VersionsActiveOf { versions = after.items } to this get stopped
+assert stopped.record = null
+emit VersionsMark { name = "heating", enabled = false } to this get nothing_active
+assert nothing_active ∈ VersionsMissing
+
+| Restoring an old version makes it a new active version, switched on.
+emit VersionsRestore { name = "heating", version = 1 } to this get back
+assert back ∈ VersionsSaved
+assert back.version = 4
+emit VersionsOf { name = "heating" } to this get restored
+assert restored.items[3].source = "one"
+assert restored.items[3].active = true
+assert restored.items[3].enabled = true
+assert restored.items[0].active = false
+emit VersionsRestore { name = "heating", version = 7 } to this get no_such
+assert no_such ∈ VersionsMissing
+
+| Deactivate, then activate the newest again without a new version; then
+| a chosen older one.
+emit VersionsDeactivate { name = "heating" } to this get off
+assert off.was = 4
+emit VersionsActivate { name = "heating", version = 0 } to this get newest
+assert newest ∈ VersionsActivated
+assert newest.active = 4
+emit VersionsActivate { name = "heating", version = 2 } to this get older
+assert older.active = 2
+assert older.was = 4
+emit VersionsOf { name = "heating" } to this get chosen
+assert chosen.items[1].active = true
+assert chosen.items[3].active = false
+assert chosen.items[4] = null
+emit VersionsActivate { name = "nothing", version = 0 } to this get unknown
+assert unknown ∈ VersionsMissing
+
+| Two programs never share versions.
+emit VersionsSave { name = "lights", source = "on" } to this get lights
+assert lights.version = 1
+emit VersionsOf { name = "heating" } to this get heating_still
+assert heating_still.items[4] = null
+
+| What a program needs, refused before anything is read.
+emit VersionsSave { name = "", source = "x" } to this get unnamed
+assert unnamed ∈ VersionsFailed
+emit VersionsSave { name = "x", source = "" } to this get empty
+assert empty ∈ VersionsFailed
+
+| A store that cannot be reached: the application's reason comes back, and
+| nothing changed.
+refuse = true
+emit VersionsSave { name = "heating", source = "five" } to this get closed
+assert closed ∈ VersionsFailed
+assert closed.reason = "the shelf is closed"
+emit VersionsDelete { name = "heating" } to this get closed_delete
+assert closed_delete ∈ VersionsFailed
+refuse = false
+emit VersionsOf { name = "heating" } to this get untouched
+assert untouched.items[4] = null
+assert untouched.items[1].active = true
