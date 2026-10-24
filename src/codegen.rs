@@ -115,6 +115,17 @@ pub fn organelle_link_target(project_root: &Path, reference: &str) -> Result<Str
                 .extension()
                 .and_then(|e| e.to_str())
                 .unwrap_or("so");
+            // Pinned with its native archive too (ticket 143): name the
+            // module, and the build decides — an executable links the
+            // archive in, a held application (`--target shared`) opens the
+            // `.so` its host shares, the interpreter opens the `.so`. A pin
+            // without one (every release before archives were published)
+            // keeps naming the `.so`, so nothing an app has today changes
+            // until it is re-pinned. A browser pin's asset is its wasm
+            // archive and keeps its path.
+            if locked.static_archive && ext == "so" {
+                return Ok(reference.to_string());
+            }
             Ok(format!("{reference}.{ext}"))
         }
         None => Err(format!(
@@ -651,6 +662,25 @@ mod tests {
         // Linked by module name, not the platform-suffixed asset — code's
         // loader maps `console.so` back to the pinned asset via lock.json.
         assert!(content.contains("link \"console.so\" as term"));
+    }
+
+    /// Pinned with its native archive as well (code tickets 141/142): the
+    /// module is named and the build chooses — linked in for an executable,
+    /// the shared `.so` for a held application (ticket 143). The test above
+    /// keeps the older pin's `console.so`.
+    #[test]
+    fn generate_module_name_organelle_pinned_with_its_archive_is_named() {
+        let root = tmp_root("module_name_archive");
+        fs::create_dir_all(root.join(".code")).unwrap();
+        fs::write(
+            root.join(".code/lock.json"),
+            r#"{"modules":{"math":{"name":"math","version":"2.18.0","asset":"math-linux-x86_64.so",
+                "static_archive":{"asset":"math-linux-x86_64.a","sha256":"ab","link":["-lm"]}}}}"#,
+        )
+        .unwrap();
+        let m = make_manifest("myapp", &[("math", "math")]);
+        let content = generate_main_code(&m, &[], &root).unwrap();
+        assert!(content.contains("link \"math\" as math"), "{content}");
     }
 
     #[test]
