@@ -217,8 +217,14 @@ pub fn parse_manifest(path: &Path) -> Result<AppManifest, String> {
         }
     }
 
-    // Interpolate ${VAR} references throughout the JSON tree.
+    // Interpolate ${VAR} references throughout the JSON tree — except in
+    // the organelles' `config` blocks, which stay as written: whether a
+    // `${VAR}` there is read when the program starts or baked into the build
+    // depends on what is being built, and only code generation knows that
+    // (`codegen::EnvMode`, ticket 170).
+    let raw_configs = take_configs(&mut json);
     interpolate_env_vars(&mut json);
+    put_back_configs(&mut json, raw_configs);
 
     let name = json
         .get("name")
@@ -424,6 +430,38 @@ fn organelle_type_from_value(v: &serde_json::Value) -> Option<String> {
     let normalized = normalize_type(base);
     let stripped = normalized.strip_suffix("_mock").unwrap_or(&normalized);
     Some(stripped.to_string())
+}
+
+/// Each organelle's `config` block, lifted out of the manifest so the rest of
+/// it can be interpolated without touching them.
+fn take_configs(json: &mut serde_json::Value) -> Vec<(String, serde_json::Value)> {
+    let mut taken = Vec::new();
+    if let Some(organelles) = json.get_mut("organelles").and_then(|v| v.as_object_mut()) {
+        for (alias, entry) in organelles.iter_mut() {
+            if let Some(config) = entry.as_object_mut().and_then(|e| e.remove("config")) {
+                taken.push((alias.clone(), config));
+            }
+        }
+    }
+    taken
+}
+
+fn put_back_configs(json: &mut serde_json::Value, configs: Vec<(String, serde_json::Value)>) {
+    if let Some(organelles) = json.get_mut("organelles").and_then(|v| v.as_object_mut()) {
+        for (alias, config) in configs {
+            if let Some(entry) = organelles.get_mut(&alias).and_then(|e| e.as_object_mut()) {
+                entry.insert("config".to_string(), config);
+            }
+        }
+    }
+}
+
+/// A config value with its `${VAR}`s replaced by this process's environment,
+/// as the build that bakes them in needs (`codegen::EnvMode::Baked`).
+pub fn bake_env(value: &serde_json::Value) -> serde_json::Value {
+    let mut baked = value.clone();
+    interpolate_env_vars(&mut baked);
+    baked
 }
 
 /// Recursively walk a JSON value, replacing `${VAR}` patterns in strings

@@ -142,10 +142,27 @@ pub fn organelle_link_target(project_root: &Path, reference: &str) -> Result<Str
 ///
 /// The result is the [`GENERATED_HEADER`], the stamp line (see
 /// [`STAMP_PREFIX`]), a blank line, and then the body the stamp digests.
+/// How a `${VAR}` in an organelle's `config` block reaches the program
+/// (ticket 170).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EnvMode {
+    /// Read from the process environment when the program starts, through
+    /// the application's `env` organelle: a program of its own (`run`,
+    /// `build --target exe`). Nothing secret is written into the entry or the
+    /// binary, and one build runs in any environment that sets the variables.
+    Runtime,
+    /// Written into the entry as text, as before: a held application
+    /// (`--target shared` runs inside a host, whose environment is the host's
+    /// and not the application's own `.env`), a page (`wasm`: a browser has
+    /// no environment), a static archive, and the fixtures' entry (`test`).
+    Baked,
+}
+
 pub fn generate_main_code(
     manifest: &AppManifest,
     genes: &[String],
     project_root: &Path,
+    mode: EnvMode,
 ) -> Result<String, String> {
     let mut lines = Vec::new();
 
@@ -199,14 +216,40 @@ pub fn generate_main_code(
     // after that link never runs. A stateful organelle configured from the
     // manifest has to be set up before that loop starts.
     let mut emitted_setup = false;
+    let mut reads = EnvReads::default();
     for (alias, entry) in &manifest.organelles {
         let Some(fields) = entry.config() else {
             continue;
         };
         let setup = setup_particle(project_root, alias, entry)?;
-        lines.push(generate_setup_line(&setup, alias, fields));
+        match mode {
+            EnvMode::Baked => {
+                let baked: serde_json::Map<String, serde_json::Value> = fields
+                    .iter()
+                    .map(|(k, v)| (k.clone(), crate::manifest::bake_env(v)))
+                    .collect();
+                lines.push(generate_setup_line(&setup, alias, &baked));
+            }
+            EnvMode::Runtime => {
+                let line = generate_runtime_setup_line(&setup, alias, fields, &mut reads);
+                if !reads.lines.is_empty() && reads.env_alias.is_none() {
+                    reads.env_alias = Some(env_alias(manifest, alias)?);
+                }
+                reads.pending.push(line);
+            }
+        }
         emitted_setup = true;
     }
+    // In runtime mode the variables are read first, each once, then every
+    // setup line that uses them.
+    let env = reads.env_alias.clone().unwrap_or_default();
+    for read in &reads.lines {
+        lines.push(read.replace(ENV_ALIAS_SLOT, &env));
+    }
+    if !reads.lines.is_empty() {
+        lines.push(String::new());
+    }
+    lines.append(&mut reads.pending);
 
     if emitted_setup {
         lines.push(String::new());
@@ -418,6 +461,130 @@ fn setup_particle(
     }
 }
 
+/// Where the `env` organelle's alias goes in a read written before it is
+/// known (the first `${VAR}` decides that it is needed).
+const ENV_ALIAS_SLOT: &str = "\u{0}env\u{0}";
+
+/// The variables a runtime-mode entry reads, in the order first met.
+#[derive(Default)]
+struct EnvReads {
+    names: Vec<String>,
+    lines: Vec<String>,
+    pending: Vec<String>,
+    env_alias: Option<String>,
+}
+
+impl EnvReads {
+    /// The expression that holds `name`'s value once read, reading it the
+    /// first time it is asked for.
+    ///
+    /// Read as text (`Require`: unset stops the program at start, the failing
+    /// line naming the variable), then as a number when it is one — what the
+    /// baked entry does by promoting `"${PORT}"` to `8080`.
+    fn value_of(&mut self, name: &str) -> String {
+        let value = format!("_env_{name}");
+        if !self.names.iter().any(|n| n == name) {
+            self.names.push(name.to_string());
+            self.lines.extend([
+                format!("emit Require {{ name = \"{name}\" }} to {ENV_ALIAS_SLOT} get _env_read_{name}"),
+                format!("assert _env_read_{name} ∉ Exception"),
+                format!("emit Get {{ name = \"{name}\", default = 0 }} to {ENV_ALIAS_SLOT} get _env_number_{name}"),
+                format!("{value} = _env_read_{name}.value"),
+                format!("if _env_number_{name} ∉ Exception, {value} = _env_number_{name}.value"),
+            ]);
+        }
+        value
+    }
+}
+
+/// The alias of the application's own `env` organelle, which a runtime-mode
+/// entry reads its variables through.
+fn env_alias(manifest: &AppManifest, configured: &str) -> Result<String, String> {
+    manifest
+        .organelles
+        .iter()
+        .find(|(_, entry)| entry.reference() == "env")
+        .map(|(alias, _)| alias.clone())
+        .ok_or_else(|| {
+            format!(
+                "organelle '{configured}' is configured with a `${{VAR}}`, which a program of its \
+                 own reads when it starts — declare the env module it reads it with: \
+                 \"env\": \"env\" in \"organelles\", then `{} install`",
+                crate::invocation::command_prefix()
+            )
+        })
+}
+
+/// A config value as an expression that reads its `${VAR}`s at run time.
+/// A value with none is the literal it always was.
+fn format_runtime_value(v: &serde_json::Value, reads: &mut EnvReads) -> String {
+    match v {
+        serde_json::Value::String(s) if s.contains("${") => {
+            let mut parts: Vec<String> = Vec::new();
+            let mut rest = s.as_str();
+            while let Some(start) = rest.find("${") {
+                let Some(len) = rest[start + 2..].find('}') else {
+                    break;
+                };
+                if start > 0 {
+                    parts.push(format_config_value(&serde_json::Value::String(
+                        rest[..start].to_string(),
+                    )));
+                }
+                parts.push(reads.value_of(&rest[start + 2..start + 2 + len]));
+                rest = &rest[start + 3 + len..];
+            }
+            if !rest.is_empty() {
+                parts.push(format_config_value(&serde_json::Value::String(
+                    rest.to_string(),
+                )));
+            }
+            match parts.len() {
+                // A whole value that is one variable keeps the variable's
+                // kind (a port stays a number).
+                1 => parts.remove(0),
+                // Text around it makes it text: `"" +` keeps `+` joining
+                // even when the first variable is a number.
+                _ => format!("\"\" + {}", parts.join(" + ")),
+            }
+        }
+        serde_json::Value::Array(items) => {
+            let items: Vec<String> = items
+                .iter()
+                .map(|i| format_runtime_value(i, reads))
+                .collect();
+            format!("[{}]", items.join(", "))
+        }
+        serde_json::Value::Object(map) => {
+            let parts: Vec<String> = map
+                .iter()
+                .map(|(k, v)| format!("{} = {}", k, format_runtime_value(v, reads)))
+                .collect();
+            format!("{{ {} }}", parts.join(", "))
+        }
+        other => format_config_value(other),
+    }
+}
+
+fn generate_runtime_setup_line(
+    setup: &str,
+    target: &str,
+    fields: &serde_json::Map<String, serde_json::Value>,
+    reads: &mut EnvReads,
+) -> String {
+    if fields.is_empty() {
+        return format!("emit {setup} {{}} to {target} get _cfg_{target}");
+    }
+    let field_str: Vec<String> = fields
+        .iter()
+        .map(|(k, v)| format!("{} = {}", k, format_runtime_value(v, reads)))
+        .collect();
+    format!(
+        "emit {setup} {{ {} }} to {target} get _cfg_{target}",
+        field_str.join(", ")
+    )
+}
+
 fn format_config_value(v: &serde_json::Value) -> String {
     match v {
         serde_json::Value::String(s) => {
@@ -467,10 +634,10 @@ fn generate_setup_line(
 /// `manifest.json`, `src/*.gene.code` and `.code/lock.json` say at this
 /// moment, under this process's environment (`.env` interpolation and
 /// `EUGLENA_MOCK_MODE` both feed generation).
-pub fn regenerate(project_root: &Path) -> Result<String, String> {
+pub fn regenerate(project_root: &Path, mode: EnvMode) -> Result<String, String> {
     let manifest = parse_manifest(&project_root.join("manifest.json"))?;
     let genes = scan_genes(&project_root.join("src"));
-    generate_main_code(&manifest, &genes, project_root)
+    generate_main_code(&manifest, &genes, project_root, mode)
 }
 
 /// Where a project's `main.code` stands relative to the inputs it came from.
@@ -526,11 +693,19 @@ pub fn entry_status(project_root: &Path) -> EntryStatus {
         return EntryStatus::Edited;
     }
 
-    match regenerate(project_root) {
+    // Up to date if it is what either mode would write: which one wrote it
+    // depends on the command that last ran (`run` reads at run time, a held
+    // build bakes), and neither is staler than the other.
+    match regenerate(project_root, EnvMode::Baked) {
         Ok(fresh) if fresh == text => EntryStatus::UpToDate {
             euglena_version: stamp.euglena_version,
         },
-        Ok(_) => EntryStatus::Stale,
+        Ok(_) => match regenerate(project_root, EnvMode::Runtime) {
+            Ok(fresh) if fresh == text => EntryStatus::UpToDate {
+                euglena_version: stamp.euglena_version,
+            },
+            _ => EntryStatus::Stale,
+        },
         Err(e) => EntryStatus::Unverifiable(e),
     }
 }
@@ -543,8 +718,8 @@ pub fn entry_status(project_root: &Path) -> EntryStatus {
 /// The file is left in place afterward (gitignored by `euglena init`): a
 /// readable artifact that plain `code run .` also executes is worth more
 /// than a hidden one.
-pub fn write_main_code(project_root: &Path) -> Result<Generated, String> {
-    let content = regenerate(project_root)?;
+pub fn write_main_code(project_root: &Path, mode: EnvMode) -> Result<Generated, String> {
+    let content = regenerate(project_root, mode)?;
 
     let entry_path = project_root.join("main.code");
     if entry_path.is_file() {
@@ -619,7 +794,7 @@ mod tests {
     fn generate_no_organelles_no_genes() {
         let m = make_manifest("my-app", &[]);
         let root = tmp_root("no_org_no_gene");
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("emit EuglenaHasBeenBorn { cell_name = \"my-app\" } to this"));
         assert!(!content.contains("link"));
         assert!(content.starts_with(GENERATED_HEADER));
@@ -640,7 +815,7 @@ mod tests {
             "todo_actions.gene.code".to_string(),
         ];
         let root = tmp_root("literal_paths");
-        let content = generate_main_code(&m, &genes, &root).unwrap();
+        let content = generate_main_code(&m, &genes, &root, EnvMode::Baked).unwrap();
         assert!(content.contains("link \"organelles/react.so\" as react"));
         assert!(content.contains("link \"organelles/storage.so\" as storage"));
         assert!(content.contains("link \"src/state_loader.gene.code\""));
@@ -658,7 +833,7 @@ mod tests {
         )
         .unwrap();
         let m = make_manifest("myapp", &[("term", "console")]);
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         // Linked by module name, not the platform-suffixed asset — code's
         // loader maps `console.so` back to the pinned asset via lock.json.
         assert!(content.contains("link \"console.so\" as term"));
@@ -679,7 +854,7 @@ mod tests {
         )
         .unwrap();
         let m = make_manifest("myapp", &[("math", "math")]);
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("link \"math\" as math"), "{content}");
     }
 
@@ -693,7 +868,7 @@ mod tests {
         )
         .unwrap();
         let m = make_manifest("myapp", &[("crunch", "crunch")]);
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("link \"crunch.a\" as crunch"));
     }
 
@@ -701,7 +876,7 @@ mod tests {
     fn generate_module_name_organelle_not_installed_errors() {
         let root = tmp_root("module_missing");
         let m = make_manifest("myapp", &[("term", "console")]);
-        let err = generate_main_code(&m, &[], &root).unwrap_err();
+        let err = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap_err();
         assert!(err.contains("console"), "error should name it: {err}");
         assert!(err.contains("install"), "error should hint the fix: {err}");
     }
@@ -710,7 +885,7 @@ mod tests {
     fn generate_wasm_organelle_rejected() {
         let root = tmp_root("wasm_rejected");
         let m = make_manifest("myapp", &[("ui", "organelles/ui.wasm")]);
-        let err = generate_main_code(&m, &[], &root).unwrap_err();
+        let err = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap_err();
         assert!(err.contains("wasm"));
     }
 
@@ -759,7 +934,7 @@ mod tests {
             organelles: map,
             genes: Vec::new(),
         };
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
 
         // Not linked up front — that is the whole point.
         assert!(
@@ -825,7 +1000,7 @@ mod tests {
             organelles: map,
             genes: Vec::new(),
         };
-        let err = generate_main_code(&m, &[], &root).unwrap_err();
+        let err = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap_err();
         assert!(err.contains("Config") && err.contains("Listen"), "{err}");
         assert!(
             err.contains("odd"),
@@ -839,7 +1014,7 @@ mod tests {
     fn generate_without_a_stand_in_generates_no_picker() {
         let m = make_manifest("plain", &[("term", "organelles/term.so")]);
         let root = tmp_root("no_picker");
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("link \"organelles/term.so\" as term"));
         assert!(!content.contains("EuglenaPickOrganelle"));
         assert!(!content.contains("Linked"));
@@ -849,7 +1024,7 @@ mod tests {
     fn generate_header_marks_as_generated() {
         let m = make_manifest("x", &[]);
         let root = tmp_root("header");
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.starts_with(GENERATED_HEADER));
     }
 
@@ -857,7 +1032,7 @@ mod tests {
     fn generated_entry_is_stamped_with_its_own_body_digest() {
         let m = make_manifest("x", &[]);
         let root = tmp_root("stamp");
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
 
         let stamp = parse_stamp(&content).expect("a generated entry carries a stamp");
         assert_eq!(stamp.euglena_version, env!("CARGO_PKG_VERSION"));
@@ -873,7 +1048,7 @@ mod tests {
     fn stamp_sits_on_the_second_line_and_leaves_the_body_alone() {
         let m = make_manifest("x", &[("term", "organelles/term.so")]);
         let root = tmp_root("stamp_layout");
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         let lines: Vec<&str> = content.lines().collect();
         assert_eq!(lines[0], GENERATED_HEADER);
         assert!(lines[1].starts_with(STAMP_PREFIX));
@@ -901,7 +1076,7 @@ mod tests {
             r#"{"name":"x","organelles":{}}"#,
         )
         .unwrap();
-        write_main_code(&root).unwrap();
+        write_main_code(&root, EnvMode::Baked).unwrap();
         root
     }
 
@@ -943,7 +1118,7 @@ mod tests {
         assert!(matches!(entry_status(&root), EntryStatus::Stale));
 
         // A new gene is an input too.
-        write_main_code(&root).unwrap();
+        write_main_code(&root, EnvMode::Baked).unwrap();
         assert!(matches!(entry_status(&root), EntryStatus::UpToDate { .. }));
         fs::create_dir_all(root.join("src")).unwrap();
         fs::write(root.join("src/extra.gene.code"), "gene_name = \"extra\"\n").unwrap();
@@ -1017,6 +1192,85 @@ mod tests {
         }
     }
 
+    /// A jwt organelle configured from `${…}`s, beside the env organelle a
+    /// runtime-mode entry reads them through (ticket 170).
+    /// Each test names its own variables (`prefix`): tests run in parallel
+    /// and the process environment is shared.
+    fn env_app(root: &Path, prefix: &str) -> AppManifest {
+        fs::create_dir_all(root.join(".code")).unwrap();
+        fs::write(
+            root.join(".code/lock.json"),
+            r#"{"modules":{
+                "jwt":{"name":"jwt","version":"1.1.4","asset":"jwt-linux-x86_64.so","setup":"Config"},
+                "env":{"name":"env","version":"1.1.4","asset":"env-linux-x86_64.so"}}}"#,
+        )
+        .unwrap();
+        let mut m = one(
+            "app",
+            "auth",
+            full(
+                "jwt",
+                serde_json::json!({
+                    "secret": format!("${{{prefix}_SECRET}}"),
+                    "issuer": format!("https://${{{prefix}_HOST}}:${{{prefix}_PORT}}/id"),
+                    "ttl": 60
+                }),
+                None,
+            ),
+        );
+        m.organelles.insert(
+            "vars".to_string(),
+            OrganelleEntry::Reference("env".to_string()),
+        );
+        m
+    }
+
+    #[test]
+    fn runtime_mode_reads_config_variables_when_the_program_starts() {
+        let root = tmp_root("cfg_runtime");
+        let m = env_app(&root, "STAGING");
+        std::env::set_var("STAGING_SECRET", "do-not-bake-me");
+        let content = generate_main_code(&m, &[], &root, EnvMode::Runtime).unwrap();
+        std::env::remove_var("STAGING_SECRET");
+        assert!(!content.contains("do-not-bake-me"), "{content}");
+        // Each variable is read once, through the declared env organelle,
+        // and stops the program at start when it is unset.
+        assert_eq!(
+            content
+                .matches("emit Require { name = \"STAGING_SECRET\" } to vars")
+                .count(),
+            1
+        );
+        assert!(content.contains("assert _env_read_STAGING_SECRET ∉ Exception"));
+        // A whole value that is one variable keeps its kind; text around
+        // variables makes text; a literal stays a literal.
+        assert!(content.contains(
+            "emit Config { issuer = \"\" + \"https://\" + _env_STAGING_HOST + \":\" + _env_STAGING_PORT + \"/id\", secret = _env_STAGING_SECRET, ttl = 60 } to auth get _cfg_auth"
+        ), "{content}");
+        // The reads come before the setup line that uses them.
+        assert!(content.find("emit Require").unwrap() < content.find("emit Config").unwrap());
+    }
+
+    #[test]
+    fn baked_mode_writes_config_variables_in_as_before() {
+        let root = tmp_root("cfg_baked");
+        let m = env_app(&root, "BAKED");
+        std::env::set_var("BAKED_SECRET", "baked");
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
+        std::env::remove_var("BAKED_SECRET");
+        assert!(content.contains("secret = \"baked\""), "{content}");
+        assert!(!content.contains("emit Require"), "{content}");
+    }
+
+    #[test]
+    fn runtime_mode_without_an_env_organelle_says_what_to_declare() {
+        let root = tmp_root("cfg_runtime_no_env");
+        let mut m = env_app(&root, "NOENV");
+        m.organelles.remove("vars");
+        let err = generate_main_code(&m, &[], &root, EnvMode::Runtime).unwrap_err();
+        assert!(err.contains("\"env\": \"env\""), "{err}");
+    }
+
     #[test]
     fn generate_config_block_emits_the_modules_setup_particle() {
         let root = tmp_root("cfg_setup");
@@ -1031,7 +1285,7 @@ mod tests {
             "auth",
             full("jwt", serde_json::json!({ "secret": "sh" }), None),
         );
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("link \"jwt.so\" as auth"));
         assert!(content.contains("emit Config { secret = \"sh\" } to auth get _cfg_auth"));
     }
@@ -1050,7 +1304,7 @@ mod tests {
             "srv",
             full("http_server", serde_json::json!({ "port": 9800 }), None),
         );
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("emit Config { port = 9800 } to srv get _cfg_srv"));
     }
 
@@ -1064,7 +1318,7 @@ mod tests {
         )
         .unwrap();
         let m = one("app", "files", full("fs", serde_json::json!({}), None));
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("emit Config {} to files get _cfg_files"));
     }
 
@@ -1082,7 +1336,7 @@ mod tests {
             "c",
             full("crypto", serde_json::json!({ "cost": 12 }), None),
         );
-        let err = generate_main_code(&m, &[], &root).unwrap_err();
+        let err = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap_err();
         assert!(err.contains("stateless"), "should say why: {err}");
         assert!(err.contains("crypto"), "should name it: {err}");
     }
@@ -1095,7 +1349,7 @@ mod tests {
             "x",
             full("organelles/x.so", serde_json::json!({ "k": 1 }), None),
         );
-        let err = generate_main_code(&no_setup, &[], &root).unwrap_err();
+        let err = generate_main_code(&no_setup, &[], &root, EnvMode::Baked).unwrap_err();
         assert!(
             err.contains("setup"),
             "should ask for a setup particle: {err}"
@@ -1110,7 +1364,7 @@ mod tests {
                 Some("Init"),
             ),
         );
-        let content = generate_main_code(&with_setup, &[], &root).unwrap();
+        let content = generate_main_code(&with_setup, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("emit Init { k = 1 } to x get _cfg_x"));
     }
 
@@ -1126,7 +1380,7 @@ mod tests {
                 Some("Config"),
             ),
         );
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("token = null"));
     }
 
@@ -1134,7 +1388,7 @@ mod tests {
     fn generate_reference_organelle_emits_no_setup() {
         let m = make_manifest("app", &[("logger", "organelles/console.so")]);
         let root = tmp_root("ref_no_setup");
-        let content = generate_main_code(&m, &[], &root).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         assert!(content.contains("link \"organelles/console.so\" as logger"));
         assert!(!content.contains("_cfg_"));
         assert!(!content.contains("emit Config"));
@@ -1149,7 +1403,7 @@ mod tests {
         )
         .unwrap();
         fs::write(root.join("main.code"), "| hand-written\nassert 1 = 1\n").unwrap();
-        let err = write_main_code(&root).unwrap_err();
+        let err = write_main_code(&root, EnvMode::Baked).unwrap_err();
         assert!(err.contains("already exists"), "got: {err}");
     }
 
@@ -1166,7 +1420,7 @@ mod tests {
             format!("{GENERATED_HEADER}\nold content\n"),
         )
         .unwrap();
-        write_main_code(&root).unwrap();
+        write_main_code(&root, EnvMode::Baked).unwrap();
         let content = fs::read_to_string(root.join("main.code")).unwrap();
         assert!(content.contains("emit EuglenaHasBeenBorn { cell_name = \"x\" } to this"));
         assert!(!content.contains("old content"));
