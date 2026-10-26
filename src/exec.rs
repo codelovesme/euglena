@@ -139,7 +139,7 @@ pub fn run(path: &str, verbose: bool) {
     let project_root = euglena_project_root_or_exit(path);
     let need = version_need_or_exit(Some(&project_root), None);
     let binary = find_code_binary_or_exit(&need);
-    let entry_arg = generate_entry_or_exit(&project_root, verbose);
+    let entry_arg = generate_entry_or_exit(&project_root, codegen::EnvMode::Runtime, verbose);
 
     let mut cmd = process::Command::new(&binary);
     cmd.arg("run").arg(&entry_arg);
@@ -158,7 +158,14 @@ pub fn build(path: &str, release: bool, target: Option<&str>, output: Option<&st
     }
     let need = version_need_or_exit(Some(&project_root), None);
     let binary = find_code_binary_or_exit(&need);
-    let entry_arg = generate_entry_or_exit(&project_root, verbose);
+    // A program of its own reads its `${VAR}`s when it starts; anything that
+    // runs inside something else (a host, a page) or is linked into it gets
+    // them written in (ticket 170, `codegen::EnvMode`).
+    let mode = match target.unwrap_or("exe") {
+        "exe" => codegen::EnvMode::Runtime,
+        _ => codegen::EnvMode::Baked,
+    };
+    let entry_arg = generate_entry_or_exit(&project_root, mode, verbose);
 
     let mut cmd = process::Command::new(&binary);
     cmd.arg("build").arg(&entry_arg);
@@ -186,7 +193,9 @@ pub fn test(path: &str, verbose: bool) {
     let project_root = euglena_project_root_or_exit(path);
     let need = version_need_or_exit(Some(&project_root), None);
     let binary = find_code_binary_or_exit(&need);
-    generate_entry_or_exit(&project_root, verbose);
+    // The fixtures link the genes, not the entry; it is regenerated for
+    // `doctor`, baked as a held build would be.
+    generate_entry_or_exit(&project_root, codegen::EnvMode::Baked, verbose);
 
     let mut cmd = process::Command::new(&binary);
     cmd.arg("test").current_dir(&project_root);
@@ -305,8 +314,8 @@ fn euglena_project_root_or_exit(path: &str) -> PathBuf {
 /// project root itself. `code`'s own "a directory means its main.code"
 /// convention does the rest, and installed organelles resolve natively since
 /// the entry lives where `.code/` actually is.
-fn generate_entry_or_exit(project_root: &Path, verbose: bool) -> String {
-    match codegen::write_main_code(project_root) {
+fn generate_entry_or_exit(project_root: &Path, mode: codegen::EnvMode, verbose: bool) -> String {
+    match codegen::write_main_code(project_root, mode) {
         Ok(summary) => {
             if verbose {
                 eprintln!(
