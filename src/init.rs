@@ -14,7 +14,14 @@ use crate::invocation::command_prefix;
 /// handing the application a copy to keep in step with a runtime it does not
 /// control, and a copy that falls behind fails in the browser, at a distance
 /// from the change that broke it.
-pub fn run(name: &str, web: bool) {
+///
+/// `service` scaffolds one that listens on its own port instead of being held
+/// by a host: `net_server` configured from `PORT` and `HOST`, read when it
+/// starts, and a Dockerfile that puts the binary `build --release` writes into
+/// a slim image. The build links its modules in, so the binary is the whole
+/// application; the image adds certificates, a user that is not root, and
+/// nothing secret.
+pub fn run(name: &str, web: bool, service: bool) {
     let project = Path::new(name);
 
     if project.exists() {
@@ -32,14 +39,19 @@ pub fn run(name: &str, web: bool) {
     fs::create_dir_all(project.join(".code")).expect("failed to create .code/");
 
     // Write manifest.json — the single source of truth for cell name + organelles.
-    fs::write(project.join("manifest.json"), manifest_template(name, web))
-        .expect("failed to write manifest.json");
+    fs::write(
+        project.join("manifest.json"),
+        manifest_template(name, web, service),
+    )
+    .expect("failed to write manifest.json");
 
     // Write a starter nucleus gene.
     fs::write(
         project.join("src/nucleus.gene.code"),
         if web {
             web_gene_template()
+        } else if service {
+            service_gene_template()
         } else {
             nucleus_gene_template()
         },
@@ -53,6 +65,21 @@ pub fn run(name: &str, web: bool) {
         fs::create_dir_all(project.join("web")).expect("failed to create web/");
         fs::write(project.join("web/index.html"), index_html_template(name))
             .expect("failed to write web/index.html");
+    }
+
+    if service {
+        // Its own file, so it links after the handlers it serves: genes link
+        // alphabetically, and `Listen` runs at link time.
+        fs::write(project.join("src/server.gene.code"), server_gene_template())
+            .expect("failed to write src/server.gene.code");
+        // Local values only. The image sets its own, and a deployment passes
+        // the rest as environment.
+        fs::write(project.join(".env"), "HOST=127.0.0.1\nPORT=8090\n")
+            .expect("failed to write .env");
+        fs::write(project.join("Dockerfile"), dockerfile_template(name))
+            .expect("failed to write Dockerfile");
+        fs::write(project.join(".dockerignore"), dockerignore_template(name))
+            .expect("failed to write .dockerignore");
     }
 
     // Empty lockfile — marks the project root for `code install`/`link`.
@@ -69,11 +96,16 @@ pub fn run(name: &str, web: bool) {
     // hold the archive it ships and the library it would test against. A
     // fixture that tested nothing would be worse than none.
     if !web {
-        fs::write(project.join("tests/nucleus.code"), test_fixture_template())
+        let fixture = if service {
+            service_fixture_template()
+        } else {
+            test_fixture_template()
+        };
+        fs::write(project.join("tests/nucleus.code"), fixture)
             .expect("failed to write tests/nucleus.code");
     }
 
-    fs::write(project.join(".gitignore"), gitignore_template(web))
+    fs::write(project.join(".gitignore"), gitignore_template(web, service))
         .expect("failed to write .gitignore");
 
     println!("Created Euglena app '{}'", name);
@@ -100,6 +132,14 @@ pub fn run(name: &str, web: bool) {
         println!();
         println!("No starter fixture: a browser app's organelles are archives, and `{cmd} test`");
         println!("interprets rather than builds, so it cannot link them yet.");
+    } else if service {
+        println!("  {cmd} install                        (net_server and env)");
+        println!("  {cmd} run                            (listens on 127.0.0.1:8090, from .env)");
+        println!("  {cmd} build --release");
+        println!("  docker build -t {name} .");
+        println!("  docker run -p 8080:8080 {name}");
+        println!();
+        println!("Ask it: curl -d '{{\"_class\":\"Ping\",\"value\":1}}' localhost:8080/{name}");
     } else {
         println!("  {cmd} run   (needs a `code` interpreter on PATH — e.g. `cdlvsm install code`)");
     }
@@ -113,13 +153,30 @@ pub fn run(name: &str, web: bool) {
 // Templates
 // ---------------------------------------------------------------------------
 
-fn manifest_template(name: &str, web: bool) -> String {
+fn manifest_template(name: &str, web: bool, service: bool) -> String {
     // `runtime` is what tells `euglena install` which bytes to fetch: a page
     // cannot open a `.so`, so a browser app gets the archive that links in.
     // A manifest that says nothing means a machine, which is what every app
     // said before there was a second answer.
+    //
+    // A service's `${PORT}` and `${HOST}` are read when it starts, through
+    // `env`, so one build runs anywhere it is told where to listen.
     let (runtime, organelles) = if web {
         ("web", "\n    \"dom\": \"dom\"\n  ")
+    } else if service {
+        (
+            "native",
+            r#"
+    "env": "env",
+    "net": {
+      "module": "net_server",
+      "config": {
+        "host": "${HOST}",
+        "port": "${PORT}"
+      }
+    }
+  "#,
+        )
     } else {
         ("native", "")
     };
@@ -149,6 +206,78 @@ gene_name = "nucleus"
 EuglenaHasBeenBorn { cell_name } =>
     return Alive { cell_name = cell_name }
 "#
+}
+
+/// A service answers whatever particles its handlers name; net_server hands
+/// each one in as it was sent, so a handler is the whole of an endpoint.
+fn service_gene_template() -> &'static str {
+    r#"| Nucleus gene — what the service answers.
+|
+| Any src/*.gene.code file is linked into the app automatically. A particle
+| POSTed to the service arrives here with its `_class` intact, and the
+| handler's answer is the reply, so each handler is one endpoint.
+
+gene_name = "nucleus"
+
+EuglenaHasBeenBorn { cell_name } =>
+    return Alive { cell_name = cell_name }
+
+Ping { value } =>
+    return Pong { value = value }
+"#
+}
+
+/// Starting to listen is its own gene so that it links last.
+fn server_gene_template() -> &'static str {
+    r#"| Server — start listening.
+|
+| `net` was configured from HOST and PORT before any gene linked, and genes
+| link alphabetically, so the handlers this serves are already registered.
+| The service lives as long as the listener does; nothing keeps it alive.
+
+emit Listen to net get listen
+assert listen.ok
+
+port = listen.port
+emit Log { source = "server", level = "Info", message = "listening on port $port" } to net
+"#
+}
+
+/// The image: the binary, and only what it needs beside it.
+fn dockerfile_template(name: &str) -> String {
+    format!(
+        r#"# The image for {name}: the binary `euglena build --release` wrote, on a
+# slim base.
+#
+#   euglena build --release
+#   docker build -t {name} .
+#   docker run -p 8080:8080 -e NAME=value {name}
+#
+# Nothing is built here. The binary links its modules in, so it is the whole
+# application, and it reads PORT, HOST and every other ${{VAR}} when it starts:
+# nothing secret is in it or in this image. The base needs a glibc at least as
+# new as the one on the machine that built the binary.
+#
+# An application that needs more beside it (a tool, templates) adds a COPY
+# below the binary's.
+FROM debian:trixie-slim
+
+# Certificates, so TLS to a database or an API can verify who answered.
+RUN apt-get update  && apt-get install -y --no-install-recommends ca-certificates  && rm -rf /var/lib/apt/lists/*  && useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin app
+
+COPY --chmod=0555 build/{name} /app/{name}
+
+USER 10001
+ENV HOST=0.0.0.0 PORT=8080
+EXPOSE 8080
+ENTRYPOINT ["/app/{name}"]
+"#
+    )
+}
+
+/// Only the binary goes to the build: not `.env`, not the source.
+fn dockerignore_template(name: &str) -> String {
+    format!("*\n!build/{name}\n")
 }
 
 /// A gene that draws instead of one that answers.
@@ -227,7 +356,20 @@ assert born.cell_name = "test"
 "#
 }
 
-fn gitignore_template(web: bool) -> String {
+fn service_fixture_template() -> &'static str {
+    r#"| A starter fixture for `euglena test`. Fixtures run in place, from
+| tests/, so a gene under src/ is linked with a relative path. It links the
+| handlers and not the server, so nothing listens while it runs.
+
+link "../src/nucleus.gene.code"
+
+emit Ping { value = 7 } to this get answer
+assert answer ∈ Pong
+assert answer.value = 7
+"#
+}
+
+fn gitignore_template(web: bool, service: bool) -> String {
     let mut text = String::from(
         r#"# Installed organelle binaries, and installed genes. .code/lock.json
 # (committed) pins what they are, so a checkout can reproduce both with
@@ -251,6 +393,14 @@ build/
 # build wrote them.
 web/*.wasm
 web/host.mjs
+"#,
+        );
+    }
+    if service {
+        text.push_str(
+            r#"
+# Values for this machine. A deployment passes its own as environment.
+.env
 "#,
         );
     }

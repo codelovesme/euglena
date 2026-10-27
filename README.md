@@ -63,7 +63,7 @@ Linux x86_64 only, for now. Examples below use `cdlvsm euglena` — drop the
 ## Usage
 
 ```
-cdlvsm euglena init <name> [--web]      scaffold a new app in ./<name>
+cdlvsm euglena init <name> [--web|--service]  scaffold a new app in ./<name>
 cdlvsm euglena run [app]                run the app (default: this directory)
 cdlvsm euglena build [app] [options]    compile to a native binary (or a module)
 cdlvsm euglena test                     run this project's fixtures (wraps `code test`)
@@ -86,6 +86,29 @@ page to load the module into, and a gene that draws instead of one that
 answers. It does **not** write the page's half of the browser organelles —
 `code build --target wasm` emits that beside the module it built, so the two
 halves are always the same age.
+
+`init --service` scaffolds one that listens on its own port, for a machine
+or a container rather than a host: `net_server` configured from `${HOST}`
+and `${PORT}`, a gene that answers `Ping`, a server gene that starts
+listening, a `.env` for running it here (`127.0.0.1:8090`, gitignored), and
+a `Dockerfile`:
+
+```bash
+cdlvsm euglena init api --service && cd api
+cdlvsm euglena install
+cdlvsm euglena build --release        # build/api: modules linked in, nothing to copy beside it
+docker build -t api .
+docker run -p 8080:8080 -e MONGO_URI=… api
+curl -d '{"_class":"Ping","value":1}' localhost:8080/api
+```
+
+The release binary links every module in, so it runs from wherever it is
+copied: the image is `debian:trixie-slim`, certificates, a user that is not
+root, and the binary. Nothing is built inside it, and nothing secret goes
+into either, since every `${VAR}` is read when the binary starts; the image
+sets `HOST=0.0.0.0` and `PORT=8080`, and a deployment passes the rest. An
+application that needs more beside it adds a `COPY` of its own. The base
+needs a glibc at least as new as the machine that built the binary.
 
 `install` with no name is what a fresh checkout runs: the manifest is the
 list, and everything it names is fetched — once per *module*, so two aliases

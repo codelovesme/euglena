@@ -56,6 +56,70 @@ fn init_scaffolds_a_code_project() {
     let _ = fs::remove_dir_all(&work);
 }
 
+/// `init --service` writes a service that is told where to listen when it
+/// starts, and an image that holds only its binary: `${HOST}`/`${PORT}` in
+/// the manifest rather than numbers, a `.env` for this machine that git and
+/// the image both leave out, and a Dockerfile that copies the release
+/// binary, runs as a user that is not root, and listens on every address.
+#[test]
+fn init_service_scaffolds_a_listener_and_its_image() {
+    let work = tmp_dir("scaffold_service");
+    let status = Command::new(bin())
+        .args(["init", "api", "--service"])
+        .current_dir(&work)
+        .status()
+        .unwrap();
+    assert!(status.success(), "euglena init --service failed");
+
+    let root = work.join("api");
+    let manifest: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(root.join("manifest.json")).unwrap()).unwrap();
+    let net = &manifest["organelles"]["net"];
+    assert_eq!(net["module"], "net_server");
+    assert_eq!(net["config"]["port"], "${PORT}");
+    assert_eq!(net["config"]["host"], "${HOST}");
+    assert_eq!(manifest["organelles"]["env"], "env");
+
+    let server = fs::read_to_string(root.join("src/server.gene.code")).unwrap();
+    assert!(server.contains("emit Listen to net"));
+    let nucleus = fs::read_to_string(root.join("src/nucleus.gene.code")).unwrap();
+    assert!(nucleus.contains("Ping { value } =>"));
+
+    let env = fs::read_to_string(root.join(".env")).unwrap();
+    assert!(env.contains("HOST=127.0.0.1"));
+    assert!(fs::read_to_string(root.join(".gitignore"))
+        .unwrap()
+        .lines()
+        .any(|l| l == ".env"));
+
+    let dockerfile = fs::read_to_string(root.join("Dockerfile")).unwrap();
+    assert!(dockerfile.contains("COPY --chmod=0555 build/api /app/api"));
+    assert!(dockerfile.contains("USER 10001"));
+    assert!(dockerfile.contains("ENV HOST=0.0.0.0 PORT=8080"));
+    assert!(dockerfile.contains("ca-certificates"));
+    assert_eq!(
+        fs::read_to_string(root.join(".dockerignore")).unwrap(),
+        "*\n!build/api\n"
+    );
+
+    let _ = fs::remove_dir_all(&work);
+}
+
+/// `--web` and `--service` are two different lives; asking for both refuses.
+#[test]
+fn init_refuses_web_and_service_together() {
+    let work = tmp_dir("scaffold_web_service");
+    let status = Command::new(bin())
+        .args(["init", "both", "--web", "--service"])
+        .current_dir(&work)
+        .status()
+        .unwrap();
+    assert!(!status.success());
+    assert!(!work.join("both").exists());
+
+    let _ = fs::remove_dir_all(&work);
+}
+
 /// A second `init` into the same directory refuses and writes nothing new.
 #[test]
 fn init_refuses_an_existing_directory() {
