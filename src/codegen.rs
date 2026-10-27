@@ -151,10 +151,16 @@ pub enum EnvMode {
     /// `build --target exe`). Nothing secret is written into the entry or the
     /// binary, and one build runs in any environment that sets the variables.
     Runtime,
-    /// Written into the entry as text, as before: a held application
-    /// (`--target shared` runs inside a host, whose environment is the host's
-    /// and not the application's own `.env`), a page (`wasm`: a browser has
-    /// no environment), a static archive, and the fixtures' entry (`test`).
+    /// Read when the application starts, as `Runtime`, but from its own
+    /// `.env` file rather than the process environment: a held application
+    /// (`--target shared`) runs inside a host, whose process environment is
+    /// the host's (ticket 180). Its `env` organelle is pointed at the file
+    /// first (`Config { file }`, env ≥ 2.19). An application that declares
+    /// no `env` organelle, or pins one from before `Config`, is `Baked`.
+    Held,
+    /// Written into the entry as text, as before: a page (`wasm`: a browser
+    /// has no environment), a static archive, the fixtures' entry (`test`),
+    /// and a held application that cannot read its own file yet.
     Baked,
 }
 
@@ -215,6 +221,17 @@ pub fn generate_main_code(
     // runs an unbounded keep-alive `loop` at link time, and anything emitted
     // after that link never runs. A stateful organelle configured from the
     // manifest has to be set up before that loop starts.
+    // A held application reads its own file when its env organelle can;
+    // otherwise its values are baked in, as they always were.
+    let held_file = match mode {
+        EnvMode::Held => held_env_file(manifest, project_root),
+        _ => None,
+    };
+    let mode = match (mode, &held_file) {
+        (EnvMode::Held, Some(_)) => EnvMode::Runtime,
+        (EnvMode::Held, None) => EnvMode::Baked,
+        (other, _) => other,
+    };
     let mut emitted_setup = false;
     let mut reads = EnvReads::default();
     for (alias, entry) in &manifest.organelles {
@@ -223,7 +240,8 @@ pub fn generate_main_code(
         };
         let setup = setup_particle(project_root, alias, entry)?;
         match mode {
-            EnvMode::Baked => {
+            // `Held` was settled above; it is one of the other two by here.
+            EnvMode::Baked | EnvMode::Held => {
                 let baked: serde_json::Map<String, serde_json::Value> = fields
                     .iter()
                     .map(|(k, v)| (k.clone(), crate::manifest::bake_env(v)))
@@ -243,6 +261,13 @@ pub fn generate_main_code(
     // In runtime mode the variables are read first, each once, then every
     // setup line that uses them.
     let env = reads.env_alias.clone().unwrap_or_default();
+    if let (Some(file), false) = (&held_file, reads.lines.is_empty()) {
+        lines.push(format!(
+            "emit Config {{ file = {} }} to {env} get _env_file",
+            format_config_value(&serde_json::Value::String(file.clone()))
+        ));
+        lines.push("assert _env_file ∉ Exception".to_string());
+    }
     for read in &reads.lines {
         lines.push(read.replace(ENV_ALIAS_SLOT, &env));
     }
@@ -497,6 +522,26 @@ impl EnvReads {
     }
 }
 
+/// The `.env` a held application reads, when its `env` organelle can be
+/// pointed at one: declared, and pinned at a version whose setup particle is
+/// `Config` (env ≥ 2.19).
+fn held_env_file(manifest: &AppManifest, project_root: &Path) -> Option<String> {
+    let declared = manifest
+        .organelles
+        .values()
+        .any(|entry| entry.reference() == "env");
+    let configurable = lockfile::read(project_root, "env")
+        .and_then(|m| m.setup)
+        .is_some_and(|setup| setup == "Config");
+    if !(declared && configurable) {
+        return None;
+    }
+    let root = project_root
+        .canonicalize()
+        .unwrap_or_else(|_| project_root.to_path_buf());
+    Some(root.join(".env").display().to_string().replace('\\', "/"))
+}
+
 /// The alias of the application's own `env` organelle, which a runtime-mode
 /// entry reads its variables through.
 fn env_alias(manifest: &AppManifest, configured: &str) -> Result<String, String> {
@@ -693,19 +738,26 @@ pub fn entry_status(project_root: &Path) -> EntryStatus {
         return EntryStatus::Edited;
     }
 
-    // Up to date if it is what either mode would write: which one wrote it
+    // Up to date if it is what any mode would write: which one wrote it
     // depends on the command that last ran (`run` reads at run time, a held
-    // build bakes), and neither is staler than the other.
+    // build reads its own file or bakes, `test` bakes), and none is staler
+    // than another.
     match regenerate(project_root, EnvMode::Baked) {
         Ok(fresh) if fresh == text => EntryStatus::UpToDate {
             euglena_version: stamp.euglena_version,
         },
-        Ok(_) => match regenerate(project_root, EnvMode::Runtime) {
-            Ok(fresh) if fresh == text => EntryStatus::UpToDate {
-                euglena_version: stamp.euglena_version,
-            },
-            _ => EntryStatus::Stale,
-        },
+        Ok(_) => {
+            let fresh = [EnvMode::Runtime, EnvMode::Held]
+                .into_iter()
+                .any(|mode| regenerate(project_root, mode).is_ok_and(|fresh| fresh == text));
+            if fresh {
+                EntryStatus::UpToDate {
+                    euglena_version: stamp.euglena_version,
+                }
+            } else {
+                EntryStatus::Stale
+            }
+        }
         Err(e) => EntryStatus::Unverifiable(e),
     }
 }
@@ -1259,6 +1311,59 @@ mod tests {
         let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
         std::env::remove_var("BAKED_SECRET");
         assert!(content.contains("secret = \"baked\""), "{content}");
+        assert!(!content.contains("emit Require"), "{content}");
+    }
+
+    /// `env_app` with its env pinned at a version that takes `Config`.
+    fn held_app(root: &Path, prefix: &str) -> AppManifest {
+        let m = env_app(root, prefix);
+        fs::write(
+            root.join(".code/lock.json"),
+            r#"{"modules":{
+                "jwt":{"name":"jwt","version":"1.1.4","asset":"jwt-linux-x86_64.so","setup":"Config"},
+                "env":{"name":"env","version":"2.19.0","asset":"env-linux-x86_64.so","setup":"Config"}}}"#,
+        )
+        .unwrap();
+        m
+    }
+
+    #[test]
+    fn a_held_build_reads_its_own_env_file_when_its_env_can() {
+        let root = tmp_root("cfg_held");
+        let m = held_app(&root, "HELD");
+        std::env::set_var("HELD_SECRET", "do-not-bake-me");
+        let content = generate_main_code(&m, &[], &root, EnvMode::Held).unwrap();
+        std::env::remove_var("HELD_SECRET");
+        assert!(!content.contains("do-not-bake-me"), "{content}");
+        let file = root
+            .canonicalize()
+            .unwrap()
+            .join(".env")
+            .display()
+            .to_string();
+        let config = format!("emit Config {{ file = \"{file}\" }} to vars get _env_file");
+        assert!(content.contains(&config), "{content}");
+        // Pointed at the file before anything is read from it.
+        assert!(content.find(&config).unwrap() < content.find("emit Require").unwrap());
+        assert!(content.contains("secret = _env_HELD_SECRET"), "{content}");
+    }
+
+    #[test]
+    fn a_held_build_bakes_when_its_env_cannot_read_a_file() {
+        // env pinned from before `Config`: reading would read the host's
+        // environment, so the values are written in, as before.
+        let root = tmp_root("cfg_held_old_env");
+        let m = env_app(&root, "OLDENV");
+        std::env::set_var("OLDENV_SECRET", "baked");
+        let content = generate_main_code(&m, &[], &root, EnvMode::Held).unwrap();
+        std::env::remove_var("OLDENV_SECRET");
+        assert!(content.contains("secret = \"baked\""), "{content}");
+        assert!(!content.contains("_env_file"), "{content}");
+        // No env organelle at all: the same.
+        let root = tmp_root("cfg_held_no_env");
+        let mut m = held_app(&root, "NOENVHELD");
+        m.organelles.remove("vars");
+        let content = generate_main_code(&m, &[], &root, EnvMode::Held).unwrap();
         assert!(!content.contains("emit Require"), "{content}");
     }
 
