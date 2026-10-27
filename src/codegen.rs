@@ -233,7 +233,10 @@ pub fn generate_main_code(
         (other, _) => other,
     };
     let mut emitted_setup = false;
-    let mut reads = EnvReads::default();
+    let mut reads = EnvReads {
+        lenient: held_file.is_some(),
+        ..EnvReads::default()
+    };
     for (alias, entry) in &manifest.organelles {
         let Some(fields) = entry.config() else {
             continue;
@@ -497,6 +500,10 @@ struct EnvReads {
     lines: Vec<String>,
     pending: Vec<String>,
     env_alias: Option<String>,
+    /// A held application reads an unset variable as `""`, as the baked
+    /// entry it replaces did, rather than stopping: it starts inside the
+    /// host, and its `.env` was written for an entry that never stopped.
+    lenient: bool,
 }
 
 impl EnvReads {
@@ -510,21 +517,32 @@ impl EnvReads {
         let value = format!("_env_{name}");
         if !self.names.iter().any(|n| n == name) {
             self.names.push(name.to_string());
+            if self.lenient {
+                self.lines.push(format!(
+                    "emit Get {{ name = \"{name}\", default = \"\" }} to {ENV_ALIAS_SLOT} get _env_read_{name}"
+                ));
+            } else {
+                self.lines.extend([
+                    format!("emit Require {{ name = \"{name}\" }} to {ENV_ALIAS_SLOT} get _env_read_{name}"),
+                    format!("assert _env_read_{name} ∉ Exception"),
+                ]);
+            }
             self.lines.extend([
-                format!("emit Require {{ name = \"{name}\" }} to {ENV_ALIAS_SLOT} get _env_read_{name}"),
-                format!("assert _env_read_{name} ∉ Exception"),
                 format!("emit Get {{ name = \"{name}\", default = 0 }} to {ENV_ALIAS_SLOT} get _env_number_{name}"),
                 format!("{value} = _env_read_{name}.value"),
-                format!("if _env_number_{name} ∉ Exception, {value} = _env_number_{name}.value"),
+                // Only a value that is there and is a number becomes one.
+                format!(
+                    "if _env_number_{name} ∉ Exception and _env_number_{name}.found, {value} = _env_number_{name}.value"
+                ),
             ]);
         }
         value
     }
 }
 
-/// The `.env` a held application reads, when its `env` organelle can be
-/// pointed at one: declared, and pinned at a version whose setup particle is
-/// `Config` (env ≥ 2.19).
+/// The `.env` a held application reads, when it has one and its `env`
+/// organelle can be pointed at it: declared, and pinned at a version whose
+/// setup particle is `Config` (env ≥ 2.19).
 fn held_env_file(manifest: &AppManifest, project_root: &Path) -> Option<String> {
     let declared = manifest
         .organelles
@@ -533,7 +551,9 @@ fn held_env_file(manifest: &AppManifest, project_root: &Path) -> Option<String> 
     let configurable = lockfile::read(project_root, "env")
         .and_then(|m| m.setup)
         .is_some_and(|setup| setup == "Config");
-    if !(declared && configurable) {
+    // No `.env` at all: there is nothing of its own to read, and its values
+    // are what they always were — baked, and empty.
+    if !(declared && configurable) || !project_root.join(".env").exists() {
         return None;
     }
     // The file itself, resolved: a build made in a folder of links to the
@@ -1325,6 +1345,11 @@ mod tests {
     fn held_app(root: &Path, prefix: &str) -> AppManifest {
         let m = env_app(root, prefix);
         fs::write(
+            root.join(".env"),
+            format!("{prefix}_SECRET=from-its-own-file\n"),
+        )
+        .unwrap();
+        fs::write(
             root.join(".code/lock.json"),
             r#"{"modules":{
                 "jwt":{"name":"jwt","version":"1.1.4","asset":"jwt-linux-x86_64.so","setup":"Config"},
@@ -1351,8 +1376,23 @@ mod tests {
         let config = format!("emit Config {{ file = \"{file}\" }} to vars get _env_file");
         assert!(content.contains(&config), "{content}");
         // Pointed at the file before anything is read from it.
-        assert!(content.find(&config).unwrap() < content.find("emit Require").unwrap());
+        assert!(content.find(&config).unwrap() < content.find("emit Get").unwrap());
         assert!(content.contains("secret = _env_HELD_SECRET"), "{content}");
+        // Unset reads as "", as the baked entry did, instead of stopping the
+        // host's start.
+        assert!(!content.contains("emit Require"), "{content}");
+        assert!(content.contains(
+            "emit Get { name = \"HELD_SECRET\", default = \"\" } to vars get _env_read_HELD_SECRET"
+        ), "{content}");
+    }
+
+    #[test]
+    fn a_held_build_without_a_env_file_bakes() {
+        let root = tmp_root("cfg_held_no_file");
+        let m = held_app(&root, "NOFILE");
+        fs::remove_file(root.join(".env")).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Held).unwrap();
+        assert!(!content.contains("_env_file"), "{content}");
     }
 
     #[test]
@@ -1364,6 +1404,7 @@ mod tests {
         let elsewhere = tmp_root("cfg_held_link_real");
         fs::create_dir_all(&elsewhere).unwrap();
         fs::write(elsewhere.join(".env"), "LINKED_SECRET=x\n").unwrap();
+        fs::remove_file(root.join(".env")).unwrap();
         std::os::unix::fs::symlink(elsewhere.join(".env"), root.join(".env")).unwrap();
         let content = generate_main_code(&m, &[], &root, EnvMode::Held).unwrap();
         let real = elsewhere
