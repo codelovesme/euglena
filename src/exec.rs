@@ -163,6 +163,7 @@ pub fn build(path: &str, release: bool, target: Option<&str>, output: Option<&st
     // them written in (ticket 170, `codegen::EnvMode`).
     let mode = match target.unwrap_or("exe") {
         "exe" => codegen::EnvMode::Runtime,
+        "shared" => codegen::EnvMode::Held,
         _ => codegen::EnvMode::Baked,
     };
     let entry_arg = generate_entry_or_exit(&project_root, mode, verbose);
