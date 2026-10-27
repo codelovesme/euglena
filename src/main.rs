@@ -34,6 +34,9 @@ enum Commands {
         /// Scaffold an app that runs in a browser rather than on a machine
         #[arg(long)]
         web: bool,
+        /// Scaffold a service that listens on its own port, with a Dockerfile
+        #[arg(long, conflicts_with = "web")]
+        service: bool,
     },
     /// Run an Euglena application through the `code` interpreter
     Run {
@@ -134,7 +137,7 @@ enum CodeCommands {
 fn main() {
     let cli = Cli::parse();
     match cli.command {
-        Commands::Init { name, web } => init::run(&name, web),
+        Commands::Init { name, web, service } => init::run(&name, web, service),
         Commands::Run { path, verbose } => exec::run(&path, verbose),
         Commands::Build {
             path,
