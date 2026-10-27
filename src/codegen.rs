@@ -536,10 +536,17 @@ fn held_env_file(manifest: &AppManifest, project_root: &Path) -> Option<String> 
     if !(declared && configurable) {
         return None;
     }
-    let root = project_root
-        .canonicalize()
-        .unwrap_or_else(|_| project_root.to_path_buf());
-    Some(root.join(".env").display().to_string().replace('\\', "/"))
+    // The file itself, resolved: a build made in a folder of links to the
+    // application (`tools/euglena-preserving-entry.py`) must name the real
+    // `.env`, not a link in a folder that is gone once the build is done.
+    let file = project_root.join(".env");
+    let real = file.canonicalize().unwrap_or_else(|_| {
+        project_root
+            .canonicalize()
+            .unwrap_or_else(|_| project_root.to_path_buf())
+            .join(".env")
+    });
+    Some(real.display().to_string().replace('\\', "/"))
 }
 
 /// The alias of the application's own `env` organelle, which a runtime-mode
@@ -1346,6 +1353,26 @@ mod tests {
         // Pointed at the file before anything is read from it.
         assert!(content.find(&config).unwrap() < content.find("emit Require").unwrap());
         assert!(content.contains("secret = _env_HELD_SECRET"), "{content}");
+    }
+
+    #[test]
+    fn a_held_build_names_the_real_env_file_behind_a_link() {
+        // A build made in a folder of links to the application must name
+        // the real file, not the link in a folder gone after the build.
+        let root = tmp_root("cfg_held_link");
+        let m = held_app(&root, "LINKED");
+        let elsewhere = tmp_root("cfg_held_link_real");
+        fs::create_dir_all(&elsewhere).unwrap();
+        fs::write(elsewhere.join(".env"), "LINKED_SECRET=x\n").unwrap();
+        std::os::unix::fs::symlink(elsewhere.join(".env"), root.join(".env")).unwrap();
+        let content = generate_main_code(&m, &[], &root, EnvMode::Held).unwrap();
+        let real = elsewhere
+            .canonicalize()
+            .unwrap()
+            .join(".env")
+            .display()
+            .to_string();
+        assert!(content.contains(&format!("file = \"{real}\"")), "{content}");
     }
 
     #[test]
