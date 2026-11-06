@@ -1,0 +1,10 @@
+{
+  "id": "euglena/diagram",
+  "title": "Diagram",
+  "purpose": "Draws a flow of steps as boxes joined by arrows, as a value the dom organelle renders.",
+  "triggers": [
+    {
+      "kind": "manual"
+    }
+  ]
+}

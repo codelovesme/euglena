@@ -170,15 +170,19 @@ pub fn install_one(project_root: &Path, name: &str) -> Result<(), String> {
         .map_err(|e| format!("no gene called '{name}' in the registry ({e})"))?;
     let meta: serde_json::Value = serde_json::from_str(&meta_text)
         .map_err(|e| format!("the registry's entry for '{name}' is not JSON: {e}"))?;
-    let expected = meta
-        .get("sha256")
-        .and_then(|v| v.as_str())
-        .ok_or_else(|| format!("the registry's entry for '{name}' names no sha256"))?;
-    let version = meta
-        .get("version")
-        .and_then(|v| v.as_str())
-        .unwrap_or(&version)
-        .to_string();
+    // Read as a package description (`crate::package`): a legacy entry as it
+    // always was, a schema-1 one checked whole — and one this euglena cannot
+    // read refused here, before anything is written or any pin moves.
+    let description = crate::package::parse(&meta)
+        .map_err(|e| format!("the registry's entry for '{name}': {e}"))?;
+    if description.name != name {
+        return Err(format!(
+            "the registry's entry for '{name}' describes '{}'",
+            description.name
+        ));
+    }
+    let expected = description.sha256.as_str();
+    let version = description.version.clone().unwrap_or(version);
 
     let bytes = fetch_bytes(&format!("{base}/{asset}"))
         .map_err(|e| format!("cannot fetch the gene '{name}': {e}"))?;
@@ -197,6 +201,10 @@ pub fn install_one(project_root: &Path, name: &str) -> Result<(), String> {
         .join(&version);
     fs::create_dir_all(&dir).map_err(|e| format!("cannot create {}: {e}", dir.display()))?;
     fs::write(dir.join(&asset), &bytes)
+        .map_err(|e| format!("cannot write {}: {e}", dir.display()))?;
+    // The description beside the bytes it describes, so what the package
+    // needs and answers can be read without the registry.
+    fs::write(dir.join(format!("{name}.gene.json")), meta_text.as_bytes())
         .map_err(|e| format!("cannot write {}: {e}", dir.display()))?;
 
     pin(project_root, name, &version, &asset, &found)?;

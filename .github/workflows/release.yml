@@ -76,6 +76,16 @@ jobs:
       # Each gene travels with a small metadata file naming its sha256, which
       # `euglena install` checks before it writes anything and again before
       # it compiles it in.
+      # `euglena describe` reads what each gene emits to through `code
+      # handlers`, so the registry's descriptions carry derived bindings.
+      - name: Download code (v2.26.0)
+        run: |
+          set -euo pipefail
+          curl -sSfL -o code.tar.gz \
+            https://github.com/codelovesme/code/releases/download/v2.26.0/code-v2.26.0-x86_64-linux.tar.gz
+          tar -xzf code.tar.gz
+          target/release/euglena code set "$PWD/code-v2.26.0-x86_64-linux/code"
+
       - name: Package the genes
         run: |
           set -euo pipefail
@@ -86,17 +96,16 @@ jobs:
           shopt -s nullglob
           for gene in genes/*.gene.code; do
             name="$(basename "$gene" .gene.code)"
-            sum="$(sha256sum "$gene" | cut -d' ' -f1)"
             cp "$gene" "${name}.gene.code"
-            cat > "${name}.gene.json" <<JSON
-          {
-            "name": "${name}",
-            "version": "${version}",
-            "asset": "${name}.gene.code",
-            "sha256": "${sum}"
-          }
-          JSON
-            echo "packaged gene ${name}@${version} (sha256 ${sum})"
+            meta=()
+            if [[ -f "genes/${name}.meta.json" ]]; then
+              meta=(--meta "genes/${name}.meta.json")
+            fi
+            # A schema-1 package description (ticket 155): the digest and
+            # what the source needs from its bytes, the rest from the meta.
+            target/release/euglena describe "$gene" "${meta[@]}" --version "$version" > "${name}.gene.json"
+            target/release/euglena describe "$gene" --check "${name}.gene.json"
+            echo "packaged gene ${name}@${version} (sha256 $(sha256sum "$gene" | cut -d' ' -f1))"
           done
 
       - name: Upload build artifact

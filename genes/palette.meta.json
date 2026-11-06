@@ -1,0 +1,10 @@
+{
+  "id": "euglena/palette",
+  "title": "Palette",
+  "purpose": "The workspace's colours: seven roles every application links, for light and dark.",
+  "triggers": [
+    {
+      "kind": "manual"
+    }
+  ]
+}
