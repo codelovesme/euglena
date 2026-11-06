@@ -11,6 +11,7 @@ mod invocation;
 mod lockfile;
 mod manifest;
 mod modules;
+mod package;
 mod pin_audit;
 mod sha256;
 
@@ -108,6 +109,23 @@ enum Commands {
     },
     /// List declared organelles and whether each is installed
     List,
+    /// Describe a reusable program (a gene, a saved plasmid) as a package:
+    /// stable id, version and sha256, the names it needs its application to
+    /// provide, the particles it answers — or, with --check, verify one
+    Describe {
+        /// The `.gene.code` (or `.code`) source
+        source: String,
+        /// What only the author knows: id, title, purpose, triggers,
+        /// bindings.dynamic (a JSON file)
+        #[arg(long)]
+        meta: Option<String>,
+        /// The version to describe (default: the meta's, else euglena's)
+        #[arg(long)]
+        version: Option<String>,
+        /// Verify this description against the source instead
+        #[arg(long, conflicts_with_all = ["meta", "version"])]
+        check: Option<String>,
+    },
     /// Check the Code interpreter, project layout, and declared organelles
     Doctor {
         /// Additional hosted web projects to check against this shell
@@ -166,6 +184,17 @@ fn main() {
         }
         Commands::Uninstall { alias } => modules::uninstall(&alias),
         Commands::List => modules::list(),
+        Commands::Describe {
+            source,
+            meta,
+            version,
+            check,
+        } => package::run(
+            &source,
+            meta.as_deref(),
+            version.as_deref(),
+            check.as_deref(),
+        ),
         Commands::Doctor { guests } => doctor::run(&guests),
         Commands::Code { command } => match command {
             CodeCommands::Set { path } => config::set_code_binary_path(&path),

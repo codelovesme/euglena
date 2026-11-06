@@ -347,6 +347,89 @@ the generated text identical and every application would go on reporting "up
 to date" while compiling in bytes that had changed. The digest is part of the
 body, so the stamp covers it and `doctor` says STALE the moment a pin moves.
 
+#### What a gene says about itself — and a saved plasmid
+
+A gene's `.gene.json` is its **package description**. The same description
+serves a program saved as data and attached at runtime as a plasmid (a Home
+rule, a Mike saved program): what is reusable about a program does not
+depend on whether it lives in a file or in a database.
+
+```json
+{
+  "schema": 1,
+  "id": "euglena/outbox",
+  "name": "outbox",
+  "title": "Outbox",
+  "purpose": "Keeps changes that have not reached the service yet …",
+  "version": "0.9.0",
+  "asset": "outbox.gene.code",
+  "sha256": "…64 hex…",
+  "bindings": { "required": ["arrays", "clock", "json", "store"], "dynamic": [] },
+  "handlers": [{ "class": "OutboxPost", "fields": ["item"] }, …],
+  "triggers": [{ "kind": "manual" }]
+}
+```
+
+- **`id`** is the package's identity and never changes: not with a new
+  version, a new `title`, or someone renaming their saved copy. `name` is
+  the file/registry name, `title` the one for people.
+- **`version` + `sha256`** say which bytes. Changing the source is a new
+  digest, and a description never describes bytes it was not made from:
+  `euglena describe --check` and `install` refuse a mismatch rather than
+  re-deriving the digest to make it pass. A digest proves bytes, not
+  authorship, correctness or the right to run them.
+- **`bindings.required`** are the names the source emits to without linking
+  them — what the application must provide (`Offer`, ticket 153). Read from
+  the parsed source (`code handlers`' `emits`, Code ≥ 2.26.0), never guessed
+  from text. They are requirements, not permissions, and carry no service
+  configuration. `dynamic` lists names that hold an address at runtime and
+  are not organelles. No `bindings` at all means they were never declared
+  (an older `code` cannot report them) — unknown, not "none".
+- **`handlers`** are the particles it answers; **`triggers`** (`manual`,
+  `event { class }`, `timer { at | every, once? }`) say how it is meant to
+  be started. A trigger is a declaration: reading one subscribes to
+  nothing, and does not mean the application can deliver it.
+
+`euglena describe genes/outbox.gene.code --meta genes/outbox.meta.json
+--version 0.9.0` writes it: the facts from the source and its bytes, the
+rest (`id`, `title`, `purpose`, `triggers`, `bindings.dynamic`) from the
+author's meta file. `euglena describe <source> --check <description>` says
+whether a description describes a source — the digest must match, and
+every name the source needs must be required (a required name the source
+never uses is a note, not an error).
+
+**A legacy description** — no `schema`, every `.gene.json` before 0.9.0 —
+installs exactly as it always did. Its `id` is `euglena/<name>`, from the
+one fact it has, so it is the same on every read; nothing is invented for
+the bindings and purpose it never declared. A `schema` newer than this
+euglena reads, a malformed field, or a field that belongs to someone's
+saved copy (below) is refused at `install` before anything is written, and
+the pin already in `.code/lock.json` stays as it was. Unknown fields are
+kept. The installed description lands beside its bytes, in
+`.code/genes/<name>/<version>/<name>.gene.json`.
+
+**A package is not a saved copy.** One owner's saved program is an
+*instance* record that holds a package:
+
+```json
+{ "instance": "…", "owner": "…", "name": "my evening reminder",
+  "conversations": ["…"], "memory": ["…"],
+  "loaded": { "id": 4, "version": 2, "hash": "sha256:…" },
+  "package": { …the description… }, "source": "…" }
+```
+
+The instance has its own identity and its own `name` (renaming it changes
+neither its instance id nor the package `id`). Who made it, from which
+conversation, its memory links, whether it is on, and what is loaded now
+are the instance's. `loaded` is what the `interpreter` module reports
+(`Status`: runtime `id`, `version`, `hash`) and is compared with the stored
+source's digest — a stale record is not proof of what runs. Sharing or
+reinstalling passes on `package` and `source` only; a description holding
+`owner`, `creator`, `conversations`, `memory`, `loaded`, `active`,
+`enabled`, `access`, `state` or `instance` is refused. Where instances are
+kept (a database, a file) is the application's; the `versions` gene keeps
+their history.
+
 `EUGLENA_GENE_RELEASE` points the registry somewhere else — a directory on
 disk (`file://…`) is how a gene is tried before it is published.
 

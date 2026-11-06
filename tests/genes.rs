@@ -371,3 +371,67 @@ fn uninstalling_a_gene_undeclares_unpins_and_removes_it() {
     );
     app.cleanup();
 }
+
+/// A schema-1 description (ticket 155) installs exactly as a legacy one does,
+/// and lands beside the bytes so what the gene needs can be read offline.
+#[test]
+fn a_described_gene_installs_and_keeps_its_description() {
+    let app = App::new("described");
+    let asset = app.registry.join("palette.gene.code");
+    fs::write(&asset, PALETTE).unwrap();
+    let sum = sha256_of(&asset);
+    let description = format!(
+        "{{\"schema\":1,\"id\":\"euglena/palette\",\"name\":\"palette\",\"title\":\"Palette\",\
+          \"version\":\"9.9.9\",\"asset\":\"palette.gene.code\",\"sha256\":\"{sum}\",\
+          \"bindings\":{{\"required\":[],\"dynamic\":[]}},\
+          \"handlers\":[{{\"class\":\"Palette\",\"fields\":[]}}],\"future_field\":true}}"
+    );
+    fs::write(app.registry.join("palette.gene.json"), &description).unwrap();
+    let (ok, out) = app.euglena(&["install", "palette", "--gene"]);
+    assert!(ok, "install failed:\n{out}");
+    assert_eq!(app.lock()["genes"]["palette"]["sha256"], sum);
+    let kept = app
+        .installed("palette", "9.9.9")
+        .with_file_name("palette.gene.json");
+    assert_eq!(fs::read_to_string(kept).unwrap(), description);
+    app.cleanup();
+}
+
+/// A description this euglena cannot read — a newer schema, an instance's
+/// field — is refused before anything is written, and the pin already there
+/// stays exactly as it was.
+#[test]
+fn an_unreadable_description_leaves_the_existing_pin() {
+    let app = App::new("unreadable");
+    app.publish("palette", "9.9.9", PALETTE);
+    let (ok, out) = app.euglena(&["install", "palette", "--gene"]);
+    assert!(ok, "install failed:\n{out}");
+    let before = app.lock();
+
+    let asset = app.registry.join("palette.gene.code");
+    fs::write(
+        &asset,
+        "Palette =>\n    return Colours { bg = \"#ffffff\" }\n",
+    )
+    .unwrap();
+    let sum = sha256_of(&asset);
+    for (entry, said) in [
+        (
+            format!("{{\"schema\":2,\"id\":\"euglena/palette\",\"name\":\"palette\",\"version\":\"10.0.0\",\"sha256\":\"{sum}\"}}"),
+            "upgrade euglena",
+        ),
+        (
+            format!("{{\"schema\":1,\"id\":\"euglena/palette\",\"name\":\"palette\",\"version\":\"10.0.0\",\"sha256\":\"{sum}\",\"owner\":\"someone\"}}"),
+            "saved copy",
+        ),
+        ("{\"name\":\"palette\"}".to_string(), "names no sha256"),
+    ] {
+        fs::write(app.registry.join("palette.gene.json"), &entry).unwrap();
+        let (ok, out) = app.euglena(&["install", "palette", "--gene"]);
+        assert!(!ok, "a bad description was accepted: {entry}");
+        assert!(out.contains(said), "expected '{said}' in:\n{out}");
+        assert_eq!(app.lock(), before, "the pin moved for: {entry}");
+        assert!(!app.installed("palette", "10.0.0").exists());
+    }
+    app.cleanup();
+}

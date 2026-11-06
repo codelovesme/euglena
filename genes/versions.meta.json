@@ -1,0 +1,10 @@
+{
+  "id": "euglena/versions",
+  "title": "Versions",
+  "purpose": "Keeps every version a stored program has had: save, change, switch off, delete and restore without losing history.",
+  "triggers": [
+    {
+      "kind": "manual"
+    }
+  ]
+}
