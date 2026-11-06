@@ -81,10 +81,11 @@ jobs:
       - name: Download code (v2.26.0)
         run: |
           set -euo pipefail
-          curl -sSfL -o code.tar.gz \
+          curl -sSfL -o "$RUNNER_TEMP/code.tar.gz" \
             https://github.com/codelovesme/code/releases/download/v2.26.0/code-v2.26.0-x86_64-linux.tar.gz
-          tar -xzf code.tar.gz
-          target/release/euglena code set "$PWD/code-v2.26.0-x86_64-linux/code"
+          # Outside the workspace: the release uploads every *.tar.gz here.
+          tar -xzf "$RUNNER_TEMP/code.tar.gz" -C "$RUNNER_TEMP"
+          target/release/euglena code set "$RUNNER_TEMP/code-v2.26.0-x86_64-linux/code"
 
       - name: Package the genes
         run: |
