@@ -331,6 +331,13 @@ pub fn generate_main_code(
         lines.push(String::new());
     }
 
+    // Plasmids reach this application's organelles by name.
+    let plasmid_lines = plasmid_hosting(manifest, project_root, genes, &installed);
+    if !plasmid_lines.is_empty() {
+        lines.extend(plasmid_lines);
+        lines.push(String::new());
+    }
+
     // Boot particle.
     lines.push(format!(
         "emit EuglenaHasBeenBorn {{ cell_name = \"{}\" }} to this",
@@ -345,6 +352,85 @@ pub fn generate_main_code(
     let body = format!("\n{}", lines.join("\n"));
     let stamp = stamp_line(env!("CARGO_PKG_VERSION"), &sha256::hex(body.as_bytes()));
     Ok(format!("{GENERATED_HEADER}\n{stamp}\n{body}"))
+}
+
+/// What a plasmid loaded with `Load { host = true }` may reach: every
+/// organelle of the application but the plasmid one itself, by its alias —
+/// the same names the application's genes use (`code_abi.h` item 14, which
+/// asks the base `Offer` and `Module` the way a hosted guest asks its host).
+///
+/// Generated only for an application that links the `interpreter` module,
+/// and only when none of its genes answers `Offer` or `Module` itself: an
+/// application that writes its own keeps its own say.
+fn plasmid_hosting(
+    manifest: &AppManifest,
+    project_root: &Path,
+    genes: &[String],
+    installed: &[String],
+) -> Vec<String> {
+    let is_interpreter = |reference: &str| {
+        let base = reference.rsplit('/').next().unwrap_or(reference);
+        let base = base.strip_suffix(".so").unwrap_or(base);
+        let base = base.strip_prefix("lib").unwrap_or(base);
+        base.split('-').next() == Some("interpreter")
+    };
+    if !manifest
+        .organelles
+        .values()
+        .any(|entry| is_interpreter(entry.reference()))
+    {
+        return Vec::new();
+    }
+    let answers_itself = genes
+        .iter()
+        .map(|gene| project_root.join("src").join(gene))
+        .chain(installed.iter().map(std::path::PathBuf::from))
+        .filter_map(|path| fs::read_to_string(path).ok())
+        .any(|text| {
+            text.lines().any(|line| {
+                line.starts_with("Offer {")
+                    || line.starts_with("Offer =>")
+                    || line.starts_with("Module {")
+                    || line.starts_with("Module =>")
+            })
+        });
+    if answers_itself {
+        return Vec::new();
+    }
+    let reachable: Vec<&String> = manifest
+        .organelles
+        .iter()
+        .filter(|(_, entry)| !is_interpreter(entry.reference()))
+        .map(|(alias, _)| alias)
+        .collect();
+    let mut lines = vec![
+        "| Plasmids loaded with `host = true` reach this application's organelles by".to_string(),
+        "| name, every one but the plasmid organelle itself.".to_string(),
+        "Offer { app as _plasmid_app, name as _plasmid_name } =>".to_string(),
+    ];
+    for alias in &reachable {
+        lines.push(format!(
+            "    if _plasmid_name = \"{alias}\", return Offered"
+        ));
+    }
+    lines.push("    return Refused".to_string());
+    lines.push(String::new());
+    lines.push(
+        "Module { app as _plasmid_app, name as _plasmid_name, particle as _plasmid_particle } =>"
+            .to_string(),
+    );
+    for alias in &reachable {
+        lines.push(format!("    if _plasmid_name = \"{alias}\""));
+        lines.push(format!(
+            "        emit _plasmid_particle to {alias} get _plasmid_answer"
+        ));
+        lines.push("        return _plasmid_answer".to_string());
+    }
+    lines.push(
+        "    return Exception { source = \"euglena\", message = \"this application offers no organelle '$_plasmid_name'\" }"
+            .to_string(),
+    );
+    lines
 }
 
 /// The particle euglena emits to configure `alias` from its `config` block.
@@ -867,6 +953,41 @@ mod tests {
         let _ = fs::remove_dir_all(&dir);
         fs::create_dir_all(&dir).unwrap();
         dir
+    }
+
+    #[test]
+    fn plasmids_reach_every_organelle_but_their_own() {
+        let m = make_manifest(
+            "home",
+            &[
+                ("plasmid", "organelles/interpreter.so"),
+                ("push", "organelles/ntfy.so"),
+                ("store", "organelles/mongodb.so"),
+            ],
+        );
+        let root = tmp_root("plasmid_hosting");
+        let content = generate_main_code(&m, &[], &root, EnvMode::Baked).unwrap();
+        assert!(content.contains("Offer { app as _plasmid_app, name as _plasmid_name } =>"));
+        assert!(content.contains("    if _plasmid_name = \"push\", return Offered"));
+        assert!(content.contains("    if _plasmid_name = \"store\", return Offered"));
+        assert!(!content.contains("\"plasmid\", return Offered"));
+        assert!(content.contains("        emit _plasmid_particle to push get _plasmid_answer"));
+
+        // An application answering `Offer` itself keeps its own say.
+        fs::create_dir_all(root.join("src")).unwrap();
+        fs::write(
+            root.join("src/own.gene.code"),
+            "Offer { app, name } =>\n    return Refused\n",
+        )
+        .unwrap();
+        let own =
+            generate_main_code(&m, &["own.gene.code".to_string()], &root, EnvMode::Baked).unwrap();
+        assert!(!own.contains("_plasmid_name"));
+
+        // Without the interpreter there is nothing to generate.
+        let plain = make_manifest("todo", &[("push", "organelles/ntfy.so")]);
+        let none = generate_main_code(&plain, &[], &root, EnvMode::Baked).unwrap();
+        assert!(!none.contains("_plasmid_name"));
     }
 
     #[test]

@@ -61,7 +61,12 @@ use crate::codegen;
 /// parses — and 2.15.0's modules are ABI 2, which an earlier compiler's
 /// generated code cannot read. One baseline again: the newest thing euglena
 /// itself hands an app.
-pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (2, 15, 0);
+///
+/// **2.24.0 since euglena 0.8.0.** An application may name the `vacuole`
+/// module (`"ram": "vacuole"`), which no `code` before 2.24.0 knows how to
+/// install; and the `Offer`/`Module` pair euglena now writes for a plasmid
+/// is answered by a `code` from 2.25.0 on (older ones never ask it).
+pub(crate) const MIN_CODE_VERSION: (u32, u32, u32) = (2, 24, 0);
 
 pub(crate) fn fmt_version((major, minor, patch): (u32, u32, u32)) -> String {
     format!("{major}.{minor}.{patch}")
@@ -525,7 +530,7 @@ mod tests {
 
     #[test]
     fn min_version_ordering() {
-        assert!((2, 15, 0) >= MIN_CODE_VERSION);
+        assert!((2, 24, 0) >= MIN_CODE_VERSION);
         assert!((3, 0, 0) >= MIN_CODE_VERSION);
         // Everything before it is below. Nothing under 1.4.0 has the `|`
         // comment and so cannot parse the entry euglena writes; 1.4.0 and
@@ -533,7 +538,9 @@ mod tests {
         // before 1.8.0 hears a door linked while the program runs; and
         // nothing before 2.0.0 reads an indented block, which is how every
         // gene euglena scaffolds is written; and nothing before 2.15.0
-        // parses the genes it ships — see `MIN_CODE_VERSION`.
+        // parses the genes it ships; and nothing before 2.24.0 installs
+        // `vacuole` — see `MIN_CODE_VERSION`.
+        assert!((2, 23, 9) < MIN_CODE_VERSION);
         assert!((2, 14, 9) < MIN_CODE_VERSION);
         assert!((1, 9, 9) < MIN_CODE_VERSION);
         assert!((1, 7, 0) < MIN_CODE_VERSION);
