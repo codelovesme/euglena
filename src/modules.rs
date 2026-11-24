@@ -38,9 +38,18 @@ fn require_manifest(project_root: &Path) -> PathBuf {
 /// Without one: the manifest *is* the list — fetch everything it declares,
 /// which is what a fresh checkout needs and the only way to get an app
 /// running without reading its manifest by hand.
-pub fn install(name: Option<&str>, gene: bool, alias: Option<&str>) {
+pub fn install(name: Option<&str>, gene: bool, alias: Option<&str>, upgrade: bool) {
     match name {
-        Some(name) => install_one(name, gene, alias),
+        Some(name) => {
+            if upgrade {
+                eprintln!(
+                    "euglena: `--upgrade` moves every declared gene's pin to this euglena's \
+                     release — drop the name, or drop `--upgrade` to refetch '{name}'"
+                );
+                process::exit(1);
+            }
+            install_one(name, gene, alias)
+        }
         None => {
             if alias.is_some() {
                 eprintln!(
@@ -49,7 +58,7 @@ pub fn install(name: Option<&str>, gene: bool, alias: Option<&str>) {
                 );
                 process::exit(1);
             }
-            install_declared();
+            install_declared(upgrade);
         }
     }
 }
@@ -63,7 +72,7 @@ pub fn install(name: Option<&str>, gene: bool, alias: Option<&str>) {
 ///
 /// One failure does not stop the rest. A checkout missing four organelles
 /// should learn that in one run, not four.
-fn install_declared() {
+fn install_declared(upgrade: bool) {
     let root = project_root();
     let manifest_path = require_manifest(&root);
     let json = match read_manifest_json(&manifest_path) {
@@ -76,7 +85,7 @@ fn install_declared() {
 
     let modules = declared_modules(&json);
     if modules.is_empty() {
-        let genes = install_declared_genes(&root, &json);
+        let genes = install_declared_genes(&root, &json, upgrade);
         if genes == 0 {
             println!("no organelles to install — manifest.json declares none by name");
         } else {
@@ -96,7 +105,7 @@ fn install_declared() {
         }
     }
 
-    let genes = install_declared_genes(&root, &json);
+    let genes = install_declared_genes(&root, &json, upgrade);
 
     if failed.is_empty() {
         println!("{} organelle(s) declared and installed", modules.len());
@@ -140,7 +149,7 @@ fn install_gene(root: &Path, manifest_path: &Path, name: &str, alias: Option<&st
             process::exit(1);
         }
     };
-    if let Err(e) = crate::genes::install_one(root, name) {
+    if let Err(e) = crate::genes::install_one(root, name, crate::genes::Fetch::Refetch) {
         eprintln!("euglena: {e}");
         process::exit(1);
     }
@@ -161,8 +170,8 @@ fn install_gene(root: &Path, manifest_path: &Path, name: &str, alias: Option<&st
 /// The genes a manifest declares, fetched the same way. Reported separately
 /// because they are a different kind of thing: an organelle is a native
 /// artifact with an ABI, a gene is source that links into the root.
-fn install_declared_genes(root: &Path, json: &serde_json::Value) -> usize {
-    match crate::genes::install_declared(root, json) {
+fn install_declared_genes(root: &Path, json: &serde_json::Value, upgrade: bool) -> usize {
+    match crate::genes::install_declared(root, json, upgrade) {
         Ok(n) => n,
         Err(e) => {
             eprintln!("euglena: {e}");

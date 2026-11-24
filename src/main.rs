@@ -95,6 +95,10 @@ enum Commands {
         /// Alias to declare in manifest.json (default: the module name)
         #[arg(long = "as")]
         alias: Option<String>,
+        /// Move every declared gene's pin to this euglena's own release.
+        /// Without it a gene is fetched at the version .code/lock.json pins.
+        #[arg(long = "upgrade")]
+        upgrade: bool,
     },
     /// Drop an organelle's manifest alias, and its module if unreferenced —
     /// or drop a declared gene
@@ -179,9 +183,12 @@ fn main() {
             };
             exec::format(check, &paths);
         }
-        Commands::Install { name, gene, alias } => {
-            modules::install(name.as_deref(), gene, alias.as_deref())
-        }
+        Commands::Install {
+            name,
+            gene,
+            alias,
+            upgrade,
+        } => modules::install(name.as_deref(), gene, alias.as_deref(), upgrade),
         Commands::Uninstall { alias } => modules::uninstall(&alias),
         Commands::List => modules::list(),
         Commands::Describe {

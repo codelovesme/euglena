@@ -120,17 +120,26 @@ impl App {
     }
 
     fn euglena(&self, args: &[&str]) -> (bool, String) {
-        let out = Command::new(bin())
+        self.euglena_with(args, true)
+    }
+
+    /// Without the registry override: the default release on GitHub. Used
+    /// only where the answer comes before anything is fetched.
+    fn euglena_with(&self, args: &[&str], registry: bool) -> (bool, String) {
+        let mut command = Command::new(bin());
+        command
             .args(args)
             .current_dir(&self.root)
             .env("HOME", &self.home)
             .env("PATH", &self.path)
-            .env(
+            .env_remove("EUGLENA_GENE_RELEASE");
+        if registry {
+            command.env(
                 "EUGLENA_GENE_RELEASE",
                 format!("file://{}", self.registry.display()),
-            )
-            .output()
-            .unwrap();
+            );
+        }
+        let out = command.output().unwrap();
         let combined = format!(
             "{}{}",
             String::from_utf8_lossy(&out.stdout),
@@ -433,5 +442,117 @@ fn an_unreadable_description_leaves_the_existing_pin() {
         assert_eq!(app.lock(), before, "the pin moved for: {entry}");
         assert!(!app.installed("palette", "10.0.0").exists());
     }
+    app.cleanup();
+}
+
+/// A fresh checkout has the lock but not the gene files (they are not
+/// committed). A build fetches what the lock pins and goes on, rather than
+/// stopping to ask for `euglena install`.
+#[test]
+fn a_build_fetches_a_pinned_gene_the_checkout_does_not_have() {
+    let app = App::new("fresh");
+    app.publish("palette", "9.9.9", PALETTE);
+    assert!(app.euglena(&["install", "palette", "--gene"]).0);
+    let pinned = app.lock()["genes"]["palette"].clone();
+    fs::remove_dir_all(app.root.join(".code").join("genes")).unwrap();
+
+    let (ok, out) = app.euglena(&["run"]);
+    assert!(ok, "the build should fetch the pinned gene:\n{out}");
+    assert!(
+        out.contains("pinned but not installed"),
+        "and say so:\n{out}"
+    );
+    assert!(app.installed("palette", "9.9.9").is_file());
+    assert_eq!(
+        app.lock()["genes"]["palette"],
+        pinned,
+        "the pin should not move"
+    );
+    app.cleanup();
+}
+
+/// A bare install takes exactly what was pinned. Bytes republished at the
+/// same version since are refused, with the way to take them on purpose.
+#[test]
+fn a_bare_install_refuses_bytes_republished_since_the_pin() {
+    let app = App::new("republished");
+    app.publish("palette", "9.9.9", PALETTE);
+    assert!(app.euglena(&["install", "palette", "--gene"]).0);
+    let pinned = app.lock()["genes"]["palette"].clone();
+    fs::remove_dir_all(app.root.join(".code").join("genes")).unwrap();
+    app.publish(
+        "palette",
+        "9.9.9",
+        "Palette =>\n    return Colours { bg = \"#fff\" }\n",
+    );
+
+    let (ok, out) = app.euglena(&["install"]);
+    assert!(
+        !ok,
+        "a republished gene should not be taken silently:\n{out}"
+    );
+    assert!(
+        out.contains("euglena install palette"),
+        "and should name the fix:\n{out}"
+    );
+    assert_eq!(
+        app.lock()["genes"]["palette"],
+        pinned,
+        "the pin should not move"
+    );
+
+    let (ok, out) = app.euglena(&["install", "palette"]);
+    assert!(ok, "naming the gene takes the new bytes:\n{out}");
+    assert_ne!(app.lock()["genes"]["palette"]["sha256"], pinned["sha256"]);
+    app.cleanup();
+}
+
+/// A lock pinning a gene newer than this euglena is refused before anything
+/// is fetched, and the lock is left as it was — an older euglena once wrote
+/// a 0.10.0 lock down to its own 0.9.0.
+#[test]
+fn a_pin_newer_than_this_euglena_is_refused_and_kept() {
+    let app = App::new("newer");
+    app.publish("palette", "9.9.9", PALETTE);
+    assert!(app.euglena(&["install", "palette", "--gene"]).0);
+    fs::remove_dir_all(app.root.join(".code").join("genes")).unwrap();
+    let before = fs::read_to_string(app.root.join(".code").join("lock.json")).unwrap();
+
+    for args in [&["install"][..], &["run"][..]] {
+        let (ok, out) = app.euglena_with(args, false);
+        assert!(!ok, "`euglena {}` should refuse:\n{out}", args.join(" "));
+        assert!(
+            out.contains("newer than this euglena") && out.contains("cdlvsm install euglena"),
+            "and say why and what to do:\n{out}"
+        );
+        assert_eq!(
+            fs::read_to_string(app.root.join(".code").join("lock.json")).unwrap(),
+            before,
+            "the lock should be left as it was"
+        );
+    }
+    app.cleanup();
+}
+
+/// A pin moves to another version only when asked: `--upgrade`.
+#[test]
+fn only_upgrade_moves_a_gene_pin_to_another_version() {
+    let app = App::new("upgrade");
+    app.publish("palette", "9.9.9", PALETTE);
+    assert!(app.euglena(&["install", "palette", "--gene"]).0);
+    app.publish(
+        "palette",
+        "9.9.10",
+        "Palette =>\n    return Colours { bg = \"#fff\" }\n",
+    );
+
+    let (ok, out) = app.euglena(&["install"]);
+    assert!(ok, "a bare install keeps what verifies:\n{out}");
+    assert_eq!(app.lock()["genes"]["palette"]["version"], "9.9.9");
+
+    let (ok, out) = app.euglena(&["install", "--upgrade"]);
+    assert!(ok, "--upgrade should move the pin:\n{out}");
+    assert_eq!(app.lock()["genes"]["palette"]["version"], "9.9.10");
+    assert!(app.installed("palette", "9.9.10").is_file());
     app.cleanup();
 }

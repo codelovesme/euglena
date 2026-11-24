@@ -122,6 +122,13 @@ A bare `euglena install` keeps any gene that already verifies — a fresh
 checkout is what it is for. Naming the gene refetches it, which is how a
 republish at the same version is picked up.
 
+**The lock decides the version, never the binary** (ticket 20). A bare install
+and a build fetch exactly the pin: its version, its release, its sha256. A pin
+newer than this euglena is refused with the lock untouched — an older euglena
+once wrote a 0.10.0 lock down to 0.9.0. Only `euglena install --upgrade` moves
+a pin to this euglena's release. `run`/`build`/`test` fetch a pinned gene the
+checkout lacks (`genes::fetch_missing`) before generating the entry.
+
 ---
 
 ## Vocabulary

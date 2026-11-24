@@ -321,6 +321,13 @@ fn euglena_project_root_or_exit(path: &str) -> PathBuf {
 /// convention does the rest, and installed organelles resolve natively since
 /// the entry lives where `.code/` actually is.
 fn generate_entry_or_exit(project_root: &Path, mode: codegen::EnvMode, verbose: bool) -> String {
+    // A gene the lock pins but this checkout has never fetched is fetched
+    // now, at the pinned version, so a fresh checkout builds on the first
+    // try. The gene files are not committed; the lock is.
+    if let Err(e) = crate::genes::fetch_missing(project_root) {
+        eprintln!("euglena: {e}");
+        process::exit(1);
+    }
     match codegen::write_main_code(project_root, mode) {
         Ok(summary) => {
             if verbose {
