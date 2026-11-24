@@ -88,6 +88,21 @@ Metrics =>
         radius = "12px"
         control = "10px"
         tap = "46px"
+        | The `ui` gene's shapes (2026-11-24), taken from To Do and Home,
+        | which set the look: a control (button, input) is the tightest; a
+        | chip a little rounder; a group of controls (the tabs' track, a
+        | row) rounder again; a panel standing on its own (a card, a
+        | dialog) the roundest; a pill is fully round.
+        radius_control = ".4rem"
+        radius_chip = ".65rem"
+        radius_inner = ".6rem"
+        radius_card = ".75rem"
+        radius_pill = "999px"
+        | Space between things, three steps; the gutter above is the page's.
+        space_s = ".5rem"
+        space_m = "1rem"
+        space_l = "1.5rem"
+        chip = "2.6rem"
     }
 
 | Task priority — the one place colour carries meaning rather than mood.

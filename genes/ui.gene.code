@@ -1,0 +1,385 @@
+| The workspace's components, in one file, linked by every application
+| (ticket 330 in my-euglena-apps). `palette` says what the colours and the
+| sizes are; this says what a button, a tab, a dialog *is*, so two
+| applications cannot disagree about it.
+|
+| **Pure, on purpose.** A gene's handlers see only this file's top level,
+| so nothing here holds an application's state: which tab is chosen,
+| whether a dialog is open, what a press does. Each handler takes values
+| and the particles a press sends, and answers an element
+| (`Node { value }`, the shape `dom`'s `Render` draws). The application
+| keeps its handlers exactly as they are.
+|
+| **One stylesheet.** `UiBaseStyles` answers the rules for every class
+| below, from `Palette` and `Metrics`; an application renders
+| `styles = base.value + { its own rules }`. Every class is `ui-…`, so an
+| application's own `.button` or `.chip` keeps working while it moves over.
+|
+| **Prefixed.** A gene's handlers join the program's one table, so every
+| handler here is `Ui…` (the outbox once clashed with auth's `Rejected`).
+|
+| Where the look comes from: To Do and Home, which set it (owner,
+| 2026-10-01/02) — segmented tabs with the chosen one filled, chips with
+| the chosen one filled, a dialog with a title and a quiet ✕ over a
+| hairline, a 4px stripe that carries meaning, a quiet status line, small
+| uppercase section labels over a hairline, every delete a bin that asks
+| first. Needs the `palette` gene.
+|
+| A press is anything `dom` takes in `on.click`: a handler's name, or a
+| particle (`{ _class = "Picked", id = 3 }`). `null` draws the element
+| without one.
+
+| ── Icons ──────────────────────────────────────────────
+
+| A small, fixed set, drawn in the text's colour. Unknown names draw
+| nothing rather than a broken box.
+UiIcon { name ∈ Any } =>
+    paths = {
+        close = "m6 6 12 12M18 6 6 18"
+        bin = "M5 7h14m-9 4v6m4-6v6M9 7V4h6v3m-9 0 1 14h10l1-14"
+        plus = "M12 5v14M5 12h14"
+        back = "m15 18-6-6 6-6"
+        next = "m9 18 6-6-6-6"
+        check = "m5 12 5 5 9-10"
+        more = "M5 12h.01M12 12h.01M19 12h.01"
+        edit = "M4 20h4L19 9l-4-4L4 16v4Zm9-13 4 4"
+        refresh = "M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"
+    }
+    d = paths[name]
+    if d ∉ String
+        return Node { value = { tag = "span", attrs = { class = "ui-icon" }, children = [] } }
+    return Node {
+        value = {
+            tag = "svg"
+            attrs = { class = "ui-icon", viewBox = "0 0 24 24", fill = "none", "aria-hidden" = "true" }
+            children = [{ tag = "path", attrs = { d = d, stroke = "currentColor", "stroke-width" = "2", "stroke-linecap" = "round", "stroke-linejoin" = "round" }, children = [] }]
+        }
+    }
+
+| ── Buttons ────────────────────────────────────────────
+
+| `kind`: "" (plain), "primary" (the one filled button of a view),
+| "danger" (filled red: the second press of a delete), "quiet" (no
+| border, muted: Cancel, Close), "link" (accent text).
+UiButton { label ∈ Any, click ∈ Any, kind ∈ Any } =>
+    class = "ui-button"
+    if kind ∈ String and kind ≠ "", class = "ui-button " + kind
+    on = {}
+    if click ≠ null, on = { click = click }
+    return Node { value = { tag = "button", attrs = { class = class, type = "button" }, on = on, children = [label] } }
+
+| A button that is only an icon: `label` is what a screen reader says and
+| what a pointer's tooltip shows.
+UiIconButton { icon ∈ Any, label ∈ Any, click ∈ Any, kind ∈ Any } =>
+    emit UiIcon { name = icon } to this get drawn
+    class = "ui-icon-button"
+    if kind ∈ String and kind ≠ "", class = "ui-icon-button " + kind
+    on = {}
+    if click ≠ null, on = { click = click }
+    return Node { value = { tag = "button", attrs = { class = class, type = "button", "aria-label" = label, title = label }, on = on, children = [drawn.value] } }
+
+| Every delete is this: a quiet bin. It never deletes; its press opens a
+| `UiConfirmPopup` (owner, 2026-10-02).
+UiDeleteButton { label ∈ Any, click ∈ Any } =>
+    emit UiIconButton { icon = "bin", label = label, click = click, kind = "quiet delete" } to this get drawn
+    return drawn
+
+| ── Choosing ───────────────────────────────────────────
+
+| Segmented tabs: one row, equal widths, the chosen one filled.
+| `items`: [{ label, click, picked }].
+UiTabs { items ∈ Array } =>
+    tabs = []
+    loop item over items
+        class = "ui-tab"
+        if item.picked = true, class = "ui-tab picked"
+        current = {}
+        if item.picked = true, current = { "aria-current" = "page" }
+        on = {}
+        if item.click ≠ null, on = { click = item.click }
+        tabs += [{ tag = "button", attrs = { class = class, type = "button" } + current, on = on, children = [item.label] }]
+    return Node { value = { tag = "nav", attrs = { class = "ui-tabs" }, children = tabs } }
+
+| Chips: a wrapping row, the chosen ones filled. `items` as for tabs.
+UiChips { items ∈ Array } =>
+    chips = []
+    loop item over items
+        class = "ui-chip"
+        if item.picked = true, class = "ui-chip picked"
+        pressed = "false"
+        if item.picked = true, pressed = "true"
+        on = {}
+        if item.click ≠ null, on = { click = item.click }
+        chips += [{ tag = "button", attrs = { class = class, type = "button", "aria-pressed" = pressed }, on = on, children = [item.label] }]
+    return Node { value = { tag = "div", attrs = { class = "ui-chips" }, children = chips } }
+
+| ── Fields ─────────────────────────────────────────────
+
+| A labelled control: the label small and uppercase above it, a hint or an
+| error under it. `control` is the input, select or textarea itself
+| (`UiInput` draws one).
+UiField { label ∈ Any, control ∈ Any, hint ∈ Any, error ∈ Any } =>
+    parts = [{ tag = "span", attrs = { class = "ui-field-label" }, children = [label] }, control]
+    if hint ∈ String and hint ≠ "", parts += [{ tag = "span", attrs = { class = "ui-field-hint" }, children = [hint] }]
+    if error ∈ String and error ≠ "", parts += [{ tag = "span", attrs = { class = "ui-field-error", role = "alert" }, children = [error] }]
+    return Node { value = { tag = "label", attrs = { class = "ui-field" }, children = parts } }
+
+| An input in the theme, never under 16px (a smaller one makes Safari zoom
+| the page). `change` is the handler's name `dom` calls with the value.
+UiInput { name ∈ Any, value ∈ Any, placeholder ∈ Any, type ∈ Any, change ∈ Any } =>
+    attrs = { class = "ui-input" }
+    if name ∈ String, attrs = attrs + { name = name, id = name }
+    if value ≠ null, attrs = attrs + { value = "$value" }
+    if placeholder ∈ String, attrs = attrs + { placeholder = placeholder }
+    kind = "text"
+    if type ∈ String and type ≠ "", kind = type
+    attrs = attrs + { type = kind }
+    on = {}
+    if change ≠ null, on = { input = change }
+    return Node { value = { tag = "input", attrs = attrs, on = on, children = [] } }
+
+| ── Surfaces ───────────────────────────────────────────
+
+| A panel at the one elevation. `stripe`: null, "accent", "health",
+| "warn" or "danger" — a 4px left edge that carries meaning (priority in
+| To Do, a device's health in Home), never decoration. `title` may be null.
+UiCard { title ∈ Any, children ∈ Array, stripe ∈ Any, click ∈ Any } =>
+    class = "ui-card"
+    if stripe ∈ String and stripe ≠ "", class = "ui-card stripe-" + stripe
+    parts = []
+    if title ∈ String and title ≠ "", parts += [{ tag = "h3", attrs = { class = "ui-card-title" }, children = [title] }]
+    parts = parts + children
+    if click ≠ null
+        return Node { value = { tag = "button", attrs = { class = class + " pressable", type = "button" }, on = { click = click }, children = parts } }
+    return Node { value = { tag = "article", attrs = { class = class }, children = parts } }
+
+| A section's head: a small uppercase label over a hairline, and on the
+| right a short note (a count, a time) or nothing.
+UiSectionHead { title ∈ Any, note ∈ Any } =>
+    parts = [{ tag = "h2", attrs = { class = "ui-section-title" }, children = [title] }]
+    if note ∈ String and note ≠ "", parts += [{ tag = "span", attrs = { class = "ui-section-note" }, children = [note] }]
+    return Node { value = { tag = "div", attrs = { class = "ui-section-head" }, children = parts } }
+
+| The quiet line at the top of a page: a dot for how things stand
+| ("ok", "warn", "danger", "" muted) and a sentence. `action` is an
+| element (a quiet Refresh) or null.
+UiStatusLine { text ∈ Any, state ∈ Any, action ∈ Any } =>
+    dot = "ui-dot"
+    if state ∈ String and state ≠ "", dot = "ui-dot " + state
+    parts = [{ tag = "span", attrs = { class = dot }, children = [] }, { tag = "span", attrs = { class = "ui-status-text" }, children = [text] }]
+    if action ≠ null, parts += [action]
+    return Node { value = { tag = "div", attrs = { class = "ui-status-line", role = "status" }, children = parts } }
+
+| Nothing here yet: what will be, and what to do about it.
+UiEmptyState { title ∈ Any, text ∈ Any, action ∈ Any } =>
+    parts = [{ tag = "p", attrs = { class = "ui-empty-title" }, children = [title] }]
+    if text ∈ String and text ≠ "", parts += [{ tag = "p", attrs = { class = "ui-empty-text" }, children = [text] }]
+    if action ≠ null, parts += [action]
+    return Node { value = { tag = "div", attrs = { class = "ui-empty" }, children = parts } }
+
+| ── Dialogs ────────────────────────────────────────────
+
+| To Do's edit-task popup, the owner's reference (2026-10-02): a title and
+| a quiet ✕ top right, a hairline, the body, a hairline, the foot. The ✕
+| and the scrim both send `close`. `foot` is a list of elements (a
+| `UiDeleteButton` on the left, a quiet Close on the right, …).
+UiDialog { title ∈ Any, body ∈ Array, foot ∈ Array, close ∈ Any } =>
+    emit UiIconButton { icon = "close", label = "Close", click = close, kind = "quiet" } to this get x
+    scrim_on = {}
+    if close ≠ null, scrim_on = { click = close }
+    panel = [
+        { tag = "div", attrs = { class = "ui-dialog-head" }, children = [{ tag = "h2", attrs = { class = "ui-dialog-title" }, children = [title] }, x.value] }
+        { tag = "div", attrs = { class = "ui-divider" }, children = [] }
+        { tag = "div", attrs = { class = "ui-dialog-body" }, children = body }
+    ]
+    if foot ≠ []
+        panel += [{ tag = "div", attrs = { class = "ui-divider" }, children = [] }, { tag = "div", attrs = { class = "ui-dialog-foot" }, children = foot }]
+    return Node {
+        value = {
+            tag = "div"
+            attrs = { class = "ui-overlay" }
+            children = [
+                { tag = "div", attrs = { class = "ui-scrim" }, on = scrim_on, children = [] }
+                { tag = "section", attrs = { class = "ui-dialog", role = "dialog", "aria-modal" = "true", "aria-label" = title }, children = panel }
+            ]
+        }
+    }
+
+| Asking before something that cannot be undone, in Home's shape
+| (2026-10-02): a title and ✕, what is about to go, what that means, then
+| a quiet Cancel and the red second press. The ✕, Cancel and the scrim
+| all send `no`.
+UiConfirmPopup { title ∈ Any, subject ∈ Any, note ∈ Any, yes ∈ Any, yes_click ∈ Any, no ∈ Any } =>
+    emit UiIconButton { icon = "close", label = "Keep it", click = no, kind = "quiet" } to this get x
+    emit UiButton { label = "Cancel", click = no, kind = "quiet" } to this get cancel
+    emit UiButton { label = yes, click = yes_click, kind = "danger" } to this get go
+    parts = [{ tag = "div", attrs = { class = "ui-dialog-head" }, children = [{ tag = "h2", attrs = { class = "ui-dialog-title" }, children = [title] }, x.value] }]
+    if subject ∈ String and subject ≠ "", parts += [{ tag = "p", attrs = { class = "ui-confirm-subject" }, children = [subject] }]
+    if note ∈ String and note ≠ "", parts += [{ tag = "p", attrs = { class = "ui-confirm-note" }, children = [note] }]
+    parts += [{ tag = "div", attrs = { class = "ui-dialog-foot" }, children = [cancel.value, go.value] }]
+    scrim_on = {}
+    if no ≠ null, scrim_on = { click = no }
+    return Node {
+        value = {
+            tag = "div"
+            attrs = { class = "ui-overlay" }
+            children = [
+                { tag = "div", attrs = { class = "ui-scrim" }, on = scrim_on, children = [] }
+                { tag = "section", attrs = { class = "ui-dialog ui-confirm", role = "alertdialog", "aria-modal" = "true", "aria-label" = title }, children = parts }
+            ]
+        }
+    }
+
+| ── Numbers drawn ──────────────────────────────────────
+
+| A share as a bar, coloured by how it stands: "ok", "warn", "danger".
+UiBar { pct ∈ Any, level ∈ Any } =>
+    width = 0
+    if pct ∈ Number, width = pct
+    if width < 0, width = 0
+    if width > 100, width = 100
+    tone = "ok"
+    if level ∈ String and level ≠ "", tone = level
+    return Node { value = { tag = "div", attrs = { class = "ui-bar", role = "meter", "aria-valuenow" = "$width", "aria-valuemin" = "0", "aria-valuemax" = "100" }, children = [{ tag = "span", attrs = { class = "ui-bar-fill " + tone, style = "width:$width%" }, children = [] }] } }
+
+| A line over time in a 300 × 60 box: x by place in the list, y between
+| `low` (bottom) and `high` (top), held inside the box; a missing value is
+| left out. `limit`, when a number, is a dashed line where trouble starts.
+| `label` above, the two ends of the time under it (`start`, `finish`).
+UiSparkline { values ∈ Array, low ∈ Number, high ∈ Number, limit ∈ Any, label ∈ Any, start ∈ Any, finish ∈ Any } =>
+    count = 0
+    loop v over values
+        count += 1
+    span = high - low
+    if span ≤ 0, span = 1
+    points = ""
+    i = 0
+    loop v over values
+        if v ∈ Number and count > 1
+            y = 60 - (v - low) * 60 / span
+            if y < 0, y = 0
+            if y > 60, y = 60
+            x = i * 300 / (count - 1)
+            if points ≠ "", points = points + " "
+            points = points + "$x,$y"
+        i += 1
+    parts = []
+    if label ∈ String and label ≠ "", parts += [{ tag = "span", attrs = { class = "ui-spark-label" }, children = [label] }]
+    if points = ""
+        parts += [{ tag = "span", attrs = { class = "ui-spark-empty" }, children = ["Not enough readings yet"] }]
+        return Node { value = { tag = "div", attrs = { class = "ui-spark" }, children = parts } }
+    marks = []
+    if limit ∈ Number
+        ly = 60 - (limit - low) * 60 / span
+        if ly ≥ 0 and ly ≤ 60
+            marks += [{ tag = "line", attrs = { x1 = "0", x2 = "300", y1 = "$ly", y2 = "$ly", class = "ui-spark-limit" }, children = [] }]
+    marks += [{ tag = "polyline", attrs = { points = points, class = "ui-spark-line" }, children = [] }]
+    parts += [{ tag = "svg", attrs = { viewBox = "0 0 300 60", preserveAspectRatio = "none", class = "ui-spark-chart", "aria-hidden" = "true" }, children = marks }]
+    if start ∈ String or finish ∈ String
+        left = ""
+        right = ""
+        if start ∈ String, left = start
+        if finish ∈ String, right = finish
+        parts += [{ tag = "div", attrs = { class = "ui-spark-axis" }, children = [{ tag = "span", children = [left] }, { tag = "span", children = [right] }] }]
+    return Node { value = { tag = "div", attrs = { class = "ui-spark" }, children = parts } }
+
+| ── Page ───────────────────────────────────────────────
+
+| The page's frame: content capped at reading width, the gutter, and the
+| room a phone's home bar needs.
+UiPage { children ∈ Array } =>
+    return Node { value = { tag = "main", attrs = { class = "ui-page" }, children = children } }
+
+| ── The stylesheet ─────────────────────────────────────
+
+| Every rule the classes above need, in the reader's theme. Asked on every
+| draw, like `Palette`, so a theme chosen in the shell follows at once.
+UiBaseStyles =>
+    emit Palette to this get c
+    emit Metrics to this get m
+    focus = "2px solid " + c.accent
+    return Node {
+        value = {
+            ".ui-page" = { width = "min(100%," + m.page + ")", margin = "0 auto", padding = ".75rem " + m.gutter + " calc(2rem + env(safe-area-inset-bottom, 0px))", "box-sizing" = "border-box" }
+            ".ui-icon" = { display = "block", width = "1.3rem", height = "1.3rem", "flex-shrink" = "0" }
+
+            ".ui-button" = { display = "inline-flex", "align-items" = "center", "justify-content" = "center", gap = ".4rem", "min-height" = m.tap, padding = "0 " + m.space_m, font = "inherit", "font-size" = m.button, "line-height" = "1.2", color = c.fg, background = c.hover, border = "1px solid " + c.line, "border-radius" = m.radius_control, cursor = "pointer", "touch-action" = "manipulation", "white-space" = "nowrap" }
+            ".ui-button:hover" = { "border-color" = c.accent }
+            ".ui-button:focus-visible, .ui-icon-button:focus-visible, .ui-tab:focus-visible, .ui-chip:focus-visible, .ui-card.pressable:focus-visible" = { outline = focus, "outline-offset" = "2px" }
+            ".ui-button.primary" = { color = "#ffffff", background = c.accent, "border-color" = c.accent, "font-weight" = "600" }
+            ".ui-button.danger" = { color = "#ffffff", background = c.danger, "border-color" = c.danger, "font-weight" = "600" }
+            ".ui-button.quiet" = { color = c.muted, background = "transparent", "border-color" = "transparent" }
+            ".ui-button.quiet:hover" = { color = c.fg, background = c.hover }
+            ".ui-button.link" = { color = c.accent, background = "transparent", "border-color" = "transparent", padding = "0 .3rem" }
+            ".ui-button:disabled" = { opacity = ".5", cursor = "default" }
+            ".ui-icon-button" = { display = "inline-flex", "align-items" = "center", "justify-content" = "center", width = m.tap, height = m.tap, padding = "0", color = c.fg, background = c.hover, border = "1px solid " + c.line, "border-radius" = m.radius_control, cursor = "pointer", "flex-shrink" = "0", "touch-action" = "manipulation" }
+            ".ui-icon-button.quiet" = { color = c.muted, background = "transparent", "border-color" = "transparent" }
+            ".ui-icon-button.quiet:hover" = { color = c.fg, background = c.hover }
+            ".ui-icon-button.delete:hover" = { color = c.danger }
+
+            ".ui-tabs" = { display = "grid", "grid-auto-flow" = "column", "grid-auto-columns" = "minmax(0,1fr)", gap = ".2rem", padding = ".2rem", margin = "0 0 " + m.space_l, background = c.panel, border = "1px solid " + c.line, "border-radius" = m.radius_inner }
+            ".ui-tab" = { "min-width" = "0", "min-height" = "2.5rem", padding = "0 .2rem", font = "inherit", "font-size" = ".9rem", color = c.muted, background = "transparent", border = "0", "border-radius" = ".45rem", cursor = "pointer", overflow = "hidden", "text-overflow" = "ellipsis", "white-space" = "nowrap", "touch-action" = "manipulation" }
+            ".ui-tab:hover" = { color = c.fg }
+            ".ui-tab.picked" = { color = "#ffffff", background = c.accent, "font-weight" = "600" }
+            ".ui-chips" = { display = "flex", "flex-wrap" = "wrap", gap = ".4rem" }
+            ".ui-chip" = { display = "inline-flex", "align-items" = "center", "justify-content" = "center", "min-height" = m.chip, padding = "0 .85rem", font = "inherit", "font-size" = ".95rem", "line-height" = "1.2", color = c.fg, background = c.hover, border = "1px solid " + c.line, "border-radius" = m.radius_chip, cursor = "pointer", "touch-action" = "manipulation" }
+            ".ui-chip.picked" = { color = "#ffffff", background = c.accent, "border-color" = c.accent, "font-weight" = "600" }
+
+            ".ui-field" = { display = "flex", "flex-direction" = "column", gap = ".3rem", "min-width" = "0" }
+            ".ui-field-label" = { color = c.muted, "font-size" = m.label, "font-weight" = "600", "letter-spacing" = ".04em", "text-transform" = "uppercase" }
+            ".ui-field-hint" = { color = c.muted, "font-size" = m.meta }
+            ".ui-field-error" = { color = c.danger, "font-size" = m.meta }
+            ".ui-input, .ui-field select, .ui-field textarea" = { width = "100%", "box-sizing" = "border-box", "min-height" = m.tap, padding = ".5rem .7rem", font = "inherit", "font-size" = m.field, color = c.fg, background = c.bg, border = "1px solid " + c.line, "border-radius" = m.radius_control }
+            ".ui-input:focus, .ui-field select:focus, .ui-field textarea:focus" = { outline = "none", "border-color" = c.accent, "box-shadow" = "0 0 0 1px " + c.accent }
+
+            ".ui-card" = { display = "flex", "flex-direction" = "column", gap = m.space_s, "min-width" = "0", padding = m.space_m, "text-align" = "left", font = "inherit", color = c.fg, background = c.panel, border = "1px solid " + c.line, "border-radius" = m.radius_card }
+            ".ui-card.pressable" = { cursor = "pointer", width = "100%" }
+            ".ui-card.pressable:hover" = { "border-color" = c.accent }
+            ".ui-card[class*=stripe-]" = { "border-left-width" = "4px" }
+            ".ui-card.stripe-accent" = { "border-left-color" = c.accent }
+            ".ui-card.stripe-health" = { "border-left-color" = c.health }
+            ".ui-card.stripe-warn" = { "border-left-color" = c.warn }
+            ".ui-card.stripe-danger" = { "border-left-color" = c.danger }
+            ".ui-card-title" = { margin = "0", "font-size" = ".95rem", "font-weight" = "600", "overflow-wrap" = "anywhere" }
+
+            ".ui-section-head" = { display = "flex", "align-items" = "baseline", "justify-content" = "space-between", gap = m.space_m, margin = m.space_l + " 0 " + m.space_s, padding = "0 0 .35rem", "border-bottom" = "1px solid " + c.line }
+            ".ui-section-title" = { margin = "0", color = c.muted, "font-size" = ".78rem", "font-weight" = "700", "letter-spacing" = ".05em", "text-transform" = "uppercase" }
+            ".ui-section-note" = { color = c.muted, "font-size" = m.meta, "text-align" = "right" }
+            ".ui-status-line" = { display = "flex", "align-items" = "center", gap = ".55rem", "min-height" = "2.5rem", margin = "0 0 .5rem", color = c.muted, "font-size" = ".85rem" }
+            ".ui-status-text" = { flex = "1", "min-width" = "0", "overflow-wrap" = "anywhere" }
+            ".ui-dot" = { width = ".55rem", height = ".55rem", "border-radius" = m.radius_pill, background = c.muted, "flex-shrink" = "0" }
+            ".ui-dot.ok" = { background = c.health }
+            ".ui-dot.warn" = { background = c.warn }
+            ".ui-dot.danger" = { background = c.danger }
+            ".ui-empty" = { display = "flex", "flex-direction" = "column", "align-items" = "center", gap = ".5rem", margin = "2.5rem auto 0", "max-width" = "26rem", padding = "0 1rem", "text-align" = "center" }
+            ".ui-empty-title" = { margin = "0", "font-size" = "1.1rem", color = c.fg }
+            ".ui-empty-text" = { margin = "0", color = c.muted, "line-height" = "1.5" }
+
+            ".ui-overlay" = { position = "fixed", inset = "0", "z-index" = "1000", display = "flex", "align-items" = "center", "justify-content" = "center", padding = m.space_m, "box-sizing" = "border-box" }
+            ".ui-scrim" = { position = "absolute", inset = "0", background = "rgba(0,0,0,.58)" }
+            ".ui-dialog" = { position = "relative", display = "flex", "flex-direction" = "column", gap = ".7rem", width = "min(34rem, 100%)", "max-height" = "min(85vh, 44rem)", overflow = "auto", "overscroll-behavior" = "contain", padding = m.space_m, "box-sizing" = "border-box", color = c.fg, background = c.panel, border = "1px solid " + c.line, "border-radius" = m.radius_card, "box-shadow" = "0 16px 44px rgba(0,0,0,.5)", "text-align" = "left" }
+            ".ui-confirm" = { width = "min(26rem, 100%)" }
+            ".ui-dialog-head" = { display = "flex", "align-items" = "center", "justify-content" = "space-between", gap = ".5rem" }
+            ".ui-dialog-title" = { margin = "0", "font-size" = "1.05rem", "overflow-wrap" = "anywhere" }
+            ".ui-dialog-body" = { display = "flex", "flex-direction" = "column", gap = ".7rem", "min-width" = "0" }
+            ".ui-dialog-foot" = { display = "flex", "flex-wrap" = "wrap", "align-items" = "center", "justify-content" = "flex-end", gap = ".5rem" }
+            ".ui-dialog-foot > .delete" = { "margin-right" = "auto" }
+            ".ui-divider" = { height = "1px", "flex-shrink" = "0", background = c.line }
+            ".ui-confirm-subject" = { margin = "0", "font-weight" = "600", "overflow-wrap" = "anywhere" }
+            ".ui-confirm-note" = { margin = "0", color = c.muted, "font-size" = ".9rem" }
+
+            ".ui-bar" = { height = ".4rem", background = c.hover, "border-radius" = m.radius_pill, overflow = "hidden" }
+            ".ui-bar-fill" = { display = "block", height = "100%", background = c.health }
+            ".ui-bar-fill.warn" = { background = c.warn }
+            ".ui-bar-fill.danger" = { background = c.danger }
+            ".ui-bar-fill.accent" = { background = c.accent }
+            ".ui-spark" = { display = "flex", "flex-direction" = "column", gap = ".15rem", "min-width" = "0" }
+            ".ui-spark-label" = { color = c.muted, "font-size" = ".72rem" }
+            ".ui-spark-empty" = { color = c.muted, "font-size" = ".72rem", "font-style" = "italic" }
+            ".ui-spark-chart" = { display = "block", width = "100%", height = "3.2rem", background = c.bg, "border-radius" = m.radius_control }
+            ".ui-spark-line" = { fill = "none", stroke = c.accent, "stroke-width" = "1.6", "vector-effect" = "non-scaling-stroke", "stroke-linejoin" = "round" }
+            ".ui-spark-limit" = { stroke = c.danger, "stroke-width" = "1", "stroke-dasharray" = "4 4", "vector-effect" = "non-scaling-stroke", opacity = ".7" }
+            ".ui-spark-axis" = { display = "flex", "justify-content" = "space-between", color = c.muted, "font-size" = ".65rem" }
+            "@media (prefers-reduced-motion: reduce)" = { "*" = { transition = "none", animation = "none" } }
+        }
+    }

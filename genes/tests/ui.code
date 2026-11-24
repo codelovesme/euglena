@@ -1,0 +1,173 @@
+| The ui gene, exercised as a fixture: every component's tree, the press
+| it carries, and the stylesheet in both themes. `Palette` and `Metrics`
+| are stubbed rather than linked: the real palette reads the theme from a
+| browser's storage, and there is none here. `theme` picks the stub.
+
+link "../ui.gene.code"
+
+theme = "dark"
+
+Palette =>
+    if theme = "light"
+        return Colours { bg = "#fff", panel = "#f6f8fa", line = "#d0d7de", fg = "#1f2328", muted = "#656d76", accent = "#0969da", health = "#1a7f37", danger = "#cf222e", warn = "#9a6700", hover = "#eaeef2" }
+    return Colours { bg = "#0d1117", panel = "#161b22", line = "#30363d", fg = "#e6edf3", muted = "#9da7b3", accent = "#2f81f7", health = "#3fb950", danger = "#f85149", warn = "#d29922", hover = "#1f242d" }
+
+Metrics =>
+    return Sizes { page = "1120px", gutter = "clamp(20px, 4vw, 40px)", tap = "46px", chip = "2.6rem", button = "15px", field = "16px", label = "11px", meta = "12.5px", radius_control = ".4rem", radius_chip = ".65rem", radius_inner = ".6rem", radius_card = ".75rem", radius_pill = "999px", space_s = ".5rem", space_m = "1rem", space_l = "1.5rem" }
+
+UseTheme { name ∈ String } =>
+    theme = name
+    return Used
+
+| ── Icons ──────────────────────────────────────────────
+
+emit UiIcon { name = "bin" } to this get bin
+assert bin.value.tag = "svg"
+assert bin.value.attrs.class = "ui-icon"
+assert bin.value.children[0].attrs.stroke = "currentColor"
+emit UiIcon { name = "no-such-icon" } to this get none
+assert none.value.tag = "span"
+assert none.value.children = []
+
+| ── Buttons ────────────────────────────────────────────
+
+emit UiButton { label = "Save", click = { _class = "Saved", id = 3 }, kind = "primary" } to this get save
+assert save.value = { tag = "button", attrs = { class = "ui-button primary", type = "button" }, on = { click = { _class = "Saved", id = 3 } }, children = ["Save"] }
+emit UiButton { label = "Plain", click = "Pressed", kind = null } to this get plain
+assert plain.value.attrs.class = "ui-button"
+assert plain.value.on.click = "Pressed"
+| No press: drawn without one.
+emit UiButton { label = "Soon", click = null, kind = "" } to this get idle
+assert idle.value.on = {}
+
+emit UiIconButton { icon = "close", label = "Close", click = "Closed", kind = "quiet" } to this get x
+assert x.value.attrs.class = "ui-icon-button quiet"
+assert x.value.attrs["aria-label"] = "Close"
+assert x.value.attrs.title = "Close"
+assert x.value.children[0].tag = "svg"
+
+emit UiDeleteButton { label = "Delete the task", click = { _class = "AskDelete", id = 7 } } to this get del
+assert del.value.attrs.class = "ui-icon-button quiet delete"
+assert del.value.on.click = { _class = "AskDelete", id = 7 }
+assert del.value.children[0].children[0].attrs.d = "M5 7h14m-9 4v6m4-6v6M9 7V4h6v3m-9 0 1 14h10l1-14"
+
+| ── Choosing ───────────────────────────────────────────
+
+emit UiTabs { items = [{ label = "House", click = { _class = "Tab", id = "house" }, picked = true }, { label = "Devices", click = { _class = "Tab", id = "devices" }, picked = false }] } to this get tabs
+assert tabs.value.tag = "nav"
+assert tabs.value.attrs.class = "ui-tabs"
+assert tabs.value.children[0].attrs = { class = "ui-tab picked", type = "button", "aria-current" = "page" }
+assert tabs.value.children[1].attrs = { class = "ui-tab", type = "button" }
+assert tabs.value.children[1].on.click = { _class = "Tab", id = "devices" }
+
+emit UiChips { items = [{ label = "All", click = "All", picked = false }, { label = "Urgent", click = "Urgent", picked = true }] } to this get chips
+assert chips.value.attrs.class = "ui-chips"
+assert chips.value.children[0].attrs["aria-pressed"] = "false"
+assert chips.value.children[1].attrs.class = "ui-chip picked"
+assert chips.value.children[1].attrs["aria-pressed"] = "true"
+
+| ── Fields ─────────────────────────────────────────────
+
+emit UiInput { name = "title", value = 42, placeholder = "What needs doing?", type = null, change = "TitleTyped" } to this get input
+assert input.value.tag = "input"
+assert input.value.attrs = { class = "ui-input", name = "title", id = "title", value = "42", placeholder = "What needs doing?", type = "text" }
+assert input.value.on = { input = "TitleTyped" }
+emit UiField { label = "Title", control = input.value, hint = "", error = "A title is needed" } to this get field
+assert field.value.tag = "label"
+assert field.value.children[0] = { tag = "span", attrs = { class = "ui-field-label" }, children = ["Title"] }
+assert field.value.children[1] = input.value
+| An empty hint is left out; the error is said.
+assert field.value.children[2].attrs = { class = "ui-field-error", role = "alert" }
+assert field.value.children[3] = null
+
+| ── Surfaces ───────────────────────────────────────────
+
+emit UiCard { title = "Living room", children = ["18.4 °C"], stripe = "health", click = null } to this get card
+assert card.value.tag = "article"
+assert card.value.attrs.class = "ui-card stripe-health"
+assert card.value.children = [{ tag = "h3", attrs = { class = "ui-card-title" }, children = ["Living room"] }, "18.4 °C"]
+emit UiCard { title = null, children = ["Open"], stripe = null, click = "Opened" } to this get pressable
+assert pressable.value.tag = "button"
+assert pressable.value.attrs.class = "ui-card pressable"
+assert pressable.value.children = ["Open"]
+
+emit UiSectionHead { title = "Living room", note = "3 devices" } to this get head
+assert head.value.children[0].children = ["Living room"]
+assert head.value.children[1].children = ["3 devices"]
+emit UiSectionHead { title = "Bedroom", note = null } to this get bare
+assert bare.value.children[1] = null
+
+emit UiStatusLine { text = "The house, as of now.", state = "ok", action = null } to this get status
+assert status.value.attrs.role = "status"
+assert status.value.children[0].attrs.class = "ui-dot ok"
+assert status.value.children[1].children = ["The house, as of now."]
+
+emit UiEmptyState { title = "Nothing to do", text = "Add a task with +.", action = null } to this get empty
+assert empty.value.attrs.class = "ui-empty"
+assert empty.value.children[1].children = ["Add a task with +."]
+
+| ── Dialogs ────────────────────────────────────────────
+
+emit UiDialog { title = "Edit task", body = ["the form"], foot = [del.value], close = "CloseEditor" } to this get dialog
+assert dialog.value.attrs.class = "ui-overlay"
+| The scrim and the ✕ both close.
+assert dialog.value.children[0].on.click = "CloseEditor"
+panel = dialog.value.children[1]
+assert panel.attrs.role = "dialog"
+assert panel.attrs["aria-label"] = "Edit task"
+assert panel.children[0].children[0].children = ["Edit task"]
+assert panel.children[0].children[1].on.click = "CloseEditor"
+assert panel.children[2].children = ["the form"]
+assert panel.children[4].children = [del.value]
+| No foot: no second hairline either.
+emit UiDialog { title = "Details", body = ["x"], foot = [], close = "Close" } to this get footless
+assert footless.value.children[1].children[3] = null
+
+emit UiConfirmPopup { title = "Delete this task?", subject = "Buy milk", note = "It cannot be brought back.", yes = "Delete", yes_click = { _class = "Delete", id = 7 }, no = "CancelDelete" } to this get ask
+popup = ask.value.children[1]
+assert popup.attrs.role = "alertdialog"
+assert ask.value.children[0].on.click = "CancelDelete"
+assert popup.children[0].children[1].on.click = "CancelDelete"
+assert popup.children[1].children = ["Buy milk"]
+assert popup.children[2].children = ["It cannot be brought back."]
+foot = popup.children[3].children
+assert foot[0].attrs.class = "ui-button quiet"
+assert foot[0].on.click = "CancelDelete"
+assert foot[1].attrs.class = "ui-button danger"
+assert foot[1].on.click = { _class = "Delete", id = 7 }
+
+| ── Numbers drawn ──────────────────────────────────────
+
+emit UiBar { pct = 140, level = "danger" } to this get full
+assert full.value.children[0].attrs = { class = "ui-bar-fill danger", style = "width:100%" }
+emit UiBar { pct = null, level = null } to this get nothing
+assert nothing.value.children[0].attrs.style = "width:0%"
+
+emit UiSparkline { values = [20, null, 100], low = 20, high = 100, limit = 60, label = "Temperature", start = "24 h ago", finish = "now" } to this get line
+assert line.value.children[0].children = ["Temperature"]
+chart = line.value.children[1]
+assert chart.tag = "svg"
+assert chart.children[0].attrs.y1 = "30"
+assert chart.children[1].attrs.points = "0,60 300,0"
+assert line.value.children[2].children[1].children = ["now"]
+emit UiSparkline { values = [5], low = 0, high = 10, limit = null, label = null, start = null, finish = null } to this get short
+assert short.value.children[0].children = ["Not enough readings yet"]
+
+emit UiPage { children = ["x"] } to this get page
+assert page.value = { tag = "main", attrs = { class = "ui-page" }, children = ["x"] }
+
+| ── The stylesheet, both themes ────────────────────────
+
+emit UiBaseStyles to this get dark
+assert dark.value[".ui-button.primary"].background = "#2f81f7"
+assert dark.value[".ui-tab.picked"].background = "#2f81f7"
+assert dark.value[".ui-card"]["border-radius"] = ".75rem"
+assert dark.value[".ui-button"]["min-height"] = "46px"
+assert dark.value[".ui-input, .ui-field select, .ui-field textarea"]["font-size"] = "16px"
+emit UseTheme { name = "light" } to this
+emit UiBaseStyles to this get light
+assert light.value[".ui-button.primary"].background = "#0969da"
+assert light.value[".ui-card"].background = "#f6f8fa"
+| Every class a component draws has its rule.
+loop name over [".ui-button", ".ui-icon-button", ".ui-tabs", ".ui-tab", ".ui-chips", ".ui-chip", ".ui-field", ".ui-field-label", ".ui-card", ".ui-section-head", ".ui-status-line", ".ui-dot", ".ui-empty", ".ui-overlay", ".ui-scrim", ".ui-dialog", ".ui-dialog-head", ".ui-dialog-foot", ".ui-divider", ".ui-bar", ".ui-bar-fill", ".ui-spark", ".ui-spark-chart", ".ui-page", ".ui-icon"]
+    assert light.value[name] ∈ Object
