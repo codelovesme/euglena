@@ -345,7 +345,7 @@ UiBaseStyles =>
             ".ui-section-head" = { display = "flex", "align-items" = "baseline", "justify-content" = "space-between", gap = m.space_m, margin = m.space_l + " 0 " + m.space_s, padding = "0 0 .35rem", "border-bottom" = "1px solid " + c.line }
             ".ui-section-title" = { margin = "0", color = c.muted, "font-size" = ".78rem", "font-weight" = "700", "letter-spacing" = ".05em", "text-transform" = "uppercase" }
             ".ui-section-note" = { color = c.muted, "font-size" = m.meta, "text-align" = "right" }
-            ".ui-status-line" = { display = "flex", "align-items" = "center", gap = ".55rem", "min-height" = "2.5rem", margin = "0 0 .5rem", color = c.muted, "font-size" = ".85rem" }
+            ".ui-status-line" = { display = "flex", "align-items" = "center", gap = ".55rem", "min-height" = "2.5rem", margin = "0", color = c.muted, "font-size" = ".85rem" }
             ".ui-status-text" = { flex = "1", "min-width" = "0", "overflow-wrap" = "anywhere" }
             ".ui-dot" = { width = ".55rem", height = ".55rem", "border-radius" = m.radius_pill, background = c.muted, "flex-shrink" = "0" }
             ".ui-dot.ok" = { background = c.health }
