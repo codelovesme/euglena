@@ -1,0 +1,10 @@
+{
+  "id": "euglena/ui",
+  "title": "UI",
+  "purpose": "The workspace's components — buttons, tabs, chips, fields, cards, dialogs, status lines, bars, sparklines — and the one stylesheet they share, as values the dom organelle renders.",
+  "triggers": [
+    {
+      "kind": "manual"
+    }
+  ]
+}
