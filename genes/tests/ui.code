@@ -9,8 +9,8 @@ theme = "dark"
 
 Palette =>
     if theme = "light"
-        return Colours { bg = "#fff", panel = "#f6f8fa", line = "#d0d7de", fg = "#1f2328", muted = "#656d76", accent = "#0969da", health = "#1a7f37", danger = "#cf222e", warn = "#9a6700", hover = "#eaeef2" }
-    return Colours { bg = "#0d1117", panel = "#161b22", line = "#30363d", fg = "#e6edf3", muted = "#9da7b3", accent = "#2f81f7", health = "#3fb950", danger = "#f85149", warn = "#d29922", hover = "#1f242d" }
+        return Colours { bg = "#fff", panel = "#f6f8fa", line = "#d0d7de", fg = "#1f2328", muted = "#656d76", accent = "#0969da", accent_soft = "#ddf4ff", health = "#1a7f37", danger = "#cf222e", warn = "#9a6700", hover = "#eaeef2" }
+    return Colours { bg = "#0d1117", panel = "#161b22", line = "#30363d", fg = "#e6edf3", muted = "#9da7b3", accent = "#2f81f7", accent_soft = "#17243a", health = "#3fb950", danger = "#f85149", warn = "#d29922", hover = "#1f242d" }
 
 Metrics =>
     return Sizes { page = "1120px", gutter = "clamp(20px, 4vw, 40px)", tap = "46px", chip = "2.6rem", button = "15px", field = "16px", label = "11px", meta = "12.5px", radius_control = ".4rem", radius_chip = ".65rem", radius_inner = ".6rem", radius_card = ".75rem", radius_pill = "999px", space_s = ".5rem", space_m = "1rem", space_l = "1.5rem" }
@@ -171,3 +171,87 @@ assert light.value[".ui-card"].background = "#f6f8fa"
 | Every class a component draws has its rule.
 loop name over [".ui-button", ".ui-icon-button", ".ui-tabs", ".ui-tab", ".ui-chips", ".ui-chip", ".ui-field", ".ui-field-label", ".ui-card", ".ui-section-head", ".ui-status-line", ".ui-dot", ".ui-empty", ".ui-overlay", ".ui-scrim", ".ui-dialog", ".ui-dialog-head", ".ui-dialog-foot", ".ui-divider", ".ui-bar", ".ui-bar-fill", ".ui-spark", ".ui-spark-chart", ".ui-page", ".ui-icon"]
     assert light.value[name] ∈ Object
+
+
+| ── From To Do (tickets 350, 353–355) ──────────────────
+
+emit UiSegmented { label = "Priority", items = [{ label = "High", click = { _class = "Picked", value = "High" }, picked = true, dot = "#eab308" }, { label = "Low", click = "PickLow", picked = false, dot = null }] } to this get seg
+assert seg.value.attrs = { class = "ui-seg", role = "group", "aria-label" = "Priority" }
+assert seg.value.children[0].attrs.class = "ui-seg-option picked"
+assert seg.value.children[0].attrs["aria-pressed"] = "true"
+assert seg.value.children[0].children[0].attrs.style = "background:#eab308"
+assert seg.value.children[0].children[1] = "High"
+assert seg.value.children[1].children = ["Low"]
+assert seg.value.children[1].on.click = "PickLow"
+
+emit UiToast { text = "✓ Saved", tone = "ok" } to this get toast
+assert toast.value = { tag = "div", attrs = { class = "ui-toast ok", role = "status" }, children = ["✓ Saved"] }
+
+emit UiMenuButton { label = "More for this task", open = true, click = "ToggleMenu" } to this get more
+assert more.value.attrs["aria-expanded"] = "true"
+assert more.value.attrs["aria-haspopup"] = "menu"
+assert more.value.on.click = "ToggleMenu"
+emit UiMenu { label = "This task", items = [{ label = "Duplicate", click = "Dup", danger = false, icon = null }, { label = "Delete task", click = { _class = "AskDelete", id = 7 }, danger = true, icon = "bin" }], close = "CloseMenu", place = "above-start" } to this get menu
+assert menu.value[0].on.click = "CloseMenu"
+assert menu.value[1].attrs.class = "ui-menu above start"
+assert menu.value[1].attrs.role = "menu"
+assert menu.value[1].children[0].attrs.class = "ui-menu-item"
+assert menu.value[1].children[1].attrs.class = "ui-menu-item danger"
+assert menu.value[1].children[1].children[0].tag = "svg"
+assert menu.value[1].children[1].on.click = { _class = "AskDelete", id = 7 }
+
+emit UiAddButton { label = "Photo", icon = "camera", click = "AttachPhoto" } to this get add_photo
+assert add_photo.value.attrs.class = "ui-add"
+assert add_photo.value.children[0].tag = "svg"
+assert add_photo.value.children[1] = "Photo"
+emit UiAddButton { label = "+ Add tag", icon = null, click = "AddTag" } to this get add_tag
+assert add_tag.value.children = ["+ Add tag"]
+
+emit UiSearchField { value = "", placeholder = "Search tags", label = "Search tags", change = "Typed", clear = "Cleared" } to this get search_empty
+assert search_empty.value.attrs.class = "ui-search"
+assert search_empty.value.children[1].attrs.type = "search"
+assert search_empty.value.children[1].on.input = "Typed"
+| Nothing typed: no ×.
+assert search_empty.value.children = [search_empty.value.children[0], search_empty.value.children[1]]
+emit UiSearchField { value = "re", placeholder = null, label = "Search tags", change = "Typed", clear = "Cleared" } to this get search_typed
+assert search_typed.value.children[1].attrs.value = "re"
+assert search_typed.value.children[2].on.click = "Cleared"
+
+emit UiSheet { title = "Add tags", body = ["rows"], foot = ["done"], close = "CloseSheet" } to this get sheet
+assert sheet.value.attrs.class = "ui-overlay ui-sheet-overlay"
+assert sheet.value.children[0].on.click = "CloseSheet"
+assert sheet.value.children[1].attrs.role = "dialog"
+assert sheet.value.children[1].children[2] = { tag = "div", attrs = { class = "ui-sheet-body" }, children = ["rows"] }
+assert sheet.value.children[1].children[3].children = ["done"]
+
+emit UiListRow { lead = null, text = "Export bank statements", note = "", trail = "1", click = { _class = "Open", id = 1 } } to this get row
+assert row.value.tag = "button"
+assert row.value.attrs.class = "ui-row pressable"
+assert row.value.children[0].children[0].children = ["Export bank statements"]
+assert row.value.children[1].children = ["1"]
+emit UiListAdd { label = "Add a subtask", click = "AddStep" } to this get add_row
+assert add_row.value.attrs.class = "ui-row ui-row-add"
+emit UiList { rows = [row.value, add_row.value] } to this get list
+assert list.value.attrs.class = "ui-list"
+
+emit UiPill { path = "Work › ", label = "Reports", remove = { _class = "ToggleTag", path = "Work/Reports" }, remove_label = "Remove tag Reports" } to this get pill
+assert pill.value.children[0].children[0] = { tag = "span", attrs = { class = "ui-pill-path" }, children = ["Work › "] }
+assert pill.value.children[1].attrs["aria-label"] = "Remove tag Reports"
+emit UiPill { path = null, label = "Health", remove = null, remove_label = null } to this get bare_pill
+assert bare_pill.value.children = [{ tag = "span", attrs = { class = "ui-pill-name" }, children = ["Health"] }]
+
+emit UiPageHead { title = "Tags", note = "8 tags", action = "edit" } to this get page_head
+assert page_head.value.children[0].children = [{ tag = "h1", attrs = { class = "ui-page-title" }, children = ["Tags"] }, "edit"]
+assert page_head.value.children[1].children = ["8 tags"]
+
+| Every new class has its rule, in both themes.
+emit UseTheme { name = "dark" } to this
+emit UiBaseStyles to this get sheet_dark
+assert sheet_dark.value[".ui-seg-option.picked, .ui-seg-option.picked:hover"] ≠ null
+assert sheet_dark.value[".ui-menu-item.danger"].color = "#f85149"
+assert sheet_dark.value[".ui-add"]["border"] = "1px dashed #30363d"
+emit UseTheme { name = "light" } to this
+emit UiBaseStyles to this get sheet_light
+assert sheet_light.value[".ui-add"].color = "#0969da"
+assert sheet_light.value[".ui-add:hover"].background = "#ddf4ff"
+emit UseTheme { name = "dark" } to this

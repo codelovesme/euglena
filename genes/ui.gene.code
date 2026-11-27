@@ -44,6 +44,11 @@ UiIcon { name ∈ Any } =>
         more = "M5 12h.01M12 12h.01M19 12h.01"
         edit = "M4 20h4L19 9l-4-4L4 16v4Zm9-13 4 4"
         refresh = "M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"
+        search = "M10.8 4.6a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4Zm4.7 10.9 4.2 4.2"
+        camera = "M4 7.5h3l1.3-2h7.4l1.3 2H20v11H4v-11Zm8 2.3a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4Z"
+        mic = "M12 3a4 4 0 0 0-4 4v4a4 4 0 0 0 8 0V7a4 4 0 0 0-4-4ZM5 11a7 7 0 0 0 14 0M12 18v3m-3 0h6"
+        file = "M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6m-6 3h6"
+        cloud = "M7 18h10.5a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.6 9.1 4.5 4.5 0 0 0 7 18Z"
     }
     d = paths[name]
     if d ∉ String
@@ -230,6 +235,177 @@ UiConfirmPopup { title ∈ Any, subject ∈ Any, note ∈ Any, yes ∈ Any, yes_
         }
     }
 
+| ── From To Do (tickets 350, 353–355, 2026-11-24/27) ───────────────
+
+| A segmented control: one framed row, a segment per choice, the pick a
+| quiet raised tile (the owner, 2026-11-25: filled blue picks were too
+| loud). `items`: [{ label, click, picked, dot }] — `dot`, when a colour,
+| is a small round mark before the label (a priority's colour).
+UiSegmented { items ∈ Array, label ∈ Any } =>
+    options = []
+    loop item over items
+        class = "ui-seg-option"
+        pressed = "false"
+        if item.picked = true
+            class = "ui-seg-option picked"
+            pressed = "true"
+        parts = []
+        if item.dot ∈ String and item.dot ≠ "", parts += [{ tag = "i", attrs = { class = "ui-seg-dot", style = "background:" + item.dot, "aria-hidden" = "true" }, children = [] }]
+        parts += [item.label]
+        on = {}
+        if item.click ≠ null, on = { click = item.click }
+        options += [{ tag = "button", attrs = { class = class, type = "button", "aria-pressed" = pressed }, on = on, children = parts }]
+    attrs = { class = "ui-seg", role = "group" }
+    if label ∈ String and label ≠ "", attrs = attrs + { "aria-label" = label }
+    return Node { value = { tag = "div", attrs = attrs, children = options } }
+
+| One line said for a moment, under the shell's header, in the middle,
+| whatever the page's scroll ("✓ Saved"). `tone`: "" or "ok" (green
+| text) or "danger". The app decides when it goes.
+UiToast { text ∈ Any, tone ∈ Any } =>
+    class = "ui-toast"
+    if tone ∈ String and tone ≠ "", class = "ui-toast " + tone
+    return Node { value = { tag = "div", attrs = { class = class, role = "status" }, children = [text] } }
+
+| The quiet "⋯" that opens a menu. `open` says whether its menu is shown.
+UiMenuButton { label ∈ Any, open ∈ Any, click ∈ Any } =>
+    emit UiIcon { name = "more" } to this get dots
+    expanded = "false"
+    if open = true, expanded = "true"
+    on = {}
+    if click ≠ null, on = { click = click }
+    return Node { value = { tag = "button", attrs = { class = "ui-icon-button quiet ui-menu-button", type = "button", "aria-label" = label, title = label, "aria-haspopup" = "menu", "aria-expanded" = expanded }, on = on, children = [dots.value] } }
+
+| A short menu by its "⋯", over a clear scrim that closes it. `items`:
+| [{ label, click, danger, icon }] — a danger item is the menu's red
+| line (Delete), never a red button on the page (the owner, 2026-11-27).
+| `place`: where it opens from its button — "below-end" (the default: a
+| "⋯" at a row's right end), "below-start", "above-start" (a "⋯" at a
+| page's foot, on the left) or "above-end". Put the two elements this
+| answers inside a positioned parent beside the button.
+UiMenu { label ∈ Any, items ∈ Array, close ∈ Any, place ∈ Any } =>
+    rows = []
+    loop item over items
+        class = "ui-menu-item"
+        if item.danger = true, class = "ui-menu-item danger"
+        parts = []
+        if item.icon ∈ String and item.icon ≠ ""
+            emit UiIcon { name = item.icon } to this get drawn
+            parts += [drawn.value]
+        parts += [{ tag = "span", children = [item.label] }]
+        on = {}
+        if item.click ≠ null, on = { click = item.click }
+        rows += [{ tag = "button", attrs = { class = class, type = "button", role = "menuitem" }, on = on, children = parts }]
+    class = "ui-menu"
+    if place = "below-start", class = "ui-menu start"
+    if place = "above-start", class = "ui-menu above start"
+    if place = "above-end", class = "ui-menu above"
+    scrim_on = {}
+    if close ≠ null, scrim_on = { click = close }
+    return Node { value = [{ tag = "div", attrs = { class = "ui-menu-scrim" }, on = scrim_on, children = [] }, { tag = "div", attrs = { class = class, role = "menu", "aria-label" = label }, children = rows }] }
+
+| Every "add" looks the same (ticket 353): dashed, accent text, 44 px —
+| "+ Add tag", "+ Due", the attachment adds. `icon` (a `UiIcon` name)
+| takes the word's colour; without one the label carries its "+".
+UiAddButton { label ∈ Any, icon ∈ Any, click ∈ Any } =>
+    parts = []
+    if icon ∈ String and icon ≠ ""
+        emit UiIcon { name = icon } to this get drawn
+        parts += [drawn.value]
+    parts += [label]
+    on = {}
+    if click ≠ null, on = { click = click }
+    return Node { value = { tag = "button", attrs = { class = "ui-add", type = "button" }, on = on, children = parts } }
+
+| A search box: the glass, the box (16 px, so a phone does not zoom), and
+| an × while something is typed. `change` gets the value as typed;
+| `clear` is the ×'s press.
+UiSearchField { value ∈ Any, placeholder ∈ Any, label ∈ Any, change ∈ Any, clear ∈ Any } =>
+    emit UiIcon { name = "search" } to this get glass
+    attrs = { class = "ui-search-input", type = "search", autocomplete = "off", spellcheck = "false" }
+    if value ≠ null, attrs = attrs + { value = "$value" }
+    if placeholder ∈ String, attrs = attrs + { placeholder = placeholder }
+    if label ∈ String, attrs = attrs + { "aria-label" = label }
+    on = {}
+    if change ≠ null, on = { input = change }
+    parts = [glass.value, { tag = "input", attrs = attrs, on = on, children = [] }]
+    if value ∈ String and value ≠ "" and clear ≠ null
+        emit UiIconButton { icon = "close", label = "Clear search", click = clear, kind = "quiet" } to this get x
+        parts += [x.value]
+    return Node { value = { tag = "div", attrs = { class = "ui-search" }, children = parts } }
+
+| A sheet from the bottom (To Do's tag picker and Drive): a grab bar, the
+| title, the body (it scrolls; the sheet keeps its height, so a level
+| opened does not make it jump), and a foot. The scrim sends `close`.
+UiSheet { title ∈ Any, body ∈ Array, foot ∈ Array, close ∈ Any } =>
+    scrim_on = {}
+    if close ≠ null, scrim_on = { click = close }
+    panel = [
+        { tag = "div", attrs = { class = "ui-sheet-grab", "aria-hidden" = "true" }, children = [] }
+        { tag = "h2", attrs = { class = "ui-sheet-title" }, children = [title] }
+        { tag = "div", attrs = { class = "ui-sheet-body" }, children = body }
+    ]
+    if foot ≠ [], panel += [{ tag = "div", attrs = { class = "ui-sheet-foot" }, children = foot }]
+    return Node {
+        value = {
+            tag = "div"
+            attrs = { class = "ui-overlay ui-sheet-overlay" }
+            children = [
+                { tag = "div", attrs = { class = "ui-scrim" }, on = scrim_on, children = [] }
+                { tag = "section", attrs = { class = "ui-sheet", role = "dialog", "aria-modal" = "true", "aria-label" = title, tabindex = "-1" }, children = panel }
+            ]
+        }
+    }
+
+| Rows in one frame, a hairline between them (To Do's subtasks, Drive's
+| files). `rows` are `UiListRow`s, or any element.
+UiList { rows ∈ Array } =>
+    return Node { value = { tag = "div", attrs = { class = "ui-list" }, children = rows } }
+
+| One row: a lead (a tick, an icon, a picture, or null), the text and a
+| muted note under it, and a trail (a count, a "›", a "⋯", or null). With
+| `click` the whole row is the press.
+UiListRow { lead ∈ Any, text ∈ Any, note ∈ Any, trail ∈ Any, click ∈ Any } =>
+    parts = []
+    if lead ≠ null, parts += [{ tag = "span", attrs = { class = "ui-row-lead" }, children = [lead] }]
+    words = [{ tag = "span", attrs = { class = "ui-row-text" }, children = [text] }]
+    if note ∈ String and note ≠ "", words += [{ tag = "span", attrs = { class = "ui-row-note" }, children = [note] }]
+    parts += [{ tag = "span", attrs = { class = "ui-row-words" }, children = words }]
+    if trail ≠ null, parts += [{ tag = "span", attrs = { class = "ui-row-trail" }, children = [trail] }]
+    if click ≠ null
+        return Node { value = { tag = "button", attrs = { class = "ui-row pressable", type = "button" }, on = { click = click }, children = parts } }
+    return Node { value = { tag = "div", attrs = { class = "ui-row" }, children = parts } }
+
+| The list's last row when it is how one is added ("+ Add a subtask").
+UiListAdd { label ∈ Any, click ∈ Any } =>
+    emit UiIcon { name = "plus" } to this get plus
+    on = {}
+    if click ≠ null, on = { click = click }
+    return Node { value = { tag = "button", attrs = { class = "ui-row ui-row-add", type = "button" }, on = on, children = [{ tag = "span", attrs = { class = "ui-row-lead" }, children = [plus.value] }, { tag = "span", attrs = { class = "ui-row-text" }, children = [label] }] } }
+
+| A thing carried, as a pill: where it sits muted ("Work › "), its name,
+| and an × to let it go (`remove`; null draws no ×). To Do's tag, the
+| same on the page and in the picker (ticket 354).
+UiPill { path ∈ Any, label ∈ Any, remove ∈ Any, remove_label ∈ Any } =>
+    name = []
+    if path ∈ String and path ≠ "", name += [{ tag = "span", attrs = { class = "ui-pill-path" }, children = [path] }]
+    name += [label]
+    parts = [{ tag = "span", attrs = { class = "ui-pill-name" }, children = name }]
+    if remove ≠ null
+        said = "Remove"
+        if remove_label ∈ String and remove_label ≠ "", said = remove_label
+        parts += [{ tag = "button", attrs = { class = "ui-pill-remove", type = "button", "aria-label" = said, title = said }, on = { click = remove }, children = ["×"] }]
+    return Node { value = { tag = "div", attrs = { class = "ui-pill" }, children = parts } }
+
+| A page's head: its title, its one action on the right (Edit, a quiet
+| button — null for none), and a muted line under it.
+UiPageHead { title ∈ Any, note ∈ Any, action ∈ Any } =>
+    row = [{ tag = "h1", attrs = { class = "ui-page-title" }, children = [title] }]
+    if action ≠ null, row += [action]
+    parts = [{ tag = "div", attrs = { class = "ui-page-head-row" }, children = row }]
+    if note ∈ String and note ≠ "", parts += [{ tag = "p", attrs = { class = "ui-page-note" }, children = [note] }]
+    return Node { value = { tag = "div", attrs = { class = "ui-page-head" }, children = parts } }
+
 | ── Numbers drawn ──────────────────────────────────────
 
 | A share as a bar, coloured by how it stands: "ok", "warn", "danger".
@@ -380,6 +556,59 @@ UiBaseStyles =>
             ".ui-spark-line" = { fill = "none", stroke = c.accent, "stroke-width" = "1.6", "vector-effect" = "non-scaling-stroke", "stroke-linejoin" = "round" }
             ".ui-spark-limit" = { stroke = c.danger, "stroke-width" = "1", "stroke-dasharray" = "4 4", "vector-effect" = "non-scaling-stroke", opacity = ".7" }
             ".ui-spark-axis" = { display = "flex", "justify-content" = "space-between", color = c.muted, "font-size" = ".65rem" }
+            ".ui-seg" = { display = "grid", "grid-auto-flow" = "column", "grid-auto-columns" = "minmax(0,1fr)", gap = ".2rem", padding = ".2rem", "box-sizing" = "border-box", "min-height" = m.tap, background = c.panel, border = "1px solid " + c.line, "border-radius" = m.radius_chip }
+            ".ui-seg-option" = { display = "inline-flex", "align-items" = "center", "justify-content" = "center", gap = ".4rem", "min-width" = "0", "min-height" = "2.5rem", padding = "0 .3rem", font = "inherit", "font-size" = ".9rem", color = c.muted, background = "transparent", border = "0", "border-radius" = m.radius_inner, cursor = "pointer", "white-space" = "nowrap", overflow = "hidden", "text-overflow" = "ellipsis" }
+            ".ui-seg-option:hover" = { color = c.fg, background = c.hover }
+            ".ui-seg-option.picked, .ui-seg-option.picked:hover" = { color = c.fg, background = c.line, "font-weight" = "600", "box-shadow" = "0 1px 3px rgba(0,0,0,.45)" }
+            ".ui-seg-option:focus-visible, .ui-add:focus-visible, .ui-row.pressable:focus-visible, .ui-menu-item:focus-visible" = { outline = focus, "outline-offset" = "2px" }
+            ".ui-seg-dot" = { display = "inline-block", width = ".5rem", height = ".5rem", "border-radius" = m.radius_pill, "flex-shrink" = "0" }
+            ".ui-toast" = { position = "fixed", top = "calc(env(safe-area-inset-top, 0px) + 4.35rem)", left = "50%", transform = "translateX(-50%)", "z-index" = "1001", padding = ".4rem .9rem", "border-radius" = m.radius_pill, background = c.panel, color = c.fg, border = "1px solid " + c.line, "box-shadow" = "0 6px 20px rgba(0,0,0,.35)", "font-size" = ".85rem", "white-space" = "nowrap", "pointer-events" = "none" }
+            ".ui-toast.ok" = { color = c.health }
+            ".ui-toast.danger" = { color = c.danger }
+            ".ui-menu-scrim" = { position = "fixed", inset = "0", "z-index" = "900" }
+            ".ui-menu" = { position = "absolute", right = "0", top = "calc(100% + .25rem)", "z-index" = "901", "min-width" = "11rem", display = "flex", "flex-direction" = "column", padding = ".25rem 0", background = c.panel, border = "1px solid " + c.line, "border-radius" = m.radius_inner, "box-shadow" = "0 8px 24px rgba(0,0,0,.3)" }
+            ".ui-menu.above" = { top = "auto", bottom = "calc(100% + .25rem)" }
+            ".ui-menu.start" = { right = "auto", left = "0" }
+            ".ui-menu-item" = { display = "flex", "align-items" = "center", gap = ".6rem", "min-height" = m.tap, padding = "0 1rem", font = "inherit", "font-size" = ".95rem", "text-align" = "left", color = c.fg, background = "transparent", border = "0", cursor = "pointer" }
+            ".ui-menu-item:hover" = { background = c.hover }
+            ".ui-menu-item.danger" = { color = c.danger }
+            ".ui-add" = { display = "inline-flex", "align-items" = "center", "justify-content" = "center", gap = ".45rem", "min-height" = m.tap, padding = "0 .85rem", "box-sizing" = "border-box", font = "inherit", "font-size" = ".95rem", "font-weight" = "500", color = c.accent, background = "transparent", border = "1px dashed " + c.line, "border-radius" = m.radius_chip, cursor = "pointer" }
+            ".ui-add:hover" = { "border-color" = c.accent, background = c.accent_soft }
+            ".ui-add .ui-icon" = { width = "1.1rem", height = "1.1rem" }
+            ".ui-search" = { display = "flex", "align-items" = "center", gap = ".5rem", "min-height" = m.tap, padding = "0 .25rem 0 .75rem", "box-sizing" = "border-box", color = c.muted, background = c.bg, border = "1px solid " + c.line, "border-radius" = m.radius_chip }
+            ".ui-search:focus-within" = { "border-color" = c.accent, "box-shadow" = "0 0 0 3px " + c.accent_soft }
+            ".ui-search-input" = { flex = "1 1 auto", "min-width" = "0", padding = "0", font = "inherit", "font-size" = m.field, color = c.fg, background = "transparent", border = "0", outline = "none", appearance = "none", "-webkit-appearance" = "none" }
+            ".ui-search-input::-webkit-search-cancel-button" = { display = "none" }
+            ".ui-search .ui-icon-button" = { width = "2.5rem", height = "2.5rem" }
+            ".ui-sheet-overlay" = { "align-items" = "flex-end", padding = "0" }
+            ".ui-sheet" = { position = "relative", display = "flex", "flex-direction" = "column", width = "min(34rem, 100%)", height = "min(85dvh, 40rem)", "box-sizing" = "border-box", background = c.panel, color = c.fg, border = "1px solid " + c.line, "border-bottom" = "0", "border-radius" = "1rem 1rem 0 0", "box-shadow" = "0 -8px 30px rgba(0,0,0,.3)", "padding-bottom" = "env(safe-area-inset-bottom, 0px)" }
+            ".ui-sheet:focus" = { outline = "none" }
+            ".ui-sheet-grab" = { width = "2.5rem", height = "4px", margin = ".5rem auto .25rem", "border-radius" = m.radius_pill, background = c.line, "flex-shrink" = "0" }
+            ".ui-sheet-title" = { margin = "0", padding = ".25rem 1rem .5rem", "font-size" = "1.05rem" }
+            ".ui-sheet-body" = { flex = "1 1 auto", "min-height" = "0", "overflow-y" = "auto", "overscroll-behavior" = "contain" }
+            ".ui-sheet-foot" = { display = "flex", gap = ".5rem", padding = ".75rem 1rem 1rem", "border-top" = "1px solid " + c.line }
+            ".ui-sheet-foot > *" = { flex = "1 1 auto" }
+            ".ui-list" = { display = "flex", "flex-direction" = "column", border = "1px solid " + c.line, "border-radius" = m.radius_chip, overflow = "hidden", background = c.bg }
+            ".ui-row" = { display = "flex", "align-items" = "center", gap = ".75rem", "min-height" = m.tap, padding = ".35rem .75rem", "box-sizing" = "border-box", width = "100%", font = "inherit", "text-align" = "left", color = c.fg, background = "transparent", border = "0", "border-bottom" = "1px solid " + c.line, "border-radius" = "0" }
+            ".ui-row:last-child" = { "border-bottom" = "0" }
+            ".ui-row.pressable" = { cursor = "pointer" }
+            ".ui-row.pressable:hover" = { background = c.hover }
+            ".ui-row-lead" = { display = "inline-flex", "align-items" = "center", "justify-content" = "center", "min-width" = "1.4rem", "flex-shrink" = "0" }
+            ".ui-row-words" = { display = "flex", "flex-direction" = "column", flex = "1 1 auto", "min-width" = "0" }
+            ".ui-row-text" = { "overflow-wrap" = "anywhere" }
+            ".ui-row-note" = { color = c.muted, "font-size" = m.meta }
+            ".ui-row-trail" = { display = "inline-flex", "align-items" = "center", color = c.muted, "font-size" = m.meta, "flex-shrink" = "0" }
+            ".ui-row-add" = { color = c.accent, cursor = "pointer" }
+            ".ui-row-add:hover" = { background = c.accent_soft }
+            ".ui-pill" = { display = "inline-flex", "align-items" = "center", "min-height" = m.tap, "max-width" = "100%", "box-sizing" = "border-box", color = c.fg, background = c.hover, border = "1px solid " + c.line, "border-radius" = m.radius_chip }
+            ".ui-pill-name" = { padding = "0 .85rem", "min-width" = "0", overflow = "hidden", "text-overflow" = "ellipsis", "white-space" = "nowrap" }
+            ".ui-pill-path" = { color = c.muted }
+            ".ui-pill-remove" = { "align-self" = "stretch", width = "2.5rem", padding = "0", font = "inherit", color = c.muted, background = "transparent", border = "0", "border-left" = "1px solid " + c.line, "border-radius" = "0 " + m.radius_chip + " " + m.radius_chip + " 0", cursor = "pointer" }
+            ".ui-pill-remove:hover" = { color = c.fg, background = c.line }
+            ".ui-page-head" = { display = "flex", "flex-direction" = "column", gap = ".2rem", margin = "0 0 " + m.space_m }
+            ".ui-page-head-row" = { display = "flex", "align-items" = "center", "justify-content" = "space-between", gap = m.space_s }
+            ".ui-page-title" = { margin = "0", "font-size" = "1.4rem", "line-height" = "1.25", "overflow-wrap" = "anywhere" }
+            ".ui-page-note" = { margin = "0", color = c.muted, "font-size" = ".9rem" }
             "@media (prefers-reduced-motion: reduce)" = { "*" = { transition = "none", animation = "none" } }
         }
     }
