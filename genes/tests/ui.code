@@ -9,8 +9,8 @@ theme = "dark"
 
 Palette =>
     if theme = "light"
-        return Colours { bg = "#fff", panel = "#f6f8fa", line = "#d0d7de", fg = "#1f2328", muted = "#656d76", accent = "#0969da", accent_soft = "#ddf4ff", health = "#1a7f37", danger = "#cf222e", warn = "#9a6700", hover = "#eaeef2" }
-    return Colours { bg = "#0d1117", panel = "#161b22", line = "#30363d", fg = "#e6edf3", muted = "#9da7b3", accent = "#2f81f7", accent_soft = "#17243a", health = "#3fb950", danger = "#f85149", warn = "#d29922", hover = "#1f242d" }
+        return Colours { bg = "#fff", panel = "#f6f8fa", line = "#d0d7de", fg = "#1f2328", muted = "#656d76", accent = "#0969da", accent_soft = "#ddf4ff", danger_soft = "#ffebe9", health = "#1a7f37", danger = "#cf222e", warn = "#9a6700", hover = "#eaeef2" }
+    return Colours { bg = "#0d1117", panel = "#161b22", line = "#30363d", fg = "#e6edf3", muted = "#9da7b3", accent = "#2f81f7", accent_soft = "#17243a", danger_soft = "#321b20", health = "#3fb950", danger = "#f85149", warn = "#d29922", hover = "#1f242d" }
 
 Metrics =>
     return Sizes { page = "1120px", gutter = "clamp(20px, 4vw, 40px)", tap = "46px", chip = "2.6rem", button = "15px", field = "16px", label = "11px", meta = "12.5px", radius_control = ".4rem", radius_chip = ".65rem", radius_inner = ".6rem", radius_card = ".75rem", radius_pill = "999px", space_s = ".5rem", space_m = "1rem", space_l = "1.5rem" }
@@ -124,17 +124,27 @@ emit UiDialog { title = "Details", body = ["x"], foot = [], close = "Close" } to
 assert footless.value.children[1].children[3] = null
 
 emit UiConfirmPopup { title = "Delete this task?", subject = "Buy milk", note = "It cannot be brought back.", yes = "Delete", yes_click = { _class = "Delete", id = 7 }, no = "CancelDelete" } to this get ask
+assert ask.value.attrs.class = "ui-overlay ui-confirm-overlay"
+assert ask.value.children[0].on.click = "CancelDelete"
 popup = ask.value.children[1]
 assert popup.attrs.role = "alertdialog"
-assert ask.value.children[0].on.click = "CancelDelete"
-assert popup.children[0].children[1].on.click = "CancelDelete"
-assert popup.children[1].children = ["Buy milk"]
-assert popup.children[2].children = ["It cannot be brought back."]
-foot = popup.children[3].children
-assert foot[0].attrs.class = "ui-button quiet"
-assert foot[0].on.click = "CancelDelete"
-assert foot[1].attrs.class = "ui-button danger"
-assert foot[1].on.click = { _class = "Delete", id = 7 }
+card = popup.children[0]
+assert card.children[0].children[0].attrs.class = "ui-ask-sign"
+assert card.children[0].children[0].children[0].tag = "svg"
+assert card.children[0].children[1].children = ["Delete this task?"]
+assert card.children[0].children[2].children = ["Buy milk"]
+assert card.children[0].children[3].children = ["It cannot be brought back."]
+assert card.children[1].attrs.class = "ui-button danger ui-ask-yes"
+assert card.children[1].on.click = { _class = "Delete", id = 7 }
+assert popup.children[1].attrs.class = "ui-button quiet ui-ask-no"
+assert popup.children[1].on.click = "CancelDelete"
+assert popup.children[1].children = ["Cancel"]
+| Where it is used: a framed card each, no link.
+emit UiConfirmPopup { title = "Move “tram.jpg” to the trash?", subject = null, note = "It stops showing where it is used:", yes = "Move to trash", yes_click = "BinAnyway", no = "KeepIt", refs = [{ label = "Keepsake: The last tram", note = "a memory" }] } to this get ask_refs
+refs = ask_refs.value.children[1].children[0].children[0].children[3]
+assert refs.attrs.class = "ui-ask-refs"
+assert refs.children[0].children[0].children = ["Keepsake: The last tram"]
+assert refs.children[0].children[1].children = ["a memory"]
 
 | ── Numbers drawn ──────────────────────────────────────
 
@@ -305,3 +315,13 @@ emit UiBaseStyles to this get screen_rules
 assert screen_rules.value[".ui-page.narrow"].width = "min(100%, 40rem)"
 assert screen_rules.value[".ui-item.stripe-warn"]["border-left-color"] = "#d29922"
 assert screen_rules.value[".ui-fab"].background = "#2f81f7"
+
+emit UiTitleField { value = "letter.pdf", label = "Name", change = "NameTyped", rows = 2 } to this get title_field
+assert title_field.value.tag = "textarea"
+assert title_field.value.attrs.rows = "2"
+assert title_field.value.on.input = "NameTyped"
+assert title_field.value.children = ["letter.pdf"]
+emit UiItemPage { title = title_field.value, body = [], foot = [] } to this get editable_page
+assert editable_page.value.children[0].tag = "textarea"
+emit UiBaseStyles to this get title_rules
+assert title_rules.value[".ui-title-field"]["font-size"] = "1.375rem"
