@@ -3,6 +3,35 @@
 | sizes are; this says what a button, a tab, a dialog *is*, so two
 | applications cannot disagree about it.
 |
+| **Parts are not the language; screens are.** (The owner, 2026-11-27:
+| Drive was moved onto these parts and still looked nothing like To Do,
+| because the parts said what a button is and not how a screen is put
+| together.) Every screen is one of these, built from the handlers below:
+|
+| - **A list** (To Do's list, Drive's folder): `UiPageNarrow` holding a
+|   `UiToolbar` (a `UiSearchField`; at most one icon button beside it, for
+|   a mode of the list itself — never for going somewhere), then for each
+|   group a `UiSectionHead` and its `UiItemCard`s, then one `UiFab` at the
+|   bottom (with a `UiDial` when there is more than one way to add).
+|   Inside a tree, a `UiPathLine` says where you are; what can be done to
+|   the place itself (rename, move, delete) is its "⋯" at the line's end.
+|   A place to go (Trash, Tags) is a row like any other, not a button.
+| - **A row** is a `UiItemCard`: a tap opens it, and nothing else — no
+|   buttons on a row, no swipe gestures (the owner, 2026-11-27).
+| - **An item** opens as a page of its own under the shell's header
+|   (`UiItemPage`): its title, what it holds, and a foot whose "⋯"
+|   (`UiMenuButton` + `UiMenu`) holds the destructive actions; a delete is
+|   the menu's one red line and asks first (`UiConfirmPopup`). Adding to
+|   an item is a `UiAddButton`; choices are `UiSegmented`; a save is said
+|   by a `UiToast`.
+| - **Picking** from many (tags, folders, files) is a `UiSheet`; a dialog
+|   only asks.
+| - The application's name is never drawn: the shell's header says it.
+|
+| The gallery (`ui-gallery-web`) draws a list and an item page built only
+| from these, and an application is checked against that, not against
+| another application.
+|
 | **Pure, on purpose.** A gene's handlers see only this file's top level,
 | so nothing here holds an application's state: which tab is chosen,
 | whether a dialog is open, what a press does. Each handler takes values
@@ -49,6 +78,11 @@ UiIcon { name ∈ Any } =>
         mic = "M12 3a4 4 0 0 0-4 4v4a4 4 0 0 0 8 0V7a4 4 0 0 0-4-4ZM5 11a7 7 0 0 0 14 0M12 18v3m-3 0h6"
         file = "M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6m-6 3h6"
         cloud = "M7 18h10.5a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.6 9.1 4.5 4.5 0 0 0 7 18Z"
+        folder = "M3.5 6.5h6l2 2h9v10h-17v-12Z"
+        upload = "M12 16V4m0 0-5 5m5-5 5 5M5 20h14"
+        photo = "M4 5h16v14H4V5Zm0 11 4.5-4.5 3.5 3.5 2.5-2.5L20 16M15.5 9.5h.01"
+        video = "M4 6h11v12H4V6Zm11 4 5-3v10l-5-3"
+        music = "M9 18V6l10-2v12M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm10-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
     }
     d = paths[name]
     if d ∉ String
@@ -406,6 +440,92 @@ UiPageHead { title ∈ Any, note ∈ Any, action ∈ Any } =>
     if note ∈ String and note ≠ "", parts += [{ tag = "p", attrs = { class = "ui-page-note" }, children = [note] }]
     return Node { value = { tag = "div", attrs = { class = "ui-page-head" }, children = parts } }
 
+| ── Screens (2026-11-27) ───────────────────────────────
+
+| A list's page: To Do's reading width (40 rem), the gutter, the room a
+| phone's home bar needs, and room at the end for the "+".
+UiPageNarrow { children ∈ Array } =>
+    return Node { value = { tag = "main", attrs = { class = "ui-page narrow" }, children = children } }
+
+| The row over a list: its `UiSearchField` takes the room, anything beside
+| it keeps its size.
+UiToolbar { children ∈ Array } =>
+    return Node { value = { tag = "div", attrs = { class = "ui-toolbar" }, children = children } }
+
+| A row of a list, To Do's card: a lead (an icon or a picture, or null),
+| the title on one line, a muted meta line under it (a string, or a list
+| of strings and small elements), and a trail ("›" for a place to go
+| into, or null). `stripe` ("accent", "health", "warn", "danger" or null)
+| is a 4 px left edge that means something. A tap opens; nothing else.
+UiItemCard { lead ∈ Any, title ∈ Any, meta ∈ Any, stripe ∈ Any, trail ∈ Any, click ∈ Any } =>
+    class = "ui-item"
+    if stripe ∈ String and stripe ≠ "", class = "ui-item stripe-" + stripe
+    parts = []
+    if lead ≠ null, parts += [{ tag = "span", attrs = { class = "ui-item-lead", "aria-hidden" = "true" }, children = [lead] }]
+    words = [{ tag = "span", attrs = { class = "ui-item-title" }, children = [title] }]
+    if meta ∈ String and meta ≠ "", words += [{ tag = "span", attrs = { class = "ui-item-meta" }, children = [meta] }]
+    if meta ∈ Array and meta ≠ [], words += [{ tag = "span", attrs = { class = "ui-item-meta" }, children = meta }]
+    parts += [{ tag = "span", attrs = { class = "ui-item-words" }, children = words }]
+    if trail ≠ null, parts += [{ tag = "span", attrs = { class = "ui-item-trail", "aria-hidden" = "true" }, children = [trail] }]
+    if click ≠ null
+        return Node { value = { tag = "button", attrs = { class = class, type = "button" }, on = { click = click }, children = parts } }
+    return Node { value = { tag = "div", attrs = { class = class }, children = parts } }
+
+| The one "+" of a list, at the bottom in the middle, where the thumb is.
+| Open (its `UiDial` shown) it says ×.
+UiFab { label ∈ Any, open ∈ Any, click ∈ Any } =>
+    icon = "plus"
+    expanded = "false"
+    if open = true
+        icon = "close"
+        expanded = "true"
+    emit UiIcon { name = icon } to this get drawn
+    on = {}
+    if click ≠ null, on = { click = click }
+    return Node { value = { tag = "button", attrs = { class = "ui-fab", type = "button", "aria-label" = label, title = label, "aria-expanded" = expanded }, on = on, children = [drawn.value] } }
+
+| What the "+" can add, over a scrim that closes it: `items`
+| [{ label, icon, click }], one pill each, stacked above the "+".
+UiDial { label ∈ Any, items ∈ Array, close ∈ Any } =>
+    pills = []
+    loop item over items
+        parts = []
+        if item.icon ∈ String and item.icon ≠ ""
+            emit UiIcon { name = item.icon } to this get drawn
+            parts += [drawn.value]
+        parts += [{ tag = "span", children = [item.label] }]
+        on = {}
+        if item.click ≠ null, on = { click = item.click }
+        pills += [{ tag = "button", attrs = { class = "ui-dial-item", type = "button" }, on = on, children = parts }]
+    scrim_on = {}
+    if close ≠ null, scrim_on = { click = close }
+    return Node { value = [{ tag = "div", attrs = { class = "ui-dial-scrim" }, on = scrim_on, children = [] }, { tag = "div", attrs = { class = "ui-dial", role = "menu", "aria-label" = label }, children = pills }] }
+
+| Where you are in a tree: the way back as links (`crumbs`: [{ label,
+| click }]), the place itself (`here`), and at the end what can be done to
+| it (`action`: a `UiMenuButton` with its `UiMenu`, or null). Positioned,
+| so a menu can open under it.
+UiPathLine { crumbs ∈ Array, here ∈ Any, action ∈ Any } =>
+    parts = []
+    loop crumb over crumbs
+        on = {}
+        if crumb.click ≠ null, on = { click = crumb.click }
+        parts += [{ tag = "button", attrs = { class = "ui-path-crumb", type = "button" }, on = on, children = [crumb.label] }, { tag = "span", attrs = { class = "ui-path-sep", "aria-hidden" = "true" }, children = ["›"] }]
+    parts += [{ tag = "span", attrs = { class = "ui-path-here", "aria-current" = "page" }, children = [here] }]
+    if action ≠ null
+        acts = [action]
+        if action ∈ Array, acts = action
+        parts += [{ tag = "span", attrs = { class = "ui-path-action" }, children = acts }]
+    return Node { value = { tag = "nav", attrs = { class = "ui-path", "aria-label" = "Where you are" }, children = parts } }
+
+| An item's own page (To Do's task page): the title, what it holds, and a
+| foot (a "⋯" with its menu on the left, the page's one primary action on
+| the right, or nothing). The app draws it in place of its list.
+UiItemPage { title ∈ Any, body ∈ Array, foot ∈ Array } =>
+    parts = [{ tag = "h1", attrs = { class = "ui-item-page-title" }, children = [title] }, { tag = "div", attrs = { class = "ui-item-page-body" }, children = body }]
+    if foot ≠ [], parts += [{ tag = "div", attrs = { class = "ui-item-page-foot" }, children = foot }]
+    return Node { value = { tag = "section", attrs = { class = "ui-item-page", tabindex = "-1" }, children = parts } }
+
 | ── Numbers drawn ──────────────────────────────────────
 
 | A share as a bar, coloured by how it stands: "ok", "warn", "danger".
@@ -587,7 +707,11 @@ UiBaseStyles =>
             ".ui-sheet-title" = { margin = "0", padding = ".25rem 1rem .5rem", "font-size" = "1.05rem" }
             ".ui-sheet-body" = { flex = "1 1 auto", "min-height" = "0", "overflow-y" = "auto", "overscroll-behavior" = "contain" }
             ".ui-sheet-foot" = { display = "flex", gap = ".5rem", padding = ".75rem 1rem 1rem", "border-top" = "1px solid " + c.line }
-            ".ui-sheet-foot > *" = { flex = "1 1 auto" }
+            | A hosted page's rules are scoped by the shell, and a bare `> *` or
+            | `> :first-child` reaches past the child it means (measured
+            | 2026-11-27: the search's glass grew to 60 px), so these name
+            | classes.
+            ".ui-sheet-foot .ui-button" = { flex = "1 1 auto" }
             ".ui-list" = { display = "flex", "flex-direction" = "column", border = "1px solid " + c.line, "border-radius" = m.radius_chip, overflow = "hidden", background = c.bg }
             ".ui-row" = { display = "flex", "align-items" = "center", gap = ".75rem", "min-height" = m.tap, padding = ".35rem .75rem", "box-sizing" = "border-box", width = "100%", font = "inherit", "text-align" = "left", color = c.fg, background = "transparent", border = "0", "border-bottom" = "1px solid " + c.line, "border-radius" = "0" }
             ".ui-row:last-child" = { "border-bottom" = "0" }
@@ -609,6 +733,44 @@ UiBaseStyles =>
             ".ui-page-head-row" = { display = "flex", "align-items" = "center", "justify-content" = "space-between", gap = m.space_s }
             ".ui-page-title" = { margin = "0", "font-size" = "1.4rem", "line-height" = "1.25", "overflow-wrap" = "anywhere" }
             ".ui-page-note" = { margin = "0", color = c.muted, "font-size" = ".9rem" }
+            ".ui-page.narrow" = { width = "min(100%, 40rem)", padding = ".75rem 1rem calc(6.5rem + env(safe-area-inset-bottom, 0px))" }
+            ".ui-toolbar" = { display = "flex", gap = ".5rem", "align-items" = "center", margin = "0 0 .5rem" }
+            ".ui-toolbar .ui-search" = { flex = "1 1 auto", "min-width" = "0" }
+            ".ui-search .ui-icon" = { flex = "0 0 auto" }
+            ".ui-item" = { display = "flex", "align-items" = "center", gap = ".85rem", width = "100%", "min-height" = "3.7rem", margin = "0 0 .55rem", padding = ".55rem .8rem", "box-sizing" = "border-box", font = "inherit", "text-align" = "left", color = c.fg, background = c.panel, border = "1px solid " + c.line, "border-radius" = ".5rem" }
+            "button.ui-item" = { cursor = "pointer" }
+            "button.ui-item:hover" = { "border-color" = c.accent }
+            "button.ui-item:focus-visible, .ui-fab:focus-visible, .ui-dial-item:focus-visible, .ui-path-crumb:focus-visible" = { outline = focus, "outline-offset" = "2px" }
+            ".ui-item[class*=stripe-]" = { "border-left-width" = "4px" }
+            ".ui-item.stripe-accent" = { "border-left-color" = c.accent }
+            ".ui-item.stripe-health" = { "border-left-color" = c.health }
+            ".ui-item.stripe-warn" = { "border-left-color" = c.warn }
+            ".ui-item.stripe-danger" = { "border-left-color" = c.danger }
+            ".ui-item-lead" = { display = "inline-flex", "align-items" = "center", "justify-content" = "center", width = "1.6rem", "flex-shrink" = "0", color = c.muted }
+            ".ui-item-lead img" = { width = "2.5rem", height = "2.5rem", "max-width" = "none", "object-fit" = "cover", "border-radius" = ".35rem", display = "block" }
+            ".ui-item-lead .ui-icon.accent, .ui-item-lead.accent" = { color = c.accent }
+            ".ui-item-words" = { display = "flex", "flex-direction" = "column", gap = ".1rem", flex = "1 1 auto", "min-width" = "0" }
+            ".ui-item-title" = { overflow = "hidden", "text-overflow" = "ellipsis", "white-space" = "nowrap" }
+            ".ui-item-meta" = { display = "flex", gap = ".45rem", "align-items" = "center", overflow = "hidden", "white-space" = "nowrap", "text-overflow" = "ellipsis", color = c.muted, "font-size" = m.meta }
+            ".ui-item-trail" = { color = c.muted, "font-size" = "1.3rem", "line-height" = "1", "flex-shrink" = "0" }
+            ".ui-fab" = { position = "fixed", left = "50%", bottom = "calc(1.75rem + env(safe-area-inset-bottom, 0px))", transform = "translateX(-50%)", "z-index" = "15", display = "inline-flex", "align-items" = "center", "justify-content" = "center", width = "3.4rem", height = "3.4rem", padding = "0", color = "#ffffff", background = c.accent, border = "0", "border-radius" = "50%", "box-shadow" = "0 6px 18px rgba(0,0,0,.3)", cursor = "pointer" }
+            ".ui-fab .ui-icon" = { width = "1.7rem", height = "1.7rem" }
+            ".ui-dial-scrim" = { position = "fixed", inset = "0", "z-index" = "14", background = "rgba(8,11,18,.45)" }
+            ".ui-dial" = { position = "fixed", left = "50%", bottom = "calc(6.25rem + env(safe-area-inset-bottom, 0px))", transform = "translateX(-50%)", "z-index" = "15", display = "flex", "flex-direction" = "column", "align-items" = "center", gap = ".6rem" }
+            ".ui-dial-item" = { display = "inline-flex", "align-items" = "center", gap = ".6rem", "min-height" = "3rem", padding = "0 1.2rem", font = "inherit", "font-weight" = "500", color = c.fg, background = c.bg, border = "1px solid " + c.line, "border-radius" = m.radius_pill, "box-shadow" = "0 4px 14px rgba(0,0,0,.2)", cursor = "pointer", "white-space" = "nowrap" }
+            ".ui-dial-item:hover" = { "border-color" = c.accent }
+            ".ui-path" = { display = "flex", "align-items" = "center", gap = ".15rem", "min-height" = m.tap, margin = ".25rem 0 0", position = "relative", "flex-wrap" = "wrap" }
+            ".ui-path-crumb" = { "min-height" = m.tap, padding = "0 .3rem", font = "inherit", "font-weight" = "500", color = c.accent, background = "transparent", border = "0", "border-radius" = m.radius_inner, cursor = "pointer" }
+            ".ui-path-crumb:hover" = { background = c.hover }
+            ".ui-path-sep" = { color = c.muted }
+            ".ui-path-here" = { padding = "0 .3rem", "font-weight" = "700", "font-size" = "1.05rem", "overflow-wrap" = "anywhere" }
+            ".ui-path-action" = { "margin-left" = "auto", position = "relative" }
+            ".ui-item-page" = { display = "flex", "flex-direction" = "column", gap = "1.1rem", padding = m.space_m + " 0 0" }
+            ".ui-item-page:focus" = { outline = "none" }
+            ".ui-item-page-title" = { margin = "0", "font-size" = "1.375rem", "line-height" = "1.3", "overflow-wrap" = "anywhere" }
+            ".ui-item-page-body" = { display = "flex", "flex-direction" = "column", gap = "1.1rem", "min-width" = "0" }
+            ".ui-item-page-foot" = { display = "flex", "align-items" = "center", gap = ".5rem", position = "relative", "padding-top" = ".25rem" }
+            ".ui-item-page-foot > .ui-button" = { "margin-left" = "auto" }
             "@media (prefers-reduced-motion: reduce)" = { "*" = { transition = "none", animation = "none" } }
         }
     }

@@ -255,3 +255,53 @@ emit UiBaseStyles to this get sheet_light
 assert sheet_light.value[".ui-add"].color = "#0969da"
 assert sheet_light.value[".ui-add:hover"].background = "#ddf4ff"
 emit UseTheme { name = "dark" } to this
+
+| ── Screens (2026-11-27) ───────────────────────────────
+
+emit UiPageNarrow { children = ["x"] } to this get narrow
+assert narrow.value = { tag = "main", attrs = { class = "ui-page narrow" }, children = ["x"] }
+emit UiToolbar { children = ["search"] } to this get toolbar
+assert toolbar.value.attrs.class = "ui-toolbar"
+
+emit UiIcon { name = "folder" } to this get folder_icon
+emit UiItemCard { lead = folder_icon.value, title = "Belgeler", meta = "3 files", stripe = null, trail = "›", click = { _class = "OpenFolder", value = "f1" } } to this get folder_card
+assert folder_card.value.tag = "button"
+assert folder_card.value.attrs.class = "ui-item"
+assert folder_card.value.on.click = { _class = "OpenFolder", value = "f1" }
+assert folder_card.value.children[0].children[0].tag = "svg"
+assert folder_card.value.children[1].children[0].children = ["Belgeler"]
+assert folder_card.value.children[1].children[1].children = ["3 files"]
+assert folder_card.value.children[2].children = ["›"]
+emit UiItemCard { lead = null, title = "Buy milk", meta = ["High", " · 2 days late"], stripe = "warn", trail = null, click = null } to this get task_card
+assert task_card.value.tag = "div"
+assert task_card.value.attrs.class = "ui-item stripe-warn"
+assert task_card.value.children[0].children[1].children = ["High", " · 2 days late"]
+
+emit UiFab { label = "Add", open = false, click = "ToggleDial" } to this get fab
+assert fab.value.attrs.class = "ui-fab"
+assert fab.value.attrs["aria-expanded"] = "false"
+emit UiFab { label = "Add", open = true, click = "ToggleDial" } to this get fab_open
+assert fab_open.value.attrs["aria-expanded"] = "true"
+emit UiDial { label = "Add", items = [{ label = "Upload files", icon = "upload", click = "Upload" }, { label = "New folder", icon = "folder", click = "NewFolder" }], close = "CloseDial" } to this get dial
+assert dial.value[0].on.click = "CloseDial"
+assert dial.value[1].attrs.class = "ui-dial"
+assert dial.value[1].children[1].on.click = "NewFolder"
+assert dial.value[1].children[1].children[1].children = ["New folder"]
+
+emit UiPathLine { crumbs = [{ label = "Drive", click = { _class = "OpenFolder", value = "" } }], here = "2026", action = null } to this get path
+assert path.value.tag = "nav"
+assert path.value.children[0].on.click = { _class = "OpenFolder", value = "" }
+assert path.value.children[2].children = ["2026"]
+emit UiPathLine { crumbs = [], here = "Fotoğraflar", action = "menu" } to this get path_menu
+assert path_menu.value.children[1].children = ["menu"]
+
+emit UiItemPage { title = "letter.pdf", body = ["preview"], foot = ["more"] } to this get item_page
+assert item_page.value.attrs.class = "ui-item-page"
+assert item_page.value.children[0].children = ["letter.pdf"]
+assert item_page.value.children[2].children = ["more"]
+
+emit UseTheme { name = "dark" } to this
+emit UiBaseStyles to this get screen_rules
+assert screen_rules.value[".ui-page.narrow"].width = "min(100%, 40rem)"
+assert screen_rules.value[".ui-item.stripe-warn"]["border-left-color"] = "#d29922"
+assert screen_rules.value[".ui-fab"].background = "#2f81f7"
