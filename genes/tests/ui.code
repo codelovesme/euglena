@@ -325,3 +325,11 @@ emit UiItemPage { title = title_field.value, body = [], foot = [] } to this get 
 assert editable_page.value.children[0].tag = "textarea"
 emit UiBaseStyles to this get title_rules
 assert title_rules.value[".ui-title-field"]["font-size"] = "1.375rem"
+
+emit UiPathLine { crumbs = [{ label = "Drive", click = "Top" }, { label = "Belgeler", click = "Up" }], here = "", action = null } to this get item_path
+assert item_path.value.children[0].children = ["Drive"]
+assert item_path.value.children[1].children = ["›"]
+assert item_path.value.children[2].children = ["Belgeler"]
+assert item_path.value.children[3] = null
+emit UiIcon { name = "download" } to this get down
+assert down.value.tag = "svg"
