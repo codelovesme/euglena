@@ -333,3 +333,12 @@ assert item_path.value.children[2].children = ["Belgeler"]
 assert item_path.value.children[3] = null
 emit UiIcon { name = "download" } to this get down
 assert down.value.tag = "svg"
+
+emit UiActionSheet { title = "old.txt", note = "In the trash", actions = [{ label = "Restore", click = { _class = "Restore", id = 1 }, danger = false }, { label = "Delete for good", click = "AskForever", danger = true }], no = "CloseActions" } to this get acts
+assert acts.value.children[0].on.click = "CloseActions"
+sheet_card = acts.value.children[1].children[0]
+assert sheet_card.children[0].children[0].children = ["old.txt"]
+assert sheet_card.children[1].attrs.class = "ui-ask-line"
+assert sheet_card.children[1].on.click = { _class = "Restore", id = 1 }
+assert sheet_card.children[2].attrs.class = "ui-ask-line danger"
+assert acts.value.children[1].children[1].children = ["Cancel"]

@@ -32,7 +32,8 @@
 | - **A filled button** only ends a form in a sheet or a dialog (Done,
 |   Make it, the red second press of a delete) — never on a page.
 | - **Picking** from many (tags, folders, files) is a `UiSheet`; a dialog
-|   only asks.
+|   only asks. What can be done to one thing that has no page of its own
+|   (a file in the trash) is a `UiActionSheet` its row's tap opens.
 | - The application's name is never drawn: the shell's header says it.
 |
 | The gallery (`ui-gallery-web`) draws a list and an item page built only
@@ -291,6 +292,41 @@ UiConfirmPopup { title ∈ Any, subject ∈ Any, note ∈ Any, yes ∈ Any, yes_
                     attrs = { class = "ui-confirm", role = "alertdialog", "aria-modal" = "true", "aria-label" = title }
                     children = [
                         { tag = "div", attrs = { class = "ui-ask-card" }, children = [{ tag = "div", attrs = { class = "ui-ask-head" }, children = head }, { tag = "button", attrs = { class = "ui-button danger ui-ask-yes", type = "button" }, on = yes_on, children = [yes] }] }
+                        { tag = "button", attrs = { class = "ui-button quiet ui-ask-no", type = "button" }, on = no_on, children = ["Cancel"] }
+                    ]
+                }
+            ]
+        }
+    }
+
+| What can be done to one thing, as iOS offers it (Drive's trash, 365):
+| the same sheet as `UiConfirmPopup` — the thing's name, a line about it,
+| then one line per choice (`actions`: [{ label, click, danger }]; a
+| danger line is red and should itself ask first), and Cancel below. The
+| row a tap opened it from carries no buttons of its own.
+UiActionSheet { title ∈ Any, note ∈ Any, actions ∈ Array, no ∈ Any } =>
+    head = [{ tag = "h2", attrs = { class = "ui-ask-title" }, children = [title] }]
+    if note ∈ String and note ≠ "", head += [{ tag = "p", attrs = { class = "ui-ask-note" }, children = [note] }]
+    lines = [{ tag = "div", attrs = { class = "ui-ask-head" }, children = head }]
+    loop one over actions
+        class = "ui-ask-line"
+        if one.danger = true, class = "ui-ask-line danger"
+        on = {}
+        if one.click ≠ null, on = { click = one.click }
+        lines += [{ tag = "button", attrs = { class = class, type = "button" }, on = on, children = [one.label] }]
+    no_on = {}
+    if no ≠ null, no_on = { click = no }
+    return Node {
+        value = {
+            tag = "div"
+            attrs = { class = "ui-overlay ui-confirm-overlay" }
+            children = [
+                { tag = "div", attrs = { class = "ui-scrim" }, on = no_on, children = [] }
+                {
+                    tag = "section"
+                    attrs = { class = "ui-confirm ui-actions", role = "dialog", "aria-modal" = "true", "aria-label" = title }
+                    children = [
+                        { tag = "div", attrs = { class = "ui-ask-card" }, children = lines }
                         { tag = "button", attrs = { class = "ui-button quiet ui-ask-no", type = "button" }, on = no_on, children = ["Cancel"] }
                     ]
                 }
@@ -724,6 +760,9 @@ UiBaseStyles =>
             ".ui-ask-ref-note" = { color = c.muted, "font-size" = m.meta }
             ".ui-confirm .ui-ask-yes" = { width = "100%", "min-height" = "3.4rem", "font-size" = "1.05rem", "font-weight" = "600", color = c.danger, background = "transparent", border = "0", "border-top" = "1px solid " + c.line, "border-radius" = "0" }
             ".ui-confirm .ui-ask-yes:hover" = { background = c.hover }
+            ".ui-ask-line" = { width = "100%", "min-height" = "3.4rem", padding = "0 1rem", font = "inherit", "font-size" = "1.05rem", color = c.accent, background = "transparent", border = "0", "border-top" = "1px solid " + c.line, cursor = "pointer" }
+            ".ui-ask-line:hover" = { background = c.hover }
+            ".ui-ask-line.danger" = { color = c.danger, "font-weight" = "600" }
             ".ui-confirm .ui-ask-no" = { width = "100%", "min-height" = "3.4rem", "font-size" = "1.05rem", "font-weight" = "600", color = c.accent, background = c.bg, border = "1px solid " + c.line, "border-radius" = "14px", "box-shadow" = "0 12px 40px rgba(0,0,0,.3)" }
             ".ui-confirm .ui-ask-no:hover" = { background = c.hover }
             ".ui-dialog-head" = { display = "flex", "align-items" = "center", "justify-content" = "space-between", gap = ".5rem" }
