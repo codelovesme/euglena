@@ -106,15 +106,17 @@ Metrics =>
     }
 
 | Task priority — the one place colour carries meaning rather than mood.
-| It reads as a stripe down the left edge of a task, so these are the four
-| steps of a scale and are deliberately not the accent, which is spent on
-| buttons and links. Here rather than in To Do because a second
-| application showing a priority must show the same four.
+| It reads as a stripe down the left edge of a task and as a dot beside a
+| priority's name. Here rather than in To Do because a second application
+| showing a priority must show the same four.
+|
+| The scale is To Do's (the owner, 2026-11-27: "To Do's colours become the
+| shared language's"): orange, yellow, green, blue — the same in both
+| themes, each readable on a dark and a light ground.
 Priorities =>
-    emit Palette to this get c
     return Steps {
-        urgent = c.danger
-        high = "#db6d28"
-        medium = c.warn
-        low = c.health
+        urgent = "#f97316"
+        high = "#eab308"
+        medium = "#22c55e"
+        low = "#3b82f6"
     }
