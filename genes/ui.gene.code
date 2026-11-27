@@ -19,11 +19,18 @@
 | - **A row** is a `UiItemCard`: a tap opens it, and nothing else — no
 |   buttons on a row, no swipe gestures (the owner, 2026-11-27).
 | - **An item** opens as a page of its own under the shell's header
-|   (`UiItemPage`): its title, what it holds, and a foot whose "⋯"
-|   (`UiMenuButton` + `UiMenu`) holds the destructive actions; a delete is
-|   the menu's one red line and asks first (`UiConfirmPopup`). Adding to
-|   an item is a `UiAddButton`; choices are `UiSegmented`; a save is said
-|   by a `UiToast`.
+|   (`UiItemPage`), and the page carries **no action buttons** (the owner,
+|   2026-11-27: "a button for every choice makes a button heaven" — look
+|   at To Do's task page: none). What can be changed is changed in place
+|   and saves itself, said by a `UiToast`: the title (`UiTitleField`), its
+|   fields, its picks (`UiSegmented`). Opening what it holds is a tap on it
+|   (a photo, a file). Everything else that acts on the item — download,
+|   move, delete — is a line of the foot's "⋯" (`UiMenuButton` +
+|   `UiMenu` with `place = "above-end"`), the foot's only control, at its
+|   right (the owner, 2026-11-27); a delete is the menu's one red line
+|   and asks first (`UiConfirmPopup`). Adding to an item is a `UiAddButton`.
+| - **A filled button** only ends a form in a sheet or a dialog (Done,
+|   Make it, the red second press of a delete) — never on a page.
 | - **Picking** from many (tags, folders, files) is a `UiSheet`; a dialog
 |   only asks.
 | - The application's name is never drawn: the shell's header says it.
@@ -82,6 +89,7 @@ UiIcon { name ∈ Any } =>
         upload = "M12 16V4m0 0-5 5m5-5 5 5M5 20h14"
         photo = "M4 5h16v14H4V5Zm0 11 4.5-4.5 3.5 3.5 2.5-2.5L20 16M15.5 9.5h.01"
         video = "M4 6h11v12H4V6Zm11 4 5-3v10l-5-3"
+        warn = "M12 4 21 20H3L12 4Zm0 6v4.5m0 3h.01"
         music = "M9 18V6l10-2v12M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm10-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
     }
     d = paths[name]
@@ -244,27 +252,47 @@ UiDialog { title ∈ Any, body ∈ Array, foot ∈ Array, close ∈ Any } =>
         }
     }
 
-| Asking before something that cannot be undone, in Home's shape
-| (2026-10-02): a title and ✕, what is about to go, what that means, then
-| a quiet Cancel and the red second press. The ✕, Cancel and the scrim
-| all send `no`.
-UiConfirmPopup { title ∈ Any, subject ∈ Any, note ∈ Any, yes ∈ Any, yes_click ∈ Any, no ∈ Any } =>
-    emit UiIconButton { icon = "close", label = "Keep it", click = no, kind = "quiet" } to this get x
-    emit UiButton { label = "Cancel", click = no, kind = "quiet" } to this get cancel
-    emit UiButton { label = yes, click = yes_click, kind = "danger" } to this get go
-    parts = [{ tag = "div", attrs = { class = "ui-dialog-head" }, children = [{ tag = "h2", attrs = { class = "ui-dialog-title" }, children = [title] }, x.value] }]
-    if subject ∈ String and subject ≠ "", parts += [{ tag = "p", attrs = { class = "ui-confirm-subject" }, children = [subject] }]
-    if note ∈ String and note ≠ "", parts += [{ tag = "p", attrs = { class = "ui-confirm-note" }, children = [note] }]
-    parts += [{ tag = "div", attrs = { class = "ui-dialog-foot" }, children = [cancel.value, go.value] }]
-    scrim_on = {}
-    if no ≠ null, scrim_on = { click = no }
+| Asking before something that cannot be undone, as iOS asks (the owner,
+| 2026-11-27, over a centred dialog): a sheet at the bottom holding the
+| question (`title`, naming the thing), what it is about (`subject`),
+| what will happen (`note`), and — when the thing is used elsewhere — a
+| framed card for each use (`refs`: [{ label, note }], no links: an item's
+| page is where they lead); under it the answer as one red line (`yes`),
+| and Cancel on its own below. Cancel and a tap outside send `no`. Over
+| the question a warning sign in a soft red circle (the owner: "a warning
+| icon would not hurt"); `icon` names another of `UiIcon`'s (the bin).
+UiConfirmPopup { title ∈ Any, subject ∈ Any, note ∈ Any, yes ∈ Any, yes_click ∈ Any, no ∈ Any, refs ∈ Any, icon ∈ Any } =>
+    sign = "warn"
+    if icon ∈ String and icon ≠ "", sign = icon
+    emit UiIcon { name = sign } to this get drawn_sign
+    head = [{ tag = "span", attrs = { class = "ui-ask-sign", "aria-hidden" = "true" }, children = [drawn_sign.value] }, { tag = "h2", attrs = { class = "ui-ask-title" }, children = [title] }]
+    if subject ∈ String and subject ≠ "", head += [{ tag = "p", attrs = { class = "ui-ask-subject" }, children = [subject] }]
+    if note ∈ String and note ≠ "", head += [{ tag = "p", attrs = { class = "ui-ask-note" }, children = [note] }]
+    if refs ∈ Array and refs ≠ []
+        cards = []
+        loop one over refs
+            words = [{ tag = "span", attrs = { class = "ui-ask-ref-label" }, children = [one.label] }]
+            if one.note ∈ String and one.note ≠ "", words += [{ tag = "span", attrs = { class = "ui-ask-ref-note" }, children = [one.note] }]
+            cards += [{ tag = "div", attrs = { class = "ui-ask-ref" }, children = words }]
+        head += [{ tag = "div", attrs = { class = "ui-ask-refs" }, children = cards }]
+    yes_on = {}
+    if yes_click ≠ null, yes_on = { click = yes_click }
+    no_on = {}
+    if no ≠ null, no_on = { click = no }
     return Node {
         value = {
             tag = "div"
-            attrs = { class = "ui-overlay" }
+            attrs = { class = "ui-overlay ui-confirm-overlay" }
             children = [
-                { tag = "div", attrs = { class = "ui-scrim" }, on = scrim_on, children = [] }
-                { tag = "section", attrs = { class = "ui-dialog ui-confirm", role = "alertdialog", "aria-modal" = "true", "aria-label" = title }, children = parts }
+                { tag = "div", attrs = { class = "ui-scrim" }, on = no_on, children = [] }
+                {
+                    tag = "section"
+                    attrs = { class = "ui-confirm", role = "alertdialog", "aria-modal" = "true", "aria-label" = title }
+                    children = [
+                        { tag = "div", attrs = { class = "ui-ask-card" }, children = [{ tag = "div", attrs = { class = "ui-ask-head" }, children = head }, { tag = "button", attrs = { class = "ui-button danger ui-ask-yes", type = "button" }, on = yes_on, children = [yes] }] }
+                        { tag = "button", attrs = { class = "ui-button quiet ui-ask-no", type = "button" }, on = no_on, children = ["Cancel"] }
+                    ]
+                }
             ]
         }
     }
@@ -518,13 +546,30 @@ UiPathLine { crumbs ∈ Array, here ∈ Any, action ∈ Any } =>
         parts += [{ tag = "span", attrs = { class = "ui-path-action" }, children = acts }]
     return Node { value = { tag = "nav", attrs = { class = "ui-path", "aria-label" = "Where you are" }, children = parts } }
 
-| An item's own page (To Do's task page): the title, what it holds, and a
-| foot (a "⋯" with its menu on the left, the page's one primary action on
-| the right, or nothing). The app draws it in place of its list.
+| An item's own page (To Do's task page): the title — words, or a
+| `UiTitleField` when it can be renamed in place — what it holds, and a
+| foot holding its "⋯" and that menu at the right, nothing else (no
+| action buttons on a page). The app draws it in place of its list.
 UiItemPage { title ∈ Any, body ∈ Array, foot ∈ Array } =>
-    parts = [{ tag = "h1", attrs = { class = "ui-item-page-title" }, children = [title] }, { tag = "div", attrs = { class = "ui-item-page-body" }, children = body }]
+    head = { tag = "h1", attrs = { class = "ui-item-page-title" }, children = [title] }
+    if title ∈ Object, head = title
+    parts = [head, { tag = "div", attrs = { class = "ui-item-page-body" }, children = body }]
     if foot ≠ [], parts += [{ tag = "div", attrs = { class = "ui-item-page-foot" }, children = foot }]
     return Node { value = { tag = "section", attrs = { class = "ui-item-page", tabindex = "-1" }, children = parts } }
+
+| An item's title that is edited where it stands (To Do's subject): as
+| large as a title, no box until it has the focus, as many rows as its
+| words need. `change` gets the value as typed; the app saves it.
+UiTitleField { value ∈ Any, label ∈ Any, change ∈ Any, rows ∈ Any } =>
+    lines = "1"
+    if rows ∈ Number and rows > 1, lines = "$rows"
+    attrs = { class = "ui-title-field", rows = lines, spellcheck = "false", autocomplete = "off" }
+    if label ∈ String, attrs = attrs + { "aria-label" = label }
+    on = {}
+    if change ≠ null, on = { input = change }
+    text = ""
+    if value ∈ String, text = value
+    return Node { value = { tag = "textarea", attrs = attrs, on = on, children = [text] } }
 
 | ── Numbers drawn ──────────────────────────────────────
 
@@ -654,7 +699,23 @@ UiBaseStyles =>
             ".ui-overlay" = { position = "fixed", inset = "0", "z-index" = "1000", display = "flex", "align-items" = "center", "justify-content" = "center", padding = m.space_m, "box-sizing" = "border-box" }
             ".ui-scrim" = { position = "absolute", inset = "0", background = "rgba(0,0,0,.58)" }
             ".ui-dialog" = { position = "relative", display = "flex", "flex-direction" = "column", gap = ".7rem", width = "min(34rem, 100%)", "max-height" = "min(85vh, 44rem)", overflow = "auto", "overscroll-behavior" = "contain", padding = m.space_m, "box-sizing" = "border-box", color = c.fg, background = c.panel, border = "1px solid " + c.line, "border-radius" = m.radius_card, "box-shadow" = "0 16px 44px rgba(0,0,0,.5)", "text-align" = "left" }
-            ".ui-confirm" = { width = "min(26rem, 100%)" }
+            ".ui-confirm-overlay" = { "align-items" = "flex-end", padding = ".5rem .5rem calc(.5rem + env(safe-area-inset-bottom, 0px))" }
+            ".ui-confirm" = { position = "relative", display = "flex", "flex-direction" = "column", gap = ".5rem", width = "min(26rem, 100%)" }
+            ".ui-ask-card" = { display = "flex", "flex-direction" = "column", overflow = "hidden", background = c.bg, border = "1px solid " + c.line, "border-radius" = "14px", "box-shadow" = "0 12px 40px rgba(0,0,0,.3)", "text-align" = "center" }
+            ".ui-ask-head" = { display = "flex", "flex-direction" = "column", gap = ".35rem", padding = "1rem 1.1rem .95rem" }
+            ".ui-ask-sign" = { display = "grid", "place-items" = "center", width = "2.75rem", height = "2.75rem", margin = "0 auto .35rem", color = c.danger, background = c.danger_soft, "border-radius" = "50%" }
+            ".ui-ask-sign .ui-icon" = { width = "1.35rem", height = "1.35rem" }
+            ".ui-ask-title" = { margin = "0", "font-size" = "1rem", "font-weight" = "600", "overflow-wrap" = "anywhere" }
+            ".ui-ask-subject" = { margin = "0", "font-weight" = "600", "overflow-wrap" = "anywhere" }
+            ".ui-ask-note" = { margin = "0", color = c.muted, "font-size" = ".875rem", "line-height" = "1.45" }
+            ".ui-ask-refs" = { display = "flex", "flex-direction" = "column", gap = ".4rem", margin = ".4rem 0 0", "text-align" = "left" }
+            ".ui-ask-ref" = { display = "flex", "flex-direction" = "column", padding = ".6rem .8rem", background = c.panel, border = "1px solid " + c.line, "border-radius" = m.radius_inner }
+            ".ui-ask-ref-label" = { "font-size" = ".92rem", "overflow-wrap" = "anywhere" }
+            ".ui-ask-ref-note" = { color = c.muted, "font-size" = m.meta }
+            ".ui-confirm .ui-ask-yes" = { width = "100%", "min-height" = "3.4rem", "font-size" = "1.05rem", "font-weight" = "600", color = c.danger, background = "transparent", border = "0", "border-top" = "1px solid " + c.line, "border-radius" = "0" }
+            ".ui-confirm .ui-ask-yes:hover" = { background = c.hover }
+            ".ui-confirm .ui-ask-no" = { width = "100%", "min-height" = "3.4rem", "font-size" = "1.05rem", "font-weight" = "600", color = c.accent, background = c.bg, border = "1px solid " + c.line, "border-radius" = "14px", "box-shadow" = "0 12px 40px rgba(0,0,0,.3)" }
+            ".ui-confirm .ui-ask-no:hover" = { background = c.hover }
             ".ui-dialog-head" = { display = "flex", "align-items" = "center", "justify-content" = "space-between", gap = ".5rem" }
             ".ui-dialog-title" = { margin = "0", "font-size" = "1.05rem", "overflow-wrap" = "anywhere" }
             ".ui-dialog-body" = { display = "flex", "flex-direction" = "column", gap = ".7rem", "min-width" = "0" }
@@ -769,8 +830,9 @@ UiBaseStyles =>
             ".ui-item-page:focus" = { outline = "none" }
             ".ui-item-page-title" = { margin = "0", "font-size" = "1.375rem", "line-height" = "1.3", "overflow-wrap" = "anywhere" }
             ".ui-item-page-body" = { display = "flex", "flex-direction" = "column", gap = "1.1rem", "min-width" = "0" }
-            ".ui-item-page-foot" = { display = "flex", "align-items" = "center", gap = ".5rem", position = "relative", "padding-top" = ".25rem" }
-            ".ui-item-page-foot > .ui-button" = { "margin-left" = "auto" }
+            ".ui-item-page-foot" = { display = "flex", "align-items" = "center", "justify-content" = "flex-end", gap = ".5rem", position = "relative", "padding-top" = ".25rem" }
+            ".ui-title-field" = { display = "block", width = "100%", margin = "0", padding = ".15rem 0", "box-sizing" = "border-box", font = "inherit", "font-size" = "1.375rem", "font-weight" = "700", "line-height" = "1.3", color = c.fg, background = "transparent", border = "0", "border-bottom" = "1px solid transparent", "border-radius" = "0", resize = "none", overflow = "hidden" }
+            ".ui-title-field:focus" = { outline = "none", "border-bottom-color" = c.line }
             "@media (prefers-reduced-motion: reduce)" = { "*" = { transition = "none", animation = "none" } }
         }
     }
