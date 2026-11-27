@@ -760,9 +760,12 @@ UiBaseStyles =>
             ".ui-ask-ref-note" = { color = c.muted, "font-size" = m.meta }
             ".ui-confirm .ui-ask-yes" = { width = "100%", "min-height" = "3.4rem", "font-size" = "1.05rem", "font-weight" = "600", color = c.danger, background = "transparent", border = "0", "border-top" = "1px solid " + c.line, "border-radius" = "0" }
             ".ui-confirm .ui-ask-yes:hover" = { background = c.hover }
-            ".ui-ask-line" = { width = "100%", "min-height" = "3.4rem", padding = "0 1rem", font = "inherit", "font-size" = "1.05rem", color = c.accent, background = "transparent", border = "0", "border-top" = "1px solid " + c.line, cursor = "pointer" }
-            ".ui-ask-line:hover" = { background = c.hover }
-            ".ui-ask-line.danger" = { color = c.danger, "font-weight" = "600" }
+            | Scoped under the sheet: an app's own `.danger` or `button` rule
+            | (To Do has both) must not reach these lines.
+            ".ui-actions .ui-ask-line" = { width = "100%", "min-height" = "3.4rem", padding = "0 1rem", margin = "0", font = "inherit", "font-size" = "1.05rem", color = c.accent, background = "transparent", border = "0", "border-top" = "1px solid " + c.line, "border-radius" = "0", "box-shadow" = "none", cursor = "pointer" }
+            ".ui-actions .ui-ask-line:hover" = { background = c.hover }
+            ".ui-actions .ui-ask-line.danger" = { color = c.danger, background = "transparent", "font-weight" = "600" }
+            ".ui-actions .ui-ask-line.danger:hover" = { background = c.hover }
             ".ui-confirm .ui-ask-no" = { width = "100%", "min-height" = "3.4rem", "font-size" = "1.05rem", "font-weight" = "600", color = c.accent, background = c.bg, border = "1px solid " + c.line, "border-radius" = "14px", "box-shadow" = "0 12px 40px rgba(0,0,0,.3)" }
             ".ui-confirm .ui-ask-no:hover" = { background = c.hover }
             ".ui-dialog-head" = { display = "flex", "align-items" = "center", "justify-content" = "space-between", gap = ".5rem" }
